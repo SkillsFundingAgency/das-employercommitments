@@ -54,27 +54,12 @@
     <DiagnosticsConfiguration Include="SFA.DAS.EAS.LevyDeclarationProvider.WorkerContent\diagnostics.wadcfgx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.EAS.PaymentProvider.Worker\SFA.DAS.EAS.PaymentProvider.Worker.csproj">
-      <Name>SFA.DAS.EAS.PaymentProvider.Worker</Name>
-      <Project>{52069b5e-6a8d-413e-b4bd-a7c7c4fd2ccf}</Project>
-      <Private>True</Private>
-      <RoleType>Worker</RoleType>
-      <RoleName>SFA.DAS.EAS.PaymentProvider.Worker</RoleName>
-      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
-    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.EAS.Web\SFA.DAS.EAS.Web.csproj">
       <Name>SFA.DAS.EAS.Web</Name>
       <Project>{65db60b1-80f0-432c-926e-7a6dd02a5645}</Project>
       <Private>True</Private>
       <RoleType>Web</RoleType>
       <RoleName>SFA.DAS.EAS.Web</RoleName>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.LevyDeclarationProvider.Worker\SFA.DAS.EAS.LevyDeclarationProvider.Worker.csproj">
-      <Name>SFA.DAS.EAS.LevyDeclarationProvider.Worker</Name>
-      <Project>{386adb6f-ce56-4afd-b762-de93e74afd41}</Project>
-      <Private>True</Private>
-      <RoleType>Worker</RoleType>
-      <RoleName>SFA.DAS.EAS.LevyDeclarationProvider.Worker</RoleName>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,5 @@
 ﻿using Moq;
 using NUnit.Framework;
-
-using SFA.DAS.EAS.Application.Queries.GetLegalEntityAgreement;
 using SFA.DAS.EAS.Domain.Models.EmployerAgreement;
 using System.Threading.Tasks;
 
@@ -14,17 +12,20 @@ namespace SFA.DAS.EAS.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
         public async Task ShouldCallMediatorToGetLegalEntityAgreementRequest()
         {
             //Arrange
-            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetLegalEntityAgreementRequest>()))
-                .ReturnsAsync(new GetLegalEntityAgreementResponse
-                {
-                    EmployerAgreement = new EmployerAgreementView()
-                });
+            //TODO API CALL
+            //MockMediator.Setup(x => x.SendAsync(It.IsAny<GetLegalEntityAgreementRequest>()))
+            //    .ReturnsAsync(new GetLegalEntityAgreementResponse
+            //    {
+            //        EmployerAgreement = new EmployerAgreementView()
+            //    });
 
             //Act
             await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", "123", "C789");
 
             //Assert
-            MockMediator.Verify(x => x.SendAsync(It.Is<GetLegalEntityAgreementRequest>(c => c.AccountId == 123L && c.LegalEntityCode == "123")), Times.Once);
+            //TODO API CALL
+            Assert.IsFalse(true);//Reminder!
+            //MockMediator.Verify(x => x.SendAsync(It.Is<GetLegalEntityAgreementRequest>(c => c.AccountId == 123L && c.LegalEntityCode == "123")), Times.Once);
         }
 
         [TestCase(true, Description = "The Employer has signed the agreement")]
@@ -32,16 +33,19 @@ namespace SFA.DAS.EAS.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
         public async Task ThenTheViewModelShouldReflectWhetherTheAgreementHasBeenSigned(bool isSigned)
         {
             //Arrange
-            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetLegalEntityAgreementRequest>()))
-                .ReturnsAsync(new GetLegalEntityAgreementResponse
-                {
-                    EmployerAgreement = isSigned ? null : new EmployerAgreementView()
-                });
+            //TODO API CALL
+            //MockMediator.Setup(x => x.SendAsync(It.IsAny<GetLegalEntityAgreementRequest>()))
+            //    .ReturnsAsync(new GetLegalEntityAgreementResponse
+            //    {
+            //        EmployerAgreement = isSigned ? null : new EmployerAgreementView()
+            //    });
 
             //Act
             var result = await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", "XYZ123", "C789");
 
             //Assert
+            //TODO API CALL
+            Assert.IsFalse(true);//Reminder!
             Assert.AreEqual(isSigned, result.Data.HasSignedAgreement);
         }
     }

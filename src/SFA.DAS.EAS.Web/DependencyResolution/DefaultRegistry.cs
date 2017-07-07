@@ -38,8 +38,6 @@ using SFA.DAS.EAS.Domain.Data.Repositories;
 using SFA.DAS.EAS.Domain.Interfaces;
 using SFA.DAS.EAS.Infrastructure.Caching;
 using SFA.DAS.EAS.Infrastructure.Data;
-using SFA.DAS.EAS.Infrastructure.Factories;
-using SFA.DAS.EAS.Infrastructure.Interfaces.REST;
 using SFA.DAS.EAS.Infrastructure.Services;
 using SFA.DAS.EAS.Web.ViewModels;
 using SFA.DAS.Events.Api.Client;
@@ -97,34 +95,9 @@ namespace SFA.DAS.EAS.Web.DependencyResolution
             RegisterMediator();
 
             RegisterAuditService();
-
-            RegisterPostCodeAnywhereService();
-
-            RegisterExecutionPolicies();
+            
 
             RegisterLogger();
-        }
-
-        private void RegisterExecutionPolicies()
-        {
-            For<Infrastructure.ExecutionPolicies.ExecutionPolicy>()
-                .Use<Infrastructure.ExecutionPolicies.CompaniesHouseExecutionPolicy>()
-                .Named(Infrastructure.ExecutionPolicies.CompaniesHouseExecutionPolicy.Name);
-
-            For<Infrastructure.ExecutionPolicies.ExecutionPolicy>()
-                .Use<Infrastructure.ExecutionPolicies.HmrcExecutionPolicy>()
-                .Named(Infrastructure.ExecutionPolicies.HmrcExecutionPolicy.Name);
-
-            For<Infrastructure.ExecutionPolicies.ExecutionPolicy>()
-                .Use<Infrastructure.ExecutionPolicies.IdamsExecutionPolicy>()
-                .Named(Infrastructure.ExecutionPolicies.IdamsExecutionPolicy.Name);
-        }
-
-        private void RegisterPostCodeAnywhereService()
-        {
-            For<IAddressLookupService>().Use<AddressLookupService>();
-            For<IRestClientFactory>().Use<RestClientFactory>();
-            For<IRestServiceFactory>().Use<RestServiceFactory>();
         }
 
         private void RegisterAuditService()

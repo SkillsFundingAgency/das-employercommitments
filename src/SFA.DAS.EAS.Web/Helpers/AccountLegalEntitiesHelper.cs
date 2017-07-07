@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
-using SFA.DAS.EAS.Application.Queries.GetAccountLegalEntities;
 using SFA.DAS.EAS.Domain.Data.Entities.Account;
 using SFA.DAS.EAS.Domain.Models.Organisation;
 
@@ -20,12 +19,13 @@ namespace SFA.DAS.EAS.Web.Helpers
 
         internal async Task<List<LegalEntity>> GetAccountLegalEntities(string hashedLegalEntityId, string userIdClaim)
         {
-            var accountEntities = await _mediator.SendAsync(new GetAccountLegalEntitiesRequest
-            {
-                HashedLegalEntityId = hashedLegalEntityId,
-                UserId = userIdClaim
-            });
-            return accountEntities.Entites.LegalEntityList;
+            //TODO API CALL
+            //var accountEntities = await _mediator.SendAsync(new GetAccountLegalEntitiesRequest
+            //{
+            //    HashedLegalEntityId = hashedLegalEntityId,
+            //    UserId = userIdClaim
+            //});
+            return new List<LegalEntity>();//TODO API CALL accountEntities.Entites.LegalEntityList;
         }
 
         internal bool IsLegalEntityAlreadyAddedToAccount(List<LegalEntity> accountLegalEntities, string organisationName, string organisationCode, OrganisationType organisationType)

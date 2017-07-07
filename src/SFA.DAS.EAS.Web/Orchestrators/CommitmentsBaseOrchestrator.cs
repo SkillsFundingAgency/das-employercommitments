@@ -3,8 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
-using SFA.DAS.EAS.Application.Queries.GetEmployerAccount;
-using SFA.DAS.EAS.Application.Queries.GetUserAccountRole;
 using SFA.DAS.EAS.Domain.Interfaces;
 using SFA.DAS.EAS.Domain.Models.UserProfile;
 using SFA.DAS.NLog.Logger;
@@ -29,23 +27,25 @@ namespace SFA.DAS.EAS.Web.Orchestrators
 
         public async Task<bool> AuthorizeRole(string hashedAccountId, string externalUserId, Role[] roles)
         {
-            var response = await _mediator.SendAsync(new GetUserAccountRoleQuery
-            {
-                HashedAccountId = hashedAccountId,
-                ExternalUserId = externalUserId
-            });
-            return roles.Contains(response.UserRole);
+            //TODO API CALL
+            //var response = await _mediator.SendAsync(new GetUserAccountRoleQuery
+            //{
+            //    HashedAccountId = hashedAccountId,
+            //    ExternalUserId = externalUserId
+            //});
+            return true;//TODO API CALL roles.Contains(response.UserRole);
         }
 
         protected async Task<OrchestratorResponse<T>> CheckUserAuthorization<T>(Func<Task<OrchestratorResponse<T>>> code, string hashedAccountId, string externalUserId) where T : class
         {
             try
             {
-                var response = await _mediator.SendAsync(new GetEmployerAccountHashedQuery
-                {
-                    HashedAccountId = hashedAccountId,
-                    UserId = externalUserId
-                });
+                //TODO API CALL
+                //var response = await _mediator.SendAsync(new GetEmployerAccountHashedQuery
+                //{
+                //    HashedAccountId = hashedAccountId,
+                //    UserId = externalUserId
+                //});
 
                 return await code.Invoke();
             }
@@ -65,11 +65,12 @@ namespace SFA.DAS.EAS.Web.Orchestrators
         {
             try
             {
-                var response = await _mediator.SendAsync(new GetEmployerAccountHashedQuery
-                {
-                    HashedAccountId = hashedAccountId,
-                    UserId = externalUserId
-                });
+                //TODO API CALL
+                //var response = await _mediator.SendAsync(new GetEmployerAccountHashedQuery
+                //{
+                //    HashedAccountId = hashedAccountId,
+                //    UserId = externalUserId
+                //});
 
                 return code.Invoke();
             }
@@ -89,11 +90,12 @@ namespace SFA.DAS.EAS.Web.Orchestrators
         {
             try
             {
-                var response = await _mediator.SendAsync(new GetEmployerAccountHashedQuery
-                {
-                    HashedAccountId = hashedAccountId,
-                    UserId = externalUserId
-                });
+                //TODO API CALL
+                //var response = await _mediator.SendAsync(new GetEmployerAccountHashedQuery
+                //{
+                //    HashedAccountId = hashedAccountId,
+                //    UserId = externalUserId
+                //});
 
                 await code.Invoke();
             }

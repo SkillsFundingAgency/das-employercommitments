@@ -142,157 +142,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\AddPayeToAccountTests\WhenIAddPayeToAnAccount.cs" />
-    <Compile Include="Commands\AddPayeToAccountTests\WhenIValidateTheCommand.cs" />
     <Compile Include="Commands\CreateApprenticeshipTests\WhenCreatingAnApprenticeship.cs" />
-    <Compile Include="Commands\RemoveLegalEntityTests\WhenIRemoveALegalEntity.cs" />
-    <Compile Include="Commands\RemoveLegalEntityTests\WhenIValidateTheCommand.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStatusTests\WhenUpdatingApprenticeshipStatusToStopped.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStatusTests\WhenValidatingTheUpdateApprenticeshipStatusCommand.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStatusTests\WhenUpdatingApprenticeshipStatus.cs" />
     <Compile Include="Commands\AuditCommandTests\WhenIProcessTheCommand.cs" />
     <Compile Include="Commands\AuditCommandTests\WhenIValidateTheCommand.cs" />
-    <Compile Include="Commands\ChangeTeamMemberRoleTests\WhenICallChangeTeamMemberRole.cs" />
-    <Compile Include="Commands\CreateAccountCommandTests\WhenICallCreateAccount.cs" />
     <Compile Include="Commands\CreateApprenticeshipTests\WhenValidatingCreateApprenticeshipCommand.cs" />
-    <Compile Include="Commands\CreateAccountCommandTests\WhenIValidateTheCommand.cs" />
     <Compile Include="Commands\CreateApprenticeshipUpdate\WhenCreatingApprenticeshipUpdate.cs" />
     <Compile Include="Commands\CreateApprenticeshipUpdate\WhenValidatingCommand.cs" />
     <Compile Include="Commands\CreateCommitmentTests\WhenValidatingTheCreateCommitmentCommand.cs" />
-    <Compile Include="Commands\CreateEmployerAgreementTemplateTests\WhenICreateAnEmployerAgreementTemplate.cs" />
-    <Compile Include="Commands\CreateEnglishFractionCalculationDateCommandTests\WhenIHandleTheCommand.cs" />
-    <Compile Include="Commands\CreateEnglishFractionCalculationDateCommandTests\WhenIValidateTheCommand.cs" />
-    <Compile Include="Commands\CreateInvitationTests\WhenICallCreateInvitation.cs" />
-    <Compile Include="Commands\CreateInvitationTests\WhenIValidateCreateInvitation.cs" />
-    <Compile Include="Commands\CreateLegalEntityCommandTests\WhenICallCreateLegalEntity.cs" />
-    <Compile Include="Commands\CreateNewPeriodEndTests\WhenICreateANewPeriodEnd.cs" />
-    <Compile Include="Commands\CreateNewPeriodEndTests\WhenIValidateTheCommand.cs" />
-    <Compile Include="Commands\CreateOrganisationAddressTests\WhenICreateAnAddress.cs" />
-    <Compile Include="Commands\CreateOrganisationAddressTests\WhenIValidateTheRequest.cs" />
     <Compile Include="Commands\DeleteApprenticeTests\WhenIDeleteAnApprentice.cs" />
     <Compile Include="Commands\DeleteApprenticeTests\WhenIValidateTheRequest.cs" />
-    <Compile Include="Commands\DeleteInvitationTests\WhenICallDeleteInvitation.cs" />
-    <Compile Include="Commands\RefreshPaymentDataTests\WhenIReceiveTheCommand.cs" />
-    <Compile Include="Commands\RefreshPaymentDataTests\WhenIValidateTheCommand.cs" />
-    <Compile Include="Commands\RemovePayeFromAccountTests\WhenIRemoveAPayeSchemeFromAnAccount.cs" />
-    <Compile Include="Commands\RemovePayeFromAccountTests\WhenIValidateTheRequest.cs" />
-    <Compile Include="Commands\RemoveTeamMember\WhenICallRemoveTeamMember.cs" />
-    <Compile Include="Commands\RemoveTeamMember\WhenIValidateTheCommand.cs" />
-    <Compile Include="Commands\RenameEmployerAccountCommandTests\WhenICallRenameAccount.cs" />
-    <Compile Include="Commands\RenameEmployerAccountCommandTests\WhenIValidateTheRenameAccountCommand.cs" />
-    <Compile Include="Commands\ResendInvitationTests\WhenIResendAnInvitation.cs" />
     <Compile Include="Commands\ReviewApprenticeshipUpdate\WhenValidatingCommand.cs" />
-    <Compile Include="Commands\SendNotificationTests\WhenSendingNotificationCommand.cs" />
-    <Compile Include="Commands\SendNotificationTests\WhenValidatingTheCommand.cs" />
-    <Compile Include="Commands\SignEmployerAgreementTests\WhenISignAnEmployerAgreement.cs" />
-    <Compile Include="Commands\SignEmployerAgreementTests\WhenIValidateTheRequest.cs" />
     <Compile Include="Commands\SubmitCommitmentTests\WhenSubmittingCommitment.cs" />
     <Compile Include="Commands\SubmitCommitmentTests\WhenValidatingTheSubmitCommitmentRequest.cs" />
     <Compile Include="Commands\UndoApprenticeshipUpdate\WhenValidatingCommand.cs" />
     <Compile Include="Commands\UndoApprenticeshipUpdate\WhenUndoingApprenticeshipUpdate.cs" />
-    <Compile Include="Commands\UpdateEnglishFractions\WhenISendTheUpdateEnglishFractionsCommand.cs" />
-    <Compile Include="Commands\UpdatePayeInformationTests\WhenUpdatingPayeInformation.cs" />
-    <Compile Include="Commands\UpdatePayeInformationTests\WhenValidatingTheCommand.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\WhenValidationUpdateProviderPaymentPriority.cs" />
-    <Compile Include="Commands\UpdateUserNotificationSettings\WhenUpdatingUserNotificationSettings.cs" />
-    <Compile Include="Commands\UpdateUserNotificationSettings\WhenValidatingTheCommand.cs" />
-    <Compile Include="Commands\UpsertRegisteredUserTests\WhenUpsertingAUser.cs" />
-    <Compile Include="Events\ProcessDeclarationTests\WhenIProcessDeclarations.cs" />
-    <Compile Include="Events\ProcessPaymentTests\WhenIProcessPaymentData.cs" />
-    <Compile Include="Factories\LevyEventFactoryTests\WhenICreateAnEvent.cs" />
-    <Compile Include="Factories\EmployerAgreementEventFactoryTests\WhenICreateAnEvent.cs" />
     <Compile Include="FakeTimeProvider.cs" />
-    <Compile Include="Commands\AcceptInvitationTests\WhenICallAcceptInvitation.cs" />
-    <Compile Include="Commands\RefreshEmployerLevyDataTests\WhenIReceiveTheCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\ApprenticeshipSearch\WhenSubmittingApprenticeshipSearch.cs" />
-    <Compile Include="Queries\GetAccountBalancesTests\WhenIGetAccountBalances.cs" />
-    <Compile Include="Queries\GetAccountBalancesTests\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetAccountEmployerAgreementRemove\WhenIGetAccountEmployerAgreementToRemove.cs" />
-    <Compile Include="Queries\GetAccountEmployerAgreementRemove\WhenIValidateTheQuery.cs" />
-    <Compile Include="Queries\GetAccountEmployerAgreementsRemove\WhenIGetAccountEmployerAgreementsToRemove.cs" />
-    <Compile Include="Queries\GetAccountEmployerAgreementsRemove\WhenIValidateTheQuery.cs" />
-    <Compile Include="Queries\GetAccountEmployerAgreementTests\WhenIGetTheAgreements.cs" />
-    <Compile Include="Queries\GetAccountEmployerAgreementTests\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetAccountPAYESchemes\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetAccountPAYESchemes\WhenIGetAccountPayeSchemes.cs" />
-    <Compile Include="Queries\GetAccountTeamMembers\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetAccountTransactionDetailTests\WhenIGetAccountTransactionDetails.cs" />
-    <Compile Include="Queries\GetAccountTransactionDetailTests\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetAccountTransactionsTests\WhenIGetAccountTransactions.cs" />
-    <Compile Include="Queries\GetAccountTransactionsTests\WhenIValidateTheRequest.cs" />
     <Compile Include="Queries\GetApprenticeshipDataLock\WhenGettingApprenticeshipDataLock.cs" />
     <Compile Include="Queries\GetApprenticeshipDetails\WhenIGetApprenticeshipDetails.cs" />
     <Compile Include="Queries\GetApprenticeshipDetails\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetCharity\WhenIGetCharity.cs" />
-    <Compile Include="Queries\GetCharity\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetEmployerAgreementPdfTests\WhenIGetTheEmployerAgreement.cs" />
-    <Compile Include="Queries\GetEmployerAgreementPdfTests\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetEmployerAgreementByIdTests\WhenIGetAnAgreement.cs" />
-    <Compile Include="Queries\GetEmployerAgreementByIdTests\WhenIValidateTheQuery.cs" />
-    <Compile Include="Queries\GetEmployerAgreementQueryTests\WhenIGetEmployerAgreements.cs" />
-    <Compile Include="Queries\GetEmployerAgreementQueryTests\WhenIValidateTheQuery.cs" />
-    <Compile Include="Queries\GetLastLevyDeclarationsTests\WhenIGetLevyDeclarations.cs" />
-    <Compile Include="Queries\GetLastLevyDeclarationsTests\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetLevyDeclarationsByAccountAndPeriodTests\WhenIGetLevyDeclarations.cs" />
-    <Compile Include="Queries\GetOrganisationTests\WhenISearchForAnOrganisation.cs" />
-    <Compile Include="Queries\GetOrganisationTests\WhenIValidateTheQuery.cs" />
-    <Compile Include="Queries\GetPayeSchemeByRefTests\WhenIGetAPayeScheme.cs" />
-    <Compile Include="Queries\GetPayeSchemeByRefTests\WhenIValidateTheQuery.cs" />
-    <Compile Include="Queries\GetLegalEntityByIdTests\WhenIGetALegalEntity.cs" />
-    <Compile Include="Queries\GetLegalEntityByIdTests\WhenIValidateTheQuery.cs" />
-    <Compile Include="Queries\GetEmployerAccountTests\WhenIGetEmployerAccountsByAccountId.cs" />
-    <Compile Include="Queries\GetEmployerAccountTests\WhenIGetEmployerAccountsByHashedKey.cs" />
-    <Compile Include="Queries\GetEmployerAccountTests\WhenIValidateTheGetAccountByHashedIdRequest.cs" />
-    <Compile Include="Queries\GetEmployerAccountTests\WhenIValidateTheGetAccountByIdRequest.cs" />
-    <Compile Include="Queries\FindEmployerAccountPaymentTransactionDetailsTests - Copy\WhenIGetEmployerPaymentTransactionDetails.cs" />
-    <Compile Include="Queries\FindEmployerAccountPaymentTransactionDetailsTests - Copy\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\FindEmployerAccountLevyDeclarationTransactionDetailsTests\WhenIGetEmployerLevyDeclarationTransactionDetails.cs" />
-    <Compile Include="Queries\FindEmployerAccountLevyDeclarationTransactionDetailsTests\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetEmployerAccountTransactionsTests\WhenIGetEmployerTransactions.cs" />
-    <Compile Include="Queries\GetEmployerAccountTransactionsTests\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetEmployerAgreementTemplateTests\WhenIRequestTheLatestEmployerAgreementTemplate.cs" />
-    <Compile Include="Queries\GetEmployerEnglishFractionHistoryTests\WhenIGetEnglishFractions.cs" />
-    <Compile Include="Queries\GetEmployerEnglishFractionHistoryTests\WhenIValidateTheQuery.cs" />
-    <Compile Include="Queries\GetEnglishFractionsUpdateRequired\WhenGettingIfEnglishFractionsUpdateIsRequired.cs" />
-    <Compile Include="Queries\GetEnglishFrationDetail\WhenIGetEnglishFractionDetail.cs" />
-    <Compile Include="Queries\GetEnglishFrationDetail\WhenIValidateTheQuery.cs" />
-    <Compile Include="Queries\GetLatestAccountAgreementTemplateTests\WhenIRequestTheLatestAgreementTemplate.cs" />
-    <Compile Include="Queries\GetLevyDeclarationTests\WhenIGetLevyDeclarations.cs" />
-    <Compile Include="Queries\GetLevyDeclarationTests\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetEmployerAccountByHashedIdTests\WhenIGetEmployerAccounts.cs" />
-    <Compile Include="Queries\GetEmployerAccountByHashedIdTests\WhenIValidateTheQuery.cs" />
-    <Compile Include="Queries\GetPayeSchemeInUseTests\WhenIQueryExistingSchemes.cs" />
-    <Compile Include="Queries\GetAccountLegalEntities\WhenIGetAccountLegalEntities.cs" />
-    <Compile Include="Queries\GetAccountLegalEntities\WhenValidatingAccountLegalEntities.cs" />
-    <Compile Include="Queries\GetAccountTeamMembers\WhenIGetUserAccounts.cs" />
-    <Compile Include="Queries\GetEmployerInformationTests\WhenIRequestEmployerInformation.cs" />
-    <Compile Include="Queries\GetGatewayInformationTests\WhenGettingGatewayQuery.cs" />
-    <Compile Include="Queries\GetGatewayTokenTests\WhenGettingTokenResponseFromHmrc.cs" />
-    <Compile Include="Queries\GetHmrcEmployerInformationTests\WhenRequestingEmployerInformation.cs" />
-    <Compile Include="Queries\GetHmrcEmployerInformationTests\WhenValidatingTheRequest.cs" />
-    <Compile Include="Queries\GetHmrcLevyDeclarationTests\WhenRequestingLevyDeclarations.cs" />
-    <Compile Include="Queries\GetHmrcLevyDeclarationTests\WhenValidatingTheRequest.cs" />
-    <Compile Include="Queries\GetPayeSchemeInUseTests\WhenIValidateTheQuery.cs" />
-    <Compile Include="Queries\GetPostcodeAddressTests\WhenIGetAddressesFromAPostcode.cs" />
-    <Compile Include="Queries\GetPreviousTransactionsCountTests\WhenIGetPreviousTransactionsCount.cs" />
-    <Compile Include="Queries\GetPreviousTransactionsCountTests\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetPublicSectorOrgainsationTests\WhenIGetPublicSectorOrganisations.cs" />
-    <Compile Include="Queries\GetPublicSectorOrgainsationTests\WhenIValidateTheQuery.cs" />
-    <Compile Include="Queries\GetSignedEmployerAgreementPdfTests\WhenIGetTheSignedEmployerAgreement.cs" />
-    <Compile Include="Queries\GetSignedEmployerAgreementPdfTests\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetTeamMembers\WhenIGetTeamMembers.cs" />
-    <Compile Include="Queries\GetTeamMembers\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetUserAccountRole\WhenIGetAUserAccountRole.cs" />
-    <Compile Include="Queries\GetUserAccountRole\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetUserAccountsTests\WhenIGetUserAccounts.cs" />
-    <Compile Include="Queries\GetUserInvitations\WhenIRequestHowManyInvitationsIHave.cs" />
-    <Compile Include="Queries\GetUserInvitations\WhenIRequestUserInvitations.cs" />
-    <Compile Include="Queries\GetUserInvitations\WhenIValidateTheRequestForNumberOfInvitations.cs" />
-    <Compile Include="Queries\GetUserNotificationSettings\WhenIGetUserNotificationSettings.cs" />
-    <Compile Include="Queries\GetUserNotificationSettings\WhenIValidateTheRequest.cs" />
-    <Compile Include="Queries\GetUsersTests\WhenIGetUsers.cs" />
-    <Compile Include="Queries\GetUserTest\WhenIGetAUser.cs" />
     <Compile Include="Queries\QueryBaseTest.cs" />
     <Compile Include="Queries\ValidateStatusChangeDateQuery\WhenValidatingChangeDate.cs" />
   </ItemGroup>
@@ -301,10 +174,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.EAS.Account.Api.Types\SFA.DAS.EAS.Account.Api.Types.csproj">
-      <Project>{8afb0bbe-1e53-488c-a971-d236df9eaa77}</Project>
-      <Name>SFA.DAS.EAS.Account.Api.Types</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.EmployerApprenticeshipsService.Application\SFA.DAS.EAS.Application.csproj">
       <Project>{0226F97A-704E-49B0-A100-B75FEEC9C8AD}</Project>
       <Name>SFA.DAS.EAS.Application</Name>
@@ -316,10 +185,6 @@
     <ProjectReference Include="..\SFA.DAS.EmployerApprenticeshipsService.Infrastructure\SFA.DAS.EAS.Infrastructure.csproj">
       <Project>{01AC2BC2-AC01-400F-AB8F-548DD5C0EE74}</Project>
       <Name>SFA.DAS.EAS.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.EmployerApprenticeshipsService.TestCommon\SFA.DAS.EAS.TestCommon.csproj">
-      <Project>{05d7c094-e2c9-4ccd-b0d7-85d263254b26}</Project>
-      <Name>SFA.DAS.EAS.TestCommon</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
