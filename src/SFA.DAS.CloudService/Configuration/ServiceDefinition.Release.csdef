@@ -3,6 +3,7 @@
   <WebRole name="SFA.DAS.EmployerCommitments.Web" vmsize="Standard_D2_v2">
     <Runtime executionContext="elevated" />
     <Startup>
+      <Task commandLine="AppInit.cmd" executionContext="elevated" taskType="simple" />
       <Task commandLine="StartUp\IIS.bat" executionContext="elevated" taskType="background">
       </Task>
     </Startup>
@@ -24,13 +25,10 @@
       <Setting name="RedisConnection" />
       <Setting name="LoggingRedisConnectionString"/>
       <Setting name="LoggingRedisKey"/>
-      <Setting name="TokenCertificateThumbprint"/>
-      <Setting name="ShowPayeHistory" />
-      <Setting name="CurrentTime" />
     </ConfigurationSettings>
     <Endpoints>
-      <InputEndpoint name="HttpsIn" protocol="https" port="443" certificate="WebSslCert" loadBalancer="das-prd-eas-ilb"/>
-      <InputEndpoint name="HttpIn" protocol="http" port="80" loadBalancer="das-prd-eas-ilb"/>
+      <InputEndpoint name="HttpsIn" protocol="https" port="443" certificate="WebSslCert" loadBalancer="das-empc-ilb"/>
+      <InputEndpoint name="HttpIn" protocol="http" port="80" loadBalancer="das-empc-ilb"/>
     </Endpoints>
     <Certificates>
       <Certificate name="WebSslCert" storeLocation="LocalMachine" storeName="My" />
