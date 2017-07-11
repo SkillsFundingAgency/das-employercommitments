@@ -181,14 +181,6 @@
     <Compile Include="Queries\ApprenticeshipSearch\ApprenticeshipSearchQueryHandler.cs" />
     <Compile Include="Queries\ApprenticeshipSearch\ApprenticeshipSearchQueryRequest.cs" />
     <Compile Include="Queries\ApprenticeshipSearch\ApprenticeshipSearchQueryResponse.cs" />
-    <Compile Include="Queries\FindAccountProviderPayments\FindAccountProviderPaymentsHandler.cs" />
-    <Compile Include="Queries\FindAccountProviderPayments\FindAccountProviderPaymentsQuery.cs" />
-    <Compile Include="Queries\FindAccountProviderPayments\FindAccountProviderPaymentsQueryValidator.cs" />
-    <Compile Include="Queries\FindAccountProviderPayments\FindAccountProviderPaymentsResponse.cs" />
-    <Compile Include="Queries\FindAccountCoursePayments\FindAccountCoursePaymentsQuery.cs" />
-    <Compile Include="Queries\FindAccountCoursePayments\FindAccountCoursePaymentsQueryHandler.cs" />
-    <Compile Include="Queries\FindAccountCoursePayments\FindAccountCoursePaymentsQueryValidator.cs" />
-    <Compile Include="Queries\FindAccountCoursePayments\FindAccountCoursePaymentsResponse.cs" />
     <Compile Include="Queries\GetAllApprenticeships\GetAllApprenticeshipsRequest.cs" />
     <Compile Include="Queries\GetAllApprenticeships\GetAllApprenticeshipsHandler.cs" />
     <Compile Include="Queries\GetAllApprenticeships\GetAllApprenticeshipsResponse.cs" />
@@ -220,9 +212,6 @@
     <Compile Include="Queries\GetFrameworks\GetFrameworksQueryRequest.cs" />
     <Compile Include="Queries\GetFrameworks\GetFrameworksQueryResponse.cs" />
     <Compile Include="Queries\GetProviderPaymentPriority\GetProviderPaymentPriorityResponse.cs" />
-    <Compile Include="Queries\GetProviders\GetProvidersQueryHandler.cs" />
-    <Compile Include="Queries\GetProviders\GetProvidersQueryRequest.cs" />
-    <Compile Include="Queries\GetProviders\GetProvidersQueryResponse.cs" />
     <Compile Include="Queries\GetProvider\GetProviderQueryHandler.cs" />
     <Compile Include="Queries\GetProvider\GetProviderQueryRequest.cs" />
     <Compile Include="Queries\GetProvider\GetProviderQueryResponse.cs" />

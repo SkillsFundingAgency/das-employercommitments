@@ -132,7 +132,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\IdamsTests.cs" />
-    <Compile Include="ExecutionPoliciesTests\CompanyHouse\WhenILookUpACompanyThatDoesNotExist.cs" />
     <Compile Include="Factories\WhenICreateARestClient.cs" />
     <Compile Include="Mapping\PaymentMappingTests\WhenIMapAPaymentToPaymentDetails.cs" />
     <Compile Include="NoopExecutionPolicy.cs" />

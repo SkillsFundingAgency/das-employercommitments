@@ -34,10 +34,8 @@ using SFA.DAS.Configuration.FileStorage;
 using SFA.DAS.CookieService;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
-using SFA.DAS.EmployerCommitments.Domain.Data.Repositories;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Infrastructure.Caching;
-using SFA.DAS.EmployerCommitments.Infrastructure.Data;
 using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.Events.Api.Client;
@@ -75,9 +73,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<IConfiguration>().Use<EmployerApprenticeshipsServiceConfiguration>();
 
             var config = this.GetConfiguration();
-
-            For<IUserRepository>().Use<UserRepository>();
-
+            
             For<ICache>().Use<InMemoryCache>(); //RedisCache
 
             For<IApprenticeshipInfoServiceConfiguration>().Use(config.ApprenticeshipInfoService);
