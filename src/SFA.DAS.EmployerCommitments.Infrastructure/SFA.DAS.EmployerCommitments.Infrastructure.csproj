@@ -121,6 +121,14 @@
     <Reference Include="SFA.DAS.CookieService, Version=1.0.0.27423, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.CookieService.1.0.0.27423\lib\net45\SFA.DAS.CookieService.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.EAS.Account.Api.Client, Version=1.0.0.35115, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.0.0.35115\lib\net45\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SFA.DAS.EAS.Account.Api.Types, Version=1.0.0.35115, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.0.0.35115\lib\net45\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SFA.DAS.Messaging, Version=2.0.0.8280, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Messaging.2.0.0.8280\lib\net45\SFA.DAS.Messaging.dll</HintPath>
     </Reference>
@@ -236,6 +244,7 @@
     <Compile Include="Services\AzureServiceBase.cs" />
     <Compile Include="Services\CookieStorageService.cs" />
     <Compile Include="Services\CurrentDateTime.cs" />
+    <Compile Include="Services\EmployerAccountService.cs" />
     <Compile Include="Services\FeatureToggleService.cs" />
     <Compile Include="Services\HashingService.cs" />
     <Compile Include="Services\HttpClientWrapper.cs" />
