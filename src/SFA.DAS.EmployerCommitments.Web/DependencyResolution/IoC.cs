@@ -24,18 +24,15 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 {
     public static class IoC
     {
-        private const string ServiceName = "SFA.DAS.EmployerApprenticeshipsService";
+        private const string ServiceName = "SFA.DAS.EmployerCommitments";
 
         public static IContainer Initialize()
         {
             return new Container(c =>
             {
                 c.Policies.Add(new ConfigurationPolicy<EmployerApprenticeshipsServiceConfiguration>(ServiceName));
-                c.Policies.Add(new ConfigurationPolicy<LevyDeclarationProviderConfiguration>("SFA.DAS.LevyAggregationProvider"));
                 c.Policies.Add(new ConfigurationPolicy<NotificationsApiClientConfiguration>($"{ServiceName}.Notifications"));
-                c.Policies.Add(new ConfigurationPolicy<ReferenceDataApiClientConfiguration>("SFA.DAS.ReferenceDataApiClient"));
                 c.Policies.Add(new ConfigurationPolicy<AuditApiClientConfiguration>("SFA.DAS.AuditApiClient"));
-                c.Policies.Add(new ConfigurationPolicy<TokenServiceApiClientConfiguration>("SFA.DAS.TokenServiceApiClient"));
 				c.Policies.Add(new ConfigurationPolicy<CommitmentsApiClientConfiguration>("SFA.DAS.CommitmentsAPI"));
                 c.Policies.Add<CurrentDatePolicy>();
                 c.Policies.Add(new MessagePolicy<EmployerApprenticeshipsServiceConfiguration>(ServiceName));

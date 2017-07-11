@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
     public class DefaultRegistry : Registry
     {
         private string _test;
-        private const string ServiceName = "SFA.DAS.EmployerApprenticeshipsService";
+        private const string ServiceName = "SFA.DAS.EmployerCommitments";
         private const string ServiceNamespace = "SFA.DAS";
 
         public DefaultRegistry()
@@ -121,7 +121,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 
         private void RegisterMapper()
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.StartsWith("SFA.DAS.EAS"));
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.StartsWith("SFA.DAS.EmployerCommitments"));
 
             var mappingProfiles = new List<Profile>();
 
