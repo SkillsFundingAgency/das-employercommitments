@@ -232,6 +232,8 @@
     <Compile Include="Queries\GetStandards\GetStandardsQueryHandler.cs" />
     <Compile Include="Queries\GetStandards\GetStandardsQueryRequest.cs" />
     <Compile Include="Queries\GetStandards\GetStandardsQueryResponse.cs" />
+    <Compile Include="Queries\GetUserAccountRole\GetUserAccountRoleQuery.cs" />
+    <Compile Include="Queries\GetUserAccountRole\GetUserAccountRoleValidator.cs" />
     <Compile Include="Queries\ValidateStatusChangeDate\ValidateStatusChangeDateQuery.cs" />
     <Compile Include="Queries\ValidateStatusChangeDate\ValidateStatusChangeDateQueryHandler.cs" />
     <Compile Include="Queries\ValidateStatusChangeDate\ValidateStatusChangeDateQueryResponse.cs" />

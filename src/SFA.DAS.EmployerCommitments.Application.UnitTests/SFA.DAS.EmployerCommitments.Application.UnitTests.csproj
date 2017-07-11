@@ -147,6 +147,7 @@
     <Compile Include="Queries\GetApprenticeshipDataLock\WhenGettingApprenticeshipDataLock.cs" />
     <Compile Include="Queries\GetApprenticeshipDetails\WhenIGetApprenticeshipDetails.cs" />
     <Compile Include="Queries\GetApprenticeshipDetails\WhenIValidateTheRequest.cs" />
+    <Compile Include="Queries\GetUserAccountRoleQueryTests\WhenIValidateTheRequest.cs" />
     <Compile Include="Queries\QueryBaseTest.cs" />
     <Compile Include="Queries\ValidateStatusChangeDateQuery\WhenValidatingChangeDate.cs" />
   </ItemGroup>
