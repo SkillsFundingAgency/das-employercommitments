@@ -140,6 +140,8 @@
     <Compile Include="Services\AcademicYearTests\WhenDeterminingTheAcademicYear.cs" />
     <Compile Include="Services\AuditServiceTests\WhenISendAnAuditMessage.cs" />
     <Compile Include="Services\CookieStorageTests\WhenIUseTheCookieStorageService.cs" />
+    <Compile Include="Services\EmployerAccountServiceTests\WhenICheckAUserIsConnectedToAnAccount.cs" />
+    <Compile Include="Services\EmployerAccountServiceTests\WhenIGetLegalEntitiesLinkedToAnAccount.cs" />
     <Compile Include="Services\FeatureToggleFileBasedServiceTests\WhenIGetDisabledFeatures.cs" />
     <Compile Include="Services\ProviderEmailLookupService\ProviderEmailLookupServiceTests.cs" />
     <Compile Include="Services\WhiteListTests\WhenIGetUserWhiteList.cs" />
