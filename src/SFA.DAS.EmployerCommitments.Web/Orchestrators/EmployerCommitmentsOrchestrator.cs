@@ -138,7 +138,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 //{
                 //    HashedLegalEntityId = hashedAccountId,
                 //    UserId = externalUserId,
-                //    SignedOnly = false //TODO: This should be true when signed agreements is being used
+                //    SignedOnly = false 
                 //});
 
                 return new OrchestratorResponse<SelectLegalEntityViewModel>

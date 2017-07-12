@@ -47,6 +47,11 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Employer
                     new ResourceViewModel {Id = "4587"},
                     new ResourceViewModel {Id = "85214"}
                 });
+            _accountApiClient.Setup(x => x.GetLegalEntity(ExpectedAccountId, It.IsAny<long>()))
+                .ReturnsAsync(new LegalEntityViewModel
+                {
+                    AgreementStatus = EmployerAgreementStatus.Pending,
+                });
 
             //Act
             var actual = await _employerAccountService.GetLegalEntitiesForAccount(ExpectedAccountId);
