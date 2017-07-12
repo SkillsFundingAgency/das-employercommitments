@@ -144,6 +144,7 @@
     <Compile Include="Models\Apprenticeship\ChangeStatusType.cs" />
     <Compile Include="Models\Apprenticeship\RecordStatus.cs" />
     <Compile Include="Models\Organisation\Address.cs" />
+    <Compile Include="Models\Organisation\LegalEntity.cs" />
     <Compile Include="Models\Organisation\OrganisationSubType.cs" />
     <Compile Include="Models\Settings\UserLegalEntitySetting.cs" />
     <Compile Include="Models\ReferenceData\Organisation.cs" />

@@ -413,7 +413,6 @@
     <Compile Include="ViewModels\SubmitCommitmentViewModel.cs" />
     <Compile Include="ViewModels\SubmitCommitmenViewModel.cs" />
     <Compile Include="ViewModels\SystemDetailsViewModel.cs" />
-    <Compile Include="ViewModels\TransactionViewModel.cs" />
     <Compile Include="ViewModels\DateTimeViewModel.cs" />
     <Compile Include="Extensions\SaveStatusExtension.cs" />
     <Compile Include="ViewModels\UserLinksViewModel.cs" />
@@ -423,7 +422,6 @@
     <Compile Include="Orchestrators\CommitmentStatusCalculator.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentsOrchestrator.cs" />
     <Compile Include="Orchestrators\ICommitmentStatusCalculator.cs" />
-    <Compile Include="ViewModels\TransactionLineViewModel.cs" />
     <Compile Include="Plumbing\Mvc\LogAndHandleErrorAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
