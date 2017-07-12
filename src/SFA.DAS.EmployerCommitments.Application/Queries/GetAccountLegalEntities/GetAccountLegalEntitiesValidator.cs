@@ -14,9 +14,9 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetAccountLegalEntitie
                 validationResult.AddError(nameof(item.UserId));
             }
 
-            if (string.IsNullOrEmpty(item.HashedLegalEntityId))
+            if (string.IsNullOrEmpty(item.HashedAccountId))
             {
-                validationResult.AddError(nameof(item.HashedLegalEntityId));
+                validationResult.AddError(nameof(item.HashedAccountId));
             }
 
             return validationResult;

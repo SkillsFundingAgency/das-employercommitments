@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetAccountLe
         public void ThenTrueIsReturnedWhenAllFieldsArePopulated()
         {
             //Act
-            var actual = _validator.Validate(new GetAccountLegalEntitiesRequest { HashedLegalEntityId  = "123ABD", UserId = "123HGB", SignedOnly = false});
+            var actual = _validator.Validate(new GetAccountLegalEntitiesRequest { HashedAccountId = "123ABD", UserId = "123HGB", SignedOnly = false});
 
             //Assert
             Assert.IsTrue(actual.IsValid());
@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetAccountLe
 
             //Assert
             Assert.IsFalse(actual.IsValid());
-            Assert.Contains(new KeyValuePair<string,string>("HashedLegalEntityId", "HashedLegalEntityId has not been supplied"), actual.ValidationDictionary);
+            Assert.Contains(new KeyValuePair<string,string>("HashedAccountId", "HashedAccountId has not been supplied"), actual.ValidationDictionary);
             Assert.Contains(new KeyValuePair<string,string>("UserId", "UserId has not been supplied"), actual.ValidationDictionary);
         }
 
