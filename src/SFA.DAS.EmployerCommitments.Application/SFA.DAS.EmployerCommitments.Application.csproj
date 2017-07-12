@@ -181,6 +181,8 @@
     <Compile Include="Queries\ApprenticeshipSearch\ApprenticeshipSearchQueryHandler.cs" />
     <Compile Include="Queries\ApprenticeshipSearch\ApprenticeshipSearchQueryRequest.cs" />
     <Compile Include="Queries\ApprenticeshipSearch\ApprenticeshipSearchQueryResponse.cs" />
+    <Compile Include="Queries\GetAccountLegalEntities\GetAccountLegalEntitiesRequest.cs" />
+    <Compile Include="Queries\GetAccountLegalEntities\GetAccountLegalEntitiesValidator.cs" />
     <Compile Include="Queries\GetAllApprenticeships\GetAllApprenticeshipsRequest.cs" />
     <Compile Include="Queries\GetAllApprenticeships\GetAllApprenticeshipsHandler.cs" />
     <Compile Include="Queries\GetAllApprenticeships\GetAllApprenticeshipsResponse.cs" />
