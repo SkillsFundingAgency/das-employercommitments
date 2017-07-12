@@ -21,10 +21,10 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticesh
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProvider;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
-using SFA.DAS.EmployerCommitments.Domain.Data.Entities.Account;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipProvider;
+using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
 using SFA.DAS.EmployerCommitments.Web.Enums;
 using SFA.DAS.EmployerCommitments.Web.Exceptions;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
@@ -32,6 +32,7 @@ using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.NLog.Logger;
 using WebGrease.Css.Extensions;
+using OrganisationType = SFA.DAS.Commitments.Api.Types.OrganisationType;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
@@ -145,7 +146,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new SelectLegalEntityViewModel
                     {
                         CohortRef = string.IsNullOrWhiteSpace(cohortRef) ? CreateReference() : cohortRef,
-                        LegalEntities = new List<LegalEntity>() //TODO: legalEntities.Entites.LegalEntityList
+                        //LegalEntities = new List<LegalEntity>() //TODO: legalEntities.Entites.LegalEntityList
                     }
                 };
             }, hashedAccountId, externalUserId);

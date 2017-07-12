@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
-using SFA.DAS.EmployerCommitments.Domain.Data.Entities.Account;
+using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels
@@ -12,7 +12,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string LegalEntityCode { get; set; }
 
         public string CohortRef { get; set; }
-
+        
         public IEnumerable<LegalEntity> LegalEntities { get; set; }
     }
 

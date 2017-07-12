@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.AccountTeam;
+using SFA.DAS.EmployerCommitments.Domain.Models.UserProfile;
 
 namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
 {
@@ -34,18 +36,32 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
             return list;
         }
 
-        public async Task<TeamMemberViewModel> GetUserRoleOnAccount(string expectedAccountId, string expectedUserId)
+        public async Task<TeamMember> GetUserRoleOnAccount(string accountId, string userId)
         {
-            var accounts = await _client.GetAccountUsers(expectedAccountId);
+            var accounts = await _client.GetAccountUsers(accountId);
 
             if (accounts == null || !accounts.Any())
             {
                 return null;
             }
 
-            var teamMember = accounts.FirstOrDefault(c => c.UserRef.Equals(expectedUserId, StringComparison.CurrentCultureIgnoreCase));
+            var teamMember = accounts.FirstOrDefault(c => c.UserRef.Equals(userId, StringComparison.CurrentCultureIgnoreCase));
 
-            return teamMember;
+            if (teamMember == null)
+            {
+                return null;
+            }
+
+            Role usrRoleResult;
+            Enum.TryParse(teamMember.Role, true, out usrRoleResult);
+
+            return new TeamMember
+            {
+                HashedAccountId = accountId,
+                Email = teamMember.Email,
+                UserRef= teamMember.UserRef,
+                Role = usrRoleResult
+            };
         }
     }
 }

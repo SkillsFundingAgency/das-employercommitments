@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.EAS.Account.Api.Types;
+using SFA.DAS.EmployerCommitments.Domain.Models.AccountTeam;
 
 namespace SFA.DAS.EmployerCommitments.Domain.Interfaces
 {
     public interface IEmployerAccountService
     {
-        Task<TeamMemberViewModel> GetUserRoleOnAccount(string expectedAccountId, string expectedUserId);
+        Task<TeamMember> GetUserRoleOnAccount(string accountId, string userId);
     }
 }

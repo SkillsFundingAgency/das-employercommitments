@@ -53,10 +53,10 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Employer
         }
 
         [Test]
-        public async Task ThenIfTheUserIsNotConnectedToTheAccountThenAnEmptyListIsReturned()
+        public async Task ThenIfTheUserIsNotConnectedToTheAccountThenNullIsReturned()
         {
             //Act
-            var actual = await _employerAccountService.GetUserRoleOnAccount(ExpectedAccountId, ExpectedUserId);
+            var actual = await _employerAccountService.GetUserRoleOnAccount(ExpectedAccountId, "123EDC");
 
             //Assert
             Assert.IsNull(actual);
