@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetUserAccountRole;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.UserProfile;
 using SFA.DAS.NLog.Logger;
@@ -26,25 +28,20 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<bool> AuthorizeRole(string hashedAccountId, string externalUserId, Role[] roles)
         {
-            //TODO API CALL
-            //var response = await _mediator.SendAsync(new GetUserAccountRoleQuery
-            //{
-            //    HashedAccountId = hashedAccountId,
-            //    ExternalUserId = externalUserId
-            //});
-            return true;//TODO API CALL roles.Contains(response.UserRole);
+            var response = await _mediator.SendAsync(new GetUserAccountRoleQuery
+            {
+                HashedAccountId = hashedAccountId,
+                UserId = externalUserId
+            });
+
+            return response.User != null && roles.Contains(response.User.Role);
         }
 
         protected async Task<OrchestratorResponse<T>> CheckUserAuthorization<T>(Func<Task<OrchestratorResponse<T>>> code, string hashedAccountId, string externalUserId) where T : class
         {
             try
             {
-                //TODO API CALL
-                //var response = await _mediator.SendAsync(new GetEmployerAccountHashedQuery
-                //{
-                //    HashedAccountId = hashedAccountId,
-                //    UserId = externalUserId
-                //});
+                await CheckUserIsConnectedToAccount(hashedAccountId, externalUserId);
 
                 return await code.Invoke();
             }
@@ -64,12 +61,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         {
             try
             {
-                //TODO API CALL
-                //var response = await _mediator.SendAsync(new GetEmployerAccountHashedQuery
-                //{
-                //    HashedAccountId = hashedAccountId,
-                //    UserId = externalUserId
-                //});
+                await CheckUserIsConnectedToAccount(hashedAccountId, externalUserId);
 
                 return code.Invoke();
             }
@@ -89,18 +81,27 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         {
             try
             {
-                //TODO API CALL
-                //var response = await _mediator.SendAsync(new GetEmployerAccountHashedQuery
-                //{
-                //    HashedAccountId = hashedAccountId,
-                //    UserId = externalUserId
-                //});
+                await CheckUserIsConnectedToAccount(hashedAccountId, externalUserId);
 
                 await code.Invoke();
             }
             catch (UnauthorizedAccessException)
             {
                 LogUnauthorizedUserAttempt(hashedAccountId, externalUserId);
+            }
+        }
+
+        private async Task CheckUserIsConnectedToAccount(string hashedAccountId, string externalUserId)
+        {
+            var response = await _mediator.SendAsync(new GetUserAccountRoleQuery
+            {
+                HashedAccountId = hashedAccountId,
+                UserId = externalUserId
+            });
+
+            if (response.User == null)
+            {
+                throw new UnauthorizedAccessException();
             }
         }
 
