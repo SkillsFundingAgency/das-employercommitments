@@ -37,6 +37,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             _cookieStorageService = new Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>();
 
             _mockHashingService = new Mock<IHashingService>();
+            _mockHashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);
+            _mockHashingService.Setup(x => x.DecodeValue("ABC321")).Returns(321L);
+            _mockHashingService.Setup(x => x.DecodeValue("ABC456")).Returns(456L);
 
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetUserAccountRoleQuery>()))
                 .ReturnsAsync(new GetUserAccountRoleResponse { User = new TeamMember() });

@@ -3,51 +3,21 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MediatR;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.ProviderPayment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
-using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Infrastructure.Services;
-using SFA.DAS.EmployerCommitments.Web.Orchestrators;
-using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
-using SFA.DAS.EmployerCommitments.Web.Validators;
-using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
-using SFA.DAS.NLog.Logger;
+using SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
     [TestFixture]
-    public sealed class WhenGettingProviderPriorityList
+    public sealed class WhenGettingProviderPriorityList : EmployerManageApprenticeshipsOrchestratorTestBase
     {
-        private Mock<IMediator> _mediator;
-        private EmployerManageApprenticeshipsOrchestrator _orchestrator;
-
-        [SetUp]
-        public void Arrange()
-        {
-            _mediator = new Mock<IMediator>();
-            var logger = new Mock<ILog>();
-            var hashingService = new Mock<IHashingService>();
-            hashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);
-            var apprenticeshipMapper = new ApprenticeshipMapper(Mock.Of<IHashingService>(), new CurrentDateTime(), _mediator.Object);
-
-            _orchestrator = new EmployerManageApprenticeshipsOrchestrator(
-                _mediator.Object,
-                Mock.Of<IHashingService>(),
-                apprenticeshipMapper,
-                Mock.Of<ApprovedApprenticeshipViewModelValidator>(),
-                new CurrentDateTime(),
-                Mock.Of<ILog>(),
-                new Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>().Object,
-                Mock.Of<IApprenticeshipFiltersMapper>());
-        }
-
         [Test]
         public async Task ReturnListOfProvidersInAlphabeticalOrder()
         {
-            _mediator.Setup(x => x.SendAsync(It.IsAny<GetProviderPaymentPriorityRequest>()))
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetProviderPaymentPriorityRequest>()))
                 .ReturnsAsync(new GetProviderPaymentPriorityResponse
                 {
                     Data = new List<ProviderPaymentPriorityItem>
@@ -58,7 +28,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                     }
                 });
 
-            var response = await _orchestrator.GetPaymentOrder("123", "user123");
+            var response = await EmployerManageApprenticeshipsOrchestrator.GetPaymentOrder("123", "user123");
 
             var list = response.Data.Items.ToList();
             list[0].ProviderName.Should().Be("AAA");
@@ -69,13 +39,13 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         [Test]
         public async Task ReturnNotFoundIfLessThan2ProvidersInTheList()
         {
-            _mediator.Setup(x => x.SendAsync(It.IsAny<GetProviderPaymentPriorityRequest>()))
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetProviderPaymentPriorityRequest>()))
                 .ReturnsAsync(new GetProviderPaymentPriorityResponse
                 {
                     Data = new List<ProviderPaymentPriorityItem> { new ProviderPaymentPriorityItem() }
                 });
 
-            var response = await _orchestrator.GetPaymentOrder("123", "user123");
+            var response = await EmployerManageApprenticeshipsOrchestrator.GetPaymentOrder("123", "user123");
 
             response.Status.Should().Be(HttpStatusCode.NotFound);
         }

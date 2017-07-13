@@ -1,76 +1,49 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using MediatR;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
-using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Infrastructure.Services;
-using SFA.DAS.EmployerCommitments.Web.Orchestrators;
-using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
-using SFA.DAS.EmployerCommitments.Web.Validators;
+using SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
     [TestFixture]
-    public class WhenGettingApprenticeships
+    public class WhenGettingApprenticeships : EmployerManageApprenticeshipsOrchestratorTestBase
     {
-        private EmployerManageApprenticeshipsOrchestrator _orchestrator;
-        private ApprenticeshipMapper _apprenticeshipMapper;
-        private Mock<IMediator> _mockMediator;
-        private Mock<ICurrentDateTime> _mockDateTime;
-        private Mock<ICookieStorageService<UpdateApprenticeshipViewModel>> _cookieStorageService;
-        private Mock<IApprenticeshipFiltersMapper> _mockApprenticeshipFiltersMapper;
-
         [SetUp]
         public void Setup()
         {
-            _mockMediator = new Mock<IMediator>();
-            _mockDateTime = new Mock<ICurrentDateTime>();
-
-            _cookieStorageService = new Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>();
-
-            _apprenticeshipMapper = new ApprenticeshipMapper(Mock.Of<IHashingService>(), _mockDateTime.Object, _mockMediator.Object);
-
-            _mockMediator.Setup(x => x.SendAsync(It.IsAny<ApprenticeshipSearchQueryRequest>()))
+        
+        
+        
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<ApprenticeshipSearchQueryRequest>()))
                 .ReturnsAsync(new ApprenticeshipSearchQueryResponse
                 {
                     Apprenticeships = new List<Apprenticeship>(),
                     Facets = new Facets()
                 });
 
-            _mockApprenticeshipFiltersMapper = new Mock<IApprenticeshipFiltersMapper>();
 
-            _mockApprenticeshipFiltersMapper.Setup(
+            ApprenticeshipFiltersMapper.Setup(
                 x => x.MapToApprenticeshipSearchQuery(It.IsAny<ApprenticeshipFiltersViewModel>()))
                 .Returns(new ApprenticeshipSearchQuery());
 
-            _mockApprenticeshipFiltersMapper.Setup(
+            ApprenticeshipFiltersMapper.Setup(
                 x => x.Map(It.IsAny<Facets>()))
                 .Returns(new ApprenticeshipFiltersViewModel());
-
-            _orchestrator = new EmployerManageApprenticeshipsOrchestrator(
-                _mockMediator.Object,
-                Mock.Of<IHashingService>(),
-                _apprenticeshipMapper,
-                Mock.Of<ApprovedApprenticeshipViewModelValidator>(),
-                new CurrentDateTime(),
-                Mock.Of<ILog>(),
-                _cookieStorageService.Object,
-                _mockApprenticeshipFiltersMapper.Object);
+            
         }
 
         [Test]
         public async Task ThenShouldMapFiltersToSearchQuery()
         {
             //Act
-            await _orchestrator.GetApprenticeships("hashedAccountId", new ApprenticeshipFiltersViewModel(), "UserId");
+            await EmployerManageApprenticeshipsOrchestrator.GetApprenticeships("hashedAccountId", new ApprenticeshipFiltersViewModel(), "UserId");
 
             //Assert
-            _mockApprenticeshipFiltersMapper.Verify(
+            ApprenticeshipFiltersMapper.Verify(
                 x => x.MapToApprenticeshipSearchQuery(It.IsAny<ApprenticeshipFiltersViewModel>())
                 , Times.Once());
         }
@@ -79,10 +52,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         public async Task ThenShouldMapSearchResultsToViewModel()
         {
             //Act
-            await _orchestrator.GetApprenticeships("hashedAccountId", new ApprenticeshipFiltersViewModel(), "UserId");
+            await EmployerManageApprenticeshipsOrchestrator.GetApprenticeships("hashedAccountId", new ApprenticeshipFiltersViewModel(), "UserId");
 
             //Assert
-            _mockApprenticeshipFiltersMapper.Verify(
+            ApprenticeshipFiltersMapper.Verify(
                 x => x.Map(It.IsAny<Facets>())
                 , Times.Once());
         }
@@ -91,10 +64,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         public async Task ThenShouldCallMediatorToQueryApprenticeships()
         {
             //Act
-            await _orchestrator.GetApprenticeships("hashedAccountId", new ApprenticeshipFiltersViewModel(), "UserId");
+            await EmployerManageApprenticeshipsOrchestrator.GetApprenticeships("hashedAccountId", new ApprenticeshipFiltersViewModel(), "UserId");
 
             //Assert
-            _mockMediator.Verify(x => x.SendAsync(It.IsAny<ApprenticeshipSearchQueryRequest>()), Times.Once);
+            MockMediator.Verify(x => x.SendAsync(It.IsAny<ApprenticeshipSearchQueryRequest>()), Times.Once);
         }
     }
 }

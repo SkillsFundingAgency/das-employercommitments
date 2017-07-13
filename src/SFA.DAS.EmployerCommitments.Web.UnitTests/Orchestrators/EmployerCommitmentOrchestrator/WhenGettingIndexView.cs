@@ -6,7 +6,9 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.ProviderPayment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetUserAccountRole;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.AccountTeam;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.NLog.Logger;
@@ -23,6 +25,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         public void Arrange()
         {
             _mediator = new Mock<IMediator>();
+            _mediator.Setup(x => x.SendAsync(It.IsAny<GetUserAccountRoleQuery>()))
+                .ReturnsAsync(new GetUserAccountRoleResponse { User = new TeamMember() });
             var logger = new Mock<ILog>();
             var calculator = new Mock<ICommitmentStatusCalculator>();
             var hashingService = new Mock<IHashingService>();

@@ -14,6 +14,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.DeleteApprentice;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeship;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountLegalEntities;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitments;
@@ -132,21 +133,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-
-                //TODO: Change to use API Call
-                //var legalEntities = await _mediator.SendAsync(new GetAccountLegalEntitiesRequest
-                //{
-                //    HashedLegalEntityId = hashedAccountId,
-                //    UserId = externalUserId,
-                //    SignedOnly = false 
-                //});
+                var legalEntities = await _mediator.SendAsync(new GetAccountLegalEntitiesRequest
+                {
+                    HashedAccountId = hashedAccountId,
+                    UserId = externalUserId,
+                    SignedOnly = false
+                });
 
                 return new OrchestratorResponse<SelectLegalEntityViewModel>
                 {
                     Data = new SelectLegalEntityViewModel
                     {
                         CohortRef = string.IsNullOrWhiteSpace(cohortRef) ? CreateReference() : cohortRef,
-                        //LegalEntities = new List<LegalEntity>() //TODO: legalEntities.Entites.LegalEntityList
+                        LegalEntities = legalEntities.LegalEntities
                     }
                 };
             }, hashedAccountId, externalUserId);
@@ -205,8 +204,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 var provider = await ProviderSearch(int.Parse(providerId));
 
-                //TODO API CALLvar legalEntities = await GetActiveLegalEntities(hashedAccountId, externalUserId);
-                var legalEntity = new LegalEntity();//TODO API CALL legalEntities.Entites.LegalEntityList.Single(x => x.Code.Equals(legalEntityCode, StringComparison.InvariantCultureIgnoreCase));
+                var legalEntities = await GetActiveLegalEntities(hashedAccountId, externalUserId);
+                var legalEntity = legalEntities.LegalEntities.Single(x => x.Code.Equals(legalEntityCode, StringComparison.InvariantCultureIgnoreCase));
 
                 return new OrchestratorResponse<CreateCommitmentViewModel>
                 {
@@ -990,16 +989,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
  
             return approvalState;
          }
-
-        //TODO API CALL
-        //private async Task<GetAccountLegalEntitiesResponse> GetActiveLegalEntities(string hashedAccountId, string externalUserId)
-        //{
-        //    return await _mediator.SendAsync(new GetAccountLegalEntitiesRequest
-        //    {
-        //        HashedLegalEntityId = hashedAccountId,
-        //        UserId = externalUserId
-        //    });
-        //}
+        
+        private async Task<GetAccountLegalEntitiesResponse> GetActiveLegalEntities(string hashedAccountId, string externalUserId)
+        {
+            return await _mediator.SendAsync(new GetAccountLegalEntitiesRequest
+            {
+                HashedAccountId = hashedAccountId,
+                UserId = externalUserId
+            });
+        }
 
         private CommitmentViewModel MapFrom(CommitmentView commitment)
         {
