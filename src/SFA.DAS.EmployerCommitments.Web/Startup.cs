@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitments.Web
     public class Startup
     {
       
-        private const string ServiceName = "SFA.DAS.SFA.DAS.EmployerCommitments";
+        private const string ServiceName = "SFA.DAS.EmployerCommitments";
 
 
         public void Configuration(IAppBuilder app)
