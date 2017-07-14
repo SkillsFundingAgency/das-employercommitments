@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.IdentityModel.Tokens;
+using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
 using Microsoft.Azure;
@@ -27,7 +29,7 @@ namespace SFA.DAS.EmployerCommitments.Web
     public class Startup
     {
       
-        private const string ServiceName = "SFA.DAS.EmployerApprenticeshipsService";
+        private const string ServiceName = "SFA.DAS.SFA.DAS.EmployerCommitments";
 
 
         public void Configuration(IAppBuilder app)
@@ -74,7 +76,7 @@ namespace SFA.DAS.EmployerCommitments.Web
                 TokenSigningCertificateLoader = GetSigningCertificate(config.Identity.UseCertificate),
                 AuthenticatedCallback = identity =>
                 {
-                    //PostAuthentiationAction(identity, authenticationOrchestrator, logger, constants);
+                    PostAuthentiationAction(identity, logger, constants);
                 }
             });
 
@@ -112,29 +114,23 @@ namespace SFA.DAS.EmployerCommitments.Web
             };
         }
 
-        //private static void PostAuthentiationAction(ClaimsIdentity identity, AuthenticationOrchestraor authenticationOrchestrator, ILogger logger, Constants constants)
-        //{
-        //    logger.Info("PostAuthenticationAction called");
-        //    var userRef = identity.Claims.FirstOrDefault(claim => claim.Type == constants.Id())?.Value;
-        //    var email = identity.Claims.FirstOrDefault(claim => claim.Type == constants.Email())?.Value;
-        //    var firstName = identity.Claims.FirstOrDefault(claim => claim.Type == constants.GivenName())?.Value;
-        //    var lastName = identity.Claims.FirstOrDefault(claim => claim.Type == constants.FamilyName())?.Value;
-        //    logger.Info("Claims retrieved from OIDC server {0}: {1} : {2} : {3}", userRef, email, firstName, lastName);
+        private static void PostAuthentiationAction(ClaimsIdentity identity, ILogger logger, Constants constants)
+        {
+            logger.Info("PostAuthenticationAction called");
+            var userRef = identity.Claims.FirstOrDefault(claim => claim.Type == constants.Id())?.Value;
+            var email = identity.Claims.FirstOrDefault(claim => claim.Type == constants.Email())?.Value;
+            var firstName = identity.Claims.FirstOrDefault(claim => claim.Type == constants.GivenName())?.Value;
+            var lastName = identity.Claims.FirstOrDefault(claim => claim.Type == constants.FamilyName())?.Value;
+            logger.Info("Claims retrieved from OIDC server {0}: {1} : {2} : {3}", userRef, email, firstName, lastName);
 
-        //    identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, identity.Claims.First(c => c.Type == constants.Id()).Value));
-        //    identity.AddClaim(new Claim(ClaimTypes.Name, identity.Claims.First(c => c.Type == constants.DisplayName()).Value));
-        //    identity.AddClaim(new Claim("sub", identity.Claims.First(c => c.Type == constants.Id()).Value));
-        //    identity.AddClaim(new Claim("email", identity.Claims.First(c => c.Type == constants.Email()).Value));
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, identity.Claims.First(c => c.Type == constants.Id()).Value));
+            identity.AddClaim(new Claim(ClaimTypes.Name, identity.Claims.First(c => c.Type == constants.DisplayName()).Value));
+            identity.AddClaim(new Claim("sub", identity.Claims.First(c => c.Type == constants.Id()).Value));
+            identity.AddClaim(new Claim("email", identity.Claims.First(c => c.Type == constants.Email()).Value));
+            
+            //HttpContext.Current.Response.Redirect(HttpContext.Current.Request.Path, true);
 
-
-        //    Task.Run(async () =>
-        //    {
-        //        await authenticationOrchestrator.SaveIdentityAttributes(userRef, email, firstName, lastName);
-        //    }).Wait();
-
-        //    //HttpContext.Current.Response.Redirect(HttpContext.Current.Request.Path, true);
-
-        //}
+        }
 
         private static EmployerApprenticeshipsServiceConfiguration GetConfigurationObject()
         {
