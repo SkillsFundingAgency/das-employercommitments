@@ -13,6 +13,7 @@
       <Setting name="LoggingRedisConnectionString" value="__LoggingRedisConnectionString__" />
       <Setting name="LoggingRedisKey" value="__LoggingRedisKey__" />
       <Setting name="TokenCertificateThumbprint" value="__TokenCertificateThumbprint__" />
+      <Setting name="EmployerAccountBaseUrl" value="__EmployerAccountBaseUrl__" />
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="WebSslCert" thumbprint="E280E23D933FE3A62AF335BE9768A2C9D65CCC9A" thumbprintAlgorithm="sha1" />
