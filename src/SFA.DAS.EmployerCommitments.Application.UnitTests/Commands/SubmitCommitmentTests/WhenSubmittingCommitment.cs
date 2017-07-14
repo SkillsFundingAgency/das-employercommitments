@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
                 .ReturnsAsync(_repositoryCommitment);
 
             _mockMediator = new Mock<IMediator>();
-            var config = new EmployerApprenticeshipsServiceConfiguration
+            var config = new EmployerCommitmentsServiceConfiguration
                              {
                                  CommitmentNotification = new CommitmentNotificationConfiguration { SendEmail = true }
                              };

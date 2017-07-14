@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
         public ProviderEmailLookupService(
             ILog logger,
             IdamsEmailServiceWrapper idamsEmailServiceWrapper,
-            EmployerApprenticeshipsServiceConfiguration employerConfiguration,
+            EmployerCommitmentsServiceConfiguration employerConfiguration,
             IApprenticeshipInfoServiceWrapper apprenticeshipInfoService)
         {
             _logger = logger;

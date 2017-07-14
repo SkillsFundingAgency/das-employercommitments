@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Data
 
         public IdamsEmailServiceWrapper(
             ILog logger,
-            EmployerApprenticeshipsServiceConfiguration configuration,
+            EmployerCommitmentsServiceConfiguration configuration,
             IHttpClientWrapper httpClient,
             [RequiredPolicy(IdamsExecutionPolicy.Name)]ExecutionPolicy executionPolicy)
         {

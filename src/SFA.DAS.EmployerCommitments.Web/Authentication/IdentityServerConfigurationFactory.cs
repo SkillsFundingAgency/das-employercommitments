@@ -5,9 +5,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Authentication
 {
     public class IdentityServerConfigurationFactory : ConfigurationFactory
     {
-        private readonly EmployerApprenticeshipsServiceConfiguration _configuration;
+        private readonly EmployerCommitmentsServiceConfiguration _configuration;
 
-        public IdentityServerConfigurationFactory(EmployerApprenticeshipsServiceConfiguration configuration)
+        public IdentityServerConfigurationFactory(EmployerCommitmentsServiceConfiguration configuration)
         {
             _configuration = configuration;
         }

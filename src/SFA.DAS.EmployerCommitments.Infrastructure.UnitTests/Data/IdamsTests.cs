@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Data
         [SetUp]
         public void SetUp()
         {
-            var config = new EmployerApprenticeshipsServiceConfiguration
+            var config = new EmployerCommitmentsServiceConfiguration
             {
                 CommitmentNotification = new CommitmentNotificationConfiguration
                 {

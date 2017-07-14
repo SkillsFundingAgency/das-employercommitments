@@ -18,13 +18,13 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Provider
     {
         private Infrastructure.Services.ProviderEmailLookupService _sut;
 
-        private readonly EmployerApprenticeshipsServiceConfiguration _config;
+        private readonly EmployerCommitmentsServiceConfiguration _config;
         private Mock<IdamsEmailServiceWrapper> _mockIdamsService;
         private Mock<IApprenticeshipInfoServiceWrapper> _mockApprenticeshipService;
 
         public ProviderEmailLookupServiceTests()
         {
-            _config = new EmployerApprenticeshipsServiceConfiguration
+            _config = new EmployerCommitmentsServiceConfiguration
                          {
                              CommitmentNotification =
                                  new CommitmentNotificationConfiguration

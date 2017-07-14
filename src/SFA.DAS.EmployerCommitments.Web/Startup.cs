@@ -132,7 +132,7 @@ namespace SFA.DAS.EmployerCommitments.Web
 
         }
 
-        private static EmployerApprenticeshipsServiceConfiguration GetConfigurationObject()
+        private static EmployerCommitmentsServiceConfiguration GetConfigurationObject()
         {
             var environment = Environment.GetEnvironmentVariable("DASENV");
             if (string.IsNullOrEmpty(environment))
@@ -145,7 +145,7 @@ namespace SFA.DAS.EmployerCommitments.Web
                configurationRepository,
                new ConfigurationOptions(ServiceName, environment, "1.0"));
 
-            var config = configurationService.Get<EmployerApprenticeshipsServiceConfiguration>();
+            var config = configurationService.Get<EmployerCommitmentsServiceConfiguration>();
 
             return config;
         }

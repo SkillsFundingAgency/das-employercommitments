@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
 
         private readonly ILog _logger;
 
-        private readonly EmployerApprenticeshipsServiceConfiguration _configuration;
+        private readonly EmployerCommitmentsServiceConfiguration _configuration;
 
         private readonly IHashingService _hashingService;
 
@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
             IEmployerCommitmentApi commitmentApi, 
             IMediator mediator,
             ILog logger,
-            EmployerApprenticeshipsServiceConfiguration configuration,
+            EmployerCommitmentsServiceConfiguration configuration,
             IHashingService hashingService,
             IProviderEmailLookupService providerEmailLookupService)
         {

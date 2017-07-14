@@ -3,7 +3,7 @@ using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 
 namespace SFA.DAS.EmployerCommitments.Domain.Configuration
 {
-    public class EmployerApprenticeshipsServiceConfiguration : IConfiguration
+    public class EmployerCommitmentsServiceConfiguration : IConfiguration
     {
         public CompaniesHouseConfiguration CompaniesHouse { get; set; }
         public string ServiceBusConnectionString { get; set; }

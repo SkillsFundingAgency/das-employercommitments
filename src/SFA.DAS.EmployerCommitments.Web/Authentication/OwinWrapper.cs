@@ -17,9 +17,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Authentication
     public class OwinWrapper : IOwinWrapper
     {
         private readonly IOwinContext _owinContext;
-        private readonly EmployerApprenticeshipsServiceConfiguration _configuration;
+        private readonly EmployerCommitmentsServiceConfiguration _configuration;
 
-        public OwinWrapper(EmployerApprenticeshipsServiceConfiguration configuration)
+        public OwinWrapper(EmployerCommitmentsServiceConfiguration configuration)
         {
             _configuration = configuration;
             _owinContext = HttpContext.Current.GetOwinContext();

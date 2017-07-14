@@ -70,7 +70,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For(typeof(ICookieService<>)).Use(typeof(HttpCookieService<>));
             For(typeof(ICookieStorageService<>)).Use(typeof(CookieStorageService<>));
 
-            For<IConfiguration>().Use<EmployerApprenticeshipsServiceConfiguration>();
+            For<IConfiguration>().Use<EmployerCommitmentsServiceConfiguration>();
 
             var config = this.GetConfiguration();
             
@@ -142,7 +142,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<IMapper>().Use(mapper).Singleton();
         }
 
-        private EmployerApprenticeshipsServiceConfiguration GetConfiguration()
+        private EmployerCommitmentsServiceConfiguration GetConfiguration()
         {
             var environment = Environment.GetEnvironmentVariable("DASENV");
             if (string.IsNullOrEmpty(environment))
@@ -158,7 +158,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             var configurationService = new ConfigurationService(configurationRepository,
                 new ConfigurationOptions(ServiceName, environment, "1.0"));
 
-            var result = configurationService.Get<EmployerApprenticeshipsServiceConfiguration>();
+            var result = configurationService.Get<EmployerCommitmentsServiceConfiguration>();
 
             return result;
         }

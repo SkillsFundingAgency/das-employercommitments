@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Infrastructure.StructureMapR
                 c =>
                     {
                         c.AddRegistry<TestRegistry>();
-                        c.Policies.Add(new ConfigurationPolicy<EmployerApprenticeshipsServiceConfiguration>("SFA.DAS.EmployerApprenticeshipsService"));
+                        c.Policies.Add(new ConfigurationPolicy<EmployerCommitmentsServiceConfiguration>("SFA.DAS.EmployerApprenticeshipsService"));
                     }
                 );
         }
@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Infrastructure.StructureMapR
             public TestRegistry()
             {
                 For<ITestClass>().Use<TestClass>();
-                For<IConfiguration>().Use<EmployerApprenticeshipsServiceConfiguration>();
+                For<IConfiguration>().Use<EmployerCommitmentsServiceConfiguration>();
             }
         }
 

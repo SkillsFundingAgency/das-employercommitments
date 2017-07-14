@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment
         
         private readonly IMediator _mediator;
 
-        private readonly EmployerApprenticeshipsServiceConfiguration _configuration;
+        private readonly EmployerCommitmentsServiceConfiguration _configuration;
 
         private readonly IProviderEmailLookupService _providerEmailLookupService;
 
@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment
         public SubmitCommitmentCommandHandler(
             IEmployerCommitmentApi commitmentApi, 
             IMediator mediator,
-            EmployerApprenticeshipsServiceConfiguration configuration,
+            EmployerCommitmentsServiceConfiguration configuration,
             IProviderEmailLookupService providerEmailLookupService,
             ILog logger)
         {
