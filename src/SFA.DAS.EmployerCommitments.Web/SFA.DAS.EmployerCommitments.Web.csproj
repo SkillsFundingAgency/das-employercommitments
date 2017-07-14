@@ -193,6 +193,14 @@
     <Reference Include="SFA.DAS.CookieService, Version=1.0.0.27423, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.CookieService.1.0.0.27423\lib\net45\SFA.DAS.CookieService.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.EAS.Account.Api.Client, Version=1.0.0.35577, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.0.0.35577\lib\net45\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SFA.DAS.EAS.Account.Api.Types, Version=1.0.0.35577, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.0.0.35577\lib\net45\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SFA.DAS.EmployerUsers.WebClientComponents, Version=1.0.0.29302, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.EmployerUsers.WebClientComponents.1.0.0.29302\lib\net45\SFA.DAS.EmployerUsers.WebClientComponents.dll</HintPath>
     </Reference>
@@ -837,7 +845,6 @@
     <Content Include="src\sass\_panels.scss" />
     <Content Include="src\sass\_commitments.scss" />
     <Content Include="Views\Shared\_PayeNotFound.cshtml" />
-    <Content Include="Views\Shared\GatewayInform.cshtml" />
     <Content Include="src\sass\_custom.scss" />
     <Content Include="StartUp\IIS.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

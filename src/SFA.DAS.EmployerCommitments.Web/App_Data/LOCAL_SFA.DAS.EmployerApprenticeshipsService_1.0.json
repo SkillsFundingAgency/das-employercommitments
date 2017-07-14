@@ -22,7 +22,6 @@
     },
     "AccountActivationUrl": "/account/confirm"
   },
-  "DatabaseConnectionString": "Server=.;Database=SFA.DAS.EAS.Employer_Account;Integrated Security = true;Trusted_Connection=True;Pooling=False;Connect Timeout=30;MultipleActiveResultSets=True",
   "CompaniesHouse": {
     "ApiKey": "[API_KEY]",
     "BaseUrl": "https://api.companieshouse.gov.uk"
