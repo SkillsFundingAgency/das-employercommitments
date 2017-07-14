@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.EmployerCommitments.Web
+@using SFA.DAS.EmployerCommitments.Web.Extensions
 @using SFA.DAS.EmployerCommitments.Web.ViewModels
 
 @model OrchestratorResponse<CommitmentsIndexViewModel>
@@ -60,7 +61,7 @@
 @section breadcrumb {
     <div class="breadcrumbs">
         <ol role="navigation">
-            <li><a href="@Url.Action("Index", "EmployerTeam", new {accountId = ViewBag.HashedAccountId })">Home</a></li>
+            <li><a href="@Url.ExternalUrlAction("teams")">Home</a></li>
             <li>Apprentices</li>
         </ol>
     </div>

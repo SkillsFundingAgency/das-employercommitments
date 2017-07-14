@@ -337,6 +337,7 @@
     <Compile Include="Authentication\IOwinWrapper.cs" />
     <Compile Include="Authentication\OwinWrapper.cs" />
     <Compile Include="Controllers\AccessDeniedController.cs" />
+    <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Extensions\ValidationResultExtensions.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestrator.cs" />
     <Compile Include="Orchestrators\Mappers\ApprenticeshipFiltersMapper.cs" />
