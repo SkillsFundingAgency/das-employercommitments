@@ -26,7 +26,7 @@
       <Setting name="LoggingRedisConnectionString" />
       <Setting name="LoggingRedisKey" />
       <Setting name="TokenCertificateThumbprint" />
-      <Setting name="EmployerAccountBaseUrl" />
+      <Setting name="MyaBaseUrl" />
     </ConfigurationSettings>
     <Endpoints>
       <InputEndpoint name="HttpsIn" protocol="https" port="443" certificate="WebSslCert" />
