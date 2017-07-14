@@ -405,51 +405,70 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<FinishEditingViewModel>> GetFinishEditingViewModel(string hashedAccountId, string externalUserId, string hashedCommitmentId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
-            _logger.Info($"Getting Finish Editing Model, Account: {accountId}, CommitmentId: {commitmentId}");
-
-            return await CheckUserAuthorization(async () =>
+            try
             {
-                var response = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                var accountId = _hashingService.DecodeValue(hashedAccountId);
+                var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
+                _logger.Info($"Getting Finish Editing Model, Account: {accountId}, CommitmentId: {commitmentId}");
+
+                return await CheckUserAuthorization(async () =>
                 {
-                    AccountId = accountId,
-                    CommitmentId = commitmentId
-                });
-
-                AssertCommitmentStatus(response.Commitment, EditStatus.EmployerOnly);
-                AssertCommitmentStatus(response.Commitment, AgreementStatus.EmployerAgreed, AgreementStatus.ProviderAgreed, AgreementStatus.NotAgreed);
-
-                //TODO replace with API
-                //var agreementResponse = await _mediator.SendAsync(new GetLegalEntityAgreementRequest
-                //{
-                //    AccountId = accountId,
-                //    LegalEntityCode = response.Commitment.LegalEntityId
-                //});
-
-                var hasSigned = false;//TODO replace with API agreementResponse.EmployerAgreement == null;
-
-                var overlaps = await _mediator.SendAsync(
-                    new GetOverlappingApprenticeshipsQueryRequest
+                    var response = await _mediator.SendAsync(new GetCommitmentQueryRequest
                     {
-                        Apprenticeship = response.Commitment.Apprenticeships
+                        AccountId = accountId,
+                        CommitmentId = commitmentId
                     });
 
+                    AssertCommitmentStatus(response.Commitment, EditStatus.EmployerOnly);
+                    AssertCommitmentStatus(response.Commitment, AgreementStatus.EmployerAgreed,
+                        AgreementStatus.ProviderAgreed, AgreementStatus.NotAgreed);
+
+                    var legalEntity =
+                        await GetLegalEntityByCode(hashedAccountId, externalUserId, response.Commitment.LegalEntityId);
+
+                    var hasSigned = legalEntity.AgreementStatus == EmployerAgreementStatus.Signed;
+
+                    var overlaps = await _mediator.SendAsync(
+                        new GetOverlappingApprenticeshipsQueryRequest
+                        {
+                            Apprenticeship = response.Commitment.Apprenticeships
+                        });
+
+                    return new OrchestratorResponse<FinishEditingViewModel>
+                    {
+                        Data = new FinishEditingViewModel
+                        {
+                            HashedAccountId = hashedAccountId,
+                            HashedCommitmentId = hashedCommitmentId,
+                            NotReadyForApproval = !response.Commitment.CanBeApproved,
+                            ApprovalState = GetApprovalState(response.Commitment),
+                            HasApprenticeships = response.Commitment.Apprenticeships.Any(),
+                            InvalidApprenticeshipCount =
+                                response.Commitment.Apprenticeships.Count(x => !x.CanBeApproved),
+                            HasSignedTheAgreement = hasSigned,
+                            HasOverlappingErrors = overlaps?.Overlaps?.Any() ?? false
+                        }
+                    };
+                }, hashedAccountId, externalUserId);
+            }
+            catch (InvalidRequestException ex)
+            {
                 return new OrchestratorResponse<FinishEditingViewModel>
                 {
-                    Data = new FinishEditingViewModel
-                    {
-                        HashedAccountId = hashedAccountId,
-                        HashedCommitmentId = hashedCommitmentId,
-                        NotReadyForApproval = !response.Commitment.CanBeApproved,
-                        ApprovalState = GetApprovalState(response.Commitment),
-                        HasApprenticeships = response.Commitment.Apprenticeships.Any(),
-                        InvalidApprenticeshipCount = response.Commitment.Apprenticeships.Count(x => !x.CanBeApproved),
-                        HasSignedTheAgreement = hasSigned,
-                        HasOverlappingErrors = overlaps?.Overlaps?.Any() ?? false
-                    }
+                    FlashMessage = FlashMessageViewModel.CreateErrorFlashMessageViewModel(ex.ErrorMessages),
+                    Status = HttpStatusCode.BadRequest
                 };
-            }, hashedAccountId, externalUserId);
+
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return new OrchestratorResponse<FinishEditingViewModel>
+                {
+                    FlashMessage = FlashMessageViewModel.CreateErrorFlashMessageViewModel(new Dictionary<string, string>()),
+                    Status = HttpStatusCode.Unauthorized
+                };
+            }
+            
         }
 
         public async Task ApproveCommitment(string hashedAccountId, string externalUserId, string userDisplayName, string userEmail, string hashedCommitmentId, SaveStatus saveStatus)
@@ -919,16 +938,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             var response = new OrchestratorResponse<LegalEntitySignedAgreementViewModel>();
             try
             {
-                var legalEntities = await GetActiveLegalEntities(hashedAccountId, userId);
-
-                var legalEntity = legalEntities.LegalEntities.FirstOrDefault(
-                        c => c.Code.Equals(legalEntityCode, StringComparison.CurrentCultureIgnoreCase));
-
-                if (legalEntity == null)
-                {
-                    throw new InvalidRequestException(new Dictionary<string, string> { {"LegalEntity","Agreement does not exist"} });
-                }
-
+                var legalEntity = await GetLegalEntityByCode(hashedAccountId, userId, legalEntityCode);
+                
                 var hasSigned = legalEntity.AgreementStatus == EmployerAgreementStatus.Signed;
                 
                 response.Data = new LegalEntitySignedAgreementViewModel
@@ -954,6 +965,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }
 
         }
+
+        
 
         public async Task<Dictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship)
         {
@@ -1013,6 +1026,20 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 HashedAccountId = hashedAccountId,
                 UserId = externalUserId
             });
+        }
+
+        private async Task<LegalEntity> GetLegalEntityByCode(string hashedAccountId, string userId, string legalEntityCode)
+        {
+            var legalEntities = await GetActiveLegalEntities(hashedAccountId, userId);
+
+            var legalEntity = legalEntities.LegalEntities.FirstOrDefault(
+                    c => c.Code.Equals(legalEntityCode, StringComparison.CurrentCultureIgnoreCase));
+
+            if (legalEntity == null)
+            {
+                throw new InvalidRequestException(new Dictionary<string, string> { { "LegalEntity", "Agreement does not exist" } });
+            }
+            return legalEntity;
         }
 
         private CommitmentViewModel MapFrom(CommitmentView commitment)

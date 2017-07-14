@@ -1,43 +1,28 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using MediatR;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.Commitments.Api.Types.Validation;
+using SFA.DAS.EmployerCommitments.Application;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountLegalEntities;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
-using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Web.Orchestrators;
-using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
-using SFA.DAS.NLog.Logger;
+using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
 {
     [TestFixture]
     public class WhenGettingFinishEditing : OrchestratorTestBase
     {
-        private Mock<IMediator> _mediator;
-        private Mock<ILog> _logger;
-        private Mock<IHashingService> _hashingService;
-        private Mock<ICommitmentStatusCalculator> _calculator;
-
-        private EmployerCommitmentsOrchestrator _employerCommitmentOrchestrator;
-
+        
         [SetUp]
         public void Arrange()
         {
-            _mediator = new Mock<IMediator>();
-            _logger = new Mock<ILog>();
-            _calculator = new Mock<ICommitmentStatusCalculator>();
-
-            _hashingService = new Mock<IHashingService>();
-            _hashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);
-            _hashingService.Setup(x => x.DecodeValue("ABC321")).Returns(321L);
-            _hashingService.Setup(x => x.DecodeValue("ABC456")).Returns(456L);
-
-            _mediator.Setup(x => x.SendAsync(It.IsAny<GetCommitmentQueryRequest>()))
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetCommitmentQueryRequest>()))
                 .ReturnsAsync(new GetCommitmentQueryResponse
                 {
                     Commitment = new CommitmentView
@@ -47,37 +32,29 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                         EditStatus = EditStatus.EmployerOnly
                     }
                 });
-            _mediator.Setup(x => x.SendAsync(It.IsAny<GetOverlappingApprenticeshipsQueryRequest>()))
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetOverlappingApprenticeshipsQueryRequest>()))
                 .ReturnsAsync(
-                    new GetOverlappingApprenticeshipsQueryResponse { Overlaps = Enumerable.Empty<ApprenticeshipOverlapValidationResult>() });
-
-            _employerCommitmentOrchestrator = new EmployerCommitmentsOrchestrator(
-                _mediator.Object,
-                _hashingService.Object, 
-                _calculator.Object, 
-                Mock.Of<IApprenticeshipMapper>(), 
-                Mock.Of<ICommitmentMapper>(), 
-                _logger.Object);
+                    new GetOverlappingApprenticeshipsQueryResponse
+                    {
+                        Overlaps = Enumerable.Empty<ApprenticeshipOverlapValidationResult>()
+                    });
         }
 
         [Test]
         public async Task ShouldCallMediatorToGetLegalEntityAgreementRequest()
         {
             //Arrange
-            //TODO API CALL
-            //MockMediator.Setup(x => x.SendAsync(It.IsAny<GetLegalEntityAgreementRequest>()))
-            //    .ReturnsAsync(new GetLegalEntityAgreementResponse
-            //    {
-            //        EmployerAgreement = new EmployerAgreementView()
-            //    });
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
+                .ReturnsAsync(new GetAccountLegalEntitiesResponse
+                {
+                    LegalEntities = new List<LegalEntity> { new LegalEntity { Code = "321" } }
+                });
 
             //Act
             await EmployerCommitmentOrchestrator.GetFinishEditingViewModel("ABC123", "XYZ123", "ABC321");
 
             //Assert
-            //TODO API CALL
-            Assert.IsTrue(false); //reminder for below!
-            //MockMediator.Verify(x => x.SendAsync(It.Is<GetLegalEntityAgreementRequest>(c => c.AccountId == 123L && c.LegalEntityCode=="321" )), Times.Once);
+            MockMediator.Verify(x => x.SendAsync(It.Is<GetAccountLegalEntitiesRequest>(c => c.HashedAccountId == "ABC123" && c.UserId== "XYZ123")), Times.Once);
         }
 
         [TestCase(true, Description = "The Employer has signed the agreement")]
@@ -85,18 +62,57 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         public async Task ThenTheViewModelShouldReflectWhetherTheAgreementHasBeenSigned(bool isSigned)
         {
             //Arrange
-            //TODO API CALL
-            //MockMediator.Setup(x => x.SendAsync(It.IsAny<GetLegalEntityAgreementRequest>()))
-            //    .ReturnsAsync(new GetLegalEntityAgreementResponse
-            //    {
-            //        EmployerAgreement = isSigned ? null : new EmployerAgreementView()
-            //    });
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
+                .ReturnsAsync(new GetAccountLegalEntitiesResponse
+                {
+                    LegalEntities = new List<LegalEntity> { new LegalEntity
+                    {
+                        Code = "321",
+                        AgreementStatus = isSigned ? EmployerAgreementStatus.Signed : EmployerAgreementStatus.Pending
+                    } }
+                });
 
             //Act
             var result = await EmployerCommitmentOrchestrator.GetFinishEditingViewModel("ABC123", "XYZ123", "ABC321");
 
             //Assert
             Assert.AreEqual(isSigned, result.Data.HasSignedTheAgreement);
+        }
+
+        [Test]
+        public async Task ThenIfAnInvalidRequestExceptionIsThrownThenTheOrchestratorResponseIsPopulatedAsBadRequest()
+        {
+            //Arrange
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
+                .ThrowsAsync(new InvalidRequestException(new Dictionary<string, string> { { "", "" } }));
+
+            //Act
+            var actual = await EmployerCommitmentOrchestrator.GetFinishEditingViewModel("ABC123", "XYZ123", "ABC321");
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, actual.Status);
+            Assert.AreEqual(1, actual.FlashMessage.ErrorMessages.Count);
+        }
+
+        [Test]
+        public async Task ThenIfTheCodeDoesNotExistTheResponseIsPopulatedAsBadRequest()
+        {
+            //Arrange
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
+                .ReturnsAsync(new GetAccountLegalEntitiesResponse
+                {
+                    LegalEntities = new List<LegalEntity> { new LegalEntity
+                    {
+                        Code = "XYZ1233",
+                        AgreementStatus = EmployerAgreementStatus.Signed
+                    } }
+                });
+
+            //Act
+            var actual = await EmployerCommitmentOrchestrator.GetFinishEditingViewModel("ABC123", "XYZ123", "ABC321");
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, actual.Status);
         }
     }
 }
