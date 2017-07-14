@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitments.Solution.UnitTests.ConfigTests
             var extensions = new[] {".config", ".cscfg"};
             var excludedPaths = new[] { "obj", "bin", "vs", "package", "tool", "test" };
 
-            _excludedSettingNames = new[] { "webpages:Version", "LogLevel", "idaAudience", "idaTenant", "TokenCertificateThumbprint", "DeclarationsEnabled", "CurrentTime" };
+            _excludedSettingNames = new[] { "webpages:Version", "LogLevel", "idaAudience", "idaTenant", "TokenCertificateThumbprint", "DeclarationsEnabled", "CurrentTime", "EmployerAccountBaseUrl" };
             _allowedConfigValues = new[] { "UseDevelopmentStorage=true", "LOCAL", "true", "false", "localhost", "Endpoint=sb://[your namespace].servicebus.windows.net;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=[your secret]" };
 
             var path = new FileInfo(Assembly.GetCallingAssembly().Location).Directory.Parent.Parent.Parent;
