@@ -1,11 +1,9 @@
 using System.Linq;
 using System.Threading.Tasks;
-
 using MediatR;
-
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 
-namespace SFA.DAS.EAS.Application.Queries.GetPriceHistoryQueryRequest
+namespace SFA.DAS.EmployerCommitments.Application.Queries.GetPriceHistoryQueryRequest
 {
     public class GetPriceHistoryQueryHandler :
         IAsyncRequestHandler<GetPriceHistoryQueryRequest, GetPriceHistoryQueryResponse>

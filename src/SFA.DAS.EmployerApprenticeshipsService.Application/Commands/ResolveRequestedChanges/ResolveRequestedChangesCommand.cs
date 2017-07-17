@@ -1,8 +1,7 @@
 ﻿using MediatR;
-
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 
-namespace SFA.DAS.EAS.Application.Commands.ResolveRequestedChanges
+namespace SFA.DAS.EmployerCommitments.Application.Commands.ResolveRequestedChanges
 {
     public class ResolveRequestedChangesCommand : IAsyncRequest
     {

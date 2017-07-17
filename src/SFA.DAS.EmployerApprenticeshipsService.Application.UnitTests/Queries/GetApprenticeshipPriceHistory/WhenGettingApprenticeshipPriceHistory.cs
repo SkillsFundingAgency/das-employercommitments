@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Moq;
 using NUnit.Framework;
-
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
-using SFA.DAS.EAS.Application.Queries.GetPriceHistoryQueryRequest;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetPriceHistoryQueryRequest;
 
-namespace SFA.DAS.EAS.Application.UnitTests.Queries.GetApprenticeshipPriceHistory
+namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetApprenticeshipPriceHistory
 {
     [TestFixture]
     public class WhenGettingApprenticeshipPriceHistory

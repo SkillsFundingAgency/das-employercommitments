@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using FluentValidation.Attributes;
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
-using SFA.DAS.EAS.Web.Validators;
-using SFA.DAS.EAS.Web.ViewModels.ManageApprenticeships;
+using SFA.DAS.EmployerCommitments.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 {

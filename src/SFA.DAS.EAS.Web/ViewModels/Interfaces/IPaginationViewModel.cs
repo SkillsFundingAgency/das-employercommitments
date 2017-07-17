@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.EAS.Web.ViewModels.Interfaces
+﻿namespace SFA.DAS.EmployerCommitments.Web.ViewModels.Interfaces
 {
     public interface IPaginationViewModel
     {

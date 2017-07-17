@@ -1,8 +1,7 @@
 using FluentValidation;
-
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 
-namespace SFA.DAS.EAS.Web.Validators
+namespace SFA.DAS.EmployerCommitments.Web.Validators
 {
     public sealed class DataLockStatusViewModelViewModelValidator : AbstractValidator<DataLockStatusViewModel>
     {

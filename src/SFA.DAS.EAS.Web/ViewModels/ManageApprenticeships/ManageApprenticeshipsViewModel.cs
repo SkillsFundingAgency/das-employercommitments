@@ -1,5 +1,5 @@
-﻿using SFA.DAS.EAS.Web.ViewModels.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SFA.DAS.EmployerCommitments.Web.ViewModels.Interfaces;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 {

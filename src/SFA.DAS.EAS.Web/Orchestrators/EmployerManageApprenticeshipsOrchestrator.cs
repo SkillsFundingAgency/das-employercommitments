@@ -9,6 +9,7 @@ using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeshipUpdate;
+using SFA.DAS.EmployerCommitments.Application.Commands.ResolveRequestedChanges;
 using SFA.DAS.EmployerCommitments.Application.Commands.ReviewApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UndoApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStatus;
@@ -17,8 +18,10 @@ using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLock;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetPriceHistoryQueryRequest;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDate;
@@ -32,10 +35,6 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.NLog.Logger;
 using ChangeStatusType = SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships.ChangeStatusType;
-
-using SFA.DAS.EAS.Application.Commands.ResolveRequestedChanges;
-using SFA.DAS.EAS.Application.Queries.GetApprenticeshipDataLockSummary;
-using SFA.DAS.EAS.Application.Queries.GetPriceHistoryQueryRequest;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {

@@ -1,6 +1,6 @@
 using System;
 
-namespace SFA.DAS.EAS.Web.ViewModels.ManageApprenticeships
+namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 {
     public class PriceHistoryViewModel
     {

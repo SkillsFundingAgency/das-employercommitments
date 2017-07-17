@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace SFA.DAS.EAS.Application.Queries.GetApprenticeshipDataLockSummary
+namespace SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary
 {
     public class GetDataLockSummaryQueryRequest :
         IAsyncRequest<GetDataLockSummaryQueryResponse>

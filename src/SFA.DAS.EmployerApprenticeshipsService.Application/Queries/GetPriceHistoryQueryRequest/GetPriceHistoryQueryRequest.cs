@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace SFA.DAS.EAS.Application.Queries.GetPriceHistoryQueryRequest
+namespace SFA.DAS.EmployerCommitments.Application.Queries.GetPriceHistoryQueryRequest
 {
     public class GetPriceHistoryQueryRequest : IAsyncRequest<GetPriceHistoryQueryResponse>
     {

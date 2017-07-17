@@ -1,14 +1,11 @@
 ﻿using System.Threading.Tasks;
-
 using Moq;
-
 using NUnit.Framework;
-
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.DataLock;
-using SFA.DAS.EAS.Application.Queries.GetApprenticeshipDataLockSummary;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary;
 
-namespace SFA.DAS.EAS.Application.UnitTests.Queries.GetApprenticeshipDataLockSummary
+namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetApprenticeshipDataLockSummary
 {
     [TestFixture]
     public class WhenGettingApprenticeshipDataLockSummary

@@ -1,10 +1,8 @@
 ﻿using System.Threading.Tasks;
-
 using MediatR;
-
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 
-namespace SFA.DAS.EAS.Application.Queries.GetApprenticeshipDataLockSummary
+namespace SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary
 {
     public class GetDataLockSummaryQueryHandler : IAsyncRequestHandler<GetDataLockSummaryQueryRequest, GetDataLockSummaryQueryResponse>
     {

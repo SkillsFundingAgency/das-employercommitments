@@ -1,4 +1,4 @@
-namespace SFA.DAS.EAS.Web.ViewModels
+namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 {
     public class SummaryUnsubscribeViewModel
     {

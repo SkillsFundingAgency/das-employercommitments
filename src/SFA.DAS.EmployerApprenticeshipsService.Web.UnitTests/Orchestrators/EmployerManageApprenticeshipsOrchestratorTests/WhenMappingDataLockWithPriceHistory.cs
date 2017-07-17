@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using FluentAssertions;
 using MediatR;
 using Moq;
 using NUnit.Framework;
-
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.DataLock;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
-using SFA.DAS.EAS.Web.ViewModels.ManageApprenticeships;
+using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 
-namespace SFA.DAS.EAS.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
+namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
     [TestFixture]
     public class WhenMappingDataLockWithPriceHistory
