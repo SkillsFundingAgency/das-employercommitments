@@ -88,7 +88,7 @@
 
     <div id="global-cookie-message">
         <p>
-            GOV.UK uses cookies to make the site simpler. <a href="@Url.Action("Privacy","Home")">Find out more about cookies</a>
+            GOV.UK uses cookies to make the site simpler. <a href="@Url.ExternalUrlAction("service", "privacy",true)">Find out more about cookies</a>
         </p>
     </div>
 
@@ -122,32 +122,32 @@
             <div class="account-information" role="navigation">
                 <nav id="user-nav">
                     <ul role="menubar">
-                        <li><a href="@Url.Action("Help", "Home")">Help</a></li>
+                        <li><a href="@Url.ExternalUrlAction("service", "help")">Help</a></li>
                         @if (HttpContext.Current.User.Identity.IsAuthenticated)
                         {
                             
                             <li class="has-sub-menu">
                                 <a href="/" role="menuitem">Settings</a>
                                 <ul role="menu">
-                                    <li><a href="@Url.Action("ViewAccounts", "Home")" role="menuitem">Your accounts</a></li>
+                                    <li><a href="@Url.ExternalUrlAction("service", "accounts",true)" role="menuitem">Your accounts</a></li>
                                     @if (string.IsNullOrWhiteSpace(ViewBag.HideNav))
                                     {     
-                                    <li><a href="@Url.Action("RenameAccount", "EmployerAccount")" role="menuitem">Rename account</a></li>
+                                    <li><a href="@Url.ExternalUrlAction("rename",ignoreAccountId:true)" role="menuitem">Rename account</a></li>
                                     }
                                     <li><a href="@UserLinksViewModel.ChangePasswordLink">Change your password</a></li>
                                     <li><a href="@UserLinksViewModel.ChangeEmailLink">Change your email address</a></li>
-                                    <li><a href="@Url.Action("NotificationSettings", "Settings")">Notification settings</a></li>
+                                    <li><a href="@Url.ExternalUrlAction("settings", "notifications",true)">Notification settings</a></li>
                                     
                                 </ul>
                             </li>
-                            <li><a href="@Url.Action("SignOut", "Home")" role="menuitem">Sign out</a></li>
+                            <li><a href="@Url.ExternalUrlAction("service", "signout",true)" role="menuitem">Sign out</a></li>
                             
                         }
                         else
                         {
                             if (Model?.GetType().GetProperty("HideHeaderSignInLink") == null)
                             {
-                                <li><a href="@Url.Action("SignIn", "Home")" role="menuitem">Sign in / Register</a></li>
+                                <li><a href="@Url.ExternalUrlAction("service", "signin",true)" role="menuitem">Sign in / Register</a></li>
                             }
                         }
                     </ul>
@@ -190,9 +190,9 @@
             <div class="footer-meta">
                 <div class="footer-meta-inner">
                     <ul class="platform-help-links">
-                        <li><a href="@Url.Action("Help", "Home")">Help</a></li>
+                        <li><a href="@Url.ExternalUrlAction("service", "help",true)">Help</a></li>
                         <li><a href="https://www.surveymonkey.co.uk/r/2JPLQ9T" target="_blank">Feedback</a></li>
-                        <li><a href="@Url.Action("Privacy", "Home")">Privacy and cookies</a></li>
+                        <li><a href="@Url.ExternalUrlAction("service", "privacy",true)">Privacy and cookies</a></li>
                         <li>Built by the <a href="http://gov.uk/sfa" target="_blank">Education and Skills Funding Agency</a></li>
                     </ul>
                     <div class="open-government-licence">

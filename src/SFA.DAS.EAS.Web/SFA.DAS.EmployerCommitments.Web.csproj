@@ -855,7 +855,6 @@
     <Content Include="src\sass\screen-ie8.scss" />
     <Content Include="src\sass\_panels.scss" />
     <Content Include="src\sass\_commitments.scss" />
-    <Content Include="Views\Shared\_PayeNotFound.cshtml" />
     <Content Include="src\sass\_custom.scss" />
     <Content Include="StartUp\IIS.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -876,13 +875,10 @@
     <Content Include="src\sass\_agreement.scss" />
     <Content Include="Views\Error\InvalidState.cshtml" />
     <Content Include="Views\EmployerCommitments\AgreementNotSigned.cshtml" />
-    <Content Include="Views\Shared\_SetupAccount.cshtml" />
-    <Content Include="Views\Shared\_Agreement_v1.cshtml" />
     <Content Include="Views\EmployerManageApprentices\Edit.cshtml" />
     <Content Include="Views\EmployerManageApprentices\ViewChanges.cshtml" />
     <Content Include="Views\EmployerManageApprentices\ConfirmChanges.cshtml" />
     <Content Include="Views\Shared\EditApprenticeship.cshtml" />
-    <Content Include="Views\Shared\_WhatIsEnglishPercentage.cshtml" />
     <Content Include="Views\EmployerManageApprentices\ReviewChanges.cshtml" />
     <Content Include="src\sass\_accordions.scss" />
     <Content Include="Views\EmployerManageApprentices\ChangeStatus.cshtml" />
@@ -898,7 +894,6 @@
     <Content Include="Views\Settings\NotificationUnsubscribe.cshtml" />
     <Content Include="Views\Shared\Pagination.cshtml" />
     <Content Include="src\sass\_search.scss" />
-    <Content Include="Views\Shared\_SetupAccount_OrgS.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
