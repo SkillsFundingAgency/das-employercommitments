@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.EmployerCommitments.Web.ViewModels.LegalEntitySignedAgreementViewModel
+﻿@using SFA.DAS.EmployerCommitments.Web.Extensions
+@model SFA.DAS.EmployerCommitments.Web.ViewModels.LegalEntitySignedAgreementViewModel
 @{
     ViewBag.Title = "Agreement not signed";
     ViewBag.PageId = "agreement-not-signed";
@@ -17,12 +18,12 @@
                 @Model.LegalEntityName
                 doesn't have a signed agreement with the Education and Skills Funding Agency (ESFA). Without a signed agreement you can add apprentice details, but won't be able to authorise payments to training providers.
                 <br/><br/>
-                Only account owners can sign ESFA agreements. If you're not sure who the owner is, you can <a href="@Url.Action("ViewTeam", "EmployerTeam")">check your team details</a>.
+                Only account owners can sign ESFA agreements. If you're not sure who the owner is, you can <a href="@Url.ExternalUrlAction("teams", "view")">check your team details</a>.
             </strong>
 
         </div>
         @*TODO*@
-        <p><a class="button" href="@Url.Action("Index", "EmployerAgreement")" aria-label="Review your agreement">Review agreement</a>
+        <p><a class="button" href="@Url.ExternalUrlAction("agreements")" aria-label="Review your agreement">Review agreement</a>
         <p><a href="@Url.Action("SearchProvider", new {Model.HashedAccountId, Model.LegalEntityCode, Model.CohortRef})">Continue anyway</a></p>
     </div>
 </div>
