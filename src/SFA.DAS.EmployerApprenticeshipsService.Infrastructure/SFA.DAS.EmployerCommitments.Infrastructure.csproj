@@ -231,11 +231,11 @@
     <Folder Include="Interfaces\PostcodeAnywhere\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.EmployerCommitments.Application\SFA.DAS.EmployerCommitments.Application.csproj">
+    <ProjectReference Include="..\SFA.DAS.EmployerApprenticeshipsService.Application\SFA.DAS.EmployerCommitments.Application.csproj">
       <Project>{0226F97A-704E-49B0-A100-B75FEEC9C8AD}</Project>
       <Name>SFA.DAS.EmployerCommitments.Application</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.EmployerCommitments.Domain\SFA.DAS.EmployerCommitments.Domain.csproj">
+    <ProjectReference Include="..\SFA.DAS.EmployerApprenticeshipsService.Domain\SFA.DAS.EmployerCommitments.Domain.csproj">
       <Project>{EC415CDA-9294-4967-BD27-AA900985427D}</Project>
       <Name>SFA.DAS.EmployerCommitments.Domain</Name>
     </ProjectReference>

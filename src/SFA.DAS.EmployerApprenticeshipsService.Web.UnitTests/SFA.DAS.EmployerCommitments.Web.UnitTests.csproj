@@ -168,19 +168,19 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.EmployerCommitments.Application\SFA.DAS.EmployerCommitments.Application.csproj">
+    <ProjectReference Include="..\SFA.DAS.EmployerApprenticeshipsService.Application\SFA.DAS.EmployerCommitments.Application.csproj">
       <Project>{0226F97A-704E-49B0-A100-B75FEEC9C8AD}</Project>
       <Name>SFA.DAS.EmployerCommitments.Application</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.EmployerCommitments.Domain\SFA.DAS.EmployerCommitments.Domain.csproj">
+    <ProjectReference Include="..\SFA.DAS.EmployerApprenticeshipsService.Domain\SFA.DAS.EmployerCommitments.Domain.csproj">
       <Project>{EC415CDA-9294-4967-BD27-AA900985427D}</Project>
       <Name>SFA.DAS.EmployerCommitments.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.EmployerCommitments.Infrastructure\SFA.DAS.EmployerCommitments.Infrastructure.csproj">
+    <ProjectReference Include="..\SFA.DAS.EmployerApprenticeshipsService.Infrastructure\SFA.DAS.EmployerCommitments.Infrastructure.csproj">
       <Project>{01AC2BC2-AC01-400F-AB8F-548DD5C0EE74}</Project>
       <Name>SFA.DAS.EmployerCommitments.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.EmployerCommitments.Web\SFA.DAS.EmployerCommitments.Web.csproj">
+    <ProjectReference Include="..\SFA.DAS.EAS.Web\SFA.DAS.EmployerCommitments.Web.csproj">
       <Project>{65DB60B1-80F0-432C-926E-7A6DD02A5645}</Project>
       <Name>SFA.DAS.EmployerCommitments.Web</Name>
     </ProjectReference>
