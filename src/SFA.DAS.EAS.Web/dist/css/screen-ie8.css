@@ -4458,29 +4458,20 @@ h2 .float-right {
 
 .dynamic-cost-display .bold-xlarge {
   line-height: 82px;
+  font-size: 80px;
 }
 
 .dynamic-cost-display .short {
+  font-size: 67px;
+}
+
+.dynamic-cost-display .long {
   font-size: 48px;
-}
-
-.dynamic-cost-display .long {
-  font-size: 26px;
   line-height: 82px;
 }
 
 .dynamic-cost-display .longer {
-  font-size: 19px;
-  line-height: 82px;
-}
-
-.dynamic-cost-display .long {
-  font-size: 45px;
-  line-height: 82px;
-}
-
-.dynamic-cost-display .longer {
-  font-size: 32px;
+  font-size: 38px;
   line-height: 82px;
 }
 
@@ -4503,6 +4494,15 @@ h2 .float-right {
 }
 
 /*Email notification settings*/
+#notification-settings .alert-default {
+  background: #dee0e2;
+  margin-bottom: 40px;
+}
+
+#notification-settings .alert-default p {
+  font-weight: bold;
+}
+
 #notification-settings h1 {
   margin-bottom: 0;
 }
@@ -4545,6 +4545,10 @@ h2 .float-right {
   overflow: auto;
 }
 
+.filter-option-select .options-container .item {
+  border-bottom: 1px solid #bfc1c3;
+}
+
 .filter-option-select .options-container label {
   font-size: 16px;
   line-height: 1.25;
@@ -4553,8 +4557,12 @@ h2 .float-right {
   font-weight: 400;
   text-transform: none;
   padding: 7px 0 7px 2px;
-  border-bottom: 1px solid #bfc1c3;
   cursor: pointer;
+  margin-left: 20px;
+}
+
+.filter-option-select .options-container input {
+  margin-left: -16px;
 }
 
 .filter-option-select .showHide {
@@ -4591,6 +4599,34 @@ h2 .float-right {
   margin-bottom: 0;
 }
 
+#review-datalock-changes h2.heading-small {
+  margin-top: 40px;
+}
+
+#review-datalock-changes .core-detail {
+  margin-bottom: 30px;
+}
+
+#review-datalock-changes .core-detail td.first-child {
+  border-top: 1px solid #bfc1c3;
+}
+
+#review-datalock-changes .changes .current {
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+#review-datalock-changes .changes .changed {
+  font-weight: bold;
+}
+
+#review-datalock-changes #approve-changes a.break-line {
+  clear: both;
+  display: block;
+  padding-left: 0;
+  margin-top: 20px;
+}
+
 #edit-started-apprentice .approve-alert {
   margin-top: 30px;
 }
@@ -4605,6 +4641,90 @@ h2 .float-right {
 
 #edit-started-apprentice strong {
   font-weight: bold;
+}
+
+#manage-all-apprentices .previous-next-navigation {
+  padding-left: 0;
+  position: relative;
+  overflow: hidden;
+  margin: 60px 0 0;
+  width: 100%;
+}
+
+#manage-all-apprentices .previous-next-navigation li {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 20px;
+  line-height: 1.11111;
+  font-weight: 400;
+  text-transform: none;
+  font-size-adjust: 0.5;
+  display: block;
+  padding: 0;
+  margin: 0;
+  width: 50%;
+  float: left;
+}
+
+#manage-all-apprentices .previous-next-navigation li a {
+  display: block;
+  text-decoration: none;
+  font-size: 24px;
+  line-height: 0.9em;
+}
+
+#manage-all-apprentices .previous-next-navigation li a span {
+  display: block;
+  font-family: "nta", Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.25;
+  font-weight: 400;
+  text-transform: none;
+  font-size-adjust: 0.5;
+}
+
+#manage-all-apprentices .previous-next-navigation li a:hover {
+  background: #f8f8f8;
+}
+
+#manage-all-apprentices .previous-next-navigation li a:hover .page-numbers {
+  text-decoration: underline;
+}
+
+#manage-all-apprentices .previous-next-navigation li a:focus .page-numbers {
+  text-decoration: underline;
+}
+
+#manage-all-apprentices .previous-next-navigation li.next {
+  float: right;
+  text-align: right;
+}
+
+#manage-all-apprentices .previous-next-navigation li.next a {
+  padding: 15px 35px 15px 0;
+}
+
+#manage-all-apprentices .previous-next-navigation li.next a:before {
+  background: transparent url("/dist/css/images/pagination-arrow-sprite.png") no-repeat -102px -11px;
+  margin: -4px -32px 0 0;
+  display: block;
+  float: right;
+  width: 30px;
+  height: 38px;
+  content: " ";
+}
+
+#manage-all-apprentices .previous-next-navigation li.previous a {
+  padding: 15px 0 15px 35px;
+}
+
+#manage-all-apprentices .previous-next-navigation li.previous a:before {
+  background: transparent url("/dist/css/images/pagination-arrow-sprite.png") no-repeat -20px -11px;
+  margin: -4px 0 0 -32px;
+  display: block;
+  float: left;
+  width: 30px;
+  height: 38px;
+  content: " ";
 }
 
 @media only screen and (max-device-width: 640px), only screen and (max-device-width: 667px), only screen and (max-width: 480px) {
@@ -4628,6 +4748,9 @@ h2 .float-right {
     text-decoration: none;
     color: #0b0c0c;
     cursor: pointer;
+  }
+  #apprentice-details .finishEditingBtn {
+    margin-bottom: 20px;
   }
   .bubble-arrow, .overlap-arrow {
     display: none;

@@ -11,10 +11,6 @@
     <thead>
     <tr>
         <th></th>
-        @if (Model.IsDataLockOrigin)
-        {
-            <th scope="col">Period</th>
-        }
         <th scope="col">@currentValuHeader</th>
         <th scope="col">Changed to</th>
     </tr>
@@ -23,9 +19,9 @@
     @if (!string.IsNullOrWhiteSpace(Model.FirstName) || !string.IsNullOrWhiteSpace(Model.LastName))
     {
         <tr>
-            <th scope="row">Name</th>
+            <td>Name</td>
             <td>@Model.OriginalApprenticeship.FirstName @Model.OriginalApprenticeship.LastName</td>
-            <td class="changed-item">@GetNameChange(Model.OriginalApprenticeship, Model)</td>
+            <td>@GetNameChange(Model.OriginalApprenticeship, Model)</td>
             @Html.Hidden("FirstName", Model.FirstName)
             @Html.Hidden("Lastname", Model.LastName)
         </tr>
@@ -34,14 +30,14 @@
     @if (Model.DateOfBirth?.DateTime != null)
     {
         <tr>
-            <th scope="row">Date of birth</th>
+            <td>Date of birth</td>
             <td>
                 @if (Model.OriginalApprenticeship.DateOfBirth.HasValue)
                 {
                     @Model.OriginalApprenticeship.DateOfBirth.Value.ToGdsFormat()
                 }
             </td>
-            <td class="changed-item">@Model.DateOfBirth.DateTime.Value.ToGdsFormat()</td>
+            <td>@Model.DateOfBirth.DateTime.Value.ToGdsFormat()</td>
             @Html.Hidden("DateOfBirth.Day", Model.DateOfBirth.Day)
             @Html.Hidden("DateOfBirth.Month", Model.DateOfBirth.Month)
             @Html.Hidden("DateOfBirth.Year", Model.DateOfBirth.Year)
@@ -51,9 +47,9 @@
     @if (Model.TrainingName != null)
     {
         <tr>
-            <th scope="row">Apprenticeship training course</th>
+            <td>Apprenticeship training course</td>
             <td>@Model.OriginalApprenticeship.TrainingName </td>
-            <td class="changed-item">@Model.TrainingName</td>
+            <td>@Model.TrainingName</td>
             @Html.Hidden("TrainingCode", Model.TrainingCode)
             @Html.Hidden("TrainingName", Model.TrainingName)
             @Html.Hidden("TrainingType", Model.TrainingType)
@@ -63,13 +59,9 @@
     @if (Model.StartDate?.DateTime != null)
     {
         <tr>
-            <th scope="row">Planned training start date</th>
-            @if (Model.IsDataLockOrigin)
-            {
-                <td>--</td>
-            }
+            <td>Planned training start date</td>
             <td>@Model.OriginalApprenticeship.StartDate.Value.ToGdsFormat() </td>
-            <td class="changed-item">@Model.StartDate.DateTime.Value.ToGdsFormat()</td>
+            <td>@Model.StartDate.DateTime.Value.ToGdsFormat()</td>
             @Html.Hidden("StartDate.Month", Model.StartDate.Month)
             @Html.Hidden("StartDate.Year", Model.StartDate.Year)
         </tr>
@@ -78,13 +70,9 @@
     @if (Model.EndDate?.DateTime != null)
     {
         <tr>
-            <th scope="row">Planned training end date</th>
-            @if (Model.IsDataLockOrigin)
-            {
-                <td>--</td>
-            }
+            <td>Planned training end date</td>
             <td>@Model.OriginalApprenticeship.EndDate.Value.ToGdsFormat() </td>
-            <td class="changed-item">@Model.EndDate.DateTime.Value.ToGdsFormat()</td>
+            <td>@Model.EndDate.DateTime.Value.ToGdsFormat()</td>
             @Html.Hidden("EndDate.Month", Model.EndDate.Month)
             @Html.Hidden("EndDate.Year", Model.EndDate.Year)
         </tr>
@@ -93,15 +81,9 @@
     @if (!string.IsNullOrEmpty(Model.Cost))
     { 
         <tr>
-            <th scope="row">Cost</th>
-            @if (Model.IsDataLockOrigin)
-            {
-                <td>
-                    @Model.IlrEffectiveFromDate.Value.ToGdsFormat()
-                </td>
-            }
+            <td>Cost</td>
             <td>@Model.OriginalApprenticeship.Cost.FormatCost() </td>
-            <td class="changed-item">@FormatCost(Model.Cost)</td>
+            <td>@FormatCost(Model.Cost)</td>
             @Html.Hidden("Cost", Model.Cost)
         </tr>
     }
@@ -109,9 +91,9 @@
     @if (Model.EmployerRef != null)
     {
         <tr>
-            <th scope="row">Reference</th>
+            <td>Reference</td>
             <td>@Model.OriginalApprenticeship.EmployerReference</td>
-            <td class="changed-item">@Model.EmployerRef</td>
+            <td>@Model.EmployerRef</td>
             @Html.Hidden("EmployerRef", Model.EmployerRef)
         </tr>
     }

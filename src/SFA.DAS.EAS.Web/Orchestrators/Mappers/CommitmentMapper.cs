@@ -34,7 +34,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 LegalEntityName = commitment.LegalEntityName,
                 ProviderName = commitment.ProviderName,
                 Status = _statusCalculator.GetStatus(commitment.EditStatus, commitment.ApprenticeshipCount, commitment.LastAction, commitment.AgreementStatus),
-                ShowViewLink = commitment.EditStatus == EditStatus.EmployerOnly,
                 LatestMessage = await messageTask
             };
         }

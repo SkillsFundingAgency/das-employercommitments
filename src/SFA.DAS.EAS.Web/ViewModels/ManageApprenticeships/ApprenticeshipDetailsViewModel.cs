@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
@@ -29,7 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         
         public bool CanEditStatus { get;  set; }
 
-        public string Alert { get; set; }
+        public IEnumerable<string> Alerts { get; set; }
 
         public string EmployerReference { get; set; }
 
@@ -37,9 +38,9 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public bool EnableEdit { get; set; }
 
-        public bool HasDataLockError { get; set; }
+        public bool PendingDataLockRestart { get; set; }
 
-        public TriageStatus DataLockTriageStatus { get; set; }
+        public bool PendingDataLockChange { get; set; }
     }
 
     public enum PendingChanges
@@ -47,5 +48,13 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         None = 0,
         ReadyForApproval = 1,
         WaitingForApproval = 2
+    }
+
+    public enum TriageStatusViewModel
+    {
+        Unknown = 0,
+        Change = 1,
+        Restart = 2,
+        FixIlr = 3
     }
 }

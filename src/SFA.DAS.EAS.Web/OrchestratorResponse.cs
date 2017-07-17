@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 
 namespace SFA.DAS.EmployerCommitments.Web
@@ -22,5 +23,4 @@ namespace SFA.DAS.EmployerCommitments.Web
     {
         public T Data { get; set; }
     }
-
 }

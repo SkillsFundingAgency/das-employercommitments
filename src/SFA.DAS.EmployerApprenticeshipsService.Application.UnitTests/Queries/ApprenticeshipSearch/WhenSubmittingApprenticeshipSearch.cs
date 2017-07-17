@@ -6,6 +6,7 @@ using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using FluentAssertions;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.ApprenticeshipSearch
 {
@@ -23,7 +24,10 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.Apprenticesh
                 x => x.GetEmployerApprenticeships(It.IsAny<long>(), It.IsAny<ApprenticeshipSearchQuery>()))
                 .ReturnsAsync(new ApprenticeshipSearchResponse
                 {
-                    Apprenticeships = new List<Apprenticeship>()
+                    Apprenticeships = new List<Apprenticeship>(),
+                    PageNumber = 2,
+                    PageSize = 10,
+                    TotalApprenticeships = 100
                 });
 
             _handler = new ApprenticeshipSearchQueryHandler(_commitmentsApi.Object, Mock.Of<IHashingService>());
@@ -50,5 +54,44 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.Apprenticesh
                     Times.Once);
         }
 
+        [Test]
+        public async Task ThenCommitmentsApiIsCalledWithCorrectPageNumber()
+        {
+            //Arrange
+            var request = new ApprenticeshipSearchQueryRequest
+            {
+                HashedLegalEntityId = "EmployerId",
+                Query = new ApprenticeshipSearchQuery { PageNumber = 5 }
+            };
+
+            //Act
+            await _handler.Handle(request);
+
+            //Assert
+            _commitmentsApi.Verify(
+                x => x.GetEmployerApprenticeships(
+                    It.IsAny<long>(),
+                    It.Is<ApprenticeshipSearchQuery>(a => a.PageNumber == 5)),
+                    Times.Once);
+        }
+
+        [Test]
+        public async Task ThenShouldReturnPaginationValuesFromApi()
+        {
+            //Arrange
+            var request = new ApprenticeshipSearchQueryRequest
+            {
+                HashedLegalEntityId = "EmployerId",
+                Query = new ApprenticeshipSearchQuery()
+            };
+
+            //Act
+            var response = await _handler.Handle(request);
+
+            //Assert
+            response.PageNumber.Should().Be(2);
+            response.PageSize.Should().Be(10);
+            response.TotalApprenticeships.Should().Be(100);
+        }
     }
 }

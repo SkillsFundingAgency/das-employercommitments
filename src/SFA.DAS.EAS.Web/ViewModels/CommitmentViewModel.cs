@@ -22,5 +22,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string BackLinkUrl { get; set; }
         public bool HasOverlappingErrors { get; set; }
         public Dictionary<string, string> FundingCapWarnings { get; set; }
+        public bool IsReadOnly { get; set; }
     }
 }

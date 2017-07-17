@@ -8,6 +8,5 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string HashedId { get; set; }
 
         public List<UserNotificationSetting> NotificationSettings { get; set; }
-
     }
 }

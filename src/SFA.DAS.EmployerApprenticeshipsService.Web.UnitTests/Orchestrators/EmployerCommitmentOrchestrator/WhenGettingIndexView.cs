@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             var logger = new Mock<ILog>();
             var calculator = new Mock<ICommitmentStatusCalculator>();
             var hashingService = new Mock<IHashingService>();
-
+            
             hashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);
     
             _orchestrator = new EmployerCommitmentsOrchestrator(

@@ -177,17 +177,5 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             result.Data.PendingChanges.Should().Be(PendingChanges.ReadyForApproval);
         }
 
-        //TODO give this a better name to describe the test being performed
-        [Test]
-        public void HelloWorld()
-        {
-            var ap = new Apprenticeship
-                         {
-                             DataLockTriageStatus = TriageStatus.Restart
-                         };
-
-            var result = ApprenticeshipMapper.MapToApprenticeshipDetailsViewModel(ap);
-            result.HasDataLockError.Should().BeTrue();
-        }
     }
 }
