@@ -89,9 +89,17 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             RegisterMediator();
 
             RegisterAuditService();
-            
+
+            RegisterExecutionPolicies();
 
             RegisterLogger();
+        }
+
+        private void RegisterExecutionPolicies()
+        {
+            For<Infrastructure.ExecutionPolicies.ExecutionPolicy>()
+                .Use<Infrastructure.ExecutionPolicies.IdamsExecutionPolicy>()
+                .Named(Infrastructure.ExecutionPolicies.IdamsExecutionPolicy.Name);
         }
 
         private void RegisterAuditService()
