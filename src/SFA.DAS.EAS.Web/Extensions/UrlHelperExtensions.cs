@@ -12,7 +12,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Extensions
 
             var accountId = helper.RequestContext.RouteData.Values["hashedAccountId"];
 
-            return ignoreAccountId ? $"{baseUrl}accounts/{controllerName}/{actionName}" 
+            return ignoreAccountId ? $"{baseUrl}{controllerName}/{actionName}" 
                                     : $"{baseUrl}accounts/{accountId}/{controllerName}/{actionName}";
             
         }
