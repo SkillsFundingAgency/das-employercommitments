@@ -166,7 +166,7 @@
                 <ul role="menubar" id="global-nav-links">
                     <li><a href="@Url.ExternalUrlAction("teams")" class="@(ViewBag.Section == "home" ? "selected" : "")"  role="menuitem">Home</a></li>
                     <li><a href="@Url.ExternalUrlAction("balance")" class="@(ViewBag.Section == "finance" ? "selected" : "")" role="menuitem">Finance</a></li>
-                    <li><a href="@Url.Action("Index", "EmployerCommitments")" class="@(controllerString == "EmployerCommitments" ? "selected" : "")" role="menuitem">Apprentices</a></li>
+                    <li><a href="@Url.Action("Index", "EmployerCommitments")" class="@(ViewBag.Section == "apprentices" ? "selected" : "")" role="menuitem">Apprentices</a></li>
                     <li><a href="@Url.ExternalUrlAction("teams", "view")" class="@(ViewBag.Section == "team" ? "selected" : "")" role="menuitem">Your team</a></li>
                     <li><a href="@Url.ExternalUrlAction("agreements")" class="@(ViewBag.Section == "organisations" ? "selected" : "")" role="menuitem">Your organisations and agreements</a></li>
                     <li><a href="@Url.ExternalUrlAction("schemes")" class="@(ViewBag.Section == "paye" ? "selected" : "")" role="menuitem">PAYE schemes</a></li>
