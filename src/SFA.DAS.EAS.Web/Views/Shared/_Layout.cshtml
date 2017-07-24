@@ -158,7 +158,6 @@
     </div>
     @if (HttpContext.Current.User.Identity.IsAuthenticated)
                 {
-                    var controllerString = ViewContext.RouteData.Values["Controller"].ToString();
                     if (string.IsNullOrWhiteSpace(ViewBag.HideNav))
                     {
         <div class="header-organisation" role="navigation">
