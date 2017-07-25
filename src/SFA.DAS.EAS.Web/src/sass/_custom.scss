@@ -535,6 +535,10 @@ h2{
 
 // pagination 
 #manage-all-apprentices{
+  .panel{
+      background:$grey-3;
+      border-color:$purple;
+  }
 .previous-next-navigation {
 padding-left: 0;
 position: relative;
@@ -610,6 +614,12 @@ width: 100%;
   }
 }
 // END -pagination styles
+
+
+
+
+
+
 
 
 //all mobile media query breakpoints
