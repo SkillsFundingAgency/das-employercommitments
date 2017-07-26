@@ -4642,6 +4642,11 @@ h2 .float-right {
   font-weight: bold;
 }
 
+#manage-all-apprentices .panel {
+  background: #dee0e2;
+  border-color: #2e358b;
+}
+
 #manage-all-apprentices .previous-next-navigation {
   padding-left: 0;
   position: relative;
