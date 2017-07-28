@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Web;
 using AutoMapper;
@@ -40,6 +41,9 @@ using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.Events.Api.Client;
 using SFA.DAS.Events.Api.Client.Configuration;
+using SFA.DAS.Notifications.Api.Client;
+using SFA.DAS.Notifications.Api.Client.Configuration;
+using SFA.DAS.Http.TokenGenerators;
 using SFA.DAS.NLog.Logger;
 using StructureMap;
 using StructureMap.Graph;
@@ -84,6 +88,8 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
                 .Ctor<IEventsApiClientConfiguration>().Is(config.EventsApi)
                 .SelectConstructor(() => new EventsApi(null)); // The default one isn't the one we want to use.;
 
+            ConfigureNotificationsApi(config);
+
             RegisterMapper();
 
             RegisterMediator();
@@ -93,6 +99,30 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             RegisterExecutionPolicies();
 
             RegisterLogger();
+        }
+
+        private void ConfigureNotificationsApi(EmployerCommitmentsServiceConfiguration config)
+        {
+            HttpClient httpClient;
+
+            if (string.IsNullOrWhiteSpace(config.CommitmentNotification.NotificationApi.ClientId))
+            {
+                httpClient = new Http.HttpClientBuilder()
+                .WithBearerAuthorisationHeader(new JwtBearerTokenGenerator(config.CommitmentNotification.NotificationApi))
+                .Build();
+            }
+            else
+            {
+                httpClient = new Http.HttpClientBuilder()
+                .WithBearerAuthorisationHeader(new AzureADBearerTokenGenerator(config.CommitmentNotification.NotificationApi))
+                .Build();
+            }
+
+            For<INotificationsApi>().Use<NotificationsApi>().Ctor<HttpClient>().Is(httpClient);
+
+            For<INotificationsApiClientConfiguration>().Use(config.CommitmentNotification.NotificationApi);
+
+
         }
 
         private void RegisterExecutionPolicies()
