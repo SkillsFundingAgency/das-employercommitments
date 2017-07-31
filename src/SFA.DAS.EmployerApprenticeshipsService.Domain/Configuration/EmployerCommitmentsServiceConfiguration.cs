@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.Notifications.Api.Client.Configuration;
 
 namespace SFA.DAS.EmployerCommitments.Domain.Configuration
 {
@@ -31,6 +32,9 @@ namespace SFA.DAS.EmployerCommitments.Domain.Configuration
         public string SuperUserRoleId { get; set; }
 
         public string ClientToken { get; set; }
+
+        public NotificationsApiClientConfiguration NotificationApi { get; set; }
+
     }
 
     public class ApprenticeshipInfoServiceConfiguration : IApprenticeshipInfoServiceConfiguration
