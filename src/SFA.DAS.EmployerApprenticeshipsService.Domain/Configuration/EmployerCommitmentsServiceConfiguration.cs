@@ -33,8 +33,6 @@ namespace SFA.DAS.EmployerCommitments.Domain.Configuration
 
         public string ClientToken { get; set; }
 
-        public NotificationsApiClientConfiguration NotificationApi { get; set; }
-
     }
 
     public class ApprenticeshipInfoServiceConfiguration : IApprenticeshipInfoServiceConfiguration

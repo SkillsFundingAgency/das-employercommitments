@@ -42,13 +42,14 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.Events.Api.Client;
 using SFA.DAS.Events.Api.Client.Configuration;
 using SFA.DAS.Notifications.Api.Client;
-using SFA.DAS.Notifications.Api.Client.Configuration;
 using SFA.DAS.Http.TokenGenerators;
 using SFA.DAS.NLog.Logger;
+using SFA.DAS.Notifications.Api.Client.Configuration;
 using StructureMap;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
 using IConfiguration = SFA.DAS.EmployerCommitments.Domain.Interfaces.IConfiguration;
+using NotificationsApiClientConfiguration = SFA.DAS.EmployerCommitments.Domain.Configuration.NotificationsApiClientConfiguration;
 
 namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 {
@@ -88,7 +89,10 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
                 .Ctor<IEventsApiClientConfiguration>().Is(config.EventsApi)
                 .SelectConstructor(() => new EventsApi(null)); // The default one isn't the one we want to use.;
 
-            ConfigureNotificationsApi(config);
+            var notificationsApiConfig = Infrastructure.DependencyResolution.ConfigurationHelper.GetConfiguration
+                <NotificationsApiClientConfiguration>($"{ServiceName}.Notifications");
+
+            ConfigureNotificationsApi(notificationsApiConfig);
 
             RegisterMapper();
 
@@ -101,26 +105,26 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             RegisterLogger();
         }
 
-        private void ConfigureNotificationsApi(EmployerCommitmentsServiceConfiguration config)
+        private void ConfigureNotificationsApi(NotificationsApiClientConfiguration config)
         {
             HttpClient httpClient;
 
-            if (string.IsNullOrWhiteSpace(config.CommitmentNotification.NotificationApi.ClientId))
+            if (string.IsNullOrWhiteSpace(config.ClientId))
             {
                 httpClient = new Http.HttpClientBuilder()
-                .WithBearerAuthorisationHeader(new JwtBearerTokenGenerator(config.CommitmentNotification.NotificationApi))
+                .WithBearerAuthorisationHeader(new JwtBearerTokenGenerator(config))
                 .Build();
             }
             else
             {
                 httpClient = new Http.HttpClientBuilder()
-                .WithBearerAuthorisationHeader(new AzureADBearerTokenGenerator(config.CommitmentNotification.NotificationApi))
+                .WithBearerAuthorisationHeader(new AzureADBearerTokenGenerator(config))
                 .Build();
             }
 
             For<INotificationsApi>().Use<NotificationsApi>().Ctor<HttpClient>().Is(httpClient);
 
-            For<INotificationsApiClientConfiguration>().Use(config.CommitmentNotification.NotificationApi);
+            For<INotificationsApiClientConfiguration>().Use(config);
 
 
         }
