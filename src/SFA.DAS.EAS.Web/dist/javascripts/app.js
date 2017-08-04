@@ -177,6 +177,11 @@ $(".js-enabled #WhenToMakeChange-SpecificDate").on('click touchstart', (function
     $("#stop-effective").show().attr("aria-hidden", "false");
 }));
 
+//on validation error expand error field
+if ($('.validation-summary-errors').attr('data-valmsg-summary') == 'true') {
+    $("#stop-effective").show().attr("aria-hidden", "false");
+}
+
 
 
 
