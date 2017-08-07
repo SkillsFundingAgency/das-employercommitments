@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Web;
 using AutoMapper;
@@ -40,11 +41,15 @@ using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.Events.Api.Client;
 using SFA.DAS.Events.Api.Client.Configuration;
+using SFA.DAS.Notifications.Api.Client;
+using SFA.DAS.Http.TokenGenerators;
 using SFA.DAS.NLog.Logger;
+using SFA.DAS.Notifications.Api.Client.Configuration;
 using StructureMap;
 using StructureMap.Graph;
 using StructureMap.TypeRules;
 using IConfiguration = SFA.DAS.EmployerCommitments.Domain.Interfaces.IConfiguration;
+using NotificationsApiClientConfiguration = SFA.DAS.EmployerCommitments.Domain.Configuration.NotificationsApiClientConfiguration;
 
 namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 {
@@ -84,6 +89,11 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
                 .Ctor<IEventsApiClientConfiguration>().Is(config.EventsApi)
                 .SelectConstructor(() => new EventsApi(null)); // The default one isn't the one we want to use.;
 
+            var notificationsApiConfig = Infrastructure.DependencyResolution.ConfigurationHelper.GetConfiguration
+                <NotificationsApiClientConfiguration>($"{ServiceName}.Notifications");
+
+            ConfigureNotificationsApi(notificationsApiConfig);
+
             RegisterMapper();
 
             RegisterMediator();
@@ -93,6 +103,30 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             RegisterExecutionPolicies();
 
             RegisterLogger();
+        }
+
+        private void ConfigureNotificationsApi(NotificationsApiClientConfiguration config)
+        {
+            HttpClient httpClient;
+
+            if (string.IsNullOrWhiteSpace(config.ClientId))
+            {
+                httpClient = new Http.HttpClientBuilder()
+                .WithBearerAuthorisationHeader(new JwtBearerTokenGenerator(config))
+                .Build();
+            }
+            else
+            {
+                httpClient = new Http.HttpClientBuilder()
+                .WithBearerAuthorisationHeader(new AzureADBearerTokenGenerator(config))
+                .Build();
+            }
+
+            For<INotificationsApi>().Use<NotificationsApi>().Ctor<HttpClient>().Is(httpClient);
+
+            For<INotificationsApiClientConfiguration>().Use(config);
+
+
         }
 
         private void RegisterExecutionPolicies()

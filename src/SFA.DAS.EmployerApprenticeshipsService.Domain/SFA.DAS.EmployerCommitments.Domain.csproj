@@ -61,8 +61,9 @@
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=6.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAzure.Storage.6.2.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="SFA.DAS.Audit.Client, Version=1.0.0.20553, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Audit.Client.1.0.0.20553\lib\net45\SFA.DAS.Audit.Client.dll</HintPath>
@@ -93,8 +94,17 @@
     <Reference Include="SFA.DAS.Events.Api.Types, Version=1.20.0.26497, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Events.Api.Types.1.20.0.26497\lib\net45\SFA.DAS.Events.Api.Types.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Notifications.Api.Client">
-      <HintPath>..\packages\SFA.DAS.Notifications.Api.Client.1.1.0.12760\lib\net45\SFA.DAS.Notifications.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.Http, Version=1.0.0.35788, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Http.1.0.0.35788\lib\net45\SFA.DAS.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SFA.DAS.Notifications.Api.Client, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Notifications.Api.Client.2.0.0.35919\lib\net45\SFA.DAS.Notifications.Api.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SFA.DAS.Notifications.Api.Types, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Notifications.Api.Types.2.0.0.35919\lib\net45\SFA.DAS.Notifications.Api.Types.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="SFA.DAS.Provider.Events.Api.Client, Version=2.0.0.33572, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.0.0.33572\lib\net45\SFA.DAS.Provider.Events.Api.Client.dll</HintPath>
@@ -129,6 +139,7 @@
   <ItemGroup>
     <Compile Include="Configuration\AccountApiConfiguration.cs" />
     <Compile Include="Configuration\EmployerApprenticeshipApiConfiguration.cs" />
+    <Compile Include="Configuration\NotificationsApiClientConfiguration.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Http\InternalServerErrorException.cs" />
     <Compile Include="Http\RequestTimeOutException.cs" />
@@ -163,7 +174,6 @@
     <Compile Include="Configuration\HmrcConfiguration.cs" />
     <Compile Include="Configuration\IdentityServerConfiguration.cs" />
     <Compile Include="Configuration\LevyDeclarationProviderConfiguration.cs" />
-    <Compile Include="Configuration\NotificationsApiClientConfiguration.cs" />
     <Compile Include="Configuration\PaymentProviderConfiguration.cs" />
     <Compile Include="Configuration\PaymentsApiClientConfiguration.cs" />
     <Compile Include="Configuration\EventsApiClientConfiguration.cs" />

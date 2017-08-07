@@ -31,10 +31,10 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             return new Container(c =>
             {
                 c.Policies.Add(new ConfigurationPolicy<EmployerCommitmentsServiceConfiguration>(ServiceName));
-                c.Policies.Add(new ConfigurationPolicy<NotificationsApiClientConfiguration>($"{ServiceName}.Notifications"));
                 c.Policies.Add(new ConfigurationPolicy<AuditApiClientConfiguration>("SFA.DAS.AuditApiClient"));
 				c.Policies.Add(new ConfigurationPolicy<CommitmentsApiClientConfiguration>("SFA.DAS.CommitmentsAPI"));
-				c.Policies.Add(new ConfigurationPolicy<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI"));
+                c.Policies.Add(new ConfigurationPolicy<NotificationsApiClientConfiguration>($"{ServiceName}.Notifications"));
+                c.Policies.Add(new ConfigurationPolicy<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI"));
                 c.Policies.Add<CurrentDatePolicy>();
                 c.Policies.Add(new MessagePolicy<EmployerCommitmentsServiceConfiguration>(ServiceName));
                 c.Policies.Add(new ExecutionPolicyPolicy());
