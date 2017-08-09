@@ -26,7 +26,7 @@
             <h1 class="heading-xlarge">Select stop date</h1>
             
             <fieldset>
-                <p class="form-label-bold">Select stop date</p>
+                <legend class="visually-hidden" aria-hidden="true">Select stop date</legend>
                 <div class="form-group">
                     <legend class="visually-hidden">Date of status change</legend>
                    
@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="form-error-group form-group @Html.AddClassIfPropertyInError("DateOfChange", "error")" id="stop-effective">
-                    <span class="form-label-bold">When did it stop?</span>
+                    <span class="form-label-bold">Enter stop date</span>
                     <span class="form-hint">The earliest date you can enter is @Model.Data.StartDate.ToFullDateEntryFormat()</span>
 
                     <div class="form-date">
