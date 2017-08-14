@@ -42,7 +42,7 @@
                         </p>
                     </div>
 
-                    <label for=@($"WhenToMakeChange-{WhenToMakeChangeOptions.SpecificDate}") class="block-label selection-button-radio">
+                    <label for=@($"WhenToMakeChange-{WhenToMakeChangeOptions.SpecificDate}") class="block-label selection-button-radio" id="before-today">
                         @Html.RadioButton("WhenToMakeChange", WhenToMakeChangeOptions.SpecificDate, new { id = $"WhenToMakeChange-{WhenToMakeChangeOptions.SpecificDate}" })
                         Before today
                     </label>
