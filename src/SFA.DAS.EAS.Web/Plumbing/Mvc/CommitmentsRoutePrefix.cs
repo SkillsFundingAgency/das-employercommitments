@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Azure;
+using System;
 using System.Web.Mvc;
 
 namespace SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc
@@ -18,7 +19,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc
             if (prefix == null)
                 throw new ArgumentNullException(nameof(prefix), "Cannot be null");
 
-            return $"commitments/{prefix}";
+            var commitmentsPrefix = CloudConfigurationManager.GetSetting("CommitmentsRoutePrefix");
+
+            return $"{commitmentsPrefix}/{prefix}";
         }
     }
 }
