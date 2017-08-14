@@ -2,10 +2,11 @@
 using System.Web.Mvc;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.NLog.Logger;
+using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
-    [RoutePrefix("Error")]
+    [CommitmentsRoutePrefix("Error")]
     public class ErrorController : Controller
     {
         private readonly ILog _logger;

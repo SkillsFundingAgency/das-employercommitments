@@ -4,21 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using FluentValidation.Mvc;
-using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.UserProfile;
 using SFA.DAS.EmployerCommitments.Web.Authentication;
-using SFA.DAS.EmployerCommitments.Web.Exceptions;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.EmployerUsers.WebClientComponents;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
+using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
     [Authorize]
-    [RoutePrefix("accounts/{hashedAccountId}/apprentices/manage")]
+    [CommitmentsRoutePrefix("accounts/{hashedAccountId}/apprentices/manage")]
     public class EmployerManageApprenticesController : BaseController
     {
         private readonly EmployerManageApprenticeshipsOrchestrator _orchestrator;

@@ -351,6 +351,7 @@
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestrator.cs" />
     <Compile Include="Orchestrators\Mappers\ApprenticeshipFiltersMapper.cs" />
     <Compile Include="Orchestrators\Mappers\IApprenticeshipFiltersMapper.cs" />
+    <Compile Include="Plumbing\Mvc\CommitmentsRoutePrefix.cs" />
     <Compile Include="Validators\ChangeStatusViewModelValidator.cs" />
     <Compile Include="Validators\DataLockStatusViewModelViewModelValidator.cs" />
     <Compile Include="Validators\ProviderPriorityReOrderListValidator.cs" />
