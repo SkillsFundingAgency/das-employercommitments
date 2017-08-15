@@ -16,12 +16,13 @@ using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerUsers.WebClientComponents;
+using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
 
     [Authorize]
-    [RoutePrefix("accounts/{hashedaccountId}/apprentices")]
+    [CommitmentsRoutePrefix("accounts/{hashedaccountId}/apprentices")]
     public class EmployerCommitmentsController : BaseController
     {
         private readonly EmployerCommitmentsOrchestrator _employerCommitmentsOrchestrator;
