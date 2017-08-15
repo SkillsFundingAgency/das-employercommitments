@@ -145,6 +145,7 @@
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenUserSelectsToEditStatus.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenMappingApprenticeship.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingStatusOfCommitment.cs" />
+    <Compile Include="Plumbing\CommitmentRoutePrefixTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatusCalculator\WhenEditStatusIsWithEmployer.cs" />
     <Compile Include="StatusCalculator\WhenEditStatusIsWithBoth.cs" />

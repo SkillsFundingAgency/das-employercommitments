@@ -21,7 +21,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc
 
             var commitmentsPrefix = CloudConfigurationManager.GetSetting("CommitmentsRoutePrefix");
 
-            return $"{commitmentsPrefix}/{prefix}";
+            if (!string.IsNullOrWhiteSpace(commitmentsPrefix))
+                return $"{commitmentsPrefix}/{prefix}";
+            else 
+                return prefix;
         }
     }
 }
