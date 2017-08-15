@@ -182,8 +182,10 @@ if ($('.validation-summary-errors').attr('data-valmsg-summary') == 'true') {
     $("#stop-effective").show().attr("aria-hidden", "false");
 }
 
-
-
+// if input is not selected hide this block forever
+if ( ! $("#before-today input").is(':checked') ) {
+    $("#stop-effective").hide().attr("aria-hidden", "true");
+}
 
 
 // cohorts bingo balls - clickable block
