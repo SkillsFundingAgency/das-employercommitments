@@ -25,6 +25,21 @@ else
 {
             <div class="grid-row">
                 <div class="column-one-third">
+                    <!--Search bar-->
+                        <div id="search-app">
+                            <form id="search-form" method="get" action="http://www.google.com">
+                                <fieldset class="inline">
+                                    <legend>
+                                        <h1 class="heading-medium">
+                                            Search for an apprentice
+                                        </h1>
+                                    </legend>
+                                </fieldset>
+                                    <input type="text" id="search-input" class="search-text" name="q" size="21" maxlength="120" value="Search apprentice">
+                                    <input type="submit" value=" " class="submit-search">
+                            </form>
+                        </div>
+
                     <form method="GET" action="@Url.Action("ListAll")" novalidate="novalidate">
                         @Html.Partial("ApprenticeshipFilters", Model.Data.Filters)
                         <button type="submit" class="button" value="Filter">Filter apprentices</button>
