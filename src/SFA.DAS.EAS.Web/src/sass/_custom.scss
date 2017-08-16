@@ -622,8 +622,45 @@ width: 100%;
       }
 }
 
+// search apprentice
 
+	#search-form{
 
+		margin:20px 0;
+
+        .search-text{
+		margin: 0;
+		padding: 6px 15px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size:14px;
+		color:#666;
+		border:1px solid #ddd; 
+		border-right:0px;
+	
+	}
+	    .submit-search {
+		margin: 0 0 0 -4px;
+		padding: 0;
+		width: 40px;
+        height: 32px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-size:14px;
+		font-weight:bold;
+		outline: none;
+		cursor: pointer;
+		text-align: center;
+		text-decoration: none;
+		color: #ffffff;
+		border: solid 1px #ddd; 
+		background: #fff url('tf-search-icon-transparent.png');
+	}
+	/* Fixes submit button height problem in Firefox */
+	    .submit-search::-moz-focus-inner {
+	  border: 0;
+	}
+
+}
+	
 
 
 
