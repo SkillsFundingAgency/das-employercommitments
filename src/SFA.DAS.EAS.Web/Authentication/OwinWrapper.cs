@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Authentication
             var authenticationManager = _owinContext.Authentication;
             authenticationManager.SignOut("Cookies");
             
-            return new RedirectResult("https://dev-eas.apprenticeships.sfa.bis.gov.uk/service/signout");   
+            return new RedirectResult(redirectUrl);   
         }
 
         public string GetClaimValue(string claimKey)
