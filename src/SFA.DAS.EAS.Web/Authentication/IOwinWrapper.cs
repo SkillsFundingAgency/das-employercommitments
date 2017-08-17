@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Authentication
         void IssueLoginCookie(string id, string displayName);
         void RemovePartialLoginCookie();
         void SignInUser(string id, string displayName, string email);
-        ActionResult SignOutUser();
+        ActionResult SignOutUser(string redirectUrl);
         string GetClaimValue(string claimKey);
         Task UpdateClaims();
     }
