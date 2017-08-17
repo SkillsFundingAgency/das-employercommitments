@@ -1,4 +1,4 @@
-var sfa = sfa || {};
+﻿var sfa = sfa || {};
 
 sfa.homePage = {
     init: function () {
@@ -201,5 +201,7 @@ $('.container-head').on('click touchstart', (function () {
 
 }));
 
-
-
+$("#search-input").on("click", function () {
+    if ($(this).val() == "Search for their name")
+        $(this).val("")
+});

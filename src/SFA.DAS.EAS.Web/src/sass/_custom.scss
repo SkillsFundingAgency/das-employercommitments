@@ -624,43 +624,38 @@ width: 100%;
 
 // search apprentice
 
-	#search-form{
+#manage-all-apprentices{
+   hr.black{
+       background:$text-colour;
+       height: 2px;
+       margin: 10px 0 20px 0;
+   }
+   .filter-app-head{
+       margin-top:0;
+   }
+}
 
-		margin:20px 0;
-
+#search-form{
+		margin:7px 0 15px 0;
         .search-text{
+           @include media(tablet) {width:262px;}
 		margin: 0;
 		padding: 6px 15px;
-		font-family: Arial, Helvetica, sans-serif;
-		font-size:14px;
-		color:#666;
-		border:1px solid #ddd; 
-		border-right:0px;
-	
-	}
+        border:1px solid $border-colour;
+	    }
 	    .submit-search {
 		margin: 0 0 0 -4px;
 		padding: 0;
-		width: 40px;
-        height: 32px;
-		font-family: Arial, Helvetica, sans-serif;
-		font-size:14px;
-		font-weight:bold;
-		outline: none;
+		width: 38px;
+        height: 39px;	
 		cursor: pointer;
-		text-align: center;
-		text-decoration: none;
-		color: #ffffff;
-		border: solid 1px #ddd; 
-		background: #fff url('tf-search-icon-transparent.png');
+		border:1px solid $border-colour; 
+		background:url(/dist/images/search-glass.png) no-repeat 5px 5px;
+        color:transparent;
 	}
-	/* Fixes submit button height problem in Firefox */
-	    .submit-search::-moz-focus-inner {
-	  border: 0;
-	}
-
 }
-	
+
+
 
 
 
@@ -700,6 +695,7 @@ only screen and (max-width: 480px) {
 .bubble-arrow,.overlap-arrow {display:none;} 
     
 .manage-all-apprentices{
+   
 td:nth-of-type(1):before {
       content: "Name";
       font-weight: normal;

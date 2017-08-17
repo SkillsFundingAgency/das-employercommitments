@@ -29,22 +29,19 @@ else
                         <div id="search-app">
                             <form id="search-form" method="get" action="http://www.google.com">
                                 <fieldset class="inline">
-                                    <legend>
-                                        <h2 class="heading-medium">
-                                            Search for an apprentice
-                                        </h2>
-                                    </legend>
+                                    <legend><h2 class="heading-medium">Search for an apprentice</h2></legend>
+                                            <input type="text" id="search-input" class="search-text form-control" value="Search for their name" />
+                                            <input type="submit" class="submit-search form-control" />
                                 </fieldset>
-                                    <input type="text" id="search-input" class="search-text" name="q" size="21" maxlength="120" value="Search apprentice">
-                                    <input type="submit" value=" " class="submit-search">
                             </form>
                         </div>
-
+                        <hr class="black"/>
+                    <h2 class="heading-medium filter-app-head">Filter apprentices</h2>
                     <form method="GET" action="@Url.Action("ListAll")" novalidate="novalidate">
                         @Html.Partial("ApprenticeshipFilters", Model.Data.Filters)
                         <button type="submit" class="button" value="Filter">Filter apprentices</button>
                         <p>
-                            <a href="@Url.Action("ListAll")" title="Reset" class="button text-link reset-link">Reset</a>
+                          <a href="@Url.Action("ListAll")" title="Reset" class="button text-link reset-link">Reset</a>
                         </p>
                     </form>
                 </div>
