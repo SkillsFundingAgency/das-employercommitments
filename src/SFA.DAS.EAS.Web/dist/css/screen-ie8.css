@@ -4752,6 +4752,9 @@ h2 .float-right {
 
 #search-form .search-text {
   width: 262px;
+  height: 39px;
+  height: 38px;
+  width: 87%;
   margin: 0;
   padding: 6px 15px;
   border: 1px solid #bfc1c3;
@@ -4759,9 +4762,11 @@ h2 .float-right {
 
 #search-form .submit-search {
   margin: 0 0 0 -4px;
+  height: 39px;
+  margin-left: -4px;
   padding: 0;
   width: 38px;
-  height: 39px;
+  height: 38px;
   cursor: pointer;
   border: 1px solid #bfc1c3;
   background: url(/dist/images/search-glass.png) no-repeat 5px 5px;

@@ -638,16 +638,19 @@ width: 100%;
 #search-form{
 		margin:7px 0 15px 0;
         .search-text{
-           @include media(tablet) {width:262px;}
+           @include media(tablet) {width:262px;height:39px;}
+        height:38px;
+        width:87%;
 		margin: 0;
 		padding: 6px 15px;
         border:1px solid $border-colour;
 	    }
 	    .submit-search {
-		margin: 0 0 0 -4px;
+		 @include media(tablet) {margin: 0 0 0 -4px;height:39px;}
+        margin-left:-4px;
 		padding: 0;
 		width: 38px;
-        height: 39px;	
+        height: 38px;	
 		cursor: pointer;
 		border:1px solid $border-colour; 
 		background:url(/dist/images/search-glass.png) no-repeat 5px 5px;
