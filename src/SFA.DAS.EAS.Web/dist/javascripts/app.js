@@ -201,7 +201,14 @@ $('.container-head').on('click touchstart', (function () {
 
 }));
 
-$("#search-input").on("click", function () {
+//clear search box text
+window.onload = function () {
+    $('.js-enabled #search-input').addClass('placeholder-text');
+    $('.js-enabled #search-input').val('Search for their name');
+};
+
+$("#search-input").on("focus click touchstart", (function () {
+    $('.js-enabled #search-input').removeClass('placeholder-text');
     if ($(this).val() == "Search for their name")
         $(this).val("")
-});
+}));

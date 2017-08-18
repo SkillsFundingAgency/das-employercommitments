@@ -656,6 +656,9 @@ width: 100%;
 		background:url(/dist/images/search-glass.png) no-repeat 5px 5px;
         color:transparent;
 	}
+        .placeholder-text{
+            color:$border-colour;
+        }
 }
 
 
