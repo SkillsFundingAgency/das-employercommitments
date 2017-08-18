@@ -643,7 +643,7 @@ width: 100%;
         width:87%;
 		margin: 0;
 		padding: 6px 15px;
-        border:1px solid $border-colour;
+        border:1px solid $secondary-text-colour;
 	    }
 	    .submit-search {
 		 @include media(tablet) {margin: 0 0 0 -4px;height:39px;}
@@ -652,13 +652,14 @@ width: 100%;
 		width: 38px;
         height: 38px;	
 		cursor: pointer;
-		border:1px solid $border-colour; 
+		border:1px solid $secondary-text-colour; 
 		background:url(/dist/images/search-glass.png) no-repeat 5px 5px;
         color:transparent;
 	}
         .placeholder-text{
             color:$border-colour;
         }
+
 }
 
 

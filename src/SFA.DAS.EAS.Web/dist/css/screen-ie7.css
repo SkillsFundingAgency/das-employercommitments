@@ -4806,7 +4806,7 @@ h2 .float-right {
   width: 87%;
   margin: 0;
   padding: 6px 15px;
-  border: 1px solid #bfc1c3;
+  border: 1px solid #6f777b;
 }
 
 #search-form .submit-search {
@@ -4817,7 +4817,7 @@ h2 .float-right {
   width: 38px;
   height: 38px;
   cursor: pointer;
-  border: 1px solid #bfc1c3;
+  border: 1px solid #6f777b;
   background: url(/dist/images/search-glass.png) no-repeat 5px 5px;
   color: transparent;
 }
