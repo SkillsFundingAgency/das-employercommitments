@@ -637,6 +637,7 @@ width: 100%;
 
 #search-form{
 		margin:7px 0 15px 0;
+        .heading-medium{margin-top:0;}
         .search-text{
            @include media(tablet) {width:262px;height:39px;}
         height:38px;

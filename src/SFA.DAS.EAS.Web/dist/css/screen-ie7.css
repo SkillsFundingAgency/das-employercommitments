@@ -4799,6 +4799,10 @@ h2 .float-right {
   margin: 7px 0 15px 0;
 }
 
+#search-form .heading-medium {
+  margin-top: 0;
+}
+
 #search-form .search-text {
   width: 262px;
   height: 39px;
