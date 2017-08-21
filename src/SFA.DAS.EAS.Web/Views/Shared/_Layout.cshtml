@@ -132,7 +132,7 @@
                                     <li><a href="@Url.ExternalUrlAction("service", "accounts",true)" role="menuitem">Your accounts</a></li>
                                     @if (string.IsNullOrWhiteSpace(ViewBag.HideNav))
                                     {     
-                                    <li><a href="@Url.ExternalUrlAction("rename",ignoreAccountId:true)" role="menuitem">Rename account</a></li>
+                                        <li><a href="@Url.ExternalUrlAction("rename")" role="menuitem">Rename account</a></li>
                                     }
                                     <li><a href="@UserLinksViewModel.ChangePasswordLink">Change your password</a></li>
                                     <li><a href="@UserLinksViewModel.ChangeEmailLink">Change your email address</a></li>
