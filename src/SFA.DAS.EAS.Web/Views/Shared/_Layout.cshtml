@@ -122,7 +122,7 @@
             <div class="account-information" role="navigation">
                 <nav id="user-nav">
                     <ul role="menubar">
-                        <li><a href="@Url.ExternalUrlAction("service", "help")">Help</a></li>
+                        <li><a href="@Url.ExternalUrlAction("service", "help", true)">Help</a></li>
                         @if (HttpContext.Current.User.Identity.IsAuthenticated)
                         {
                             

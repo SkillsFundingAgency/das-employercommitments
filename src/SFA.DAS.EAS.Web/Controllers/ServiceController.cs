@@ -7,7 +7,6 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
-    [Authorize]
     [CommitmentsRoutePrefix("Service")]
     public class ServiceController : BaseController
     {
