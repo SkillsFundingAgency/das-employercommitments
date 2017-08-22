@@ -27,7 +27,7 @@
         if (Model.PageNumber == Model.TotalPages - 1)
         {
             var remainder = Model.TotalResults % Model.PageSize;
-            upperValue = remainder == 0 ? Model.TotalResults * Model.PageSize : (Model.PageSize * (Model.TotalPages - 1)) + remainder;
+            upperValue = remainder == 0 ? Model.TotalResults : (Model.PageSize * (Model.TotalPages - 1)) + remainder;
         }
         else
         {
