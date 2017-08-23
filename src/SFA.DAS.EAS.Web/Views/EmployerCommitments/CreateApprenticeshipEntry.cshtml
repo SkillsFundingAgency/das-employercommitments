@@ -47,7 +47,7 @@
                 @Html.Hidden("AgreementStatus", Model.Data.Apprenticeship.AgreementStatus)
                 @Html.Hidden("ProviderRef", Model.Data.Apprenticeship.ProviderRef)
 
-                <button type="submit" class="button" aria-label="Add">Add</button>
+                <button type="submit" class="button" aria-label="Add" id="submit-create-apprentice">Add</button>
                 <a class="button text-link" href="@Url.Action("Details", new { hashedAccountId = Model.Data.Apprenticeship.HashedAccountId, hashedCommitmentId = Model.Data.Apprenticeship.HashedCommitmentId })" aria-label="Cancel">Cancel</a>
             </fieldset>
                 </div>  

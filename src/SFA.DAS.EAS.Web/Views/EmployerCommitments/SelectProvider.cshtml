@@ -50,7 +50,7 @@
                 @Html.Hidden("LegalEntityCode", Model.Data.LegalEntityCode)
                 @Html.Hidden("CohortRef", Model.Data.CohortRef)
                 @Html.Hidden("ProviderId", Model.Data.ProviderId)
-                <button class="button" type="submit">Continue</button>
+                <button class="button" type="submit" id="submit-select-provider">Continue</button>
             </form>
         }
         else
@@ -63,7 +63,7 @@
                 @Html.Hidden("LegalEntityCode", Model.Data.LegalEntityCode)
                 @Html.Hidden("CohortRef", Model.Data.CohortRef)
                 @Html.Hidden("ProviderId", "")
-                <button class="button" type="submit">Search again</button>
+                <button class="button" type="submit" id="submit-select-prov">Search again</button>
             </form>
         }
 
