@@ -116,64 +116,71 @@
                     <strong class="phase-tag">BETA</strong>
                     <span>This is a new service – your <a href="https://www.surveymonkey.co.uk/r/2JPLQ9T" target="_blank">feedback</a> will help us to improve it. </span>
                 </p>
-            </div>
-
-            @if (HttpContext.Current.User.Identity.IsAuthenticated || Model?.GetType().GetProperty("HideHeaderSignInLink") == null) {
-            <div class="account-information" role="navigation">
-                <nav id="user-nav">
-                    <ul role="menubar">
-                        <li><a href="@Url.ExternalUrlAction("service", "help", true)">Help</a></li>
-                        @if (HttpContext.Current.User.Identity.IsAuthenticated)
-                        {
-                            
-                            <li class="has-sub-menu">
-                                <a href="/" role="menuitem">Settings</a>
-                                <ul role="menu">
-                                    <li><a href="@Url.ExternalUrlAction("service", "accounts",true)" role="menuitem">Your accounts</a></li>
-                                    @if (string.IsNullOrWhiteSpace(ViewBag.HideNav))
-                                    {     
-                                        <li><a href="@Url.ExternalUrlAction("rename")" role="menuitem">Rename account</a></li>
-                                    }
-                                    <li><a href="@UserLinksViewModel.ChangePasswordLink">Change your password</a></li>
-                                    <li><a href="@UserLinksViewModel.ChangeEmailLink">Change your email address</a></li>
-                                    <li><a href="@Url.ExternalUrlAction("settings", "notifications",true)">Notification settings</a></li>
-                                    
-                                </ul>
-                            </li>
-                            <li><a href="@Url.Action("SignOut", "Service")" role="menuitem">Sign out</a></li>
-                            
-                        }
-                        else
-                        {
-                            if (Model?.GetType().GetProperty("HideHeaderSignInLink") == null)
-                            {
-                                <li><a href="@Url.ExternalUrlAction("service", "signin",true)" role="menuitem">Sign in / Register</a></li>
-                            }
-                        }
-                    </ul>
-                </nav>
-            </div>
-            }
-        </div>
+            </div>   
+      </div>
     </div>
-    @if (HttpContext.Current.User.Identity.IsAuthenticated)
-                {
-                    if (string.IsNullOrWhiteSpace(ViewBag.HideNav))
-                    {
-        <div class="header-organisation" role="navigation">
-            <nav class="header-inner">
-                <ul role="menubar" id="global-nav-links">
-                    <li><a href="@Url.ExternalUrlAction("teams")" class="@(ViewBag.Section == "home" ? "selected" : "")"  role="menuitem">Home</a></li>
-                    <li><a href="@Url.ExternalUrlAction("balance")" class="@(ViewBag.Section == "finance" ? "selected" : "")" role="menuitem">Finance</a></li>
-                    <li><a href="@Url.Action("Index", "EmployerCommitments")" class="@(ViewBag.Section == "apprentices" ? "selected" : "")" role="menuitem">Apprentices</a></li>
-                    <li><a href="@Url.ExternalUrlAction("teams", "view")" class="@(ViewBag.Section == "team" ? "selected" : "")" role="menuitem">Your team</a></li>
-                    <li><a href="@Url.ExternalUrlAction("agreements")" class="@(ViewBag.Section == "organisations" ? "selected" : "")" role="menuitem">Your organisations and agreements</a></li>
-                    <li><a href="@Url.ExternalUrlAction("schemes")" class="@(ViewBag.Section == "paye" ? "selected" : "")" role="menuitem">PAYE schemes</a></li>
-                </ul>
-            </nav>
-        </div>
-        }
+
+    @if (HttpContext.Current.User.Identity.IsAuthenticated || Model?.GetType().GetProperty("HideHeaderSignInLink") == null)
+    {
+        <div id="floating-menu-holder">
+            <div class="account-information floating-menu" role="navigation">
+                <div class="js-float">
+                    <p class="floating-head-text">Your employer account </p>
+                    <nav id="user-nav">
+                        <ul role="menubar">
+                            <li><a href="@Url.ExternalUrlAction("service", "help", true)" class="menu-main">Help</a></li>
+                            @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                            {
+
+                                <li class="has-sub-menu">
+                                    <a href="/" role="menuitem" class="menu-main">Settings</a>
+                                    <ul role="menu" id="settings-menu">
+                                        <li><a href="@Url.ExternalUrlAction("service", "accounts",true)" role="menuitem" class="sub-menu-item">Your accounts</a></li>
+                                        @if (string.IsNullOrWhiteSpace(ViewBag.HideNav))
+                                        {
+                                            <li><a href="@Url.ExternalUrlAction("rename")" role="menuitem" class="sub-menu-item">Rename account</a></li>
+                                        }
+                                        <li><a href="@UserLinksViewModel.ChangePasswordLink" class="sub-menu-item">Change your password</a></li>
+                                        <li><a href="@UserLinksViewModel.ChangeEmailLink" class="sub-menu-item">Change your email address</a></li>
+                                        <li><a href="@Url.ExternalUrlAction("settings", "notifications",true)" class="sub-menu-item">Notification settings</a></li>
+
+                                    </ul>
+                                </li>
+                                    <li><a href="@Url.Action("SignOut", "Service")" role="menuitem" class="menu-main">Sign out</a></li>
+
+                            }
+                            else
+                            {
+                                if (Model?.GetType().GetProperty("HideHeaderSignInLink") == null)
+                                {
+                                    <li><a href="@Url.ExternalUrlAction("service", "signin",true)" role="menuitem">Sign in / Register</a></li>
+                                }
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div> <!--/floating-menu-holder-->
     }
+        @if (HttpContext.Current.User.Identity.IsAuthenticated)
+        {
+            if (string.IsNullOrWhiteSpace(ViewBag.HideNav))
+            {         
+                    <div class="header-organisation" role="navigation">
+                      
+                                <nav class="header-inner">
+                                    <ul role="menubar" id="global-nav-links">
+                                        <li><a href="@Url.ExternalUrlAction("teams")" class="@(ViewBag.Section == "home" ? "selected" : "")" role="menuitem">Home</a></li>
+                                        <li><a href="@Url.ExternalUrlAction("balance")" class="@(ViewBag.Section == "finance" ? "selected" : "")" role="menuitem">Finance</a></li>
+                                        <li><a href="@Url.Action("Index", "EmployerCommitments")" class="@(ViewBag.Section == "apprentices" ? "selected" : "")" role="menuitem">Apprentices</a></li>
+                                        <li><a href="@Url.ExternalUrlAction("teams", "view")" class="@(ViewBag.Section == "team" ? "selected" : "")" role="menuitem">Your team</a></li>
+                                        <li><a href="@Url.ExternalUrlAction("agreements")" class="@(ViewBag.Section == "organisations" ? "selected" : "")" role="menuitem">Your organisations and agreements</a></li>
+                                        <li><a href="@Url.ExternalUrlAction("schemes")" class="@(ViewBag.Section == "paye" ? "selected" : "")" role="menuitem">PAYE schemes</a></li>
+                                    </ul>
+                                </nav>              
+                        </div>         
+            }
+        }
     <main role="main" id="content">
 
         @RenderSection("breadcrumb", required: false)
