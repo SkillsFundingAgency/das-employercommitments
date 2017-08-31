@@ -49,7 +49,7 @@
             @Html.Hidden("hashedCommitmentId", Model.Data.Apprenticeship.HashedCommitmentId)
             @Html.Hidden("uln", Model.Data.Apprenticeship.ULN)
             @Html.Hidden("HasStarted", Model.Data.Apprenticeship.HasStarted)
-            <button type="submit" class="button" aria-label="Add">Update details</button>
+            <button type="submit" class="button" aria-label="Add" id="submit-edit-app">Update details</button>
             <a class="button text-link" href="@Url.Action("Details", new { hashedAccountId = Model.Data.Apprenticeship.HashedAccountId, hashedCommitmentId = Model.Data.Apprenticeship.HashedCommitmentId })" aria-label="Cancel">
                 Cancel and return
             </a>
