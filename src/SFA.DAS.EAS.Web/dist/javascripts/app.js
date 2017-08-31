@@ -203,7 +203,7 @@ $('.container-head').on('click touchstart', (function () {
 
 //floating menu
 $(window).scroll(function () {
-    if ($(window).scrollTop() >= 100) {
+    if ($(window).scrollTop() >= 110) {
         $('.floating-menu').addClass('fixed-header');
         $('.js-float').addClass('width-adjust');
     }
