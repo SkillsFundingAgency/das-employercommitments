@@ -74,6 +74,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment
 
         private async Task SendNotification(CommitmentView commitment, SubmitCommitmentCommand message)
         {
+            _logger.Info($"Sending notification for commitment {commitment.Id} to providers with ukprn {commitment.ProviderId}");
             var emails = await 
                 _providerEmailLookupService.GetEmailsAsync(
                     commitment.ProviderId.GetValueOrDefault(),
