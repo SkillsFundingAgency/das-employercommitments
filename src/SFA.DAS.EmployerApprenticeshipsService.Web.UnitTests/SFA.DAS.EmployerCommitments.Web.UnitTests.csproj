@@ -159,6 +159,7 @@
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingTrainingCode.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingTrainingDates.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingUln.cs" />
+    <Compile Include="Validators\ProviderSelectionTest\WhenValidatingProviderId.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
