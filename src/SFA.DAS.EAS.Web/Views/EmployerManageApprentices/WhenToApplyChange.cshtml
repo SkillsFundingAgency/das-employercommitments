@@ -27,6 +27,7 @@
             
             <fieldset>
                 <legend class="visually-hidden" aria-hidden="true">Select stop date</legend>
+                <p>No previous payments will be refunded.</p>
                 <div class="form-group">
                     <legend class="visually-hidden">Date of status change</legend>
                    
@@ -84,11 +85,8 @@
 
                 <div class="form-group">
                     <button class="button" type="submit" id="submit-apply-change">Continue</button>
+                    <a class="text-link cancel-link" href=@Url.RouteUrl("OnProgrammeApprenticeshipDetails") aria-label="Cancel">Cancel</a>
                 </div>
-                <div class="form-group">
-                    <a class="text-link" href=@Url.RouteUrl("OnProgrammeApprenticeshipDetails") aria-label="Cancel">Cancel and return</a>
-                </div>
-
             </fieldset>
         </form>
     </div>
