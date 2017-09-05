@@ -4793,7 +4793,15 @@ h2 .float-right {
   float: left;
 }
 
-<<<<<<< HEAD
+#change-apprentice-status #submit-apply-change {
+  float: left;
+}
+
+#change-apprentice-status .cancel-link {
+  margin: 7px 0 0 30px;
+  float: left;
+}
+
 /*floating menu style - EMPLOYER */
 #floating-menu-holder {
   width: 100%;
@@ -4876,17 +4884,6 @@ h2 .float-right {
 }
 
 /* - END floating menu style */
-=======
-#change-apprentice-status #submit-apply-change {
-  float: left;
-}
-
-#change-apprentice-status .cancel-link {
-  margin: 7px 0 0 30px;
-  float: left;
-}
-
->>>>>>> e9df288ed2ad9c9fd53ca6e832e9b6b8bc27539e
 @media only screen and (max-device-width: 640px), only screen and (max-device-width: 667px), only screen and (max-width: 480px) {
   #apprentice-details .tableResponsive {
     margin-top: 30px;
