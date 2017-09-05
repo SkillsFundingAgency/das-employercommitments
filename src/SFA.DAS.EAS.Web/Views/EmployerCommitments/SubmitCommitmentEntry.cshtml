@@ -48,3 +48,18 @@
        <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to Apprentices" class="back-link">Back to apprentices</a>
     </div>
 }
+
+
+@section gaDataLayer {
+    <script>
+    window.dataLayer = window.dataLayer || []; dataLayer.push({
+        'event': 'dataLoaded',
+        'loggedIn': '@HttpContext.Current.User.Identity.IsAuthenticated',
+        'userID': '',
+        'vpv': '/accounts/apprentices/submit/submit-instructions',
+        'PRN': '',
+        'org': '@Model.Data.Account.HashedId',
+        'subOrg':''
+    });
+    </script>
+}

@@ -349,3 +349,18 @@
         <a href="@Model.Data.BackLinkUrl" aria-label="Back" class="back-link">Back</a>
     </div>
 }
+
+
+@section gaDataLayer {
+    <script>
+    window.dataLayer = window.dataLayer || []; dataLayer.push({
+        'event': 'dataLoaded',
+        'loggedIn': '@HttpContext.Current.User.Identity.IsAuthenticated',
+        'userID': '',
+        'vpv': '/accounts/apprentices/details/apprentice-detail',
+        'PRN': '',
+        'org': '@Model.Data.Account.HashedId',
+        'subOrg':''
+    });
+    </script>
+}

@@ -80,3 +80,19 @@
         return requestsCount > 0 ? "clickable" : "";
     }
 }
+
+
+
+
+@section gaDataLayer {
+    <script>
+    window.dataLayer = window.dataLayer || []; dataLayer.push({
+        'event': 'dataLoaded',
+        'loggedIn': '@HttpContext.Current.User.Identity.IsAuthenticated',
+        'userID': '',
+        'vpv': '/accounts/apprentices/cohorts/cohorts-landing-page',
+        'PRN': '',
+        'org': '@Model.Data.Account.HashedId',
+        'subOrg':''
+    });
+    </script>
