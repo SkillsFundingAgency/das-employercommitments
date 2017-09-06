@@ -15,6 +15,7 @@
       <Setting name="TokenCertificateThumbprint" value="__TokenCertificateThumbprint__" />
       <Setting name="MyaBaseUrl" value="__MyaBaseUrl__" />
       <Setting name="CommitmentsRoutePrefix" value="__CommitmentsRoutePrefix__" />
+      <Setting name="CurrentTime" value="" />
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="WebSslCert" thumbprint="EDCEF8D64D09C1D1FEDFD534CACB55E0437CFAD3" thumbprintAlgorithm="sha1" />

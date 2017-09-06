@@ -15,6 +15,7 @@ using SFA.DAS.Audit.Client;
 using SFA.DAS.Audit.Client.Web;
 using SFA.DAS.Audit.Types;
 using SFA.DAS.EmployerCommitments.Infrastructure.Logging;
+using SFA.DAS.EmployerCommitments.Web.DependencyResolution;
 using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
 using SFA.DAS.EmployerUsers.WebClientComponents;
 
@@ -39,7 +40,9 @@ namespace SFA.DAS.EmployerCommitments.Web
             ModelBinders.Binders.Add(typeof(string), new TrimStringModelBinder());
 
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
-            FluentValidationModelValidatorProvider.Configure();
+
+            var container = StructuremapMvc.StructureMapDependencyScope.Container;
+            FluentValidationModelValidatorProvider.Configure(x => x.ValidatorFactory = new StructureMapValidatorFactory(container));
 
             WebMessageBuilders.Register();
             WebMessageBuilders.UserIdClaim = DasClaimTypes.Id;

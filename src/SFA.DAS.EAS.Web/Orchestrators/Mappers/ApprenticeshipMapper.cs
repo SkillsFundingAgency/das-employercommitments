@@ -81,7 +81,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         public ApprenticeshipViewModel MapToApprenticeshipViewModel(Apprenticeship apprenticeship)
         {
             var isStartDateInFuture = apprenticeship.StartDate.HasValue && apprenticeship.StartDate.Value >
-                                      new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                      new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1);
 
             return new ApprenticeshipViewModel
             {
