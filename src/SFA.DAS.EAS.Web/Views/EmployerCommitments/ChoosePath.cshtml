@@ -15,11 +15,11 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        <form method="POST" action="@Url.Action("CreateCommitment")">
+        <form method="POST" action="@Url.Action("CreateCommitment")" onsubmit="sfa.tagHelper.submitForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
 
-            <h1 class="heading-xlarge">Start adding apprentices</h1>
+            <h1 class="heading-xlarge">@ViewBag.Title</h1>
             <p class="lede">You can start adding details of your apprentices or ask your training provider to add them for you.</p>
             <p class="lede">If you ask your training provider to add them, you need to check and agree the details before any payments are made.</p>
             <fieldset role="radiogroup" aria-required="true">
@@ -29,11 +29,11 @@
                         @Html.ValidationMessage("SelectedRoute", "Please choose an option", new { id = "error-message-SelectedRoute" })
                    
                     <label class="block-label selection-button-radio" for="SelectedRoute-Employer">
-                        @Html.RadioButton("SelectedRoute", "employer", new { id = "SelectedRoute-Employer" })
+                        @Html.RadioButton("SelectedRoute", "employer", new { id = "SelectedRoute-Employer", dataOptionName = "Employer To Add", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Employer To Add')" })
                         I will add apprentices
                     </label>
                     <label class="block-label selection-button-radio" for="SelectedRoute-Provider">
-                        @Html.RadioButton("SelectedRoute", "provider", new { id = "SelectedRoute-Provider" })
+                        @Html.RadioButton("SelectedRoute", "provider", new { id = "SelectedRoute-Provider", dataOptionName = "Provider To Add", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Provider To Add')" })
                         I would like my provider to add apprentices
                     </label>
                 </div>
