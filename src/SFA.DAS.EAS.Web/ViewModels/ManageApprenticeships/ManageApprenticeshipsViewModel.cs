@@ -16,5 +16,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public int PageSize { get; internal set; }
 
         public int TotalApprenticeshipsBeforeFilter { get; set; }
+
+        public string SearchInputPlaceholder { get; set; }
     }
 }
