@@ -14,5 +14,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public int PageNumber { get; internal set; }
         public int TotalPages { get; internal set; }
         public int PageSize { get; internal set; }
+
+        public int TotalApprenticeshipsBeforeFilter { get; set; }
     }
 }

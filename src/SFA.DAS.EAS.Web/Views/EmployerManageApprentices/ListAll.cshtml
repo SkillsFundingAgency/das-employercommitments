@@ -27,11 +27,12 @@ else
                 <div class="column-one-third">
                     <!--Search bar-->
                         <div id="search-app">
-                            <form id="search-form" method="get" action="http://www.google.com">
+                            <form id="search-form" method="get" action="@Url.Action("ListAll")">
                                 <fieldset class="inline">
                                     <legend><h2 class="heading-medium">Search for an apprentice</h2></legend>
-                                            <input type="text" id="search-input" class="search-text form-control" />
-                                            <input type="submit" class="submit-search form-control" />
+                                    <input type="text" id="search-input" name="SearchInput" class="search-text form-control" value="@Model.Data.Filters.SearchInput" />
+                                    <input type="submit" class="submit-search form-control"/>
+                                    <input name="ResetFilter" type="hidden" value="True">
                                 </fieldset>
                             </form>
                         </div>
@@ -41,8 +42,10 @@ else
                         @Html.Partial("ApprenticeshipFilters", Model.Data.Filters)
                         <button type="submit" class="button" value="Filter" id="submit-app-filter">Filter apprentices</button>
                         <p>
-                          <a href="@Url.Action("ListAll")" title="Reset" class="button text-link reset-link">Reset</a>
+                            <a href="@Url.Action("ListAll")" title="Reset" class="button text-link reset-link">Reset</a>
                         </p>
+                        @Html.Hidden("SearchInput", Model.Data.Filters.SearchInput)
+                        <input name="ResetFilter" type="hidden" value="False">
                     </form>
                 </div>
 
