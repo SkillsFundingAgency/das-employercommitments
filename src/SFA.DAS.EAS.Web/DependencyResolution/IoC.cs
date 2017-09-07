@@ -38,6 +38,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
                 c.Policies.Add<CurrentDatePolicy>();
                 c.Policies.Add(new MessagePolicy<EmployerCommitmentsServiceConfiguration>(ServiceName));
                 c.Policies.Add(new ExecutionPolicyPolicy());
+                c.AddRegistry<ValidationRegistry>();
                 c.AddRegistry<DefaultRegistry>();
             });
         }

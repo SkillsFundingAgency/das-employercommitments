@@ -13,7 +13,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 
                 RuleFor(x => x.ProviderId)
                     .NotEmpty().WithMessage("Check UK Provider Reference Number")
-                    .Matches("^[0-9]{8}[\\s]*$").WithMessage("Check UK Provider Reference Number"); ;
+                    .Matches("^((?!(0))[0-9]{8})$").WithMessage("Check UK Provider Reference Number");
             });
 
             RuleSet("SearchResult", () =>

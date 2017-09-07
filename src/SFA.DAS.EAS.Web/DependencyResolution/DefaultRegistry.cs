@@ -41,6 +41,7 @@ using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.Events.Api.Client;
 using SFA.DAS.Events.Api.Client.Configuration;
+using SFA.DAS.Http;
 using SFA.DAS.Notifications.Api.Client;
 using SFA.DAS.Http.TokenGenerators;
 using SFA.DAS.NLog.Logger;
@@ -82,7 +83,9 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<ICache>().Use<InMemoryCache>(); //RedisCache
 
             For<IApprenticeshipInfoServiceConfiguration>().Use(config.ApprenticeshipInfoService);
-            For<IEmployerCommitmentApi>().Use<EmployerCommitmentApi>().Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi);
+
+            SetUpCommitmentApi(config);
+
             For<IValidationApi>().Use<ValidationApi>().Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi);
 
             For<IEventsApi>().Use<EventsApi>()
@@ -103,6 +106,24 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             RegisterExecutionPolicies();
 
             RegisterLogger();
+        }
+
+        private void SetUpCommitmentApi(EmployerCommitmentsServiceConfiguration config)
+        {
+            var bearerToken = (IGenerateBearerToken)new JwtBearerTokenGenerator(config.CommitmentsApi);
+
+            var httpClient = new HttpClientBuilder()
+                .WithBearerAuthorisationHeader(bearerToken)
+                .WithHandler(new NLog.Logger.Web.MessageHandlers.RequestIdMessageRequestHandler())
+                .WithHandler(new NLog.Logger.Web.MessageHandlers.SessionIdMessageRequestHandler())
+                .WithDefaultHeaders()
+                .Build();
+
+            For<IEmployerCommitmentApi>().Use<EmployerCommitmentApi>().
+                Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
+                .Ctor<HttpClient>().Is(httpClient);
+
+
         }
 
         private void ConfigureNotificationsApi(NotificationsApiClientConfiguration config)
