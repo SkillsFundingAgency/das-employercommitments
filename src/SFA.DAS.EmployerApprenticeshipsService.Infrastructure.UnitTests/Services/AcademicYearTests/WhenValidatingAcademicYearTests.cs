@@ -1,13 +1,10 @@
 ﻿using System;
 
 using FluentAssertions;
-
 using Moq;
-
 using NUnit.Framework;
 
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 
 namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.AcademicYearTests
@@ -23,17 +20,15 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Academic
         public void Arrange()
         {
             _currentDateTime = new Mock<ICurrentDateTime>();
-
-            _sut = new AcademicYearValidator(_currentDateTime.Object, new AcademicYear(_currentDateTime.Object));
+            _sut = new AcademicYearValidator(_currentDateTime.Object);
         }
 
-        [Ignore("Is this valid test case?")]
         [TestCase("2017-09-07", "2016-07-01")]
         public void ShouldNotValidateStartDateBeforeCloseOfR14(DateTime currentDate, DateTime startDate)
         {
             _currentDateTime.Setup(x => x.Now).Returns(currentDate);
-            var result = _sut.Validate(startDate);
-            result.Should().Be(AcademicYearValidationResult.NotWithinFundingPeriod);
+            var result = _sut.FundingPeriodOpen(startDate);
+            result.Should().BeFalse();
         }
 
         [TestCase("2017-09-07", "2016-08-01")]
@@ -45,8 +40,8 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Academic
         public void ShouldValidateStartDateBeforeCloseOfR14(DateTime currentDate, DateTime startDate)
         {
             _currentDateTime.Setup(x => x.Now).Returns(currentDate);
-            var result = _sut.Validate(startDate);
-            result.Should().Be(AcademicYearValidationResult.Success);
+            var result = _sut.FundingPeriodOpen(startDate);
+            result.Should().BeTrue();
         }
 
         [TestCase("2017-10-22", "2016-07-01")]
@@ -57,8 +52,8 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Academic
         public void ShouldNotValidateStartDateAfterCloseOfR14(DateTime currentDate, DateTime startDate)
         {
             _currentDateTime.Setup(x => x.Now).Returns(currentDate);
-            var result = _sut.Validate(startDate);
-            result.Should().Be(AcademicYearValidationResult.NotWithinFundingPeriod);
+            var result = _sut.FundingPeriodOpen(startDate);
+            result.Should().BeFalse();
         }
 
         [TestCase("2017-10-22", "2017-08-01")]
@@ -70,8 +65,8 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Academic
         public void ShouldValidateStartDateAfterCloseOfR14(DateTime currentDate, DateTime startDate)
         {
             _currentDateTime.Setup(x => x.Now).Returns(currentDate);
-            var result = _sut.Validate(startDate);
-            result.Should().Be(AcademicYearValidationResult.Success);
+            var result = _sut.FundingPeriodOpen(startDate);
+            result.Should().BeTrue();
         }
     }
 }
