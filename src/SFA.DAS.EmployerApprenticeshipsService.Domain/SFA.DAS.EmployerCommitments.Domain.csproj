@@ -152,9 +152,11 @@
     <Compile Include="Http\ServiceUnavailableException.cs" />
     <Compile Include="Http\TooManyRequestsException.cs" />
     <Compile Include="Interfaces\IEmployerAccountService.cs" />
+    <Compile Include="Interfaces\IAcademicYearValidator.cs" />
     <Compile Include="Interfaces\IProviderEmailLookupService.cs" />
     <Compile Include="Configuration\TokenServiceApiClientConfiguration.cs" />
     <Compile Include="Interfaces\IMultiVariantTestingService.cs" />
+    <Compile Include="Models\Apprenticeship\AcademicYearValidationResult.cs" />
     <Compile Include="Models\Apprenticeship\ApprenticeshipStatus.cs" />
     <Compile Include="Models\Apprenticeship\ChangeOption.cs" />
     <Compile Include="Models\Apprenticeship\ChangeStatusType.cs" />

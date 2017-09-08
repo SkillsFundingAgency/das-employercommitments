@@ -25,5 +25,14 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
         }
 
         public DateTime CurrentAcademicYearEndDate => CurrentAcademicYearStartDate.AddYears(1).AddDays(-1);
+
+        public DateTime CurrentAcademicYearFundingPeriod
+        {
+            get
+            {
+                // TODO GET DATE FROM SOURCE
+                return CurrentAcademicYearStartDate.AddDays(79);
+            }
+        }
     }
 }

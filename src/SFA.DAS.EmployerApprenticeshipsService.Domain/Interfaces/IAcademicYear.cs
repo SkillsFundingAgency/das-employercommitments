@@ -6,5 +6,6 @@ namespace SFA.DAS.EmployerCommitments.Domain.Interfaces
     {
         DateTime CurrentAcademicYearStartDate { get; }
         DateTime CurrentAcademicYearEndDate { get; }
+        DateTime CurrentAcademicYearFundingPeriod { get; }
     }
 }
