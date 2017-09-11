@@ -70,14 +70,10 @@
 
 @section gaDataLayer {
     <script>
-    window.dataLayer = window.dataLayer || []; dataLayer.push({
-        'event': 'dataLoaded',
-        'loggedIn': '@HttpContext.Current.User.Identity.IsAuthenticated',
-        'userID': '',
-        'vpv': '/accounts/apprentices/inform/add-apprentice-start-page',
-        'PRN': '',
-        'org': '@ViewBag.HashedAccountId',
-        'subOrg':''
-    });
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/inform/add-apprentice-start-page'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
     </script>
 }

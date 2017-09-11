@@ -87,17 +87,14 @@
     </div>
 }
 
-
 @section gaDataLayer {
     <script>
-    window.dataLayer = window.dataLayer || []; dataLayer.push({
-        'event': 'dataLoaded',
-        'loggedIn': '@HttpContext.Current.User.Identity.IsAuthenticated',
-        'userID': '',
-        'vpv': '/accounts/apprentices/NewCohortAcknowledgement/instructions-sent-email',
-        'PRN': '',
-        'org': '@ViewBag.HashedAccountId',
-        'subOrg':''
-    });
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/acknowledgement/instructions-sent-email',
+            'cohortRef': '@Model.Data.HashedCommitmentId',
+            'success': '@Model.Data.Content.Title'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
     </script>
 }

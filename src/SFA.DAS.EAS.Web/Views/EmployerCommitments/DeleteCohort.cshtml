@@ -10,7 +10,7 @@
 <div class="grid-row" id="confirm-delete">
     <div class="column-two-thirds">
 
-        <form action="@Url.Action("DeleteCohort")" method="POST">
+        <form action="@Url.Action("DeleteCohort")" method="POST" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
 
@@ -67,11 +67,11 @@
                     </legend>
 
                     <label class="block-label selection-button-radio" for="@Html.IdFor(m => m.Data.DeleteConfirmed)-True">
-                        @Html.RadioButton("DeleteConfirmed", true, Model.Data.DeleteConfirmed == false, new { @id = Html.IdFor(m => m.Data.DeleteConfirmed) + "-True" })
+                        @Html.RadioButton("DeleteConfirmed", true, Model.Data.DeleteConfirmed == false, new { @id = Html.IdFor(m => m.Data.DeleteConfirmed) + "-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
                         Yes, delete cohort
                     </label>
                     <label class="block-label selection-button-radio" for="@Html.IdFor(m => m.Data.DeleteConfirmed)-False">
-                        @Html.RadioButton("DeleteConfirmed", false, Model.Data.DeleteConfirmed == true, new { @id = Html.IdFor(m => m.Data.DeleteConfirmed) + "-False" })
+                        @Html.RadioButton("DeleteConfirmed", false, Model.Data.DeleteConfirmed == true, new { @id = Html.IdFor(m => m.Data.DeleteConfirmed) + "-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
                         No, don't delete cohort
                     </label>
                 </fieldset>
@@ -88,4 +88,14 @@
             Back to Cohort
         </a>
     </div>
+}
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/delete-cohort',
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
 }

@@ -353,14 +353,11 @@
 
 @section gaDataLayer {
     <script>
-    window.dataLayer = window.dataLayer || []; dataLayer.push({
-        'event': 'dataLoaded',
-        'loggedIn': '@HttpContext.Current.User.Identity.IsAuthenticated',
-        'userID': '',
-        'vpv': '/accounts/apprentices/details/apprentice-detail',
-        'PRN': '',
-        'org': '@ViewBag.HashedAccountId',
-        'subOrg':''
-    });
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/details/apprentice-detail',
+            'cohortRef': '@Model.Data.HashedId'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
     </script>
 }

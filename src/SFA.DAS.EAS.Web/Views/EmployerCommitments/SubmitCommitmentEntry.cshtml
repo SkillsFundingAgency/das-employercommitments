@@ -52,14 +52,12 @@
 
 @section gaDataLayer {
     <script>
-    window.dataLayer = window.dataLayer || []; dataLayer.push({
-        'event': 'dataLoaded',
-        'loggedIn': '@HttpContext.Current.User.Identity.IsAuthenticated',
-        'userID': '',
-        'vpv': '/accounts/apprentices/submit/submit-instructions',
-        'PRN': '',
-        'org': '@ViewBag.HashedAccountId',
-        'subOrg':''
-    });
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/submit/submit-instructions',
+            'org': '@Model.Data.LegalEntityCode',
+            'prn': '@Model.Data.ProviderId'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
     </script>
 }

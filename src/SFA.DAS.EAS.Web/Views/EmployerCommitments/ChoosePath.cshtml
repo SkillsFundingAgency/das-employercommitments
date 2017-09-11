@@ -15,7 +15,7 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        <form method="POST" action="@Url.Action("CreateCommitment")" onsubmit="sfa.tagHelper.submitForm('@ViewBag.Title')">
+        <form method="POST" action="@Url.Action("CreateCommitment")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
 
@@ -60,14 +60,10 @@
 
 @section gaDataLayer {
     <script>
-    window.dataLayer = window.dataLayer || []; dataLayer.push({
-        'event': 'dataLoaded',
-        'loggedIn': '@HttpContext.Current.User.Identity.IsAuthenticated',
-        'userID': '',
-        'vpv': '/accounts/apprentices/choosePath/choose-add-path',
-        'PRN': '',
-        'org': '@ViewBag.HashedAccountId',
-        'subOrg':''
-    });
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/choosePath/choose-add-path',
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
     </script>
 }
