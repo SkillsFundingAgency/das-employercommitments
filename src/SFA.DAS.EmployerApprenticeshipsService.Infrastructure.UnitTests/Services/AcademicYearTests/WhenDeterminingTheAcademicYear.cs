@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Academic
     public class WhenDeterminingTheAcademicYear
     {
         private Mock<ICurrentDateTime> _currentDateTime;
-        private IAcademicYear _academicYear;
+        private IAcademicYearDateProvider _academicYear;
 
         [SetUp]
         public void Arrange()
@@ -26,7 +26,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Academic
         {
             //Arrange
             _currentDateTime.Setup(x => x.Now).Returns(currentDate);
-            _academicYear = new AcademicYear(_currentDateTime.Object);
+            _academicYear = new AcademicYearDateProvider(_currentDateTime.Object);
 
             //Act
             var actualStart = _academicYear.CurrentAcademicYearStartDate;

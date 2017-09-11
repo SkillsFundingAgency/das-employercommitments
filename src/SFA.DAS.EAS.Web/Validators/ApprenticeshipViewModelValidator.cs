@@ -7,7 +7,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 {
     public class ApprenticeshipViewModelValidator : ApprenticeshipCoreValidator
     {
-        public ApprenticeshipViewModelValidator(WebApprenticeshipValidationText validationText, ICurrentDateTime currentDateTime, IAcademicYear academicYear) : base(validationText, currentDateTime, academicYear)
+        public ApprenticeshipViewModelValidator(WebApprenticeshipValidationText validationText, ICurrentDateTime currentDateTime, IAcademicYearDateProvider academicYear) : base(validationText, currentDateTime, academicYear)
         {
         }
 
