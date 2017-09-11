@@ -142,6 +142,7 @@ sfa.backLink = {
 
 // Helper for gta events
 sfa.tagHelper = {
+    dataLayer: {},
     init: function () {
         window.dataLayer = window.dataLayer || [];
     },
@@ -153,7 +154,7 @@ sfa.tagHelper = {
             'eventLab': optionName
         });
     },
-    submitForm: function (eventAction) {
+    submitRadioForm: function (eventAction) {
 
         var optionName = $("input[type='radio']:checked").attr('dataOptionName');
 

@@ -38,8 +38,23 @@
     <!--[if gt IE 8]><!-->
     <link href="@Styles.Url("~/bundles/screen")" media="all" rel="stylesheet" />
     <!--<![endif]-->
-   
-     @RenderSection("gaDataLayer", required: false)
+    @Scripts.Render("~/bundles/lodash")
+    
+    <script>
+        var sfa = sfa || {};
+        sfa.dataLayer = sfa.dataLayer || {};
+    </script>
+
+    @RenderSection("gaDataLayer", required: false)
+
+    <script>
+        window.dataLayer = window.dataLayer || []; dataLayer.push(_.assignIn({
+            'event': 'dataLoaded',
+            'loggedIn': '@ViewBag.GaData.IsAuthenticated',
+            'userID': '@ViewBag.GaData.UserId',
+            'acc': '@ViewBag.GaData.Acc'
+        }, sfa.dataLayer));
+    </script>
 
     <!-- Google Tag Manager -->
     <script>

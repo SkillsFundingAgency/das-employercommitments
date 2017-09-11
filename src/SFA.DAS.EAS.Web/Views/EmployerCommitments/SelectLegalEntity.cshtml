@@ -14,7 +14,7 @@
 }*@
 
 <div class="grid-row">
-    <form method="POST" action="@Url.Action("SetLegalEntity")" onsubmit="sfa.tagHelper.submitForm('@ViewBag.Title')">
+    <form method="POST" action="@Url.Action("SetLegalEntity")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
         <div class="column-two-thirds">
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
             <h1 class="heading-xlarge">@ViewBag.Title</h1>
@@ -63,14 +63,10 @@
 
 @section gaDataLayer {
     <script>
-    window.dataLayer = window.dataLayer || []; dataLayer.push({
-        'event': 'dataLoaded',
-        'loggedIn': '@HttpContext.Current.User.Identity.IsAuthenticated',
-        'userID': '',
-        'vpv': '/accounts/apprentices/legalEntity/create/choose-organisation',
-        'PRN': '',
-        'org': '@ViewBag.HashedAccountId',
-        'subOrg': ''
-    });
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/legalEntity/create/choose-organisation',
+        }
+
+        _.assignIn(sfa.dataLayer, extraProperties);
     </script>
 }

@@ -18,7 +18,7 @@
 
         @if (Model.Data.Provider != null)
         { 
-            <form action="@Url.Action("ConfirmProvider")" method="POST" onsubmit="sfa.tagHelper.submitForm('@ViewBag.Title')">
+            <form action="@Url.Action("ConfirmProvider")" method="POST" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
                 @Html.AntiForgeryToken()
                 @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
 
@@ -79,14 +79,12 @@
 
 @section gaDataLayer {
     <script>
-        window.dataLayer = window.dataLayer || []; dataLayer.push({
-            'event': 'dataLoaded',
-            'loggedIn': '@HttpContext.Current.User.Identity.IsAuthenticated',
-            'userID': '',
+        var extraProperties = {
             'vpv': '/accounts/apprentices/provider/create/confirm-training-provider',
-            'PRN': '@Model.Data.ProviderId',
-            'hashedAcc': '@ViewBag.HashedAccountId',
+            'prn': '@Model.Data.ProviderId',
             'org': '@Model.Data.LegalEntityCode'
-        });
+        }
+
+        _.assignIn(sfa.dataLayer, extraProperties);
     </script>
 }
