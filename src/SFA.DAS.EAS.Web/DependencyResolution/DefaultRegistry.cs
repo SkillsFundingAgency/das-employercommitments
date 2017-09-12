@@ -92,8 +92,6 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 
             ConfigureNotificationsApi();
 
-            PopulateGoogleEnvironmentDetails();
-
             RegisterMapper();
 
             RegisterMediator();
@@ -246,15 +244,6 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
         {
             SystemDetailsViewModel.EnvironmentName = envName;
             SystemDetailsViewModel.VersionNumber = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-        }
-
-        private void PopulateGoogleEnvironmentDetails()
-        {
-            var config = Infrastructure.DependencyResolution.ConfigurationHelper.GetConfiguration
-                <GoogleAnalyticsConfiguration>($"SFA.DAS.GoogleAnalytics");
-
-            GoogleAnalyicsDetailsViewModel.HeadUrl = config.GoogleAnalyticsSnippets.GoogleHeaderUrl;
-            GoogleAnalyicsDetailsViewModel.BodyUrl = config.GoogleAnalyticsSnippets.GoogleBodyUrl;
         }
 
         private void RegisterLogger()
