@@ -28,6 +28,7 @@
       <Setting name="TokenCertificateThumbprint" />
       <Setting name="MyaBaseUrl" />
       <Setting name="CommitmentsRoutePrefix" />
+      <Setting name="CurrentTime" />
     </ConfigurationSettings>
     <Endpoints>
       <InputEndpoint name="HttpsIn" protocol="https" port="443" certificate="WebSslCert" />

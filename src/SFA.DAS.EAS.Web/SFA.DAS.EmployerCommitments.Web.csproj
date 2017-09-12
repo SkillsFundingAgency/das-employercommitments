@@ -348,6 +348,8 @@
     <Compile Include="Authentication\OwinWrapper.cs" />
     <Compile Include="Controllers\AccessDeniedController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
+    <Compile Include="DependencyResolution\StructureMapValidatorFactory.cs" />
+    <Compile Include="DependencyResolution\ValidationRegistry.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Extensions\ValidationResultExtensions.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestrator.cs" />

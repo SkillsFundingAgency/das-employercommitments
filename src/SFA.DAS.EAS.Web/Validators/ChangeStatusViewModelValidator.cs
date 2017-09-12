@@ -1,5 +1,7 @@
 ﻿using System;
 using FluentValidation;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 
@@ -7,8 +9,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 {
     public sealed class ChangeStatusViewModelValidator : AbstractValidator<ChangeStatusViewModel>
     {
-        public ChangeStatusViewModelValidator()
+        private readonly ICurrentDateTime _currentDateTime;
+
+        public ChangeStatusViewModelValidator(ICurrentDateTime currentDateTime)
         {
+            _currentDateTime = currentDateTime;
             RuleFor(x => x.ChangeType)
                 .NotNull().WithMessage("Select an option")
                 .IsInEnum().WithMessage("Select an option");
@@ -27,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                                 .Cascade(CascadeMode.StopOnFirstFailure)
                                 .NotNull().WithMessage("Date is not valid")
                                 .Must(ValidateDateOfBirth).WithMessage("Date is not valid")
-                                .Must(d => d.DateTime < DateTime.UtcNow.Date.AddDays(1)).WithMessage("Date must be a date in the past");
+                                .Must(d => d.DateTime < _currentDateTime.Now.Date.AddDays(1)).WithMessage("Date must be a date in the past");
                     });
                 });
             });
