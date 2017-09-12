@@ -135,13 +135,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 
         private bool WillApprenticeBeNoMoreThan115AtTheStartOfTheCurrentTeachingYear(DateTimeViewModel dob)
         {
-            var age = _academicYear.CurrentAcademicYearStartDate.Year - dob.DateTime.Value.Year;
+            var age = _academicYear.StartDate.Year - dob.DateTime.Value.Year;
             return age <= 115;
         }
 
         private bool StartDateWithinAYearOfTheEndOfTheCurrentTeachingYear(DateTimeViewModel startDate)
         {
-            return startDate.DateTime.Value <= _academicYear.CurrentAcademicYearEndDate.AddYears(1);
+            return startDate.DateTime.Value <= _academicYear.EndDate.AddYears(1);
         }
 
         private bool BeGreaterThenStartDate(ApprenticeshipViewModel viewModel, DateTimeViewModel date)

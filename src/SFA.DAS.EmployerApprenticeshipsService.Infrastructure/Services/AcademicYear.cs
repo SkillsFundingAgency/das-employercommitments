@@ -12,7 +12,12 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
             _currentDateTime = currentDateTime;
         }
 
-        public DateTime CurrentAcademicYearStartDate
+        public AcademicYear(DateTime start)
+        {
+            _currentDateTime = new CurrentDateTime(start);
+        }
+
+        public DateTime StartDate
         {
             get
             {
@@ -24,6 +29,15 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
             }
         }
 
-        public DateTime CurrentAcademicYearEndDate => CurrentAcademicYearStartDate.AddYears(1).AddDays(-1);
+        public DateTime EndDate => StartDate.AddYears(1).AddDays(-1);
+
+        public DateTime FundingPeriodCloseDate
+        {
+            get
+            {
+                // TODO GET DATE FROM SOURCE
+                return EndDate.AddDays(80);
+            }
+        }
     }
 }
