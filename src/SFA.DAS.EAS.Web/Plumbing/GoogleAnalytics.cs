@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Plumbing
 {
     public sealed class GoogleAnalytics
     {
-        private const string ServiceName = "SFA.DAS.GoogleAnalytics";
+        private const string ServiceName = "SFA.DAS.GoogleAnalyticsValues";
 
         private static GoogleAnalytics _instance;
 
