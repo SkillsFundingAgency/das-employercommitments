@@ -51,8 +51,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Plumbing
 
         private void PopulateGoogleEnvironmentDetails(GoogleAnalyticsConfiguration environmentConfig)
         {
-            GoogleHeaderUrl = environmentConfig.GoogleAnalyticsSnippets.GoogleHeaderUrl;
-            GoogleBodyUrl = environmentConfig.GoogleAnalyticsSnippets.GoogleBodyUrl;
+            GoogleHeaderUrl = environmentConfig.GoogleAnalyticsValues.GoogleHeaderUrl;
+            GoogleBodyUrl = environmentConfig.GoogleAnalyticsValues.GoogleBodyUrl;
         }
 
         private static IConfigurationRepository GetConfigurationRepository()

@@ -7,6 +7,6 @@ namespace SFA.DAS.EmployerCommitments.Domain.Configuration
         public string DatabaseConnectionString { get; set; } // Not required
         public string ServiceBusConnectionString { get; set; } // Not required
 
-        public GoogleAnalyticsSnippets GoogleAnalyticsSnippets { get; set; }
+        public GoogleAnalyticsValues GoogleAnalyticsValues { get; set; }
     }
 }
