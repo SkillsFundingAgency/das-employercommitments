@@ -54,10 +54,8 @@ using NotificationsApiClientConfiguration = SFA.DAS.EmployerCommitments.Domain.C
 
 namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 {
-
     public class DefaultRegistry : Registry
     {
-        private string _test;
         private const string ServiceName = "SFA.DAS.EmployerCommitments";
         private const string ServiceNamespace = "SFA.DAS";
 
@@ -92,10 +90,9 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
                 .Ctor<IEventsApiClientConfiguration>().Is(config.EventsApi)
                 .SelectConstructor(() => new EventsApi(null)); // The default one isn't the one we want to use.;
 
-            var notificationsApiConfig = Infrastructure.DependencyResolution.ConfigurationHelper.GetConfiguration
-                <NotificationsApiClientConfiguration>($"{ServiceName}.Notifications");
+            ConfigureNotificationsApi();
 
-            ConfigureNotificationsApi(notificationsApiConfig);
+            PopulateGoogleEnvironmentDetails();
 
             RegisterMapper();
 
@@ -122,12 +119,13 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<IEmployerCommitmentApi>().Use<EmployerCommitmentApi>().
                 Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
                 .Ctor<HttpClient>().Is(httpClient);
-
-
         }
 
-        private void ConfigureNotificationsApi(NotificationsApiClientConfiguration config)
+        private void ConfigureNotificationsApi()
         {
+            var config = Infrastructure.DependencyResolution.ConfigurationHelper.GetConfiguration
+                <NotificationsApiClientConfiguration>($"{ServiceName}.Notifications");
+
             HttpClient httpClient;
 
             if (string.IsNullOrWhiteSpace(config.ClientId))
@@ -146,8 +144,6 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<INotificationsApi>().Use<NotificationsApi>().Ctor<HttpClient>().Is(httpClient);
 
             For<INotificationsApiClientConfiguration>().Use(config);
-
-
         }
 
         private void RegisterExecutionPolicies()
@@ -250,6 +246,15 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
         {
             SystemDetailsViewModel.EnvironmentName = envName;
             SystemDetailsViewModel.VersionNumber = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        }
+
+        private void PopulateGoogleEnvironmentDetails()
+        {
+            var config = Infrastructure.DependencyResolution.ConfigurationHelper.GetConfiguration
+                <GoogleAnalyticsConfiguration>($"SFA.DAS.GoogleAnalytics");
+
+            GoogleAnalyicsDetailsViewModel.HeadUrl = config.GoogleAnalyticsSnippets.GoogleHeaderUrl;
+            GoogleAnalyicsDetailsViewModel.BodyUrl = config.GoogleAnalyticsSnippets.GoogleBodyUrl;
         }
 
         private void RegisterLogger()

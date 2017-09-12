@@ -360,6 +360,7 @@
     <Compile Include="Validators\DataLockStatusViewModelViewModelValidator.cs" />
     <Compile Include="Validators\ProviderPriorityReOrderListValidator.cs" />
     <Compile Include="ViewModels\CommitmentsIndexViewModel.cs" />
+    <Compile Include="ViewModels\GoogleAnalyicsDetailsViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IPaginationViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\ApprenticeshipFiltersViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\ChangeStatusChoiceViewModel.cs" />
