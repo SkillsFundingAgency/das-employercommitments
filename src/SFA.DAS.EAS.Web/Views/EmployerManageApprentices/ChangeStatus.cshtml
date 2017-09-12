@@ -12,7 +12,7 @@
 <div class="grid-row">
     <div class="column-two-thirds">
 
-        <form method="POST" action="@Url.RouteUrl("PostChangeStatusSelectOption")">
+        <form method="POST" action="@Url.RouteUrl("PostChangeStatusSelectOption")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
             <h1 class="heading-xlarge">Change apprentice status</h1>
@@ -27,25 +27,25 @@
                     @if (Model.Data.IsCurrentlyPaused)
                     {
                         <label for=@($"ChangeType-{ChangeStatusType.Resume}") class="block-label selection-button-radio">
-                            @Html.RadioButton("ChangeType", ChangeStatusType.Resume, new { id = $"ChangeType-{ChangeStatusType.Resume}" })
+                            @Html.RadioButton("ChangeType", ChangeStatusType.Resume, new { id = $"ChangeType-{ChangeStatusType.Resume}", dataOptionName = $"{ChangeStatusType.Resume}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{ChangeStatusType.Resume}')" })
                             Resume
                         </label>
                     }
                     else
                     {
                         <label for=@($"ChangeType-{ChangeStatusType.Pause}") class="block-label selection-button-radio">
-                            @Html.RadioButton("ChangeType", ChangeStatusType.Pause, new { id = $"ChangeType-{ChangeStatusType.Pause}" })
+                            @Html.RadioButton("ChangeType", ChangeStatusType.Pause, new { id = $"ChangeType-{ChangeStatusType.Pause}", dataOptionName = $"{ChangeStatusType.Pause}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{ChangeStatusType.Pause}')" })
                             Pause
                         </label>
                     }
                     
                     <label for=@($"ChangeType-{ChangeStatusType.Stop}") class="block-label selection-button-radio">
-                        @Html.RadioButton("ChangeType", ChangeStatusType.Stop, new { id = $"ChangeType-{ChangeStatusType.Stop}" })
+                        @Html.RadioButton("ChangeType", ChangeStatusType.Stop, new { id = $"ChangeType-{ChangeStatusType.Stop}", dataOptionName = $"{ChangeStatusType.Stop}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{ChangeStatusType.Stop}')" })
                         Stop
                     </label>
                    
                     <label for=@($"ChangeType-{ChangeStatusType.None}") class="block-label selection-button-radio">
-                        @Html.RadioButton("ChangeType", ChangeStatusType.None, new { id = $"ChangeType-{ChangeStatusType.None}" })
+                        @Html.RadioButton("ChangeType", ChangeStatusType.None, new { id = $"ChangeType-{ChangeStatusType.None}", dataOptionName = $"{ChangeStatusType.None}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{ChangeStatusType.None}')" })
                         Don't change the status
                     </label>
                   
@@ -63,4 +63,14 @@
     <div class="breadcrumbs">
         <a href="@Url.RouteUrl("OnProgrammeApprenticeshipDetails")" aria-label="Back to apprentices details" class="back-link">Back</a>
     </div>
+}
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/manage/change-apprentice-status'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
 }

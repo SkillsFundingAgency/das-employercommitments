@@ -139,6 +139,8 @@
   <ItemGroup>
     <Compile Include="Configuration\AccountApiConfiguration.cs" />
     <Compile Include="Configuration\EmployerApprenticeshipApiConfiguration.cs" />
+    <Compile Include="Configuration\GoogleAnalyticsConfiguration.cs" />
+    <Compile Include="Configuration\GoogleAnalyticsSnippets.cs" />
     <Compile Include="Configuration\NotificationsApiClientConfiguration.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Http\InternalServerErrorException.cs" />

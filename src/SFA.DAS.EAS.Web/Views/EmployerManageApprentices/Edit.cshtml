@@ -65,3 +65,13 @@
         <a href="@Url.Action("Details", "EmployerManageApprentices", new { Model.Data.Apprenticeship.HashedAccountId, Model.Data.Apprenticeship.HashedApprenticeshipId} )" aria-label="Back to apprentice details" class="back-link">Back to apprentice details</a>
     </div>
 }
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/manage/edit-apprentice-details'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
+}

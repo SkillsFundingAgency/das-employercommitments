@@ -18,8 +18,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         private readonly IFeatureToggle _featureToggle;
         private readonly IMultiVariantTestingService _multiVariantTestingService;
         private readonly ICookieStorageService<FlashMessageViewModel> _flashMessage;
-        protected IOwinWrapper OwinWrapper;
-        
+
+        public readonly IOwinWrapper OwinWrapper;
 
         public BaseController(
             IOwinWrapper owinWrapper, 
@@ -32,7 +32,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             _multiVariantTestingService = multiVariantTestingService;
             _flashMessage = flashMessage;
         }
-
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {

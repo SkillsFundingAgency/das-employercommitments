@@ -13,12 +13,11 @@
     @Scripts.Render("~/bundles/jqueryvalcustom")
 }*@
 
-
 <div class="grid-row">
-    <form method="POST" action="@Url.Action("SetLegalEntity")">
+    <form method="POST" action="@Url.Action("SetLegalEntity")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
         <div class="column-two-thirds">
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
-            <h1 class="heading-xlarge">Choose organisation</h1>
+            <h1 class="heading-xlarge">@ViewBag.Title</h1>
             @Html.AntiForgeryToken()
             <div class="form-group @Html.AddClassIfPropertyInError("LegalEntityCode", "error")">
                 <fieldset>
@@ -30,7 +29,7 @@
                     @foreach (var entity in Model.Data.LegalEntities)
                     {
                         <label class="block-label selection-button-radio" for="LegalEntityCode-@entity.Code">
-                        @Html.RadioButton("LegalEntityCode", @entity.Code, new { @id = "LegalEntityCode-" + entity.Code })
+                        @Html.RadioButton("LegalEntityCode", @entity.Code, new { @id = "LegalEntityCode-" + entity.Code, dataOptionName=$"{entity.Name}", onclick=$"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{entity.Name}')" })
                             @entity.Name
                         </label>
                     }
@@ -55,9 +54,18 @@
         </div>
     </form>
 </div>
-
 @section breadcrumb {
     <div class="breadcrumbs">
         <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to Apprentices" class="back-link">Back to Apprentices</a>
     </div>
+}
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/legalEntity/create/choose-organisation',
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
 }

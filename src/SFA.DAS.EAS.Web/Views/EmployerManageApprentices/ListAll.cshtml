@@ -23,71 +23,85 @@
 }
 else
 {
-            <div class="grid-row">
-                <div class="column-one-third">
-                    <form method="GET" action="@Url.Action("ListAll")" novalidate="novalidate">
-                        @Html.Partial("ApprenticeshipFilters", Model.Data.Filters)
-                        <button type="submit" class="button" value="Filter" id="submit-app-filter">Filter apprentices</button>
-                        <p>
-                            <a href="@Url.Action("ListAll")" title="Reset" class="button text-link reset-link">Reset</a>
-                        </p>
-                    </form>
-                </div>
+    <div class="grid-row">
+        <div class="column-one-third">
+            <form method="GET" action="@Url.Action("ListAll")" novalidate="novalidate">
+                @Html.Partial("ApprenticeshipFilters", Model.Data.Filters)
+                <button type="submit" class="button" value="Filter" id="submit-app-filter">Filter apprentices</button>
+                <p>
+                    <a href="@Url.Action("ListAll")" title="Reset" class="button text-link reset-link">Reset</a>
+                </p>
+            </form>
+        </div>
 
-                <div class="column-two-thirds">
+        <div class="column-two-thirds">
 
-                    <table class="tableResponsive">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Date of birth</th>
-                                <th>Status</th>
-                                <th>Alerts</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var apprenticeship in Model.Data.Apprenticeships)
-                {
-                                <tr>
-                                    <td>
-                                        @apprenticeship.FirstName @apprenticeship.LastName &nbsp;
-                                    </td>
-                                    <td>
-                                        @if (apprenticeship.DateOfBirth != null)
-                                        {
-                                            @apprenticeship.DateOfBirth.Value.ToGdsFormat()
-                                        } &nbsp;
-                                    </td>
-                                    <td>
-                                        @apprenticeship.Status &nbsp;
-                                    </td>
-                                    <td>
-                                        @foreach (var a in apprenticeship.Alerts)
-                                        {
-                                            <div>
-                                                @a
-                                            </div>
-                                        }
-                                    </td>
-                                    <td>
-                                        <a href="@Url.Action("Details", new {Model.Data.HashedAccountId, hashedApprenticeshipId = apprenticeship.HashedApprenticeshipId})"
-                                           title="View  @apprenticeship.FirstName @apprenticeship.LastName"
-                                           aria-label="View @apprenticeship.FirstName @apprenticeship.LastName">View</a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+            <table class="tableResponsive">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Date of birth</th>
+                        <th>Status</th>
+                        <th>Alerts</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var apprenticeship in Model.Data.Apprenticeships)
+                    {
+                        <tr>
+                            <td>
+                                @apprenticeship.FirstName @apprenticeship.LastName &nbsp;
+                            </td>
+                            <td>
+                                @if (apprenticeship.DateOfBirth != null)
+                                {
+                                    @apprenticeship.DateOfBirth.Value.ToGdsFormat()
+                                } &nbsp;
+                            </td>
+                            <td>
+                                @apprenticeship.Status &nbsp;
+                            </td>
+                            <td>
+                                @foreach (var a in apprenticeship.Alerts)
+                                {
+                                    <div>
+                                        @a
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Details", new { Model.Data.HashedAccountId, hashedApprenticeshipId = apprenticeship.HashedApprenticeshipId })"
+                                title="View  @apprenticeship.FirstName @apprenticeship.LastName"
+                                aria-label="View @apprenticeship.FirstName @apprenticeship.LastName">View</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
 
-                    @Html.Partial("Pagination", Model.Data)
+            @Html.Partial("Pagination", Model.Data)
 
-                </div>
-            </div>
-            }
+        </div>
+    </div>
+}
 
-            @section breadcrumb {
-                <div class="breadcrumbs">
-                    <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to apprentices" class="back-link">Back to apprentices</a>
-                </div>
-            }
+@section breadcrumb {
+    <div class="breadcrumbs">
+        <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to apprentices" class="back-link">Back to apprentices</a>
+    </div>
+}
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/manage/list-all-apprentices',
+            'statuses': '@Model.Data.Filters.Status.Count',
+            'alerts': '@Model.Data.Filters.RecordStatus.Count',
+            'courses': '@Model.Data.Filters.Course.Count',
+            'providers': '@Model.Data.Filters.Provider.Count'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
+}

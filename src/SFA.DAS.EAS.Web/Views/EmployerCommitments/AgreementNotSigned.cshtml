@@ -28,3 +28,14 @@
         <p><a href="@Url.Action("SearchProvider", new {Model.HashedAccountId, Model.LegalEntityCode, Model.CohortRef})">Continue anyway</a></p>
     </div>
 </div>
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/agreement-not-signed',
+            'org': '@Model.LegalEntityCode'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
+}

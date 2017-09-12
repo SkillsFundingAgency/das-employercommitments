@@ -140,6 +140,34 @@ sfa.backLink = {
     }
 }
 
+// Helper for gta events
+sfa.tagHelper = {
+    dataLayer: {},
+    init: function () {
+        window.dataLayer = window.dataLayer || [];
+    },
+    radioButtonClick: function (eventAction, optionName) {
+        dataLayer.push({
+            'event': 'dataLayerEvent',
+            'eventCat': 'Form Option',
+            'eventAct': eventAction,
+            'eventLab': optionName
+        });
+    },
+    submitRadioForm: function (eventAction) {
+
+        var optionName = $("input[type='radio']:checked").attr('dataOptionName');
+
+        dataLayer.push({
+            'event': 'dataLayerEvent',
+            'eventCat': 'Form Submit',
+            'eventAct': eventAction,
+            'eventLab': optionName
+        });
+    }
+};
+
+
 if ($('#js-breadcrumbs')) {
     sfa.backLink.init();
 }
@@ -150,6 +178,7 @@ window.onunload = function () {
 
 sfa.forms.init();
 sfa.navigation.init();
+sfa.tagHelper.init();
 $('ul#global-nav-links').collapsableNav();
 
 var selectionButtons = new GOVUK.SelectionButtons("label input[type='radio'], label input[type='checkbox'], section input[type='radio']");
