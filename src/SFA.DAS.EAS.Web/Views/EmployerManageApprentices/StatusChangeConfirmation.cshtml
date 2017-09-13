@@ -38,7 +38,7 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        <form method="post" action="@Url.RouteUrl("PostStatusChangeConfirmation")">
+        <form method="post" action="@Url.RouteUrl("PostStatusChangeConfirmation")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
 
@@ -115,12 +115,12 @@
 
                     @Html.ValidationMessage("ChangeConfirmed", "Please choose an option", new { id = "error-message-ChangeConfirmed" })
                     <label for=@($"ChangeConfirmed-True") class="block-label selection-button-radio">
-                        @Html.RadioButton("ChangeConfirmed", true, new { id = $"ChangeConfirmed-True" })
+                        @Html.RadioButton("ChangeConfirmed", true, new { id = $"ChangeConfirmed-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
                         Yes, @pageAction this apprentice
                     </label>
 
                     <label for=@($"ChangeConfirmed-False") class="block-label selection-button-radio">
-                        @Html.RadioButton("ChangeConfirmed", false, new { id = $"ChangeConfirmed-False" })
+                        @Html.RadioButton("ChangeConfirmed", false, new { id = $"ChangeConfirmed-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
                         No, don't @pageAction this apprentice
                     </label>
                 </fieldset>
@@ -142,4 +142,14 @@
     <div class="breadcrumbs">
         <a href="@Url.RouteUrl("OnProgrammeApprenticeshipDetails")" aria-label="Back to apprentices details" class="back-link">Back</a>
     </div>
+}
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/manage/@ViewBag.PageId'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
 }
