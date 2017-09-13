@@ -14,10 +14,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         protected static readonly Func<string, int, bool> HaveNumberOfDigitsFewerThan = (str, length) => { return (str?.Count(char.IsDigit) ?? 0) < length; };
         private readonly IApprenticeshipValidationErrorText _validationText;
         private readonly ICurrentDateTime _currentDateTime;
-        private readonly IAcademicYear _academicYear;
+        private readonly IAcademicYearDateProvider _academicYear;
 
         public ApprenticeshipCoreValidator(IApprenticeshipValidationErrorText validationText,
-            ICurrentDateTime currentDateTime, IAcademicYear academicYear)
+            ICurrentDateTime currentDateTime, IAcademicYearDateProvider academicYear)
         {
             _validationText = validationText;
             _currentDateTime = currentDateTime;

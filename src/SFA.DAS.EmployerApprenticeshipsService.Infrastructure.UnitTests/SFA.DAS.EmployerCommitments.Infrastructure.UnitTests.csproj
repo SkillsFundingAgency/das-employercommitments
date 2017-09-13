@@ -145,6 +145,7 @@
     <Compile Include="NoopExecutionPolicy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AcademicYearTests\WhenDeterminingTheAcademicYear.cs" />
+    <Compile Include="Services\AcademicYearTests\WhenValidatingAcademicYear.cs" />
     <Compile Include="Services\AuditServiceTests\WhenISendAnAuditMessage.cs" />
     <Compile Include="Services\CookieStorageTests\WhenIUseTheCookieStorageService.cs" />
     <Compile Include="Services\EmployerAccountServiceTests\WhenICheckAUserIsConnectedToAnAccount.cs" />

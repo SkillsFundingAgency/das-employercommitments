@@ -145,7 +145,8 @@
     <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Http\InternalServerErrorException.cs" />
     <Compile Include="Http\RequestTimeOutException.cs" />
-    <Compile Include="Interfaces\IAcademicYear.cs" />
+    <Compile Include="Interfaces\IAcademicYearDateProvider.cs" />
+    <Compile Include="Interfaces\IAcademicYearValidator.cs" />
     <Compile Include="Interfaces\IAzureAdAuthenticationService.cs" />
     <Compile Include="Interfaces\ICookieStorageService.cs" />
     <Compile Include="Interfaces\ICurrentDateTime.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Interfaces\IProviderEmailLookupService.cs" />
     <Compile Include="Configuration\TokenServiceApiClientConfiguration.cs" />
     <Compile Include="Interfaces\IMultiVariantTestingService.cs" />
+    <Compile Include="Models\AcademicYear\AcademicYearValidationResult.cs" />
     <Compile Include="Models\Apprenticeship\ApprenticeshipStatus.cs" />
     <Compile Include="Models\Apprenticeship\ChangeOption.cs" />
     <Compile Include="Models\Apprenticeship\ChangeStatusType.cs" />
