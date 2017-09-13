@@ -2,8 +2,9 @@
 @model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships.DataLockStatusViewModel>
 
 @{
-    ViewBag.Title = "Restart Apprenticeship";
+    ViewBag.Title = "Change apprentice details";
     ViewBag.Section = "apprentices";
+    ViewBag.PageId = "restart-requested";
 }
 
 
@@ -75,4 +76,14 @@
     <div class="breadcrumbs">
         <a href="@Url.Action("Details", "EmployerManageApprentices", new { Model.Data.HashedAccountId, Model.Data.HashedApprenticeshipId} )" aria-label="Back to apprentice details" class="back-link">Back to apprentice details</a>
     </div>
+}
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/manage/restart-requested'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
 }
