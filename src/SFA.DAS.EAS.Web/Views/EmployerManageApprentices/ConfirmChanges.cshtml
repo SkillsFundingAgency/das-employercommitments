@@ -10,11 +10,11 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        <form method="POST" action="@Url.Action("SubmitChanges")" novalidate="novalidate">
+        <form method="POST" action="@Url.Action("SubmitChanges")" novalidate="novalidate" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             
             @Html.AntiForgeryToken()
 
-            <h1 class="heading-xlarge">Confirm changes</h1>
+            <h1 class="heading-xlarge">@ViewBag.Title</h1>
             
             @Html.Partial("ApprenticeshipUpdate", Model.Data)
                 <h2 class="heading-medium">Do you want to make these changes?</h2>
@@ -29,11 +29,11 @@
                         }
 
                         <label class="block-label selection-button-radio" for="changes-confirmed-true">
-                            @Html.RadioButton("ChangesConfirmed", true, new { id = "changes-confirmed-true" })
+                            @Html.RadioButton("ChangesConfirmed", true, new { id = "changes-confirmed-true", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
                             Yes, change these details
                         </label>
                         <label class="block-label selection-button-radio" for="changes-confirmed-false">
-                            @Html.RadioButton("ChangesConfirmed", false, new { id = "changes-confirmed-false" })
+                            @Html.RadioButton("ChangesConfirmed", false, new { id = "changes-confirmed-false", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
                             No, don't change these details
                         </label>
                     </fieldset>
@@ -48,4 +48,14 @@
     <div class="breadcrumbs">
         <a href="@Url.Action("Details", "EmployerManageApprentices")" aria-label="Back to apprentice details" class="back-link">Back to apprentice details</a>
     </div>
+}
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/manage/confirm-edited-changes'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
 }
