@@ -170,3 +170,13 @@
         return $"£{cost.Value:n0}";
     }
 }
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/manage/apprentice-details'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
+}

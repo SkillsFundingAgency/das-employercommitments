@@ -10,7 +10,7 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        <form method="POST" action="@Url.Action("ReviewChanges")" novalidate="novalidate">
+        <form method="POST" action="@Url.Action("ReviewChanges")" novalidate="novalidate" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             
             @Html.AntiForgeryToken()
 
@@ -31,11 +31,11 @@
                     }
 
                     <label class="block-label selection-button-radio" for="changes-approve-true">
-                        @Html.RadioButton("ChangesConfirmed", true, new { id = "changes-approve-true" })
+                        @Html.RadioButton("ChangesConfirmed", true, new { id = "changes-approve-true", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
                         Yes, approve these changes
                     </label>
                     <label class="block-label selection-button-radio" for="changes-approve-false">
-                        @Html.RadioButton("ChangesConfirmed", false, new { id = "changes-approve-false" })
+                        @Html.RadioButton("ChangesConfirmed", false, new { id = "changes-approve-false", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
                         No, reject these changes
                     </label>
                 </fieldset>
@@ -54,4 +54,14 @@
     <div class="breadcrumbs">
         <a href="@Url.Action("Details", "EmployerManageApprentices", new { Model.Data.HashedAccountId, Model.Data.HashedApprenticeshipId} )" aria-label="Back to apprentice details" class="back-link">Back to apprentice details</a>
     </div>
+}
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/manage/review-changes'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
 }

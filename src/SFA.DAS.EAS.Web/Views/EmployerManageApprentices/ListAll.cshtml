@@ -38,6 +38,7 @@ else
             </div>
             <hr class="black" />
             <h2 class="heading-medium filter-app-head">Filter apprentices</h2>
+
             <form method="GET" action="@Url.Action("ListAll")" novalidate="novalidate">
                 @Html.Partial("ApprenticeshipFilters", Model.Data.Filters)
                 <button type="submit" class="button" value="Filter" id="submit-app-filter">Filter apprentices</button>
@@ -50,6 +51,7 @@ else
         </div>
 
         <div class="column-two-thirds">
+
             @if (Model.Data.TotalResults == 0)
             {
                 <h3>No results found.</h3>
@@ -117,3 +119,18 @@ else
         <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to apprentices" class="back-link">Back to apprentices</a>
     </div>
 }
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/manage/list-all-apprentices',
+            'statuses': '@Model.Data.Filters.Status.Count',
+            'alerts': '@Model.Data.Filters.RecordStatus.Count',
+            'courses': '@Model.Data.Filters.Course.Count',
+            'providers': '@Model.Data.Filters.Provider.Count'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
+}
+

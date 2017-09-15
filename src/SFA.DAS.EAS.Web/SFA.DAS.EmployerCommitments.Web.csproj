@@ -27,6 +27,7 @@
     <IISExpressSSLPort>443</IISExpressSSLPort>
     <TargetFrameworkProfile />
     <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -357,11 +358,14 @@
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestrator.cs" />
     <Compile Include="Orchestrators\Mappers\ApprenticeshipFiltersMapper.cs" />
     <Compile Include="Orchestrators\Mappers\IApprenticeshipFiltersMapper.cs" />
+    <Compile Include="Plumbing\GoogleAnalytics.cs" />
     <Compile Include="Plumbing\Mvc\CommitmentsRoutePrefix.cs" />
+    <Compile Include="Plumbing\Mvc\GoogleTagManagerFilterAttribute.cs" />
     <Compile Include="Validators\ChangeStatusViewModelValidator.cs" />
     <Compile Include="Validators\DataLockStatusViewModelViewModelValidator.cs" />
     <Compile Include="Validators\ProviderPriorityReOrderListValidator.cs" />
     <Compile Include="ViewModels\CommitmentsIndexViewModel.cs" />
+    <Compile Include="ViewModels\GoogleAnalyicsDetailsViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IPaginationViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\ApprenticeshipFiltersViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\ChangeStatusChoiceViewModel.cs" />
@@ -473,6 +477,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="dist\javascripts\lodash.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Views\EmployerManageApprentices\EditStartedApprenticeship.cshtml" />

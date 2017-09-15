@@ -13,7 +13,7 @@
 <div class="grid-row">
     <div class="column-full">
         
-        <form action="@Url.Action("DeleteApprenticeshipConfirmation")" method="POST">
+        <form action="@Url.Action("DeleteApprenticeshipConfirmation")" method="POST" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
             @Html.Hidden("ApprenticeshipName", Model.Data.ApprenticeshipName)
@@ -36,11 +36,11 @@
                     <legend class="visually-hidden">Are you sure you want to delete the record for @Model.Data.ApprenticeshipName?</legend>
 
                     <label class="block-label selection-button-radio" for="DeleteConfirmed-True">
-                        @Html.RadioButton("DeleteConfirmed", "True", Model.Data.DeleteConfirmed.HasValue && Model.Data.DeleteConfirmed.Value, new { Id = "DeleteConfirmed-True" })
+                        @Html.RadioButton("DeleteConfirmed", "True", Model.Data.DeleteConfirmed.HasValue && Model.Data.DeleteConfirmed.Value, new { Id = "DeleteConfirmed-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
                         Yes, delete the record
                     </label>
                     <label class="block-label selection-button-radio" for="DeleteConfirmed-False">
-                        @Html.RadioButton("DeleteConfirmed", "False", Model.Data.DeleteConfirmed.HasValue && !Model.Data.DeleteConfirmed.Value, new { Id= "DeleteConfirmed-False"})
+                        @Html.RadioButton("DeleteConfirmed", "False", Model.Data.DeleteConfirmed.HasValue && !Model.Data.DeleteConfirmed.Value, new { Id= "DeleteConfirmed-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
                         No, don't delete
                     </label>
                 </fieldset>
@@ -70,3 +70,13 @@ else
     </div>
 }
 
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/apprenticeships/delete/apprentice',
+            'cohortRef': '@Model.Data.HashedCommitmentId'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
+}

@@ -15,6 +15,7 @@ namespace SFA.DAS.EmployerCommitments.Web
 
             filters.Add(new RequestIdActionFilter());
             filters.Add(new SessionIdActionFilter(HttpContext.Current));
+            filters.Add(new GoogleTagManagerFilterAttribute());
         }
     }
 }

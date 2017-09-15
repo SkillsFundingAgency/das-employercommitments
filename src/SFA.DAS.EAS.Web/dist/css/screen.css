@@ -5441,6 +5441,15 @@ h2 .float-right {
   float: left;
 }
 
+#when-to-apply-stop #submit-apply-change {
+  float: left;
+}
+
+#when-to-apply-stop .cancel-link {
+  margin: 7px 0 0 30px;
+  float: left;
+}
+
 @media only screen and (max-device-width: 640px), only screen and (max-device-width: 667px), only screen and (max-width: 480px) {
   #apprentice-details .tableResponsive {
     margin-top: 30px;

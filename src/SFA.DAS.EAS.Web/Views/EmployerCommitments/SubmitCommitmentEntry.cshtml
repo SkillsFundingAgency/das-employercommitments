@@ -48,3 +48,16 @@
        <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to Apprentices" class="back-link">Back to apprentices</a>
     </div>
 }
+
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/submit/submit-instructions',
+            'org': '@Model.Data.LegalEntityCode',
+            'prn': '@Model.Data.ProviderId'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
+}

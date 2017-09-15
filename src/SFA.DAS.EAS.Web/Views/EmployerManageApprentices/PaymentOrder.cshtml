@@ -53,9 +53,18 @@
 </div>
 
 
-
 @section breadcrumb {
     <div class="breadcrumbs">
         <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back" class="back-link">Back to start page</a>
     </div>
+}
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/manage/payment-order'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
 }
