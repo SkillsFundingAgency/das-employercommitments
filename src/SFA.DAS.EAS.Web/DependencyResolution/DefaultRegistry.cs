@@ -38,6 +38,8 @@ using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Infrastructure.Caching;
 using SFA.DAS.EmployerCommitments.Infrastructure.Services;
+using SFA.DAS.EmployerCommitments.Web.Validators;
+using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.Events.Api.Client;
 using SFA.DAS.Events.Api.Client.Configuration;
@@ -81,7 +83,9 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<ICache>().Use<InMemoryCache>(); //RedisCache
 
             For<IApprenticeshipInfoServiceConfiguration>().Use(config.ApprenticeshipInfoService);
-
+            For<IValidateApprovedApprenticeship>().Use<ApprovedApprovedApprenticeshipViewModelValidator>()
+                .Ctor<WebApprenticeshipValidationText>().Is(new WebApprenticeshipValidationText());
+                
             SetUpCommitmentApi(config);
 
             For<IValidationApi>().Use<ValidationApi>().Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi);

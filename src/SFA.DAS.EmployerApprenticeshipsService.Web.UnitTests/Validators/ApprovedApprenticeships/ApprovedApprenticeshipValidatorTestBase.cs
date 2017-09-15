@@ -15,7 +15,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprovedApprentic
     public abstract class ApprovedApprenticeshipValidatorTestBase
     {
         protected readonly Mock<ICurrentDateTime> CurrentDateTime = new Mock<ICurrentDateTime>();
-        protected ApprovedApprenticeshipViewModelValidator Sut;
+        protected ApprovedApprovedApprenticeshipViewModelValidator Sut;
         protected ApprenticeshipViewModel ValidModel;
 
         protected UpdateApprenticeshipViewModel UpdatedModel;
@@ -28,7 +28,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprovedApprentic
             YearNow = DateTime.Now.Year;
             CurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2018, 5, 1));
             var academicYearProvider = new AcademicYearDateProvider(CurrentDateTime.Object);
-            Sut = new ApprovedApprenticeshipViewModelValidator(
+            Sut = new ApprovedApprovedApprenticeshipViewModelValidator(
                 new WebApprenticeshipValidationText(),
                 CurrentDateTime.Object,
                 academicYearProvider,

@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IApprenticeshipFiltersMapper _apprenticeshipFiltersMapper;
 
-        private readonly IValidateApprenticeship _apprenticeshipValidator;
+        private readonly IValidateApprovedApprenticeship _approvedApprenticeshipValidator;
 
         private readonly ICookieStorageService<UpdateApprenticeshipViewModel>
             _apprenticshipsViewModelCookieStorageService;
@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IMediator mediator, 
             IHashingService hashingService,
             IApprenticeshipMapper apprenticeshipMapper,
-            IValidateApprenticeship apprenticeshipValidator,
+            IValidateApprovedApprenticeship approvedApprenticeshipValidator,
             ICurrentDateTime currentDateTime,
             ILog logger,
             ICookieStorageService<UpdateApprenticeshipViewModel> apprenticshipsViewModelCookieStorageService,
@@ -76,8 +76,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 throw new ArgumentNullException(nameof(currentDateTime));
             if (logger == null)
                 throw new ArgumentNullException(nameof(logger));
-            if (apprenticeshipValidator == null)
-                throw new ArgumentNullException(nameof(apprenticeshipValidator));
+            if (approvedApprenticeshipValidator == null)
+                throw new ArgumentNullException(nameof(approvedApprenticeshipValidator));
             if(apprenticeshipFiltersMapper == null)
                 throw new ArgumentNullException(nameof(apprenticeshipFiltersMapper));
             
@@ -86,7 +86,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _apprenticeshipMapper = apprenticeshipMapper;
             _currentDateTime = currentDateTime;
             _logger = logger;
-            _apprenticeshipValidator = apprenticeshipValidator;
+            _approvedApprenticeshipValidator = approvedApprenticeshipValidator;
             _apprenticshipsViewModelCookieStorageService = apprenticshipsViewModelCookieStorageService;
             _apprenticeshipFiltersMapper = apprenticeshipFiltersMapper;
         }
@@ -294,12 +294,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 .MapOverlappingErrors(overlappingErrors)
                 .ToDictionary(overlap => overlap.Key, overlap => overlap.Value);
 
-            foreach (var error in _apprenticeshipValidator.ValidateToDictionary(apprenticeship))
+            foreach (var error in _approvedApprenticeshipValidator.ValidateToDictionary(apprenticeship))
             {
                 result.Add(error.Key, error.Value);
             }
 
-            foreach (var error in _apprenticeshipValidator.ValidateAcademicYear(updatedModel.StartDate?.DateTime))
+            foreach (var error in _approvedApprenticeshipValidator.ValidateAcademicYear(updatedModel.StartDate?.DateTime))
             {
                 result.Add(error.Key, error.Value);
             }

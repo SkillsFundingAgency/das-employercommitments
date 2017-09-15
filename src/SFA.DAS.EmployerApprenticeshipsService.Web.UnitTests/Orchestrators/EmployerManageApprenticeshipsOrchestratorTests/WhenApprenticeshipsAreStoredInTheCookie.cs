@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         private EmployerManageApprenticeshipsOrchestrator _orchestrator;
 
         protected readonly Mock<ICurrentDateTime> CurrentDateTime = new Mock<ICurrentDateTime>();
-        protected ApprovedApprenticeshipViewModelValidator Validator;
+        protected ApprovedApprovedApprenticeshipViewModelValidator Validator;
 
         private const string CookieName = "sfa-das-employerapprenticeshipsservice-apprentices";
 
@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             CurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2018, 5, 1));
             var academicYearProvider = new AcademicYearDateProvider(CurrentDateTime.Object);
 
-            Validator = new ApprovedApprenticeshipViewModelValidator(
+            Validator = new ApprovedApprovedApprenticeshipViewModelValidator(
                 new WebApprenticeshipValidationText(),
                 CurrentDateTime.Object,
                 academicYearProvider,

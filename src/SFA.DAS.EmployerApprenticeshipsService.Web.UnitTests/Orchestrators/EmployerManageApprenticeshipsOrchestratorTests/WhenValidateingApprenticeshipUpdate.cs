@@ -21,14 +21,14 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
     [TestFixture]
     public class WhenValidateingApprenticeshipUpdate : ManageApprenticeshipsOrchestratorTestBase
     {
-        public Mock<IValidateApprenticeship> mockValidator;
+        public Mock<IValidateApprovedApprenticeship> mockValidator;
 
         private Mock<IApprenticeshipMapper> mockMapper;
 
         [SetUp]
         public void SetUp()
         {
-            mockValidator = new Mock<IValidateApprenticeship>();
+            mockValidator = new Mock<IValidateApprovedApprenticeship>();
             mockValidator.Setup(m => m.ValidateToDictionary(It.IsAny<ApprenticeshipViewModel>()))
                 .Returns(new Dictionary<string, string>());
             mockValidator.Setup(m => m.ValidateAcademicYear(It.IsAny<DateTime?>()))
