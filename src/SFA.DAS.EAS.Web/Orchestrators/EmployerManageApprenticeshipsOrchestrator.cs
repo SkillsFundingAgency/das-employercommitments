@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -17,7 +18,6 @@ using SFA.DAS.EmployerCommitments.Application.Commands.UpdateProviderPaymentPrio
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLock;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
@@ -26,6 +26,7 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDate;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.Exceptions;
@@ -46,7 +47,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly ILog _logger;
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IApprenticeshipFiltersMapper _apprenticeshipFiltersMapper;
-        private readonly ApprovedApprenticeshipViewModelValidator _apprenticeshipValidator;
+
+        private readonly IValidateApprenticeship _apprenticeshipValidator;
 
         private readonly ICookieStorageService<UpdateApprenticeshipViewModel>
             _apprenticshipsViewModelCookieStorageService;
@@ -57,11 +59,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IMediator mediator, 
             IHashingService hashingService,
             IApprenticeshipMapper apprenticeshipMapper,
-            ApprovedApprenticeshipViewModelValidator apprenticeshipValidator,
+            IValidateApprenticeship apprenticeshipValidator,
             ICurrentDateTime currentDateTime,
             ILog logger,
             ICookieStorageService<UpdateApprenticeshipViewModel> apprenticshipsViewModelCookieStorageService,
-            IApprenticeshipFiltersMapper apprenticeshipFiltersMapper) : base(mediator, hashingService, logger)
+            IApprenticeshipFiltersMapper apprenticeshipFiltersMapper) 
+            : base(mediator, hashingService, logger)
         {
             if (mediator == null)
                 throw new ArgumentNullException(nameof(mediator));
@@ -279,13 +282,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 , hashedAccountId, userId);
         }
 
-        public async Task<Dictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship)
+        public async Task<Dictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship, UpdateApprenticeshipViewModel updatedModel)
         {
             var overlappingErrors = await _mediator.SendAsync(
-                new GetOverlappingApprenticeshipsQueryRequest
-                {
-                    Apprenticeship = new List<Apprenticeship> {await _apprenticeshipMapper.MapFrom(apprenticeship)}
-                });
+                    new GetOverlappingApprenticeshipsQueryRequest
+                    {
+                        Apprenticeship = new List<Apprenticeship> { await _apprenticeshipMapper.MapFrom(apprenticeship) }
+                    });
 
             var result = _apprenticeshipMapper
                 .MapOverlappingErrors(overlappingErrors)
@@ -295,6 +298,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 result.Add(error.Key, error.Value);
             }
+
+            foreach (var error in _apprenticeshipValidator.ValidateAcademicYear(updatedModel.StartDate?.DateTime))
+            {
+                result.Add(error.Key, error.Value);
+            }
+            
 
             return result;
         }

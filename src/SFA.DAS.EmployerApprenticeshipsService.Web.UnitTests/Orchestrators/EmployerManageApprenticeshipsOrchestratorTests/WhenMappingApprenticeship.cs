@@ -14,7 +14,7 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
     [TestFixture]
-    public class WhenMappingApprenticeship : EmployerManageApprenticeshipsOrchestratorTestBase
+    public class WhenMappingApprenticeship : ManageApprenticeshipsOrchestratorTestBase
     {
        
         [TestCase(8, 5, arg3: 10)]
@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             MockMediator.Setup(m => m.SendAsync(It.IsAny<GetApprenticeshipUpdateRequest>()))
                 .ReturnsAsync(new GetApprenticeshipUpdateResponse());
 
-            var result = await EmployerManageApprenticeshipsOrchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
+            var result = await Orchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
             MockMediator.Verify(m => m.SendAsync(It.IsAny<GetApprenticeshipQueryRequest>()), Times.Once);
 
             result.Data.Status.Should().Be("Waiting to start");
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             MockMediator.Setup(m => m.SendAsync(It.IsAny<GetApprenticeshipUpdateRequest>()))
                 .ReturnsAsync(new GetApprenticeshipUpdateResponse());
 
-            var result = await EmployerManageApprenticeshipsOrchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
+            var result = await Orchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
             MockMediator.Verify(m => m.SendAsync(It.IsAny<GetApprenticeshipQueryRequest>()), Times.Once);
 
             result.Data.Status.Should().Be("Live");
@@ -80,7 +80,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             MockMediator.Setup(m => m.SendAsync(It.IsAny<GetApprenticeshipUpdateRequest>()))
                 .ReturnsAsync(new GetApprenticeshipUpdateResponse());
 
-            var result = await EmployerManageApprenticeshipsOrchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
+            var result = await Orchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
 
             result.Data.Status.Should().Be("Paused");
         }
@@ -97,7 +97,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             MockMediator.Setup(m => m.SendAsync(It.IsAny<GetApprenticeshipUpdateRequest>()))
                 .ReturnsAsync(new GetApprenticeshipUpdateResponse());
 
-            var result = await EmployerManageApprenticeshipsOrchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
+            var result = await Orchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
 
             result.Data.Status.Should().Be("Stopped");
         }
@@ -114,7 +114,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             MockMediator.Setup(m => m.SendAsync(It.IsAny<GetApprenticeshipUpdateRequest>()))
                 .ReturnsAsync(new GetApprenticeshipUpdateResponse());
 
-            var result = await EmployerManageApprenticeshipsOrchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
+            var result = await Orchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
 
             result.Data.Status.Should().Be("Finished");
         }
@@ -146,7 +146,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                                           }
                                   });
 
-            var result = await EmployerManageApprenticeshipsOrchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
+            var result = await Orchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
             MockMediator.Verify(m => m.SendAsync(It.IsAny<GetApprenticeshipQueryRequest>()), Times.Once);
             result.Data.PendingChanges.Should().Be(PendingChanges.WaitingForApproval);
         }
@@ -172,7 +172,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                         new ApprenticeshipUpdate {ApprenticeshipId = 1L, Originator = Originator.Provider }
                 });
 
-            var result = await EmployerManageApprenticeshipsOrchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
+            var result = await Orchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
             MockMediator.Verify(m => m.SendAsync(It.IsAny<GetApprenticeshipQueryRequest>()), Times.Once);
             result.Data.PendingChanges.Should().Be(PendingChanges.ReadyForApproval);
         }
