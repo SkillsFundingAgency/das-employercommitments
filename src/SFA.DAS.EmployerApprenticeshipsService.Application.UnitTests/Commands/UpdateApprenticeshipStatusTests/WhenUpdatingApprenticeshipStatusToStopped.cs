@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using MediatR;
@@ -12,6 +13,7 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
+using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateApprenticeshipStatusTests
 {
@@ -25,6 +27,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
         private IValidator<UpdateApprenticeshipStatusCommand> _validator = new UpdateApprenticeshipStatusCommandValidator();
         private UpdateApprenticeshipStatusCommand _validCommand;
         private Apprenticeship _testApprenticeship;
+        private Mock<IAcademicYearDateProvider> _academicYearDateProvider;
+        private IAcademicYearValidator _academicYearValidator;
 
         [SetUp]
         public void Setup()
@@ -49,7 +53,21 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
             _mockCurrentDateTime = new Mock<ICurrentDateTime>();
             _mockCurrentDateTime.SetupGet(x => x.Now).Returns(DateTime.UtcNow);
 
-            _handler = new UpdateApprenticeshipStatusCommandHandler(_mockCommitmentApi.Object, _mockMediator.Object, _mockCurrentDateTime.Object, _validator);
+            _academicYearDateProvider = new Mock<IAcademicYearDateProvider>();
+            _academicYearValidator = new AcademicYearValidator(_mockCurrentDateTime.Object,_academicYearDateProvider.Object);
+
+            _academicYearDateProvider.Setup(x => x.CurrentAcademicYearStartDate).Returns(new DateTime(2016, 8, 1));
+            _academicYearDateProvider.Setup(x => x.CurrentAcademicYearEndDate).Returns(new DateTime(2017, 7, 31));
+            _academicYearDateProvider.Setup(x => x.LastAcademicYearFundingPeriod).Returns(new DateTime(2016, 10, 18));
+
+            _handler = new UpdateApprenticeshipStatusCommandHandler(
+                _mockCommitmentApi.Object,
+                _mockMediator.Object,
+                _mockCurrentDateTime.Object,
+                _validator,
+                _academicYearDateProvider.Object,
+                _academicYearValidator
+                );
         }
 
         [Test]
@@ -82,5 +100,55 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
 
             act.ShouldThrow<InvalidRequestException>().Which.Message.Contains("Date must the same as start date if training hasn't started");
         }
+
+        [Test(Description = "Validation fails if date of change is in the previous academic year and the R14 date has passed")]
+        public void ShouldThrowValidationErrorAfterR14Close()
+        {
+            _testApprenticeship.StartDate = new DateTime(2016, 3, 1); //early last academic year
+            _validCommand.DateOfChange = new DateTime(2016, 5, 1); //last academic year
+            _mockCurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2016, 10, 19)); //after cut-off
+
+            Func<Task> act = async () => await _handler.Handle(_validCommand);
+
+            act.ShouldThrow<InvalidRequestException>().Where(x => x.ErrorMessages.Values.Contains("The earliest date you can stop this apprentice is 01 08 2016"));
+        }
+
+        [Test(Description = "Validation passes if date of change is in the previous academic year but the R14 date has not yet passed")]
+        public void ShouldNotThrowValidationErrorIfBeforeR14Close()
+        {
+            _testApprenticeship.StartDate = new DateTime(2016, 3, 1);
+            _validCommand.DateOfChange = new DateTime(2016, 5, 1); //last academic year
+            _mockCurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2016, 10, 17)); //prior to cut-off
+
+            Func<Task> act = async () => await _handler.Handle(_validCommand);
+
+            act.ShouldNotThrow<InvalidRequestException>();
+        }
+
+        [Test(Description = "Validation fails for both R14 having passed and change date before Start Date - Start Date error takes precedence")]
+        public void ShouldThrowStartDateValidationErrorAfterR14CloseAndStopDateBeforeStartDate()
+        {
+            _testApprenticeship.StartDate = new DateTime(2016, 3, 1);
+            _validCommand.DateOfChange = new DateTime(2016, 1, 1); //last academic year
+            _mockCurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2016, 10, 19)); //after cut-off
+
+            Func<Task> act = async () => await _handler.Handle(_validCommand);
+
+            act.ShouldThrow<InvalidRequestException>().Where(x => x.ErrorMessages.Values.Contains("Date cannot be earlier than training start date"));
+        }
+
+        //Story says name must be in error message, but not in design so waiting on this..............
+        //[Test]
+        //public void ShowThrowValidationErrorContainingApprenticeNameAfterR14Close()
+        //{
+        //    _testApprenticeship.FirstName = "Test";
+        //    _testApprenticeship.LastName = "TestSurname";
+        //    _testApprenticeship.StartDate = new DateTime(2016, 3, 1);
+        //    _validCommand.DateOfChange = new DateTime(2016, 5, 1); //last academic year
+        //    _mockCurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2016, 10, 19)); //after cut-off
+
+        //    Func<Task> act = async () => await _handler.Handle(_validCommand);
+        //    act.ShouldThrow<InvalidRequestException>().Where(x => x.ErrorMessages.Values.Contains("Test TestSurname"));
+        //}
     }
 }
