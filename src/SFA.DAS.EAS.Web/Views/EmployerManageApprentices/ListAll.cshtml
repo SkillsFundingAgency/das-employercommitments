@@ -54,11 +54,13 @@ else
 
             @if (Model.Data.TotalResults == 0)
             {
-                <h3>No results found.</h3>
-                <div>
-                    <p>
-                        You can search again or <a href="@Url.Action("ListAll")" title="see all apprentices" class="button text-link reset-link">see all apprentices</a>
-                    </p>
+                <div id="no-search-results">
+                    <h3 class="heading-small">No results found.</h3>
+                    <div>
+                        <p>
+                            You can search again or <a href="@Url.Action("ListAll")" title="see all apprentices" class="text-link">see all apprentices</a>
+                        </p>
+                    </div>
                 </div>
             }
             else

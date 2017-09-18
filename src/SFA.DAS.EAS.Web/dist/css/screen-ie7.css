@@ -4848,6 +4848,10 @@ h2 .float-right {
   float: left;
 }
 
+#no-search-results {
+  text-align: center;
+}
+
 @media only screen and (max-device-width: 640px), only screen and (max-device-width: 667px), only screen and (max-width: 480px) {
   #apprentice-details .tableResponsive {
     margin-top: 30px;
