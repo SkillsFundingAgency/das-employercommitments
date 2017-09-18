@@ -8,9 +8,9 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels;
 
 namespace SFA.DAS.EmployerCommitments.Web.Validators
 {
-    public class ApprovedApprovedApprenticeshipViewModelValidator : ApprenticeshipCoreValidator, IValidateApprovedApprenticeship
+    public class ApprovedApprenticeshipViewModelValidator : ApprenticeshipCoreValidator, IValidateApprovedApprenticeship
     {
-        public ApprovedApprovedApprenticeshipViewModelValidator(
+        public ApprovedApprenticeshipViewModelValidator(
             WebApprenticeshipValidationText validationText,
             ICurrentDateTime currentDateTime, 
             IAcademicYearDateProvider academicYear,

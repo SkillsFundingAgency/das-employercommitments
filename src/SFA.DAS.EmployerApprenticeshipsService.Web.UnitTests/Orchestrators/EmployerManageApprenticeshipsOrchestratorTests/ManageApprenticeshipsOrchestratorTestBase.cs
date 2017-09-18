@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             currentDateTime.Setup(x => x.Now).Returns(new DateTime(2018, 5, 1));
             var academicYearProvider = new AcademicYearDateProvider(currentDateTime.Object);
 
-            Validator = new ApprovedApprovedApprenticeshipViewModelValidator(
+            Validator = new ApprovedApprenticeshipViewModelValidator(
                 new WebApprenticeshipValidationText(),
                 currentDateTime.Object,
                 academicYearProvider,
