@@ -1,3 +1,4 @@
+using System;
 using MediatR;
 using Moq;
 using NUnit.Framework;
@@ -25,6 +26,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         protected EmployerManageApprenticeshipsOrchestrator EmployerManageApprenticeshipsOrchestrator;
         private Mock<ICookieStorageService<UpdateApprenticeshipViewModel>> _cookieStorageService;
         protected Mock<ICurrentDateTime> MockDateTime;
+        protected Mock<IAcademicYearDateProvider> AcademicYearDateProvider;
 
         [SetUp]
         public void Setup()
@@ -32,6 +34,13 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockMediator = new Mock<IMediator>();
             _mockLogger = new Mock<ILog>();
             MockDateTime = new Mock<ICurrentDateTime>();
+            MockDateTime.Setup(x => x.Now).Returns(DateTime.UtcNow);
+
+            AcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
+            AcademicYearDateProvider.Setup(x => x.CurrentAcademicYearStartDate).Returns(new DateTime(2017, 8, 1));
+            AcademicYearDateProvider.Setup(x => x.CurrentAcademicYearEndDate).Returns(new DateTime(2018, 7, 31));
+            AcademicYearDateProvider.Setup(x => x.LastAcademicYearFundingPeriod).Returns(new DateTime(2017, 10, 18));
+
             ApprenticeshipMapper = new ApprenticeshipMapper(Mock.Of<IHashingService>(), MockDateTime.Object, MockMediator.Object);
 
             _cookieStorageService = new Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>();
@@ -51,9 +60,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 _mockHashingService.Object,
                 ApprenticeshipMapper, 
                 Mock.Of<ApprovedApprenticeshipViewModelValidator>(),
-                new CurrentDateTime(),
+                MockDateTime.Object,
                 _mockLogger.Object, _cookieStorageService.Object,
-                ApprenticeshipFiltersMapper.Object);
+                ApprenticeshipFiltersMapper.Object,
+                AcademicYearDateProvider.Object
+                );
         }
     }
 }
