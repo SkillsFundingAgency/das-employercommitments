@@ -11,7 +11,7 @@
     <div class="column-full">
         <div class="govuk-box-highlight green-box">
             <h1 class="heading-xlarge" id="changeHeadline">
-                Cohort approved
+                @ViewBag.Title
             </h1>
         </div>
     </div>
@@ -77,7 +77,7 @@
         var extraProperties = {
             'vpv': '/accounts/apprentices/acknowledgement/cohort-approved',
             'cohortRef': '@Model.Data.HashedCommitmentId',
-            'success': '@Model.Data.Content.Title'
+            'success': '@ViewBag.Title'
         };
 
         _.assignIn(sfa.dataLayer, extraProperties);
