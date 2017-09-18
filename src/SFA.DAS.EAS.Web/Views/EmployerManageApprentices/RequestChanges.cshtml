@@ -9,7 +9,7 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        <h1 class="heading-xlarge">Review changes</h1>
+        <h1 class="heading-xlarge">@ViewBag.Title</h1>
 
         <table class="core-detail">
             <tr>
@@ -65,7 +65,7 @@
                             </tbody>
                         </table>
                 }
-        <form method="POST" action="@Url.Action("ConfirmRequestChanges")" novalidate="novalidate" id="approve-changes">
+        <form method="POST" action="@Url.Action("ConfirmRequestChanges")" novalidate="novalidate" id="approve-changes" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
             <h3 class="heading-medium">Are you happy to approve these changes?</h3>
             <div class="form-group @(!string.IsNullOrEmpty(Model.Data.ChangesConfirmedError) ? "error" : "")">
@@ -79,11 +79,11 @@
                     }
 
                     <label class="block-label selection-button-radio" for="changes-approve-true">
-                        @Html.RadioButton("ChangesConfirmed", true, new { id = "changes-approve-true" })
+                        @Html.RadioButton("ChangesConfirmed", true, new { id = "changes-approve-true", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
                         Yes, approve these changes
                     </label>
                     <label class="block-label selection-button-radio" for="changes-approve-false">
-                        @Html.RadioButton("ChangesConfirmed", false, new { id = "changes-approve-false" })
+                        @Html.RadioButton("ChangesConfirmed", false, new { id = "changes-approve-false", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
                         No, reject these changes
                     </label>
                 </fieldset>
@@ -114,4 +114,14 @@
 
         return $"£{cost.Value:n0}";
     }
+}
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/manage/review-datalock-changes'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
 }

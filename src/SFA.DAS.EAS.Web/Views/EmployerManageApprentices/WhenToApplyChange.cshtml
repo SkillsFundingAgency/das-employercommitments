@@ -4,8 +4,8 @@
 @model OrchestratorResponse<WhenToMakeChangeViewModel>
 
 @{
-    ViewBag.Title = "Change apprentice status";
-    ViewBag.PageId = "change-apprentice-status";
+    ViewBag.Title = "Select stop date";
+    ViewBag.PageId = "when-to-apply-stop";
     ViewBag.Section = "apprentices";
 }
 
@@ -14,16 +14,13 @@
     @Scripts.Render("~/bundles/lengthLimitation")
 }
 
-
-
-
 <div class="grid-row">
     <div class="column-two-thirds">
-        <form method="post" action="@Url.RouteUrl("PostWhenToApplyChange")" novalidate>
+        <form method="post" action="@Url.RouteUrl("PostWhenToApplyChange")" novalidate onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
             
-            <h1 class="heading-xlarge">Select stop date</h1>
+            <h1 class="heading-xlarge">@ViewBag.Title</h1>
             
             <fieldset>
                 <legend class="visually-hidden" aria-hidden="true">Select stop date</legend>
@@ -33,7 +30,7 @@
                    
                     @Html.ValidationMessage("WhenToMakeChange", "Please choose an option", new { id = "error-message-WhenToMakeChange" })
                     <label for=@($"WhenToMakeChange-{WhenToMakeChangeOptions.Immediately}") class="block-label selection-button-radio">
-                        @Html.RadioButton("WhenToMakeChange", WhenToMakeChangeOptions.Immediately, new { id = $"WhenToMakeChange-{WhenToMakeChangeOptions.Immediately}" })
+                        @Html.RadioButton("WhenToMakeChange", WhenToMakeChangeOptions.Immediately, new { id = $"WhenToMakeChange-{WhenToMakeChangeOptions.Immediately}", dataOptionName = $"{WhenToMakeChangeOptions.Immediately}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{WhenToMakeChangeOptions.Immediately}')" })
                         Today
                     </label>
 
@@ -44,7 +41,7 @@
                     </div>
 
                     <label for=@($"WhenToMakeChange-{WhenToMakeChangeOptions.SpecificDate}") class="block-label selection-button-radio" id="before-today">
-                        @Html.RadioButton("WhenToMakeChange", WhenToMakeChangeOptions.SpecificDate, new { id = $"WhenToMakeChange-{WhenToMakeChangeOptions.SpecificDate}" })
+                        @Html.RadioButton("WhenToMakeChange", WhenToMakeChangeOptions.SpecificDate, new { id = $"WhenToMakeChange-{WhenToMakeChangeOptions.SpecificDate}", dataOptionName = $"{WhenToMakeChangeOptions.SpecificDate}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{WhenToMakeChangeOptions.SpecificDate}')" })
                         Before today
                     </label>
                 </div>
@@ -93,10 +90,18 @@
 </div>
 
 
-
 @section breadcrumb {
     <div class="breadcrumbs">
         <a href="@Url.RouteUrl("OnProgrammeApprenticeshipDetails")" aria-label="Back to apprentices details" class="back-link">Back</a>
     </div>
 }
 
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/manage/when-to-apply-stop'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
+}
