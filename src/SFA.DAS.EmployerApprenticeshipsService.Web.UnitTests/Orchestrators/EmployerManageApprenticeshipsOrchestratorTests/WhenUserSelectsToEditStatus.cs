@@ -12,7 +12,7 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
     [TestFixture]
-    public class WhenUserSelectsToEditStatus : EmployerManageApprenticeshipsOrchestratorTestBase
+    public class WhenUserSelectsToEditStatus : ManageApprenticeshipsOrchestratorTestBase
     {
         private Apprenticeship _testApprenticeship;
 
@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         {
             _testApprenticeship.PaymentStatus = paymentStatus;
 
-            OrchestratorResponse<WhenToMakeChangeViewModel> response = await EmployerManageApprenticeshipsOrchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Stop, "user123");
+            OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Stop, "user123");
 
             response.Data.SkipStep.Should().BeTrue();
         }
@@ -52,7 +52,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         {
             _testApprenticeship.PaymentStatus = PaymentStatus.Active;
 
-            OrchestratorResponse<WhenToMakeChangeViewModel> response = await EmployerManageApprenticeshipsOrchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Pause, "user123");
+            OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Pause, "user123");
 
             response.Data.SkipStep.Should().BeTrue();
         }
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         {
             _testApprenticeship.PaymentStatus = PaymentStatus.Paused;
 
-            OrchestratorResponse<WhenToMakeChangeViewModel> response = await EmployerManageApprenticeshipsOrchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Resume, "user123");
+            OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Resume, "user123");
 
             response.Data.SkipStep.Should().BeTrue();
         }
@@ -73,7 +73,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             _testApprenticeship.PaymentStatus = PaymentStatus.Active;
             _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(-1); // Already started
 
-            OrchestratorResponse<WhenToMakeChangeViewModel> response = await EmployerManageApprenticeshipsOrchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Pause, "user123");
+            OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Pause, "user123");
 
             response.Data.SkipStep.Should().BeTrue();
         }
@@ -84,7 +84,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             _testApprenticeship.PaymentStatus = PaymentStatus.Paused;
             _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(-1); // Already started
 
-            OrchestratorResponse<WhenToMakeChangeViewModel> response = await EmployerManageApprenticeshipsOrchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Resume, "user123");
+            OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Resume, "user123");
 
             response.Data.SkipStep.Should().BeTrue();
         }
@@ -96,7 +96,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             _testApprenticeship.PaymentStatus = paymentStatus;
             _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(-1).Date;
 
-            OrchestratorResponse<WhenToMakeChangeViewModel> response = await EmployerManageApprenticeshipsOrchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Stop, "user123");
+            OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Stop, "user123");
 
             response.Data.SkipStep.Should().BeFalse();
         }
@@ -106,7 +106,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         {
             _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(-1); // Apprenticeship has already started
 
-            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await EmployerManageApprenticeshipsOrchestrator.GetChangeStatusConfirmationViewModel("ABC123", "CDE321", ChangeStatusType.Stop, WhenToMakeChangeOptions.Immediately, null, "user123");
+            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await Orchestrator.GetChangeStatusConfirmationViewModel("ABC123", "CDE321", ChangeStatusType.Stop, WhenToMakeChangeOptions.Immediately, null, "user123");
 
             response.Data.ChangeStatusViewModel.DateOfChange.DateTime.Should().Be(DateTime.UtcNow.Date);
         }
@@ -117,7 +117,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             var specifiedDate = DateTime.UtcNow.AddMonths(-1).Date;
             _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(-1); // Apprenticeship has already started
 
-            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await EmployerManageApprenticeshipsOrchestrator.GetChangeStatusConfirmationViewModel("ABC123", "CDE321", ChangeStatusType.Stop, WhenToMakeChangeOptions.SpecificDate, specifiedDate, "user123");
+            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await Orchestrator.GetChangeStatusConfirmationViewModel("ABC123", "CDE321", ChangeStatusType.Stop, WhenToMakeChangeOptions.SpecificDate, specifiedDate, "user123");
 
             response.Data.ChangeStatusViewModel.DateOfChange.DateTime.Should().Be(specifiedDate);
         }
@@ -127,7 +127,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         {
             _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(-1); // Apprenticeship has already started
 
-            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await EmployerManageApprenticeshipsOrchestrator.GetChangeStatusConfirmationViewModel(
+            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await Orchestrator.GetChangeStatusConfirmationViewModel(
                 "ABC123", 
                 "CDE321", 
                 ChangeStatusType.Pause, 
@@ -143,7 +143,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         {
             _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(2); // Apprenticeship is waiting to start
 
-            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await EmployerManageApprenticeshipsOrchestrator.GetChangeStatusConfirmationViewModel(
+            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await Orchestrator.GetChangeStatusConfirmationViewModel(
                 "ABC123",
                 "CDE321",
                 ChangeStatusType.Pause,
@@ -159,7 +159,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         {
             _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(-1); // Apprenticeship has already started
 
-            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await EmployerManageApprenticeshipsOrchestrator.GetChangeStatusConfirmationViewModel(
+            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await Orchestrator.GetChangeStatusConfirmationViewModel(
                 "ABC123",
                 "CDE321",
                 ChangeStatusType.Resume,
@@ -175,7 +175,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         {
             _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(2); // Apprenticeship is waiting to start
 
-            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await EmployerManageApprenticeshipsOrchestrator.GetChangeStatusConfirmationViewModel(
+            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await Orchestrator.GetChangeStatusConfirmationViewModel(
                 "ABC123",
                 "CDE321",
                 ChangeStatusType.Resume,
