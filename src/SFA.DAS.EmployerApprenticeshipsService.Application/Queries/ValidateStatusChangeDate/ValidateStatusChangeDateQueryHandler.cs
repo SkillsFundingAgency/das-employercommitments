@@ -15,12 +15,17 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDa
         private readonly IValidator<ValidateStatusChangeDateQuery> _queryValidator;
         private readonly IMediator _mediator;
         private readonly ICurrentDateTime _currentDate;
+        private readonly IAcademicYearDateProvider _academicYearDateProvider;
 
-        public ValidateStatusChangeDateQueryHandler(IValidator<ValidateStatusChangeDateQuery> queryValidator, IMediator mediator, ICurrentDateTime currentDate)
+        public ValidateStatusChangeDateQueryHandler(IValidator<ValidateStatusChangeDateQuery> queryValidator,
+            IMediator mediator,
+            ICurrentDateTime currentDate,
+            IAcademicYearDateProvider academicYearDateProvider)
         {
             _queryValidator = queryValidator;
             _mediator = mediator;
             _currentDate = currentDate;
+            _academicYearDateProvider = academicYearDateProvider;
         }
 
         public async Task<ValidateStatusChangeDateQueryResponse> Handle(ValidateStatusChangeDateQuery message)
@@ -44,6 +49,10 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDa
 
             if (response.Apprenticeship.StartDate > changeDateToUse)
                 validationResult.AddError(nameof(message.DateOfChange), "Date cannot be earlier than training start date");
+
+            //todo: academic year rule
+
+
 
             return new ValidateStatusChangeDateQueryResponse { ValidationResult = validationResult, ValidatedChangeOfDate = changeDateToUse };
         }

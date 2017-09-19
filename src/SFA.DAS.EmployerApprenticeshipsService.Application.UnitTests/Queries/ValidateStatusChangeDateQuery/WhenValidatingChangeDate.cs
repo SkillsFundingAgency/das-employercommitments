@@ -62,5 +62,11 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.ValidateStat
             response.ValidationResult.IsValid().Should().BeFalse();
             response.ValidationResult.ValidationDictionary.Should().ContainValue("Date cannot be earlier than training start date");
         }
+
+        [Test]
+        public async Task WhenDateIsInPreviousAcademicYearAndR14DateHasNotPassedThenValidationFails()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
