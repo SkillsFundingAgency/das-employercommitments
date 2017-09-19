@@ -10,7 +10,7 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
     [TestFixture]
-    public class WhenGettingApprenticeships : EmployerManageApprenticeshipsOrchestratorTestBase
+    public class WhenGettingApprenticeships : ManageApprenticeshipsOrchestratorTestBase
     {
         [SetUp]
         public void Setup()
@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         public async Task ThenShouldMapFiltersToSearchQuery()
         {
             //Act
-            await EmployerManageApprenticeshipsOrchestrator.GetApprenticeships("hashedAccountId", new ApprenticeshipFiltersViewModel(), "UserId");
+            await Orchestrator.GetApprenticeships("hashedAccountId", new ApprenticeshipFiltersViewModel(), "UserId");
 
             //Assert
             ApprenticeshipFiltersMapper.Verify(
@@ -52,7 +52,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         public async Task ThenShouldMapSearchResultsToViewModel()
         {
             //Act
-            await EmployerManageApprenticeshipsOrchestrator.GetApprenticeships("hashedAccountId", new ApprenticeshipFiltersViewModel(), "UserId");
+            await Orchestrator.GetApprenticeships("hashedAccountId", new ApprenticeshipFiltersViewModel(), "UserId");
 
             //Assert
             ApprenticeshipFiltersMapper.Verify(
@@ -64,7 +64,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         public async Task ThenShouldCallMediatorToQueryApprenticeships()
         {
             //Act
-            await EmployerManageApprenticeshipsOrchestrator.GetApprenticeships("hashedAccountId", new ApprenticeshipFiltersViewModel(), "UserId");
+            await Orchestrator.GetApprenticeships("hashedAccountId", new ApprenticeshipFiltersViewModel(), "UserId");
 
             //Assert
             MockMediator.Verify(x => x.SendAsync(It.IsAny<ApprenticeshipSearchQueryRequest>()), Times.Once);
