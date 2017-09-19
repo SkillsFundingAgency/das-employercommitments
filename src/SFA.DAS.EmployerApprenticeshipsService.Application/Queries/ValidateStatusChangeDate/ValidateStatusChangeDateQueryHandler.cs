@@ -6,6 +6,7 @@ using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
 
 namespace SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDate
@@ -15,17 +16,17 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDa
         private readonly IValidator<ValidateStatusChangeDateQuery> _queryValidator;
         private readonly IMediator _mediator;
         private readonly ICurrentDateTime _currentDate;
-        private readonly IAcademicYearDateProvider _academicYearDateProvider;
+        private readonly IAcademicYearValidator _academicYearValidator;
 
         public ValidateStatusChangeDateQueryHandler(IValidator<ValidateStatusChangeDateQuery> queryValidator,
             IMediator mediator,
             ICurrentDateTime currentDate,
-            IAcademicYearDateProvider academicYearDateProvider)
+            IAcademicYearValidator academicYearValidator)
         {
             _queryValidator = queryValidator;
             _mediator = mediator;
             _currentDate = currentDate;
-            _academicYearDateProvider = academicYearDateProvider;
+            _academicYearValidator = academicYearValidator;
         }
 
         public async Task<ValidateStatusChangeDateQueryResponse> Handle(ValidateStatusChangeDateQuery message)
@@ -48,11 +49,16 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDa
             }
 
             if (response.Apprenticeship.StartDate > changeDateToUse)
-                validationResult.AddError(nameof(message.DateOfChange), "Date cannot be earlier than training start date");
+            {
+                validationResult.AddError(nameof(message.DateOfChange),"Date cannot be earlier than training start date");
+                return new ValidateStatusChangeDateQueryResponse { ValidationResult = validationResult };
+            }
 
-            //todo: academic year rule
-
-
+            if (_academicYearValidator.Validate(changeDateToUse) == AcademicYearValidationResult.NotWithinFundingPeriod)
+            {
+                validationResult.AddError(nameof(message.DateOfChange), "Date can't be in previous academic year");
+                return new ValidateStatusChangeDateQueryResponse { ValidationResult = validationResult };
+            }
 
             return new ValidateStatusChangeDateQueryResponse { ValidationResult = validationResult, ValidatedChangeOfDate = changeDateToUse };
         }
