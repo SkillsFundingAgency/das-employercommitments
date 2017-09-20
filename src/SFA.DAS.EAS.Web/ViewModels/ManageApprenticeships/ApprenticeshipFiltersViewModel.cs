@@ -27,5 +27,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public List<string> Provider { get; set; }
         public List<string> Course { get; set; }
         public int PageNumber { get; set; }
+        public string SearchInput { get; set; }
+        public bool ResetFilter { get; set; }
     }
 }

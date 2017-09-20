@@ -13,6 +13,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
     {
         public ApprenticeshipSearchQuery MapToApprenticeshipSearchQuery(ApprenticeshipFiltersViewModel filters)
         {
+            if (filters.ResetFilter)
+            {
+                return new ApprenticeshipSearchQuery { SearchKeyword = filters.SearchInput };
+            }
+
             var selectedProviders = new List<long>();
             if (filters.Provider != null)
             {
@@ -45,6 +50,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
             var result = new ApprenticeshipSearchQuery
             {
+                SearchKeyword = filters.SearchInput,
                 PageNumber = filters.PageNumber,
                 TrainingProviderIds = selectedProviders,
                 ApprenticeshipStatuses = selectedStatuses,
