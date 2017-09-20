@@ -7,5 +7,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public bool SkipStep { get; set; }
         public ChangeStatusViewModel ChangeStatusViewModel { get; set; }
         public DateTime StartDate { get; internal set; }
+        public DateTime EarliestDate { get; set; }
     }
 }

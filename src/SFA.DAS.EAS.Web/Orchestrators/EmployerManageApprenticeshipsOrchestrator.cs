@@ -50,6 +50,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly IApprenticeshipFiltersMapper _apprenticeshipFiltersMapper;
 
         private readonly IValidateApprovedApprenticeship _approvedApprenticeshipValidator;
+        private readonly IAcademicYearDateProvider _academicYearDateProvider;
 
         private readonly ICookieStorageService<UpdateApprenticeshipViewModel>
             _apprenticshipsViewModelCookieStorageService;
@@ -66,8 +67,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             ICurrentDateTime currentDateTime,
             ILog logger,
             ICookieStorageService<UpdateApprenticeshipViewModel> apprenticshipsViewModelCookieStorageService,
-            IApprenticeshipFiltersMapper apprenticeshipFiltersMapper) 
-            : base(mediator, hashingService, logger)
+            IApprenticeshipFiltersMapper apprenticeshipFiltersMapper,
+			IAcademicYearDateProvider academicYearDateProvider) : base(mediator, hashingService, logger)
         {
             if (mediator == null)
                 throw new ArgumentNullException(nameof(mediator));
@@ -93,6 +94,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _apprenticshipsViewModelCookieStorageService = apprenticshipsViewModelCookieStorageService;
             _apprenticeshipFiltersMapper = apprenticeshipFiltersMapper;
             _searchPlaceholderText = "Enter a name";
+            _academicYearDateProvider = academicYearDateProvider;
         }
 
         public async Task<OrchestratorResponse<ManageApprenticeshipsViewModel>> GetApprenticeships(
@@ -368,11 +370,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 CheckApprenticeshipStateValidForChange(data.Apprenticeship);
 
+                var earliestDate = _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod
+                    && data.Apprenticeship.StartDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate
+                    ? _academicYearDateProvider.CurrentAcademicYearStartDate
+                    : data.Apprenticeship.StartDate.Value;
+                    
                 return new OrchestratorResponse<WhenToMakeChangeViewModel>
                 {
                     Data = new WhenToMakeChangeViewModel
                     {
                         StartDate = data.Apprenticeship.StartDate.Value,
+                        EarliestDate = earliestDate,
                         SkipStep = CanChangeDateStepBeSkipped(changeType, data),
                         ChangeStatusViewModel = new ChangeStatusViewModel
                         {
