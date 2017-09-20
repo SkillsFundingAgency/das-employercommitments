@@ -12,7 +12,7 @@ using SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitment
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
     [TestFixture]
-    public sealed class WhenGettingProviderPriorityList : EmployerManageApprenticeshipsOrchestratorTestBase
+    public sealed class WhenGettingProviderPriorityList : ManageApprenticeshipsOrchestratorTestBase
     {
         [Test]
         public async Task ReturnListOfProvidersInAlphabeticalOrder()
@@ -28,7 +28,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                     }
                 });
 
-            var response = await EmployerManageApprenticeshipsOrchestrator.GetPaymentOrder("123", "user123");
+            var response = await Orchestrator.GetPaymentOrder("123", "user123");
 
             var list = response.Data.Items.ToList();
             list[0].ProviderName.Should().Be("AAA");
@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                     Data = new List<ProviderPaymentPriorityItem> { new ProviderPaymentPriorityItem() }
                 });
 
-            var response = await EmployerManageApprenticeshipsOrchestrator.GetPaymentOrder("123", "user123");
+            var response = await Orchestrator.GetPaymentOrder("123", "user123");
 
             response.Status.Should().Be(HttpStatusCode.NotFound);
         }

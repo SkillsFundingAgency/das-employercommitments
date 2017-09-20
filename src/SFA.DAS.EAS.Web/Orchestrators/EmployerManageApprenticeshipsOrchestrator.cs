@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -17,7 +19,6 @@ using SFA.DAS.EmployerCommitments.Application.Commands.UpdateProviderPaymentPrio
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLock;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
@@ -26,6 +27,7 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDate;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.Exceptions;
@@ -46,10 +48,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly ILog _logger;
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IApprenticeshipFiltersMapper _apprenticeshipFiltersMapper;
-        private readonly ApprovedApprenticeshipViewModelValidator _apprenticeshipValidator;
+
+        private readonly IValidateApprovedApprenticeship _approvedApprenticeshipValidator;
+        private readonly IAcademicYearDateProvider _academicYearDateProvider;
 
         private readonly ICookieStorageService<UpdateApprenticeshipViewModel>
             _apprenticshipsViewModelCookieStorageService;
+
+        private string _searchPlaceholderText;
 
         private const string CookieName = "sfa-das-employerapprenticeshipsservice-apprentices";
 
@@ -57,11 +63,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IMediator mediator, 
             IHashingService hashingService,
             IApprenticeshipMapper apprenticeshipMapper,
-            ApprovedApprenticeshipViewModelValidator apprenticeshipValidator,
+            IValidateApprovedApprenticeship approvedApprenticeshipValidator,
             ICurrentDateTime currentDateTime,
             ILog logger,
             ICookieStorageService<UpdateApprenticeshipViewModel> apprenticshipsViewModelCookieStorageService,
-            IApprenticeshipFiltersMapper apprenticeshipFiltersMapper) : base(mediator, hashingService, logger)
+            IApprenticeshipFiltersMapper apprenticeshipFiltersMapper,
+			IAcademicYearDateProvider academicYearDateProvider) : base(mediator, hashingService, logger)
         {
             if (mediator == null)
                 throw new ArgumentNullException(nameof(mediator));
@@ -73,8 +80,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 throw new ArgumentNullException(nameof(currentDateTime));
             if (logger == null)
                 throw new ArgumentNullException(nameof(logger));
-            if (apprenticeshipValidator == null)
-                throw new ArgumentNullException(nameof(apprenticeshipValidator));
+            if (approvedApprenticeshipValidator == null)
+                throw new ArgumentNullException(nameof(approvedApprenticeshipValidator));
             if(apprenticeshipFiltersMapper == null)
                 throw new ArgumentNullException(nameof(apprenticeshipFiltersMapper));
             
@@ -83,9 +90,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _apprenticeshipMapper = apprenticeshipMapper;
             _currentDateTime = currentDateTime;
             _logger = logger;
-            _apprenticeshipValidator = apprenticeshipValidator;
+            _approvedApprenticeshipValidator = approvedApprenticeshipValidator;
             _apprenticshipsViewModelCookieStorageService = apprenticshipsViewModelCookieStorageService;
             _apprenticeshipFiltersMapper = apprenticeshipFiltersMapper;
+            _searchPlaceholderText = "Enter a name";
+            _academicYearDateProvider = academicYearDateProvider;
         }
 
         public async Task<OrchestratorResponse<ManageApprenticeshipsViewModel>> GetApprenticeships(
@@ -95,8 +104,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _logger.Info($"Getting On-programme apprenticeships for empployer: {accountId}");
 
             return await CheckUserAuthorization(async () =>
-            {
-                var searchQuery = _apprenticeshipFiltersMapper.MapToApprenticeshipSearchQuery(filters);
+                {
+                    if (filters.SearchInput?.Trim() == _searchPlaceholderText.Trim())
+                        filters.SearchInput = string.Empty;
+
+                    var searchQuery = _apprenticeshipFiltersMapper.MapToApprenticeshipSearchQuery(filters);
 
                 var searchResponse = await _mediator.SendAsync(new ApprenticeshipSearchQueryRequest
                 {
@@ -111,6 +123,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     .ToList();
 
                 var filterOptions = _apprenticeshipFiltersMapper.Map(searchResponse.Facets);
+                filterOptions.SearchInput = searchResponse.SearchKeyword;
 
                 var model = new ManageApprenticeshipsViewModel
                 {
@@ -120,7 +133,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     TotalResults = searchResponse.TotalApprenticeships,
                     PageNumber = searchResponse.PageNumber,
                     TotalPages = searchResponse.TotalPages,
-                    PageSize = searchResponse.PageSize
+                    TotalApprenticeshipsBeforeFilter = searchResponse.TotalApprenticeshipsBeforeFilter,
+                    PageSize = searchResponse.PageSize,
+                    SearchInputPlaceholder = _searchPlaceholderText
                 };
 
                 return new OrchestratorResponse<ManageApprenticeshipsViewModel>
@@ -279,22 +294,28 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 , hashedAccountId, userId);
         }
 
-        public async Task<Dictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship)
+        public async Task<Dictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship, UpdateApprenticeshipViewModel updatedModel)
         {
             var overlappingErrors = await _mediator.SendAsync(
-                new GetOverlappingApprenticeshipsQueryRequest
-                {
-                    Apprenticeship = new List<Apprenticeship> {await _apprenticeshipMapper.MapFrom(apprenticeship)}
-                });
+                    new GetOverlappingApprenticeshipsQueryRequest
+                    {
+                        Apprenticeship = new List<Apprenticeship> { await _apprenticeshipMapper.MapFrom(apprenticeship) }
+                    });
 
             var result = _apprenticeshipMapper
                 .MapOverlappingErrors(overlappingErrors)
                 .ToDictionary(overlap => overlap.Key, overlap => overlap.Value);
 
-            foreach (var error in _apprenticeshipValidator.ValidateToDictionary(apprenticeship))
+            foreach (var error in _approvedApprenticeshipValidator.ValidateToDictionary(apprenticeship))
             {
                 result.Add(error.Key, error.Value);
             }
+
+            foreach (var error in _approvedApprenticeshipValidator.ValidateAcademicYear(updatedModel.StartDate?.DateTime))
+            {
+                result.Add(error.Key, error.Value);
+            }
+            
 
             return result;
         }
@@ -349,11 +370,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 CheckApprenticeshipStateValidForChange(data.Apprenticeship);
 
+                var earliestDate = _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod
+                    && data.Apprenticeship.StartDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate
+                    ? _academicYearDateProvider.CurrentAcademicYearStartDate
+                    : data.Apprenticeship.StartDate.Value;
+                    
                 return new OrchestratorResponse<WhenToMakeChangeViewModel>
                 {
                     Data = new WhenToMakeChangeViewModel
                     {
                         StartDate = data.Apprenticeship.StartDate.Value,
+                        EarliestDate = earliestDate,
                         SkipStep = CanChangeDateStepBeSkipped(changeType, data),
                         ChangeStatusViewModel = new ChangeStatusViewModel
                         {

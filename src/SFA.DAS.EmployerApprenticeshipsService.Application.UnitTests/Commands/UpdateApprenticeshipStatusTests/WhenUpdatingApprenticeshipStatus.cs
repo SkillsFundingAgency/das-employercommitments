@@ -24,6 +24,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
         private Mock<ICurrentDateTime> _mockCurrentDateTime;
         private IValidator<UpdateApprenticeshipStatusCommand> _validator = new UpdateApprenticeshipStatusCommandValidator();
         private UpdateApprenticeshipStatusCommand _validCommand;
+        private Mock<IAcademicYearDateProvider> _academicYearDateProvider;
+        private Mock<IAcademicYearValidator> _academicYearValidator;
 
         [SetUp]
         public void Setup()
@@ -50,7 +52,17 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
             _mockCurrentDateTime = new Mock<ICurrentDateTime>();
             _mockCurrentDateTime.SetupGet(x => x.Now).Returns(DateTime.UtcNow);
 
-            _handler = new UpdateApprenticeshipStatusCommandHandler(_mockCommitmentApi.Object, _mockMediator.Object, _mockCurrentDateTime.Object, _validator);
+            _academicYearDateProvider = new Mock<IAcademicYearDateProvider>();
+            _academicYearValidator = new Mock<IAcademicYearValidator>();
+
+            _handler = new UpdateApprenticeshipStatusCommandHandler(
+                _mockCommitmentApi.Object,
+                _mockMediator.Object,
+                _mockCurrentDateTime.Object,
+                _validator,
+                _academicYearDateProvider.Object,
+                _academicYearValidator.Object
+                );
         }
 
         [TestCase(ChangeStatusType.Stop, PaymentStatus.Withdrawn)]
