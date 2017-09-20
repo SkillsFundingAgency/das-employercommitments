@@ -5,6 +5,7 @@ using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
+using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerCommitments.Web.Validators
 {
@@ -45,6 +46,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
             ValidateCost();
 
             ValidateEmployerReference();
+        }
+
+        public Dictionary<string, string> ValidateAcademicYear(DateTime? date)
+        {
+            var result = new Dictionary<string, string>();
+            if (date != null
+                && _academicYearValidator.Validate(date.Value) == AcademicYearValidationResult.NotWithinFundingPeriod
+                )
+            {
+                var dateText = $"{_academicYear.CurrentAcademicYearStartDate.Month} {_academicYear.CurrentAcademicYearStartDate.Year}";
+                result.Add("StartDate", $"Training start date can't be before {dateText}");
+            }
+            return result;
         }
 
         private void ValidateFirstName()
