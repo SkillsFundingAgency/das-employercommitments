@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -53,6 +54,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly ICookieStorageService<UpdateApprenticeshipViewModel>
             _apprenticshipsViewModelCookieStorageService;
 
+        private string _searchPlaceholderText;
+
         private const string CookieName = "sfa-das-employerapprenticeshipsservice-apprentices";
 
         public EmployerManageApprenticeshipsOrchestrator(
@@ -89,6 +92,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _approvedApprenticeshipValidator = approvedApprenticeshipValidator;
             _apprenticshipsViewModelCookieStorageService = apprenticshipsViewModelCookieStorageService;
             _apprenticeshipFiltersMapper = apprenticeshipFiltersMapper;
+            _searchPlaceholderText = "Enter a name or ULN";
         }
 
         public async Task<OrchestratorResponse<ManageApprenticeshipsViewModel>> GetApprenticeships(
@@ -98,8 +102,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _logger.Info($"Getting On-programme apprenticeships for empployer: {accountId}");
 
             return await CheckUserAuthorization(async () =>
-            {
-                var searchQuery = _apprenticeshipFiltersMapper.MapToApprenticeshipSearchQuery(filters);
+                {
+                    if (filters.SearchInput?.Trim() == _searchPlaceholderText.Trim())
+                        filters.SearchInput = string.Empty;
+
+                    var searchQuery = _apprenticeshipFiltersMapper.MapToApprenticeshipSearchQuery(filters);
 
                 var searchResponse = await _mediator.SendAsync(new ApprenticeshipSearchQueryRequest
                 {
@@ -114,6 +121,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     .ToList();
 
                 var filterOptions = _apprenticeshipFiltersMapper.Map(searchResponse.Facets);
+                filterOptions.SearchInput = searchResponse.SearchKeyword;
 
                 var model = new ManageApprenticeshipsViewModel
                 {
@@ -123,7 +131,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     TotalResults = searchResponse.TotalApprenticeships,
                     PageNumber = searchResponse.PageNumber,
                     TotalPages = searchResponse.TotalPages,
-                    PageSize = searchResponse.PageSize
+                    TotalApprenticeshipsBeforeFilter = searchResponse.TotalApprenticeshipsBeforeFilter,
+                    PageSize = searchResponse.PageSize,
+                    SearchInputPlaceholder = _searchPlaceholderText
                 };
 
                 return new OrchestratorResponse<ManageApprenticeshipsViewModel>
