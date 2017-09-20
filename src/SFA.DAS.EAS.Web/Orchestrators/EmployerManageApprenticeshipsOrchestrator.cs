@@ -93,8 +93,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _approvedApprenticeshipValidator = approvedApprenticeshipValidator;
             _apprenticshipsViewModelCookieStorageService = apprenticshipsViewModelCookieStorageService;
             _apprenticeshipFiltersMapper = apprenticeshipFiltersMapper;
+            _searchPlaceholderText = "Enter a name";
             _academicYearDateProvider = academicYearDateProvider;
-            _searchPlaceholderText = "Enter a name or ULN";
         }
 
         public async Task<OrchestratorResponse<ManageApprenticeshipsViewModel>> GetApprenticeships(
