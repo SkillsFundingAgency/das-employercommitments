@@ -24,5 +24,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public bool CanBeApproved { get; set; }
 
         public IEnumerable<OverlappingApprenticeship> OverlappingApprenticeships { get; set; }
+
+        public bool IsWithinAcademicYearFundingPeriod { get; set; }
     }
 }

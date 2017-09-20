@@ -11,6 +11,7 @@ using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.NLog.Logger;
+using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
@@ -20,7 +21,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         private Mock<IHashingService> _hashingService;
         private Mock<IApprenticeshipMapper> _apprenticeshipMapper;
         private Mock<ILog> _logger;
-        private Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>  _cookieStorageService;
+        private Mock<ICookieStorageService<UpdateApprenticeshipViewModel>> _cookieStorageService;
         private EmployerManageApprenticeshipsOrchestrator _orchestrator;
 
         private const string CookieName = "sfa-das-employerapprenticeshipsservice-apprentices";
@@ -34,18 +35,24 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             _logger = new Mock<ILog>();
             _cookieStorageService = new Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>();
 
+            var approvedApprenticeshipViewModelValidator = new ApprovedApprenticeshipViewModelValidator(
+                                                               new WebApprenticeshipValidationText(new AcademicYearDateProvider(new CurrentDateTime())),
+                                                               new CurrentDateTime(),
+                                                               new AcademicYearDateProvider(new CurrentDateTime()),
+                                                               Mock.Of<IAcademicYearValidator>());
+            
             _orchestrator = new EmployerManageApprenticeshipsOrchestrator(
-                _mediator.Object, 
-                _hashingService.Object, 
+                _mediator.Object,
+                _hashingService.Object,
                 _apprenticeshipMapper.Object,
-                new ApprovedApprenticeshipViewModelValidator(),
+                approvedApprenticeshipViewModelValidator,
                 new CurrentDateTime(),
                 _logger.Object,
                 _cookieStorageService.Object,
                 Mock.Of<IApprenticeshipFiltersMapper>());
         }
 
-       
+
         [Test]
         public void ThenTheCookieIsDeletedBeforeBeingCreated()
         {
@@ -56,8 +63,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             _orchestrator.CreateApprenticeshipViewModelCookie(model);
 
             //Assert
-            _cookieStorageService.Verify(x=>x.Delete(CookieName));
-            _cookieStorageService.Verify(x=>x.Create(model,CookieName,1));
+            _cookieStorageService.Verify(x => x.Delete(CookieName));
+            _cookieStorageService.Verify(x => x.Create(model, CookieName, 1));
 
         }
 
@@ -74,7 +81,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             _hashingService.Setup(x => x.DecodeValue(expectedHashedApprenticeshipId)).Returns(expectedApprenticeshipId);
             _mediator.Setup(
                 x =>
-                    x.SendAsync( It.Is<GetApprenticeshipQueryRequest>(
+                    x.SendAsync(It.Is<GetApprenticeshipQueryRequest>(
                                 c =>
                                 c.AccountId.Equals(expectedAccountId) &&
                                 c.ApprenticeshipId.Equals(expectedApprenticeshipId))))
@@ -88,7 +95,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             //Assert
             Assert.IsNotNull(actual);
-            _cookieStorageService.Verify(x=>x.Get(CookieName), Times.Once);
+            _cookieStorageService.Verify(x => x.Get(CookieName), Times.Once);
             Assert.IsAssignableFrom<OrchestratorResponse<UpdateApprenticeshipViewModel>>(actual);
         }
     }

@@ -35,6 +35,7 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.NLog.Logger;
 using WebGrease.Css.Extensions;
 using OrganisationType = SFA.DAS.Commitments.Api.Types.OrganisationType;
+using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
@@ -48,6 +49,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly Func<int, string> _addPluralizationSuffix = i => i > 1 ? "s" : "";
         private readonly IApprenticeshipMapper _apprenticeshipMapper;
         private readonly ICommitmentMapper _commitmentMapper;
+        private readonly IAcademicYearValidator _academicYearValidator;
 
         public EmployerCommitmentsOrchestrator(
             IMediator mediator,
@@ -55,7 +57,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             ICommitmentStatusCalculator statusCalculator,
             IApprenticeshipMapper apprenticeshipMapper,
             ICommitmentMapper commitmentMapper,
-            ILog logger) : base(mediator, hashingService, logger)
+            ILog logger,
+            IAcademicYearValidator academicYearValidator) : base(mediator, hashingService, logger)
         {
             if (mediator == null)
                 throw new ArgumentNullException(nameof(mediator));
@@ -69,6 +72,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 throw new ArgumentNullException(nameof(commitmentMapper));
             if (logger == null)
                 throw new ArgumentNullException(nameof(logger));
+            if (academicYearValidator == null)
+                throw new ArgumentNullException(nameof(academicYearValidator));
 
             _mediator = mediator;
             _hashingService = hashingService;
@@ -76,6 +81,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _apprenticeshipMapper = apprenticeshipMapper;
             _commitmentMapper = commitmentMapper;
             _logger = logger;
+            _academicYearValidator = academicYearValidator;
         }
 
         public async Task<OrchestratorResponse<CommitmentsIndexViewModel>> GetIndexViewModel(string hashedAccountId, string externalUserId)
@@ -391,7 +397,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-               var data = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
+                var data = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
                 {
                     AccountId = accountId,
                     ApprenticeshipId = apprenticeshipId
@@ -461,6 +467,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             Apprenticeship = response.Commitment.Apprenticeships
                         });
 
+                    var academicFundingPeriodErrorCount = 0;
+                    if (response.Commitment.Apprenticeships != null)
+                    {
+                        academicFundingPeriodErrorCount = response.Commitment.Apprenticeships.Count(x => !IsWithinAcademicFundingPeriod(x.StartDate));
+                    }
+
                     return new OrchestratorResponse<FinishEditingViewModel>
                     {
                         Data = new FinishEditingViewModel
@@ -470,10 +482,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             NotReadyForApproval = !response.Commitment.CanBeApproved,
                             ApprovalState = GetApprovalState(response.Commitment),
                             HasApprenticeships = response.Commitment.Apprenticeships.Any(),
-                            InvalidApprenticeshipCount =
-                                response.Commitment.Apprenticeships.Count(x => !x.CanBeApproved),
+                            InvalidApprenticeshipCount = response.Commitment.Apprenticeships.Count(x => !x.CanBeApproved),
                             HasSignedTheAgreement = hasSigned,
-                            HasOverlappingErrors = overlaps?.Overlaps?.Any() ?? false
+                            HasOverlappingErrors = overlaps?.Overlaps?.Any() ?? false,
+                            HasAcademicFundingPeriodErrors = academicFundingPeriodErrorCount > 0
                         }
                     };
                 }, hashedAccountId, externalUserId);
@@ -495,7 +507,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Status = HttpStatusCode.Unauthorized
                 };
             }
-            
+
         }
 
         public async Task ApproveCommitment(string hashedAccountId, string externalUserId, string userDisplayName, string userEmail, string hashedCommitmentId, SaveStatus saveStatus)
@@ -662,11 +674,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     Data = new YourCohortsViewModel
                     {
-                                   DraftCount = commitmentStatuses.Count(m => 
-                                        m == RequestStatus.NewRequest),
-                                   ReadyForReviewCount = commitmentStatuses.Count(m => 
-                                           m == RequestStatus.ReadyForReview 
-                                        || m == RequestStatus.ReadyForApproval),
+                        DraftCount = commitmentStatuses.Count(m =>
+                             m == RequestStatus.NewRequest),
+                        ReadyForReviewCount = commitmentStatuses.Count(m =>
+                                m == RequestStatus.ReadyForReview
+                             || m == RequestStatus.ReadyForApproval),
                         WithProviderCount = commitmentStatuses.Count(m =>
                              m == RequestStatus.WithProviderForApproval
                           || m == RequestStatus.SentToProvider
@@ -803,22 +815,43 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     a => MapToApprenticeshipListItem(a, overlappingApprenticeships)).ToList() ?? new List<ApprenticeshipListItemViewModel>(0);
 
                 var trainingProgrammes = await GetTrainingProgrammes();
-
                 var apprenticeshipGroups = new List<ApprenticeshipListItemGroupViewModel>();
+
+                var errors = new Dictionary<string, string>();
+                var warnings = new Dictionary<string, string>();
+
                 foreach (var group in apprenticships.OrderBy(x => x.TrainingName).GroupBy(x => x.TrainingCode))
                 {
-                    apprenticeshipGroups.Add(new ApprenticeshipListItemGroupViewModel
+                    var apprenticeshipListGroup = new ApprenticeshipListItemGroupViewModel
                     {
                         Apprenticeships = group.OrderBy(x => x.CanBeApproved).ToList(),
                         TrainingProgramme = trainingProgrammes.FirstOrDefault(x => x.Id == group.Key)
-                    });
+                    };
+
+                    apprenticeshipGroups.Add(apprenticeshipListGroup);
+
+                    var trainingTitle = string.Empty;
+                    if (!string.IsNullOrEmpty(apprenticeshipListGroup.TrainingProgramme?.Title))
+                    {
+                        trainingTitle = $":{apprenticeshipListGroup.TrainingProgramme.Title}";
+                    }
+
+                    if (apprenticeshipListGroup.OverlapErrorCount > 0)
+                    {
+                        errors.Add($"{apprenticeshipListGroup.GroupId}", $"Overlapping training dates{trainingTitle}");
+                    }
+                    else if (apprenticeshipListGroup.ApprenticeshipsNotWithinFundingPeriod > 0)
+                    {
+                        errors.Add($"{apprenticeshipListGroup.GroupId}", $"Start date in previous year{trainingTitle}");
+                    }
+
+                    if (apprenticeshipListGroup.ApprenticeshipsOverFundingLimit > 0)
+                    {
+                        warnings.Add(apprenticeshipListGroup.GroupId, $"Cost for {apprenticeshipListGroup.TrainingProgramme.Title}");
+                    }
+
                 }
-
-                var warnings = new Dictionary<string, string>();
-                apprenticeshipGroups
-                    .Where(m => m.ShowFundingLimitWarning)
-                    .ForEach(group => warnings.Add(group.GroupId, $"Cost for {group.TrainingProgramme.Title}"));
-
+                
                 var viewModel = new CommitmentDetailsViewModel
                 {
                     HashedId = _hashingService.HashValue(data.Commitment.Id),
@@ -832,8 +865,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     LatestMessage = GetLatestMessage(data.Commitment.Messages, true)?.Message,
                     ApprenticeshipGroups = apprenticeshipGroups,
                     HasOverlappingErrors = apprenticeshipGroups.Any(m => m.ShowOverlapError),
-                    FundingCapWarnings = warnings,
-                    IsReadOnly = data.Commitment.EditStatus != EditStatus.EmployerOnly
+                    IsReadOnly = data.Commitment.EditStatus != EditStatus.EmployerOnly,
+                    Warnings = warnings,
+                    Errors = errors
                 };
 
                 return new OrchestratorResponse<CommitmentDetailsViewModel>
@@ -951,9 +985,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             try
             {
                 var legalEntity = await GetLegalEntityByCode(hashedAccountId, userId, legalEntityCode);
-                
+
                 var hasSigned = legalEntity.AgreementStatus == EmployerAgreementStatus.Signed;
-                
+
                 response.Data = new LegalEntitySignedAgreementViewModel
                 {
                     HashedAccountId = hashedAccountId,
@@ -978,7 +1012,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         }
 
-        
+
 
         public async Task<Dictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship)
         {
@@ -1104,7 +1138,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 StartDate = apprenticeship.StartDate,
                 EndDate = apprenticeship.EndDate,
                 CanBeApproved = apprenticeship.CanBeApproved,
-                OverlappingApprenticeships = overlappingApprenticeships.GetOverlappingApprenticeships(apprenticeship.Id)
+                OverlappingApprenticeships = overlappingApprenticeships.GetOverlappingApprenticeships(apprenticeship.Id),
+                IsWithinAcademicYearFundingPeriod = IsWithinAcademicFundingPeriod(apprenticeship.StartDate)
             };
         }
 
@@ -1144,6 +1179,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             if (!allowedEditStatuses.Contains(commitment.EditStatus))
                 throw new InvalidStateException($"Invalid commitment state (edit status is {commitment.EditStatus}, expected {string.Join(",", allowedEditStatuses)})");
+        }
+
+        private bool IsWithinAcademicFundingPeriod(DateTime? startDate)
+        {
+            if (!startDate.HasValue)
+            {
+                return true;
+            }
+
+            return _academicYearValidator.Validate(startDate.Value) == AcademicYearValidationResult.Success;
         }
     }
 }

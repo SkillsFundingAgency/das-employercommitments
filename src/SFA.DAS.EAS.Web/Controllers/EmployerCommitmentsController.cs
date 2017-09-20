@@ -298,17 +298,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return View("AccessDenied");
 
             var model = await _employerCommitmentsOrchestrator.GetCommitmentDetails(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
-
-            var groupes = model.Data.ApprenticeshipGroups.Where(m => m.ShowOverlapError);
-            foreach (var groupe in groupes)
-            {
-                var errorMessage = groupe.TrainingProgramme?.Title != null
-                    ? $"{groupe.TrainingProgramme?.Title ?? ""} apprentices training dates"
-                    : "Apprentices training dates";
-
-                ModelState.AddModelError($"{groupe.GroupId}", errorMessage);
-            }
-
+            
             model.Data.BackLinkUrl = GetReturnToListUrl(hashedAccountId);
             SetFlashMessageOnModel(model);
 

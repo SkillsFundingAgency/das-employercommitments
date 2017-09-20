@@ -51,6 +51,7 @@ using StructureMap.Graph;
 using StructureMap.TypeRules;
 using IConfiguration = SFA.DAS.EmployerCommitments.Domain.Interfaces.IConfiguration;
 using NotificationsApiClientConfiguration = SFA.DAS.EmployerCommitments.Domain.Configuration.NotificationsApiClientConfiguration;
+using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 
 namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 {
@@ -89,6 +90,8 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<IEventsApi>().Use<EventsApi>()
                 .Ctor<IEventsApiClientConfiguration>().Is(config.EventsApi)
                 .SelectConstructor(() => new EventsApi(null)); // The default one isn't the one we want to use.;
+
+            For<IApprenticeshipValidationErrorText>().Use<WebApprenticeshipValidationText>();
 
             ConfigureNotificationsApi();
 

@@ -21,7 +21,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
         {
             CurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2018, 5, 1));
 
-            Validator = new ApprenticeshipViewModelValidator(new WebApprenticeshipValidationText(), CurrentDateTime.Object, new AcademicYearDateProvider(CurrentDateTime.Object));
+            var academicYearProvider = new AcademicYearDateProvider(CurrentDateTime.Object);
+
+            Validator = new ApprenticeshipViewModelValidator(new WebApprenticeshipValidationText(academicYearProvider), CurrentDateTime.Object, academicYearProvider, Mock.Of<IAcademicYearValidator>());
 
             ValidModel = new ApprenticeshipViewModel { ULN = "1001234567", FirstName = "TestFirstName", LastName = "TestLastName" };
         }

@@ -8,6 +8,7 @@ using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.Validators;
+using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.NLog.Logger;
 
@@ -46,11 +47,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
 
             ApprenticeshipFiltersMapper = new Mock<IApprenticeshipFiltersMapper>();
 
+            var approvedApprenticeshipViewModelValidator = new ApprovedApprenticeshipViewModelValidator(
+                                                           new WebApprenticeshipValidationText(new AcademicYearDateProvider(new CurrentDateTime())),
+                                                           new CurrentDateTime(),
+                                                           new AcademicYearDateProvider(new CurrentDateTime()),
+                                                           Mock.Of<IAcademicYearValidator>());
+
             EmployerManageApprenticeshipsOrchestrator = new EmployerManageApprenticeshipsOrchestrator(
                 MockMediator.Object,
                 _mockHashingService.Object,
-                ApprenticeshipMapper, 
-                Mock.Of<ApprovedApprenticeshipViewModelValidator>(),
+                ApprenticeshipMapper,
+                approvedApprenticeshipViewModelValidator,
                 new CurrentDateTime(),
                 _mockLogger.Object, _cookieStorageService.Object,
                 ApprenticeshipFiltersMapper.Object);

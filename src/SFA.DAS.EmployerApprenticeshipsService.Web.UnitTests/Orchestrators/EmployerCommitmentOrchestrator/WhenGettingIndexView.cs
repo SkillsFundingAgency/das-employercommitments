@@ -39,7 +39,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 Mock.Of<ICommitmentStatusCalculator>(), 
                 Mock.Of<IApprenticeshipMapper>(), 
                 Mock.Of<ICommitmentMapper>(),
-                logger.Object);
+                logger.Object,
+                Mock.Of<IAcademicYearValidator>());
         }
 
         [Test]

@@ -20,6 +20,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         private Mock<ICommitmentStatusCalculator> _mockCalculator;
         private Mock<IApprenticeshipMapper> _mockApprenticeshipMapper;
         private Mock<ICommitmentMapper> _mockCommitmentMapper;
+        private Mock<IAcademicYearValidator> _mockAcademicYearValidator;
 
         protected Mock<IMediator> MockMediator;
         protected EmployerCommitmentsOrchestrator EmployerCommitmentOrchestrator;
@@ -32,6 +33,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             _mockCalculator = new Mock<ICommitmentStatusCalculator>();
             _mockApprenticeshipMapper = new Mock<IApprenticeshipMapper>();
             _mockCommitmentMapper = new Mock<ICommitmentMapper>();
+            _mockAcademicYearValidator = new Mock<IAcademicYearValidator>();
 
             _mockHashingService = new Mock<IHashingService>();
             _mockHashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);
@@ -50,15 +52,16 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 });
 
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetUserAccountRoleQuery>()))
-                .ReturnsAsync(new GetUserAccountRoleResponse {User = new TeamMember()});
+                .ReturnsAsync(new GetUserAccountRoleResponse { User = new TeamMember() });
 
             EmployerCommitmentOrchestrator = new EmployerCommitmentsOrchestrator(
                 MockMediator.Object,
-                _mockHashingService.Object, 
-                _mockCalculator.Object, 
-                _mockApprenticeshipMapper.Object, 
-                _mockCommitmentMapper.Object, 
-                _mockLogger.Object);
+                _mockHashingService.Object,
+                _mockCalculator.Object,
+                _mockApprenticeshipMapper.Object,
+                _mockCommitmentMapper.Object,
+                _mockLogger.Object,
+                _mockAcademicYearValidator.Object);
         }
     }
 }
