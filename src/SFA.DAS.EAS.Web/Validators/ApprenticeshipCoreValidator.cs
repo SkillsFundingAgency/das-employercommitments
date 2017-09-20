@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         private readonly IAcademicYearValidator _academicYearValidator;
 
         public ApprenticeshipCoreValidator(IApprenticeshipValidationErrorText validationText,
-                                            ICurrentDateTime currentDateTime, 
+                                            ICurrentDateTime currentDateTime,
                                             IAcademicYearDateProvider academicYear,
                                             IAcademicYearValidator academicYearValidator)
         {
@@ -120,6 +120,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                 .Must(ValidateDateWithoutDay).WithMessage(_validationText.LearnPlanEndDate01.Text).WithErrorCode(_validationText.LearnPlanEndDate01.ErrorCode)
                 .Must(BeGreaterThenStartDate).WithMessage(_validationText.LearnPlanEndDate02.Text).WithErrorCode(_validationText.LearnPlanEndDate02.ErrorCode)
                 .Must(m => m.DateTime > _currentDateTime.Now).WithMessage(_validationText.LearnPlanEndDate03.Text).WithErrorCode(_validationText.LearnPlanEndDate03.ErrorCode);
+        }
+
+        private bool ValidateAcademicYearRestriction(DateTimeViewModel startDate)
+        {
+            if (startDate.DateTime.HasValue)
+            {
+                var result = _academicYearValidator.Validate(startDate.DateTime.Value);
+                return result == AcademicYearValidationResult.Success;
+            }
+            return true;
         }
 
         protected virtual void ValidateCost()
