@@ -88,8 +88,6 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
                 
             SetUpCommitmentApi(config);
 
-            For<IValidationApi>().Use<ValidationApi>().Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi);
-
             For<IEventsApi>().Use<EventsApi>()
                 .Ctor<IEventsApiClientConfiguration>().Is(config.EventsApi)
                 .SelectConstructor(() => new EventsApi(null)); // The default one isn't the one we want to use.;
@@ -120,6 +118,10 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 
             For<IEmployerCommitmentApi>().Use<EmployerCommitmentApi>().
                 Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
+                .Ctor<HttpClient>().Is(httpClient);
+
+            For<IValidationApi>().Use<ValidationApi>()
+                .Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
                 .Ctor<HttpClient>().Is(httpClient);
         }
 
