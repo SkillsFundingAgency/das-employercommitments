@@ -40,7 +40,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 Mock.Of<IApprenticeshipMapper>(), 
                 Mock.Of<ICommitmentMapper>(),
                 logger.Object,
-                Mock.Of<IAcademicYearValidator>());
+                Mock.Of<IAcademicYearValidator>(),
+                Mock.Of<IAcademicYearDateProvider>());
         }
 
         [Test]

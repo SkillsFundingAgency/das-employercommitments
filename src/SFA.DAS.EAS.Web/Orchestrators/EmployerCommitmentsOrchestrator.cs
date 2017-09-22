@@ -50,6 +50,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly IApprenticeshipMapper _apprenticeshipMapper;
         private readonly ICommitmentMapper _commitmentMapper;
         private readonly IAcademicYearValidator _academicYearValidator;
+        private readonly IAcademicYearDateProvider _academicYearDateProvider;
 
         public EmployerCommitmentsOrchestrator(
             IMediator mediator,
@@ -58,7 +59,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IApprenticeshipMapper apprenticeshipMapper,
             ICommitmentMapper commitmentMapper,
             ILog logger,
-            IAcademicYearValidator academicYearValidator) : base(mediator, hashingService, logger)
+            IAcademicYearValidator academicYearValidator,
+            IAcademicYearDateProvider academicYearDateProvider) : base(mediator, hashingService, logger)
         {
             if (mediator == null)
                 throw new ArgumentNullException(nameof(mediator));
@@ -74,6 +76,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 throw new ArgumentNullException(nameof(logger));
             if (academicYearValidator == null)
                 throw new ArgumentNullException(nameof(academicYearValidator));
+            if (academicYearDateProvider == null)
+                throw new ArgumentNullException(nameof(academicYearDateProvider));
 
             _mediator = mediator;
             _hashingService = hashingService;
@@ -82,6 +86,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _commitmentMapper = commitmentMapper;
             _logger = logger;
             _academicYearValidator = academicYearValidator;
+            _academicYearDateProvider = academicYearDateProvider;
         }
 
         public async Task<OrchestratorResponse<CommitmentsIndexViewModel>> GetIndexViewModel(string hashedAccountId, string externalUserId)
@@ -825,7 +830,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     var apprenticeshipListGroup = new ApprenticeshipListItemGroupViewModel
                     {
                         Apprenticeships = group.OrderBy(x => x.CanBeApproved).ToList(),
-                        TrainingProgramme = trainingProgrammes.FirstOrDefault(x => x.Id == group.Key)
+                        TrainingProgramme = trainingProgrammes.FirstOrDefault(x => x.Id == group.Key),
+                        EarliestAcademicYearDate = _academicYearDateProvider.CurrentAcademicYearStartDate
                     };
 
                     apprenticeshipGroups.Add(apprenticeshipListGroup);
