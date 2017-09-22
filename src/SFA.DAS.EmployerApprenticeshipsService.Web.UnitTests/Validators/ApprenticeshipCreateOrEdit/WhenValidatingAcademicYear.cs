@@ -28,7 +28,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             result.Count.Should().Be(1);
             string msg;
             result.TryGetValue("StartDate", out msg).Should().BeTrue();
-            msg.Should().Be("Training start date can't be before 8 2017");
+            msg.Should().Be("The earliest start date you can use is 8 2017");
         }
 
         [Test(Description = "After CutOff -> StartDate this AY -> Should NOT Fail")]

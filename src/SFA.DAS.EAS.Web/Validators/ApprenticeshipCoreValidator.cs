@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                 )
             {
                 var dateText = $"{_academicYear.CurrentAcademicYearStartDate.Month} {_academicYear.CurrentAcademicYearStartDate.Year}";
-                result.Add("StartDate", $"Training start date can't be before {dateText}");
+                result.Add("StartDate", $"The earliest start date you can use is {dateText}");
             }
             return result;
         }
