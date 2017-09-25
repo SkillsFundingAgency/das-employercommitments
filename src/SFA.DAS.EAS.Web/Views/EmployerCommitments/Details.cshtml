@@ -17,10 +17,10 @@
             @if (Model.Data.Errors.Any())
             {
                 <div class="validation-summary-errors error-summary">
-                    <h1 id="warning-summary" class="heading-medium warning-summary-heading">
+                    <h1 id="error-summary" class="heading-medium error-summary-heading">
                         There are errors on this page that need your attention
                     </h1>
-                    <ul class="max-funding-summary-list">
+                    <ul class="error-summary-list">
                         @foreach (var errorMsg in Model.Data.Errors)
                         {
                             <li>
