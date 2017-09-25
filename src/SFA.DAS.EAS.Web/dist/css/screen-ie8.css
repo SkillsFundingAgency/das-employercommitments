@@ -4814,7 +4814,7 @@ h2 .float-right {
   width: 100%;
   background: #6f72af;
   color: #fff;
-  z-index: 1000;
+  z-index: 1;
   margin: 0 auto;
 }
 
