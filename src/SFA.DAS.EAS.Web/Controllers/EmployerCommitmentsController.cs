@@ -765,7 +765,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             {
                 response.FlashMessage = new FlashMessageViewModel
                 {
-                    Headline = "Errors to fix",
+                    Headline = "There are errors on this page that need your attention",
                     Message = "Check the following details:",
                     ErrorMessages = apprenticeship.ErrorDictionary,
                     Severity = FlashMessageSeverityLevel.Error
@@ -784,7 +784,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             {
                 response.FlashMessage = new FlashMessageViewModel
                 {
-                    Headline = "Errors to fix",
+                    Headline = "There are errors on this page that need your attention",
                     Message = "Check the following details:",
                     ErrorMessages = apprenticeship.ErrorDictionary,
                     Severity = FlashMessageSeverityLevel.Error
