@@ -236,6 +236,7 @@
   }
 .funding-cap-alert{
   border-left:10px solid $govuk-blue;
+  padding-left:10px;
         a{
               text-decoration:none;
               color:$text-colour;
@@ -272,6 +273,7 @@ right: 0;
 #apprentice-details{
   .overlap-notification{
       border-left:10px solid $red;
+      padding-left:10px;
   }
 }
 
@@ -692,6 +694,13 @@ width: 100%;
 
 }
 
+.column-two-thirds,
+.column-full {
+    .error-summary{
+        h1{display:block;}
+    }
+
+} 
 
 //all mobile media query breakpoints
 //==================================

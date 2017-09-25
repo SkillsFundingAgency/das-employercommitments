@@ -186,7 +186,7 @@
 
                             if(group.OverlapErrorCount > 0)
                             {
-                                <div class="overlap-notification grey-background" id="error-message-@group.GroupId">
+                                <div class="overlap-notification" id="error-message-@group.GroupId">
                                     <p class="heading-small">
                                         @group.OverlapErrorCount @PluraliseApprentice(group.OverlapErrorCount).ToLower() with overlapping training dates
                                     </p>
@@ -195,7 +195,7 @@
                                         Please check the details are correct. If you're unsure, contact the employer in the first instance.
                                     </p>
                                 </div>
-                                <i class="overlap-arrow"></i>
+                               
                             }
                             else if (group.ApprenticeshipsNotWithinFundingPeriod > 0)
                             {
@@ -212,7 +212,7 @@
                             }
                             else if (group.ApprenticeshipsOverFundingLimit > 0 && !Model.Data.Errors.Any())
                             {
-                                <div class="funding-cap-alert grey-background" id="max-funding-group-@group.GroupId">
+                                <div class="funding-cap-alert" id="max-funding-group-@group.GroupId">
                                     <p class="heading-small">
                                         @($"{group.ApprenticeshipsOverFundingLimit}  {_addS("apprenticeship", group.ApprenticeshipsOverFundingLimit).ToLower()} above funding band maximum")
                                     </p>
@@ -221,7 +221,7 @@
                                     </p>
 
                                 </div>
-                                <i class="bubble-arrow"></i>
+
                             }
 
                             <table class="tableResponsive viewCommitment">
