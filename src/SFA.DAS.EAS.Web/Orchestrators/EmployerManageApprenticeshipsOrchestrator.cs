@@ -310,13 +310,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 result.Add(error.Key, error.Value);
             }
-
-            foreach (var error in _approvedApprenticeshipValidator.ValidateAcademicYear(updatedModel.StartDate?.DateTime))
-            {
-                result.Add(error.Key, error.Value);
-            }
             
-
             return result;
         }
 

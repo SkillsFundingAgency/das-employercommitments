@@ -54,6 +54,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Extensions
             return date.ToString("MMMM yyyy");
         }
 
+        public static string ToGdsFormatShortMonthWithoutDay(this DateTime date)
+        {
+            return date.ToString("MM yyyy");
+        }
+
         public static string ToGdsFormatLongMonthNameWithoutDay(this DateTime date)
         {
             return date.ToString("MMMM yyyy");

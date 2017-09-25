@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
+using System;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 {
@@ -46,5 +47,14 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
             }
         }
 
+        public int ApprenticeshipsNotWithinFundingPeriod
+        {
+            get
+            {
+                return Apprenticeships.Count(x => !x.IsWithinAcademicYearFundingPeriod);
+            }
+        }
+
+        public DateTime EarliestAcademicYearDate { get; set; }
     }
 }

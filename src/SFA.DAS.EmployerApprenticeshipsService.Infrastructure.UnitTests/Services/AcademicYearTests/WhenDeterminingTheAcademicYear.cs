@@ -18,11 +18,12 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Academic
             _currentDateTime = new Mock<ICurrentDateTime>();
         }
 
-        [TestCase("2017-08-01", "2017-08-01", "2018-07-31", "2017-10-19")]
-        [TestCase("2018-03-01", "2017-08-01", "2018-07-31", "2017-10-19")]
-        [TestCase("2018-07-31", "2017-08-01", "2018-07-31", "2017-10-19")]
-        [TestCase("2018-10-01", "2018-08-01", "2019-07-31", "2018-10-19")]
-        public void ThenAcademicYearRunsAugustToJuly(DateTime currentDate, DateTime expectedYearStart, DateTime expectedYearEnd, DateTime expectedLastAcademicYearFundingPeriod)
+        [TestCase("2017-08-01", "2017-08-01", "2018-07-31", "2017-10-19 18:00")]
+        [TestCase("2018-03-01", "2017-08-01", "2018-07-31", "2017-10-19 18:00")]
+        [TestCase("2018-07-31", "2017-08-01", "2018-07-31", "2017-10-19 18:00")]
+        [TestCase("2018-10-01", "2018-08-01", "2019-07-31", "2018-10-19 18:00")]
+        [TestCase("2018-01-01", "2017-08-01", "2018-07-31", "2017-10-19 18:00")]
+        public void ShouldReturnExpectedAcademicYearDates(DateTime currentDate, DateTime expectedYearStart, DateTime expectedYearEnd, DateTime expectedLastAcademicYearFundingPeriod)
         {
             //Arrange
             _currentDateTime.Setup(x => x.Now).Returns(currentDate);

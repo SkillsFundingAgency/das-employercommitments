@@ -27,6 +27,20 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public bool HasSignedTheAgreement { get; set; }
 
         public bool HasOverlappingErrors { get; set; }
+
+        public bool HasAcademicFundingPeriodErrors { get; set; }
+
+        public bool CanApprove
+        {
+            get
+            {
+                return !NotReadyForApproval && 
+                    HasSignedTheAgreement && 
+                    !HasOverlappingErrors &&
+                    !HasAcademicFundingPeriodErrors;
+            }
+
+        }
     }
 
     public enum ApprovalState

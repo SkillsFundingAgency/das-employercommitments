@@ -21,7 +21,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public IList<ApprenticeshipListItemGroupViewModel> ApprenticeshipGroups { get; set; }
         public string BackLinkUrl { get; set; }
         public bool HasOverlappingErrors { get; set; }
-        public Dictionary<string, string> FundingCapWarnings { get; set; }
+        public Dictionary<string, string> Warnings { get; set; }
         public bool IsReadOnly { get; set; }
+        public Dictionary<string, string> Errors { get; set; }
     }
 }

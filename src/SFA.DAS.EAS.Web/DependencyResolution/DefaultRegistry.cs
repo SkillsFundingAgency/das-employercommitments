@@ -75,7 +75,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<HttpContextBase>().Use(() => new HttpContextWrapper(HttpContext.Current));
             For(typeof(ICookieService<>)).Use(typeof(HttpCookieService<>));
             For(typeof(ICookieStorageService<>)).Use(typeof(CookieStorageService<>));
-
+            For<IApprenticeshipValidationErrorText>().Use<WebApprenticeshipValidationText>();
             For<IConfiguration>().Use<EmployerCommitmentsServiceConfiguration>();
 
             var config = this.GetConfiguration();
@@ -83,14 +83,14 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<ICache>().Use<InMemoryCache>(); //RedisCache
 
             For<IApprenticeshipInfoServiceConfiguration>().Use(config.ApprenticeshipInfoService);
-            For<IValidateApprovedApprenticeship>().Use<ApprovedApprenticeshipViewModelValidator>()
-                .Ctor<WebApprenticeshipValidationText>().Is(new WebApprenticeshipValidationText());
+            For<IValidateApprovedApprenticeship>().Use<ApprovedApprenticeshipViewModelValidator>();
                 
             SetUpCommitmentApi(config);
 
             For<IEventsApi>().Use<EventsApi>()
                 .Ctor<IEventsApiClientConfiguration>().Is(config.EventsApi)
                 .SelectConstructor(() => new EventsApi(null)); // The default one isn't the one we want to use.;
+                     
 
             ConfigureNotificationsApi();
 
