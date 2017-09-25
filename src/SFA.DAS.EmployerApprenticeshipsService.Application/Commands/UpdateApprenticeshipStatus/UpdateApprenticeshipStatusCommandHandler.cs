@@ -9,6 +9,7 @@ using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStatus
@@ -19,13 +20,17 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
         private readonly IValidator<UpdateApprenticeshipStatusCommand> _validator;
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IMediator _mediator;
+        private readonly IAcademicYearDateProvider _academicYearDateProvider;
+        private readonly IAcademicYearValidator _academicYearValidator;
 
-        public UpdateApprenticeshipStatusCommandHandler(IEmployerCommitmentApi commitmentsApi, IMediator mediator, ICurrentDateTime currentDateTime, IValidator<UpdateApprenticeshipStatusCommand> validator)
+        public UpdateApprenticeshipStatusCommandHandler(IEmployerCommitmentApi commitmentsApi, IMediator mediator, ICurrentDateTime currentDateTime, IValidator<UpdateApprenticeshipStatusCommand> validator, IAcademicYearDateProvider academicYearDateProvider, IAcademicYearValidator academicYearValidator)
         {
             _commitmentsApi = commitmentsApi;
             _mediator = mediator;
             _currentDateTime = currentDateTime;
             _validator = validator;
+            _academicYearDateProvider = academicYearDateProvider;
+            _academicYearValidator = academicYearValidator;
         }
 
         protected override async Task HandleCore(UpdateApprenticeshipStatusCommand command)
@@ -73,6 +78,14 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
                     if (response.Apprenticeship.StartDate > command.DateOfChange)
                     {
                         validationResult.AddError(nameof(command.DateOfChange), "Date cannot be earlier than training start date");
+                        throw new InvalidRequestException(validationResult.ValidationDictionary);
+                    }
+
+                    if (_academicYearValidator.Validate(command.DateOfChange) == AcademicYearValidationResult.NotWithinFundingPeriod)
+                    {
+                        var earliestDate = _academicYearDateProvider.CurrentAcademicYearStartDate.ToString("dd MM yyyy");
+
+                        validationResult.AddError(nameof(command.DateOfChange), $"The earliest date you can stop this apprentice is {earliestDate}");
                         throw new InvalidRequestException(validationResult.ValidationDictionary);
                     }
                 }

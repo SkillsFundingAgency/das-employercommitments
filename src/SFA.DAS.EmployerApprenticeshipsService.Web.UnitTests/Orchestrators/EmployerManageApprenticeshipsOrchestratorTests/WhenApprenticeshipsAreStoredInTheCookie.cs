@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+
 using MediatR;
 using Moq;
 using NUnit.Framework;
@@ -9,6 +11,7 @@ using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.Validators;
+using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.NLog.Logger;
 
@@ -23,6 +26,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         private Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>  _cookieStorageService;
         private EmployerManageApprenticeshipsOrchestrator _orchestrator;
 
+        protected readonly Mock<ICurrentDateTime> CurrentDateTime = new Mock<ICurrentDateTime>();
+        protected ApprovedApprenticeshipViewModelValidator Validator;
+
         private const string CookieName = "sfa-das-employerapprenticeshipsservice-apprentices";
 
         [SetUp]
@@ -34,15 +40,25 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             _logger = new Mock<ILog>();
             _cookieStorageService = new Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>();
 
+            CurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2018, 5, 1));
+            var academicYearProvider = new AcademicYearDateProvider(CurrentDateTime.Object);
+
+            Validator = new ApprovedApprenticeshipViewModelValidator(
+                new WebApprenticeshipValidationText(),
+                CurrentDateTime.Object,
+                academicYearProvider,
+                new AcademicYearValidator(CurrentDateTime.Object, academicYearProvider));
+
             _orchestrator = new EmployerManageApprenticeshipsOrchestrator(
                 _mediator.Object, 
                 _hashingService.Object, 
                 _apprenticeshipMapper.Object,
-                new ApprovedApprenticeshipViewModelValidator(),
+                Validator,
                 new CurrentDateTime(),
                 _logger.Object,
                 _cookieStorageService.Object,
-                Mock.Of<IApprenticeshipFiltersMapper>());
+                Mock.Of<IApprenticeshipFiltersMapper>(),
+                Mock.Of<IAcademicYearDateProvider>());
         }
 
        

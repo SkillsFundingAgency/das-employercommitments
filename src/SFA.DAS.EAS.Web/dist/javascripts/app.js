@@ -1,4 +1,4 @@
-var sfa = sfa || {};
+﻿var sfa = sfa || {};
 
 sfa.homePage = {
     init: function () {
@@ -140,6 +140,34 @@ sfa.backLink = {
     }
 }
 
+// Helper for gta events
+sfa.tagHelper = {
+    dataLayer: {},
+    init: function () {
+        window.dataLayer = window.dataLayer || [];
+    },
+    radioButtonClick: function (eventAction, optionName) {
+        dataLayer.push({
+            'event': 'dataLayerEvent',
+            'eventCat': 'Form Option',
+            'eventAct': eventAction,
+            'eventLab': optionName
+        });
+    },
+    submitRadioForm: function (eventAction) {
+
+        var optionName = $("input[type='radio']:checked").attr('dataOptionName');
+
+        dataLayer.push({
+            'event': 'dataLayerEvent',
+            'eventCat': 'Form Submit',
+            'eventAct': eventAction,
+            'eventLab': optionName
+        });
+    }
+};
+
+
 if ($('#js-breadcrumbs')) {
     sfa.backLink.init();
 }
@@ -150,6 +178,7 @@ window.onunload = function () {
 
 sfa.forms.init();
 sfa.navigation.init();
+sfa.tagHelper.init();
 $('ul#global-nav-links').collapsableNav();
 
 var selectionButtons = new GOVUK.SelectionButtons("label input[type='radio'], label input[type='checkbox'], section input[type='radio']");
@@ -201,6 +230,7 @@ $('.container-head').on('click touchstart', (function () {
 
 }));
 
+
 //floating menu
 $(window).scroll(function () {
     if ($(window).scrollTop() >= 110) {
@@ -213,3 +243,28 @@ $(window).scroll(function () {
     }
 });
 
+
+
+//clear search box text
+
+var placeholderText = $('.js-enabled #search-input').data('default-value');
+
+window.onload = function () {
+    if ($('.js-enabled #search-input').val() === "") {
+        $('.js-enabled #search-input').addClass('placeholder-text');
+        $('.js-enabled #search-input').val(placeholderText);
+    }
+};
+
+$("#search-input").on("focus click touchstart", (function () {
+    $('.js-enabled #search-input').removeClass('placeholder-text');
+    if ($(this).val() === placeholderText)
+        $(this).val("");
+}));
+
+$("#search-input").on("blur", (function () {
+    if ($(this).val() === "") {
+        $('.js-enabled #search-input').addClass('placeholder-text');
+        $(this).val(placeholderText);
+    }
+}));

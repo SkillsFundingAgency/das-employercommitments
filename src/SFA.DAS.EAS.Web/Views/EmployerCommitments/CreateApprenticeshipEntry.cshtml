@@ -61,3 +61,14 @@
        <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to Apprentices" class="back-link">Back to Apprentices</a>
     </div>
 }
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/apprenticeships/create/apprentice-entry',
+            'cohortRef': '@Model.Data.Apprenticeship.HashedCommitmentId'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
+}

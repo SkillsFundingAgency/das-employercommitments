@@ -246,7 +246,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 apprenticeship.AddErrorsFromModelState(ModelState);
             }
 
-            var validatorResult = await _orchestrator.ValidateApprenticeship(apprenticeship);
+            var model = await _orchestrator.GetConfirmChangesModel(
+                apprenticeship.HashedAccountId, 
+                apprenticeship.HashedApprenticeshipId, 
+                OwinWrapper.GetClaimValue(@"sub"), 
+                apprenticeship);
+
+            var validatorResult = await _orchestrator.ValidateApprenticeship(apprenticeship, model.Data);
             if (validatorResult.Any())
             {
                 apprenticeship.AddErrorsFromDictionary(validatorResult);
@@ -260,9 +266,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
                 return View("Edit", viewModel);
             }
-
-            var model = await _orchestrator.GetConfirmChangesModel(apprenticeship.HashedAccountId, apprenticeship.HashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"), apprenticeship);
-
+            
             if (!AnyChanges(model.Data))
             {
                 var viewModel = await _orchestrator.GetApprenticeshipForEdit(apprenticeship.HashedAccountId, apprenticeship.HashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));

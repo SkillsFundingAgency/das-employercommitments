@@ -3,6 +3,7 @@
 @using SFA.DAS.EmployerCommitments.Web
 @using SFA.DAS.EmployerCommitments.Web.Extensions
 @using SFA.DAS.EmployerCommitments.Web.ViewModels
+@using SFA.DAS.EmployerCommitments.Web.Plumbing
 
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
@@ -38,14 +39,31 @@
     <!--[if gt IE 8]><!-->
     <link href="@Styles.Url("~/bundles/screen")" media="all" rel="stylesheet" />
     <!--<![endif]-->
+    @Scripts.Render("~/bundles/lodash")
+    
+    <script>
+        var sfa = sfa || {};
+        sfa.dataLayer = sfa.dataLayer || {};
+    </script>
+
+    @RenderSection("gaDataLayer", required: false)
+
+    <script>
+        window.dataLayer = window.dataLayer || []; dataLayer.push(_.assignIn({
+            'event': 'dataLoaded',
+            'loggedIn': '@ViewBag.GaData.IsAuthenticated',
+            'userID': '@ViewBag.GaData.UserId',
+            'acc': '@ViewBag.GaData.Acc'
+        }, sfa.dataLayer));
+    </script>
 
     <!-- Google Tag Manager -->
     <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window, document, 'script', 'dataLayer', 'GTM-PFR238K');</script>
+	@Html.Raw(GoogleAnalytics.Instance.GoogleHeaderUrl);f.parentNode.insertBefore(j,f);
+    })(window, document, 'script', 'dataLayer', 'GTM-KWQBWGJ');</script>
     <!-- End Google Tag Manager -->
 
     <script type="text/javascript">
@@ -65,7 +83,7 @@
 
     <!-- Google Tag Manager (noscript) -->
     <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PFR238K"
+        <iframe src="@Html.Raw(GoogleAnalytics.Instance.GoogleBodyUrl)"
                 height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
     <!-- End Google Tag Manager (noscript) -->

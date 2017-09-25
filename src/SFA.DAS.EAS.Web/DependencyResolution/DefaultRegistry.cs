@@ -38,6 +38,8 @@ using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Infrastructure.Caching;
 using SFA.DAS.EmployerCommitments.Infrastructure.Services;
+using SFA.DAS.EmployerCommitments.Web.Validators;
+using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.Events.Api.Client;
 using SFA.DAS.Events.Api.Client.Configuration;
@@ -54,10 +56,8 @@ using NotificationsApiClientConfiguration = SFA.DAS.EmployerCommitments.Domain.C
 
 namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 {
-
     public class DefaultRegistry : Registry
     {
-        private string _test;
         private const string ServiceName = "SFA.DAS.EmployerCommitments";
         private const string ServiceNamespace = "SFA.DAS";
 
@@ -83,19 +83,16 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<ICache>().Use<InMemoryCache>(); //RedisCache
 
             For<IApprenticeshipInfoServiceConfiguration>().Use(config.ApprenticeshipInfoService);
-
+            For<IValidateApprovedApprenticeship>().Use<ApprovedApprenticeshipViewModelValidator>()
+                .Ctor<WebApprenticeshipValidationText>().Is(new WebApprenticeshipValidationText());
+                
             SetUpCommitmentApi(config);
-
-            For<IValidationApi>().Use<ValidationApi>().Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi);
 
             For<IEventsApi>().Use<EventsApi>()
                 .Ctor<IEventsApiClientConfiguration>().Is(config.EventsApi)
                 .SelectConstructor(() => new EventsApi(null)); // The default one isn't the one we want to use.;
 
-            var notificationsApiConfig = Infrastructure.DependencyResolution.ConfigurationHelper.GetConfiguration
-                <NotificationsApiClientConfiguration>($"{ServiceName}.Notifications");
-
-            ConfigureNotificationsApi(notificationsApiConfig);
+            ConfigureNotificationsApi();
 
             RegisterMapper();
 
@@ -123,11 +120,16 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
                 Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
                 .Ctor<HttpClient>().Is(httpClient);
 
-
+            For<IValidationApi>().Use<ValidationApi>()
+                .Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
+                .Ctor<HttpClient>().Is(httpClient);
         }
 
-        private void ConfigureNotificationsApi(NotificationsApiClientConfiguration config)
+        private void ConfigureNotificationsApi()
         {
+            var config = Infrastructure.DependencyResolution.ConfigurationHelper.GetConfiguration
+                <NotificationsApiClientConfiguration>($"{ServiceName}.Notifications");
+
             HttpClient httpClient;
 
             if (string.IsNullOrWhiteSpace(config.ClientId))
@@ -146,8 +148,6 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<INotificationsApi>().Use<NotificationsApi>().Ctor<HttpClient>().Is(httpClient);
 
             For<INotificationsApiClientConfiguration>().Use(config);
-
-
         }
 
         private void RegisterExecutionPolicies()

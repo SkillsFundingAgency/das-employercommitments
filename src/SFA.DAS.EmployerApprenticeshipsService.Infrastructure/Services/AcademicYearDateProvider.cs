@@ -3,11 +3,11 @@ using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 
 namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
 {
-    public class AcademicYear : IAcademicYear
+    public class AcademicYearDateProvider : IAcademicYearDateProvider
     {
         private readonly ICurrentDateTime _currentDateTime;
 
-        public AcademicYear(ICurrentDateTime currentDateTime)
+        public AcademicYearDateProvider(ICurrentDateTime currentDateTime)
         {
             _currentDateTime = currentDateTime;
         }
@@ -25,5 +25,14 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
         }
 
         public DateTime CurrentAcademicYearEndDate => CurrentAcademicYearStartDate.AddYears(1).AddDays(-1);
+
+        public DateTime LastAcademicYearFundingPeriod
+        {
+            get
+            {
+                // TODO GET DATE FROM SOURCE
+                return CurrentAcademicYearStartDate.AddDays(79);
+            }
+        }
     }
 }

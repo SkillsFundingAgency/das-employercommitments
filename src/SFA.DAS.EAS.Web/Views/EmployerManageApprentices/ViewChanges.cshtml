@@ -10,11 +10,11 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        <form method="POST" action="@Url.Action("ViewChanges")" novalidate="novalidate">
+        <form method="POST" action="@Url.Action("ViewChanges")" novalidate="novalidate" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
 
             @Html.AntiForgeryToken()
 
-            <h1 class="heading-xlarge">View changes</h1>
+            <h1 class="heading-xlarge">@ViewBag.Title</h1>
             <p class="lede">@Model.Data.ProviderName are reviewing these changes:</p>
             @Html.Partial("ApprenticeshipUpdate", Model.Data)
 
@@ -30,11 +30,11 @@
                     }
 
                     <label class="block-label selection-button-radio" for="changes-undo-true">
-                        @Html.RadioButton("ChangesConfirmed", true, new { id = "changes-undo-true" })
+                        @Html.RadioButton("ChangesConfirmed", true, new { id = "changes-undo-true", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
                         Yes, undo these changes
                     </label>
                     <label class="block-label selection-button-radio" for="changes-undo-false">
-                        @Html.RadioButton("ChangesConfirmed", false, new { id = "changes-undo-false" })
+                        @Html.RadioButton("ChangesConfirmed", false, new { id = "changes-undo-false", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
                         No, keep these changes
                     </label>
                 </fieldset>
@@ -51,4 +51,14 @@
     <div class="breadcrumbs">
         <a href="@Url.Action("Details", "EmployerManageApprentices", new { Model.Data.HashedAccountId, Model.Data.HashedApprenticeshipId} )" aria-label="Back to apprentice details" class="back-link">Back to apprentice details</a>
     </div>
+}
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/manage/view-changes'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
 }

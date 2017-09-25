@@ -4736,6 +4736,51 @@ h2 .float-right {
   float: left;
 }
 
+#manage-all-apprentices hr.black {
+  background: #0b0c0c;
+  height: 2px;
+  margin: 10px 0 20px 0;
+}
+
+#manage-all-apprentices .filter-app-head {
+  margin-top: 0;
+}
+
+#search-form {
+  margin: 7px 0 15px 0;
+}
+
+#search-form .heading-medium {
+  margin-top: 0;
+}
+
+#search-form .search-text {
+  width: 262px;
+  height: 39px;
+  height: 38px;
+  width: 87%;
+  margin: 0;
+  padding: 6px 15px;
+  border: 1px solid #6f777b;
+}
+
+#search-form .submit-search {
+  margin: 0 0 0 -4px;
+  height: 39px;
+  margin-left: -4px;
+  padding: 0;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  border: 1px solid #6f777b;
+  background: url(/dist/images/search-glass.png) no-repeat 5px 5px;
+  color: transparent;
+}
+
+#search-form .placeholder-text {
+  color: #bfc1c3;
+}
+
 #change-apprentice-status #submit-apply-change {
   float: left;
 }
@@ -4804,15 +4849,7 @@ h2 .float-right {
   margin: 10px 0 0 0px;
 }
 
-.fixed-header p.floating-head-text {
-  max-width: 960px;
-  margin-bottom: 10px;
-}
-
-.fixed-header #user-nav {
-  display: none;
-}
-
+/* - END floating menu style */
 .js-enabled #user-nav li.has-sub-menu > a:before {
   border-left-color: #fff;
 }
@@ -4834,7 +4871,19 @@ h2 .float-right {
   color: #4c2c92;
 }
 
-/* - END floating menu style */
+#when-to-apply-stop #submit-apply-change {
+  float: left;
+}
+
+#when-to-apply-stop .cancel-link {
+  margin: 7px 0 0 30px;
+  float: left;
+}
+
+> > > > > > > 202bf730bbfb488c604d5978718e2f60c84731fb #no-search-results {
+  text-align: center;
+}
+
 @media only screen and (max-device-width: 640px), only screen and (max-device-width: 667px), only screen and (max-width: 480px) {
   #apprentice-details .tableResponsive {
     margin-top: 30px;

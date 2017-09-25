@@ -11,7 +11,7 @@
     <div class="column-full">
         <div class="govuk-box-highlight green-box">
             <h1 class="heading-xlarge" id="changeHeadline">
-                Cohort approved
+                @ViewBag.Title
             </h1>
         </div>
     </div>
@@ -70,4 +70,16 @@
     <div class="breadcrumbs">
         <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to Apprentices" class="back-link">Back to Apprentices</a>
     </div>
+}
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/acknowledgement/cohort-approved',
+            'cohortRef': '@Model.Data.HashedCommitmentId',
+            'success': '@ViewBag.Title'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
 }

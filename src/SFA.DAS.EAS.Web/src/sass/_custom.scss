@@ -622,6 +622,46 @@ width: 100%;
       }
 }
 
+// search apprentice
+
+#manage-all-apprentices{
+   hr.black{
+       background:$text-colour;
+       height: 2px;
+       margin: 10px 0 20px 0;
+   }
+   .filter-app-head{
+       margin-top:0;
+   }
+}
+
+#search-form{
+		margin:7px 0 15px 0;
+        .heading-medium{margin-top:0;}
+        .search-text{
+           @include media(tablet) {width:262px;height:39px;}
+        height:38px;
+        width:87%;
+		margin: 0;
+		padding: 6px 15px;
+        border:1px solid $secondary-text-colour;
+	    }
+	    .submit-search {
+		 @include media(tablet) {margin: 0 0 0 -4px;height:39px;}
+        margin-left:-4px;
+		padding: 0;
+		width: 38px;
+        height: 38px;	
+		cursor: pointer;
+		border:1px solid $secondary-text-colour; 
+		background:url(/dist/images/search-glass.png) no-repeat 5px 5px;
+        color:transparent;
+	}
+        .placeholder-text{
+            color:$border-colour;
+        }
+
+}
 #change-apprentice-status{
     #submit-apply-change{
         float:left;
@@ -696,14 +736,7 @@ width: 100%;
                  }
             }
   }
- 
-  .fixed-header{
-        p.floating-head-text{
-            max-width:960px;
-            margin-bottom:10px;
-        }
-        #user-nav{display:none;}
-    }
+ /* - END floating menu style */
 
   .js-enabled #user-nav li.has-sub-menu>a:before{
       border-left-color:#fff;
@@ -728,8 +761,26 @@ width: 100%;
             color:#4c2c92;
             }
 }
-/* - END floating menu style */
 
+
+#when-to-apply-stop {
+    #submit-apply-change {
+        float: left;
+    }
+
+    .cancel-link {
+        margin: 7px 0 0 30px;
+        float: left;
+    }
+}
+>>>>>>> 202bf730bbfb488c604d5978718e2f60c84731fb
+
+
+#no-search-results{
+    text-align:center;
+
+
+}
 
 
 //all mobile media query breakpoints
@@ -768,6 +819,7 @@ only screen and (max-width: 480px) {
 .bubble-arrow,.overlap-arrow {display:none;} 
     
 .manage-all-apprentices{
+   
 td:nth-of-type(1):before {
       content: "Name";
       font-weight: normal;

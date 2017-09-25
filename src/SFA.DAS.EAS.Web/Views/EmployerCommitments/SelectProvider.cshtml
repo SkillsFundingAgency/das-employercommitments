@@ -18,11 +18,11 @@
 
         @if (Model.Data.Provider != null)
         { 
-            <form action="@Url.Action("ConfirmProvider")" method="POST">
+            <form action="@Url.Action("ConfirmProvider")" method="POST" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
                 @Html.AntiForgeryToken()
                 @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
 
-                <h1 class="heading-xlarge">Confirm training provider</h1>
+                <h1 class="heading-xlarge">@ViewBag.Title</h1>
                 <p class="">UK Provider Reference Number <span style="font-weight:700">'@Model.Data.ProviderId'</span> matches:</p>
 
                 <h2 class="heading-large" style="margin-bottom:0;">@Model.Data.Provider.ProviderName</h2>
@@ -36,11 +36,11 @@
                             @Html.ValidationMessage("Confirmation", "Please choose an option", new { id = "error-message-Confirmation" })
                         </div>
                         <label class="block-label selection-button-radio" for="Confirmation-True">
-                            @Html.RadioButton("Confirmation", "True", new { id = "Confirmation-True" })
+                            @Html.RadioButton("Confirmation", "True", new { id = "Confirmation-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
                             Yes, use @Model.Data.Provider.ProviderName
                         </label>
                         <label class="block-label selection-button-radio" for="Confirmation-False">
-                            @Html.RadioButton("Confirmation", "False", new { id = "Confirmation-False" })
+                            @Html.RadioButton("Confirmation", "False", new { id = "Confirmation-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
                             No, change UK Provider Reference Number
                         </label>
                     </div>
@@ -75,4 +75,16 @@
     <div class="breadcrumbs">
         <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to Apprentices" class="back-link">Back to Apprentices</a>
     </div>
+}
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/provider/create/confirm-training-provider',
+            'prn': '@Model.Data.ProviderId',
+            'org': '@Model.Data.LegalEntityCode'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
 }

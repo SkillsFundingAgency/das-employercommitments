@@ -12,7 +12,7 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        <form action="@Url.Action("FinishedEditing")" method="post">
+        <form action="@Url.Action("FinishedEditing")" method="post" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
 
@@ -105,7 +105,9 @@
     {
         var htmlAttributes = new Dictionary<string, object>
             {
-                { "id", RadioButtonId(status) }
+                { "id", RadioButtonId(status) },
+                { "dataOptionName", status },
+                { "onclick", $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{status}')" }
             };
 
         if (disabled)
@@ -132,4 +134,16 @@
     <div class="breadcrumbs">
       <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to Apprentices" class="back-link">Back to Apprentices</a>
     </div>
+}
+
+
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/finished/finish-editing'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
 }

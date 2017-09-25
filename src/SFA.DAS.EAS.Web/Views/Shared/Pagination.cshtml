@@ -7,6 +7,7 @@
         var queryStringValues = HttpUtility.ParseQueryString(Request.QueryString.ToString());
 
         queryStringValues.Set("pageNumber", pageNumber.ToString());
+        queryStringValues.Set("resetFilter", "false");
 
         return $"{Request.Url.AbsolutePath}?{queryStringValues}";
     }

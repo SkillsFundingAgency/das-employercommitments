@@ -349,3 +349,15 @@
         <a href="@Model.Data.BackLinkUrl" aria-label="Back" class="back-link">Back</a>
     </div>
 }
+
+
+@section gaDataLayer {
+    <script>
+        var extraProperties = {
+            'vpv': '/accounts/apprentices/details/apprentice-detail',
+            'cohortRef': '@Model.Data.HashedId'
+        };
+
+        _.assignIn(sfa.dataLayer, extraProperties);
+    </script>
+}
