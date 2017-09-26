@@ -33,12 +33,15 @@
                         @Html.RadioButton("WhenToMakeChange", WhenToMakeChangeOptions.Immediately, new { id = $"WhenToMakeChange-{WhenToMakeChangeOptions.Immediately}", dataOptionName = $"{WhenToMakeChangeOptions.Immediately}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{WhenToMakeChangeOptions.Immediately}')" })
                         Today
                     </label>
-
-                    <div class="panel panel-border-wide" id="stop-today">
-                        <p class="strong">
-                           If you want to stop and restart this apprenticeship, select 'before today' and enter the original start date.
-                        </p>
-                    </div>
+                    
+                    @if (Model.Data.EarliestDateIsStartDate)
+                    {
+                        <div class="panel panel-border-wide" id="stop-today">
+                            <p class="strong">
+                                If you want to stop and restart this apprenticeship, select 'before today' and enter the original start date.
+                            </p>
+                        </div>
+                    }
 
                     <label for=@($"WhenToMakeChange-{WhenToMakeChangeOptions.SpecificDate}") class="block-label selection-button-radio" id="before-today">
                         @Html.RadioButton("WhenToMakeChange", WhenToMakeChangeOptions.SpecificDate, new { id = $"WhenToMakeChange-{WhenToMakeChangeOptions.SpecificDate}", dataOptionName = $"{WhenToMakeChangeOptions.SpecificDate}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{WhenToMakeChangeOptions.SpecificDate}')" })
