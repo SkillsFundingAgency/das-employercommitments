@@ -28,6 +28,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Academic
         [TestCase("2017-10-20", "2017-07-01", AcademicYearValidationResult.NotWithinFundingPeriod)]
         [TestCase("2017-10-20", "2016-07-01", AcademicYearValidationResult.NotWithinFundingPeriod)]
         [TestCase("2017-11-01", "2016-07-20", AcademicYearValidationResult.NotWithinFundingPeriod)]
+        [TestCase("2017-10-19 18:05", "2017-07-19", AcademicYearValidationResult.NotWithinFundingPeriod)]
         [TestCase("2017-10-18", "2017-01-01", AcademicYearValidationResult.Success)]
         [TestCase("2018-10-01", "2018-06-01", AcademicYearValidationResult.Success)]
         [TestCase("2017-10-18", "2017-07-01", AcademicYearValidationResult.Success)]

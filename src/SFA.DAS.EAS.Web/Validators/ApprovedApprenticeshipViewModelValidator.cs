@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
     public class ApprovedApprenticeshipViewModelValidator : ApprenticeshipCoreValidator, IValidateApprovedApprenticeship
     {
         public ApprovedApprenticeshipViewModelValidator(
-            WebApprenticeshipValidationText validationText,
+            IApprenticeshipValidationErrorText validationText,
             ICurrentDateTime currentDateTime, 
             IAcademicYearDateProvider academicYear,
             IAcademicYearValidator academicYearValidator) 
@@ -30,7 +30,5 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
     public interface IValidateApprovedApprenticeship
     {
         Dictionary<string, string> ValidateToDictionary(ApprenticeshipViewModel instance);
-
-        Dictionary<string, string> ValidateAcademicYear(DateTime? date);
     }
 }

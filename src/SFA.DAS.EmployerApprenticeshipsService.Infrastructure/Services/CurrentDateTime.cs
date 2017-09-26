@@ -5,16 +5,17 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
 {
     public sealed class CurrentDateTime : ICurrentDateTime
     {
-        public DateTime Now { get; }
+        private readonly DateTime? _time;
+
+        public DateTime Now => _time ?? DateTime.UtcNow;
 
         public CurrentDateTime()
         {
-            Now = DateTime.UtcNow;
         }
 
-        public CurrentDateTime(DateTime time)
+        public CurrentDateTime(DateTime? time)
         {
-            Now = time;
+            _time = time;
         }
     }
 }

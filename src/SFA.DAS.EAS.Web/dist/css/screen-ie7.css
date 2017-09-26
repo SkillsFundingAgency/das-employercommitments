@@ -4404,6 +4404,7 @@ table .float-right, h2 .float-right {
 
 .funding-cap-alert {
   border-left: 10px solid #005ea5;
+  padding-left: 10px;
 }
 
 .funding-cap-alert a {
@@ -4438,6 +4439,7 @@ body input::-webkit-contacts-auto-fill-button {
 
 #apprentice-details .overlap-notification {
   border-left: 10px solid #b10e1e;
+  padding-left: 10px;
 }
 
 .overlap-alert {
@@ -4931,6 +4933,11 @@ h2 .float-right {
 
 #no-search-results {
   text-align: center;
+}
+
+.column-two-thirds .error-summary h1,
+.column-full .error-summary h1 {
+  display: block;
 }
 
 @media only screen and (max-device-width: 640px), only screen and (max-device-width: 667px), only screen and (max-width: 480px) {

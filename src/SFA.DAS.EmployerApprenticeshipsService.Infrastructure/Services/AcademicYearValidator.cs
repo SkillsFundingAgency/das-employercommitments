@@ -1,12 +1,11 @@
 ﻿using System;
-
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 
 namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
 {
-using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 
-public class AcademicYearValidator : IAcademicYearValidator
+    public class AcademicYearValidator : IAcademicYearValidator
     {
 
         public readonly ICurrentDateTime _currentDateTime;
@@ -18,10 +17,10 @@ public class AcademicYearValidator : IAcademicYearValidator
             _academicYear = academicYear;
         }
 
-        public AcademicYearValidationResult Validate(DateTime startDate)
+        public AcademicYearValidationResult Validate(DateTime trainingStartDate)
         {
-           if (startDate < _academicYear.CurrentAcademicYearStartDate &&
-                _currentDateTime.Now > _academicYear.LastAcademicYearFundingPeriod)
+            if (trainingStartDate < _academicYear.CurrentAcademicYearStartDate &&
+                 _currentDateTime.Now > _academicYear.LastAcademicYearFundingPeriod)
             {
                 return AcademicYearValidationResult.NotWithinFundingPeriod;
             }

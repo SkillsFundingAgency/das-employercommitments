@@ -1,9 +1,21 @@
-﻿using System;
+﻿using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Web.Extensions;
+using System;
 
 namespace SFA.DAS.EmployerCommitments.Web.Validators.Messages
 {
     public sealed class WebApprenticeshipValidationText : IApprenticeshipValidationErrorText
     {
+        private readonly IAcademicYearDateProvider _academicYear;
+
+        public WebApprenticeshipValidationText(IAcademicYearDateProvider academicYear)
+        {
+            _academicYear = academicYear;
+        }
+
+        public ValidationMessage AcademicYearStartDate01 =>
+             new ValidationMessage($"The earliest start date you can use is { _academicYear.CurrentAcademicYearStartDate.ToGdsFormatShortMonthWithoutDay()}", "AcademicYear_01");
+
         public ValidationMessage CohortRef01 { get { throw new NotImplementedException(); } }
         public ValidationMessage CohortRef02 { get { throw new NotImplementedException(); } }
 

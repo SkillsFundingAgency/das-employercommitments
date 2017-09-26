@@ -16,29 +16,35 @@
             @Html.AntiForgeryToken()
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
 
-            @if (Model.Data.NotReadyForApproval || !Model.Data.HasSignedTheAgreement || Model.Data.HasOverlappingErrors)
+            @if (!Model.Data.CanApprove)
             {
                 <div class="panel panel-border-wide alert-default">
                     <p class="heading-medium">You can't approve this cohort until: </p>
-                    <ul class="list list-bullet">                   
-                    @if (!Model.Data.HasSignedTheAgreement)
-                    {
-                        <li>
-                            You've signed an <a href="@Url.Action("Index", "EmployerAgreement")" target="_blank">apprenticeship agreement</a> with the Education and Skills Funding Agency
-                        </li>
-                    }
-                    @if (Model.Data.NotReadyForApproval)
-                    {
-                        <li>
-                            All <a href="@Url.Action("Details", new { hashedAccountId = Model.Data.HashedAccountId, hashedCommitmentId = Model.Data.HashedCommitmentId })">apprentice records</a> are complete
-                        </li>
-                    }
-                    @if (Model.Data.HasOverlappingErrors)
-                    {
-                        <li>
-                            There are no <a href="@Url.Action("Details", new { hashedAccountId = Model.Data.HashedAccountId, hashedCommitmentId = Model.Data.HashedCommitmentId })">overlapping training dates</a> for your apprentices
-                        </li>
-                    }
+                    <ul class="list list-bullet">
+                        @if (!Model.Data.HasSignedTheAgreement)
+                        {
+                            <li>
+                                You've signed an <a href="@Url.Action("Index", "EmployerAgreement")" target="_blank">apprenticeship agreement</a> with the Education and Skills Funding Agency
+                            </li>
+                        }
+                        @if (Model.Data.NotReadyForApproval)
+                        {
+                            <li>
+                                All <a href="@Url.Action("Details", new { hashedAccountId = Model.Data.HashedAccountId, hashedCommitmentId = Model.Data.HashedCommitmentId })">apprentice records</a> are complete
+                            </li>
+                        }
+                        @if (Model.Data.HasOverlappingErrors)
+                        {
+                            <li>
+                                There are no <a href="@Url.Action("Details", new { hashedAccountId = Model.Data.HashedAccountId, hashedCommitmentId = Model.Data.HashedCommitmentId })">overlapping training dates</a> for your apprentices
+                            </li>
+                        }
+                        @if (Model.Data.HasAcademicFundingPeriodErrors)
+                        {
+                            <li>
+                                There are no <a href="@Url.Action("Details", new { hashedAccountId = Model.Data.HashedAccountId, hashedCommitmentId = Model.Data.HashedCommitmentId })">start dates </a> in the previous academic year
+                            </li>
+                        }
                     </ul>
                 </div>
             }
@@ -51,21 +57,21 @@
                     <div>
                         @Html.ValidationMessage("SaveStatus", "Please choose an option", new { id = "error-message-SaveStatus-SendAmend" })
                     </div>
-                    @if (!Model.Data.NotReadyForApproval && Model.Data.HasSignedTheAgreement && !Model.Data.HasOverlappingErrors)
+                    @if (Model.Data.CanApprove)
                     {
                         if (Model.Data.IsApproveAndSend)
                         {
-                        <label class="block-label selection-button-radio" for="@RadioButtonId(SaveStatus.ApproveAndSend)">
-                            @Html.RadioButton("SaveStatus", SaveStatus.ApproveAndSend, GetRadioButtonAttributes(SaveStatus.ApproveAndSend, Model.Data.NotReadyForApproval))
-                            <span id="changeTwo">Approve and send to training provider</span>
-                        </label>
+                            <label class="block-label selection-button-radio" for="@RadioButtonId(SaveStatus.ApproveAndSend)">
+                                @Html.RadioButton("SaveStatus", SaveStatus.ApproveAndSend, GetRadioButtonAttributes(SaveStatus.ApproveAndSend, Model.Data.NotReadyForApproval))
+                                <span id="changeTwo">Approve and send to training provider</span>
+                            </label>
                         }
                         else
                         {
-                        <label class="block-label selection-button-radio" for="@RadioButtonId(SaveStatus.Approve)">
-                            @Html.RadioButton("SaveStatus", SaveStatus.Approve, GetRadioButtonAttributes(SaveStatus.Approve, Model.Data.NotReadyForApproval))
-                            <span id="changeTwo">Approve</span>
-                        </label>
+                            <label class="block-label selection-button-radio" for="@RadioButtonId(SaveStatus.Approve)">
+                                @Html.RadioButton("SaveStatus", SaveStatus.Approve, GetRadioButtonAttributes(SaveStatus.Approve, Model.Data.NotReadyForApproval))
+                                <span id="changeTwo">Approve</span>
+                            </label>
                         }
                     }
 
@@ -90,7 +96,7 @@
                 @Html.Hidden("NotReadyForApproval", Model.Data.NotReadyForApproval)
             </fieldset>
         </form>
-     
+
     </div>
 </div>
 
@@ -130,9 +136,9 @@
 }
 
 
-    @section breadcrumb {
+@section breadcrumb {
     <div class="breadcrumbs">
-      <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to Apprentices" class="back-link">Back to Apprentices</a>
+        <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to Apprentices" class="back-link">Back to Apprentices</a>
     </div>
 }
 
