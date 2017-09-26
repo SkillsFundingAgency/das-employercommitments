@@ -72,12 +72,15 @@
                             @Html.TextBox("DateOfChange.Year", Model.Data.ChangeStatusViewModel.DateOfChange.Year, new { @class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "DateOfChange.Year" })
                         </div>
                     </div>
-
-                    <div class="panel panel-border-wide">
-                        <p class="strong">
-                            If you want to stop and restart this apprenticeship, enter the original start <br />date: @Model.Data.StartDate.ToFullDateEntryFormat().
-                        </p>
-                    </div>
+                    
+                    @if (Model.Data.EarliestDateIsStartDate)
+                    {
+                        <div class="panel panel-border-wide">
+                            <p class="strong">
+                                If you want to stop and restart this apprenticeship, enter the original start <br/>date: @Model.Data.EarliestDate.ToFullDateEntryFormat().
+                            </p>
+                        </div>
+                    }
                 </div>
 
                 <div class="form-group">
