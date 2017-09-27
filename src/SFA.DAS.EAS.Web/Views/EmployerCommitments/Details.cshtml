@@ -17,10 +17,10 @@
             @if (Model.Data.Errors.Any())
             {
                 <div class="validation-summary-errors error-summary">
-                    <h1 id="warning-summary" class="heading-medium warning-summary-heading">
+                    <h1 id="error-summary" class="heading-medium error-summary-heading">
                         There are errors on this page that need your attention
                     </h1>
-                    <ul class="max-funding-summary-list">
+                    <ul class="error-summary-list">
                         @foreach (var errorMsg in Model.Data.Errors)
                         {
                             <li>
@@ -188,11 +188,10 @@
                             {
                                 <div class="overlap-notification" id="error-message-@group.GroupId">
                                     <p class="heading-small">
-                                        @group.OverlapErrorCount @PluraliseApprentice(group.OverlapErrorCount).ToLower() with overlapping training dates
+                                        @_addS("Apprenticeship", group.OverlapErrorCount) can't have overlapping training dates
                                     </p>
                                     <p>
-                                        These apprentices already have records with overlapping training dates in the apprenticeship service.
-                                        Please check the details are correct. If you're unsure, contact the employer in the first instance.
+                                        Please update training dates to ensure they do not overlap.
                                     </p>
                                 </div>
                                
@@ -265,7 +264,7 @@
                                                         </a>
                                                     </td>
                                                 }
-                                                else if (!apprenticeship.IsWithinAcademicYearFundingPeriod && !apprenticeship.OverlappingApprenticeships.Any())
+                                                else if (!apprenticeship.IsWithinAcademicYearFundingPeriod && group.OverlapErrorCount == 0)
                                                 {
                                                     <td class="overlap-alert">
                                                         <a href="#error-message-@group.GroupId"

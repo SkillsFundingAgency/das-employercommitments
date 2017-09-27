@@ -373,13 +373,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     Data = new WhenToMakeChangeViewModel
                     {
-                        StartDate = data.Apprenticeship.StartDate.Value,
                         EarliestDate = earliestDate,
                         SkipStep = CanChangeDateStepBeSkipped(changeType, data),
                         ChangeStatusViewModel = new ChangeStatusViewModel
                         {
                             ChangeType = changeType
-                        }
+                        },
+                        EarliestDateIsStartDate = earliestDate.Equals(data.Apprenticeship.StartDate.Value)
                     }
                 };
 
