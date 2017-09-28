@@ -4460,7 +4460,7 @@ body input::-webkit-contacts-auto-fill-button {
 }
 
 .validation-summary-max-funding {
-  border-color: #2e358b;
+  border-color: #005ea5;
 }
 
 .validation-summary-max-funding #warning-summary {
@@ -4682,7 +4682,7 @@ h2 .float-right {
 }
 
 #edit-started-apprentice .approve-alert .alert-blue {
-  border-color: #2b8cc4;
+  border-color: #005ea5;
 }
 
 #edit-started-apprentice .last-child {
@@ -4857,6 +4857,20 @@ h2 .float-right {
 .column-two-thirds .error-summary h1,
 .column-full .error-summary h1 {
   display: block;
+}
+
+#finish-editing .alert-blue {
+  border: 5px solid #005ea5;
+  padding: 20px 15px 15px;
+  margin-top: 30px;
+}
+
+#finish-editing .alert-blue p.heading-medium {
+  margin-top: 0;
+}
+
+#finish-editing .alert-blue ul.list-bullet {
+  margin-bottom: 0;
 }
 
 @media only screen and (max-device-width: 640px), only screen and (max-device-width: 667px), only screen and (max-width: 480px) {
