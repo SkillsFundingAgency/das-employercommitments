@@ -54,22 +54,24 @@
                             You're about to pause this apprentice and any future
                             payments to their training provider. Any outstanding
                             payments for training up to this point will still be made.
-                        </p>                       
-                        <p class="lede">You'll be able to return and resume the apprentice again
-                            later.</p>
-                     
+                        </p>
+                        <p class="lede">
+                            You'll be able to return and resume the apprentice again
+                            later.
+                        </p>
+
                         break;
                     case ChangeStatusType.Resume:
-                        <p class="lede">
-                            You're about to resume this apprentice and any payments
-                            you've authorised to their training provider.
-                        </p>
-                        break;
-                    case ChangeStatusType.Stop:
-                        <p class="lede">
-                            You're about to stop this apprentice and any payments you've
-                            authorised to their training provider.
-                        </p>
+                        @*<p class="lede">
+                                You're about to resume this apprentice and any payments
+                                you've authorised to their training provider.
+                            </p>*@
+                break;
+            case ChangeStatusType.Stop:
+                <p class="lede">
+                    You're about to stop this apprentice and any payments you've
+                    authorised to their training provider.
+                </p>
 
                         <div class="panel panel-border-wide">
                             <p>You won't be able to undo this change.</p>
@@ -91,12 +93,22 @@
                         <td>Name</td>
                         <td class="bold">@Model.Data.ApprenticeName</td>
                     </tr>
-                    <tr>
-                        <td>Date of birth</td>
-                        <td class="bold">
-                            @Model.Data.DateOfBirth.ToGdsFormat()
-                        </td>
-                    </tr>
+                    @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Resume)
+                    {
+                        <tr>
+                            <td>Paused on</td>
+                            <td class="bold">
+                                @Model.Data.ChangeStatusViewModel.PauseDate.DateTime.Value.ToGdsFormat()
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Resume date</td>
+                            <td class="bold">
+                                @Model.Data.ChangeStatusViewModel.ResumeDate.DateTime.Value.ToGdsFormat()
+                            </td>
+                        </tr>
+
+                    }
                     @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Stop)
                     {
                         <tr>
@@ -108,10 +120,28 @@
                     }
                 </tbody>
             </table>
-
+            @if (Model.Data.ChangeStatusViewModel.AcademicYearBreakInTraining)
+            {
+                <div class="panel panel-border-wide">
+                        <strong  class="bold-small">
+                            You can only resume in this academic year.
+                            @Model.Data.ApprenticeName will resume on @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormat().
+                        </strong>
+                   
+                </div>
+            }
             <div class="form-group">
                 <fieldset>
-                    <legend class="form-label-bold">Would you like to @pageAction this apprentice?</legend>
+
+                    @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Resume)
+                    {
+                        <legend class="form-label-bold">@Model.Data.ChangeStatusViewModel.ChangeType.Value?</legend>
+                    }
+                    else
+                    {
+                        <legend class="form-label-bold">Would you like to @pageAction this apprentice ?</legend>
+                    }
+
 
                     @Html.ValidationMessage("ChangeConfirmed", "Please choose an option", new { id = "error-message-ChangeConfirmed" })
                     <label for=@($"ChangeConfirmed-True") class="block-label selection-button-radio">
@@ -134,7 +164,7 @@
         </form>
 
     </div>
-    <div class="column-one-thirds"> </div>   
+    <div class="column-one-thirds"> </div>
 </div>
 
 

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -27,7 +25,6 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDate;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.Exceptions;
@@ -60,7 +57,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private const string CookieName = "sfa-das-employerapprenticeshipsservice-apprentices";
 
         public EmployerManageApprenticeshipsOrchestrator(
-            IMediator mediator, 
+            IMediator mediator,
             IHashingService hashingService,
             IApprenticeshipMapper apprenticeshipMapper,
             IValidateApprovedApprenticeship approvedApprenticeshipValidator,
@@ -68,7 +65,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             ILog logger,
             ICookieStorageService<UpdateApprenticeshipViewModel> apprenticshipsViewModelCookieStorageService,
             IApprenticeshipFiltersMapper apprenticeshipFiltersMapper,
-			IAcademicYearDateProvider academicYearDateProvider) : base(mediator, hashingService, logger)
+            IAcademicYearDateProvider academicYearDateProvider) : base(mediator, hashingService, logger)
         {
             if (mediator == null)
                 throw new ArgumentNullException(nameof(mediator));
@@ -82,9 +79,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 throw new ArgumentNullException(nameof(logger));
             if (approvedApprenticeshipValidator == null)
                 throw new ArgumentNullException(nameof(approvedApprenticeshipValidator));
-            if(apprenticeshipFiltersMapper == null)
+            if (apprenticeshipFiltersMapper == null)
                 throw new ArgumentNullException(nameof(apprenticeshipFiltersMapper));
-            
+
             _mediator = mediator;
             _hashingService = hashingService;
             _apprenticeshipMapper = apprenticeshipMapper;
@@ -104,11 +101,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _logger.Info($"Getting On-programme apprenticeships for empployer: {accountId}");
 
             return await CheckUserAuthorization(async () =>
-                {
-                    if (filters.SearchInput?.Trim() == _searchPlaceholderText.Trim())
-                        filters.SearchInput = string.Empty;
+            {
+                if (filters.SearchInput?.Trim() == _searchPlaceholderText.Trim())
+                    filters.SearchInput = string.Empty;
 
-                    var searchQuery = _apprenticeshipFiltersMapper.MapToApprenticeshipSearchQuery(filters);
+                var searchQuery = _apprenticeshipFiltersMapper.MapToApprenticeshipSearchQuery(filters);
 
                 var searchResponse = await _mediator.SendAsync(new ApprenticeshipSearchQueryRequest
                 {
@@ -157,7 +154,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             return await CheckUserAuthorization(async () =>
             {
                 var data = await _mediator.SendAsync(
-                    new GetApprenticeshipQueryRequest {AccountId = accountId, ApprenticeshipId = apprenticeshipId});
+                    new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
 
                 var detailsViewModel =
                     _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(data.Apprenticeship);
@@ -165,7 +162,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 detailsViewModel.PendingDataLockRestart = data.Apprenticeship.DataLockCourseTriaged;
                 detailsViewModel.PendingDataLockChange = data.Apprenticeship.DataLockPriceTriaged;
 
-                return new OrchestratorResponse<ApprenticeshipDetailsViewModel> {Data = detailsViewModel};
+                return new OrchestratorResponse<ApprenticeshipDetailsViewModel> { Data = detailsViewModel };
             }, hashedAccountId, externalUserId);
         }
 
@@ -281,16 +278,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _logger.Debug($"Undoing pending update for : AccountId {accountId}, ApprenticeshipId: {apprenticeshipId}");
 
             await CheckUserAuthorization(async () =>
+            {
+                await _mediator.SendAsync(new UndoApprenticeshipUpdateCommand
                 {
-                    await _mediator.SendAsync(new UndoApprenticeshipUpdateCommand
-                    {
-                        AccountId = accountId,
-                        ApprenticeshipId = apprenticeshipId,
-                        UserId = userId,
-                        UserDisplayName = userName,
-                        UserEmailAddress = userEmail
-                    });
-                }
+                    AccountId = accountId,
+                    ApprenticeshipId = apprenticeshipId,
+                    UserId = userId,
+                    UserDisplayName = userName,
+                    UserEmailAddress = userEmail
+                });
+            }
                 , hashedAccountId, userId);
         }
 
@@ -310,12 +307,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 result.Add(error.Key, error.Value);
             }
-            
+
             return result;
         }
 
         public async Task<OrchestratorResponse<ChangeStatusChoiceViewModel>> GetChangeStatusChoiceNavigation(string hashedAccountId, string hashedApprenticeshipId, string externalUserId)
-           
+
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
@@ -364,16 +361,40 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 CheckApprenticeshipStateValidForChange(data.Apprenticeship);
 
-                var earliestDate = _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod
-                    && data.Apprenticeship.StartDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate
-                    ? _academicYearDateProvider.CurrentAcademicYearStartDate
-                    : data.Apprenticeship.StartDate.Value;
-                    
+                // ReSharper disable once PossibleInvalidOperationException
+                DateTime earliestDate = data.Apprenticeship.StartDate.Value;
+
+                if (changeType == ChangeStatusType.Resume && data.Apprenticeship.StartDate.Value > _currentDateTime.Now)
+                {
+                    earliestDate = data.Apprenticeship.PauseDate.Value;
+                }
+                 else if (changeType == ChangeStatusType.Resume )
+                {
+                    if ( data.Apprenticeship.PauseDate.HasValue)
+                    {
+                        earliestDate = data.Apprenticeship.PauseDate.Value;
+                        if (data.Apprenticeship.PauseDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate)
+                        {
+                            if (_currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod)
+                            {
+                                earliestDate = _academicYearDateProvider.CurrentAcademicYearStartDate;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    earliestDate = _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod
+                                       && data.Apprenticeship.StartDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate
+                        ? _academicYearDateProvider.CurrentAcademicYearStartDate
+                        : data.Apprenticeship.StartDate.Value;
+
+
+                }
                 return new OrchestratorResponse<WhenToMakeChangeViewModel>
                 {
                     Data = new WhenToMakeChangeViewModel
                     {
-                        StartDate = data.Apprenticeship.StartDate.Value,
                         EarliestDate = earliestDate,
                         SkipStep = CanChangeDateStepBeSkipped(changeType, data),
                         ChangeStatusViewModel = new ChangeStatusViewModel
@@ -385,7 +406,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             }, hashedAccountId, externalUserId);
         }
-
+        //DCM-754-Impact
         private bool CanChangeDateStepBeSkipped(ChangeStatusType changeType, GetApprenticeshipQueryResponse data)
         {
             return data.Apprenticeship.IsWaitingToStart(_currentDateTime) // Not started
@@ -406,7 +427,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 AccountId = accountId,
                 ApprenticeshipId = apprenticeshipId,
-                ChangeOption = (ChangeOption) model.WhenToMakeChange,
+                ChangeOption = (ChangeOption)model.WhenToMakeChange,
                 DateOfChange = model.DateOfChange.DateTime
             });
 
@@ -436,26 +457,46 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         });
 
                 CheckApprenticeshipStateValidForChange(data.Apprenticeship);
+                ChangeStatusViewModel viewmodel = new ChangeStatusViewModel
+                {
+                    DateOfChange = DetermineChangeDate(changeType, data.Apprenticeship, whenToMakeChange, dateOfChange),
+                    ChangeType = changeType,
+                    WhenToMakeChange = whenToMakeChange,
+                    ChangeConfirmed = false
+                };
 
+                if (changeType == ChangeStatusType.Resume &&  data.Apprenticeship.StartDate > _currentDateTime.Now)
+                {
+                    var academicYearBreakInTrainingHasOccured = data.Apprenticeship.PauseDate.HasValue &&
+                                                                 data.Apprenticeship.PauseDate < _academicYearDateProvider.CurrentAcademicYearStartDate &&
+                                                                 _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod;
+
+                    var pauseDate = new DateTimeViewModel(data.Apprenticeship.PauseDate);
+
+                    var resumeDate = new DateTimeViewModel(academicYearBreakInTrainingHasOccured
+                                                            ? _academicYearDateProvider.CurrentAcademicYearStartDate
+                                                            : pauseDate.DateTime.Value);
+
+                    viewmodel.AcademicYearBreakInTraining = academicYearBreakInTrainingHasOccured;
+                    viewmodel.PauseDate = pauseDate;
+                    viewmodel.ResumeDate = resumeDate;
+                
+                }
+                
                 return new OrchestratorResponse<ConfirmationStateChangeViewModel>
                 {
                     Data = new ConfirmationStateChangeViewModel
                     {
                         ApprenticeName = data.Apprenticeship.ApprenticeshipName,
+                        // ReSharper disable once PossibleInvalidOperationException
                         DateOfBirth = data.Apprenticeship.DateOfBirth.Value,
-                        ChangeStatusViewModel = new ChangeStatusViewModel
-                        {
-                            DateOfChange = DetermineChangeDate(changeType, data.Apprenticeship, whenToMakeChange, dateOfChange),
-                            ChangeType = changeType,
-                            WhenToMakeChange = whenToMakeChange,
-                            ChangeConfirmed = false
-                        }
+                        ChangeStatusViewModel = viewmodel
                     }
                 };
-
             }, hashedAccountId, externalUserId);
         }
 
+        //DCM-754-Impact
         public async Task UpdateStatus(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusViewModel model, string externalUserId, string userName, string userEmail)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
@@ -481,7 +522,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     UserId = externalUserId,
                     ApprenticeshipId = apprenticeshipId,
                     EmployerAccountId = accountId,
-                    ChangeType = (Domain.Models.Apprenticeship.ChangeStatusType) model.ChangeType,
+                    // ReSharper disable once PossibleInvalidOperationException
+                    ChangeType = (Domain.Models.Apprenticeship.ChangeStatusType)model.ChangeType,
+                    // ReSharper disable once PossibleInvalidOperationException
                     DateOfChange = model.DateOfChange.DateTime.Value,
                     UserEmailAddress = userEmail,
                     UserDisplayName = userName
@@ -506,6 +549,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         }
 
+        //DCM-754-Impact
         private DateTimeViewModel DetermineChangeDate(ChangeStatusType changeType, Apprenticeship apprenticeship, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange)
         {
             if (changeType == ChangeStatusType.Pause || changeType == ChangeStatusType.Resume)
@@ -578,7 +622,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             mappedModel.HashedAccountId = hashedAccountId;
             mappedModel.HashedApprenticeshipId = hashedApprenticeshipId;
 
-            return new OrchestratorResponse<UpdateApprenticeshipViewModel> {Data = mappedModel};
+            return new OrchestratorResponse<UpdateApprenticeshipViewModel> { Data = mappedModel };
         }
 
         public void CreateApprenticeshipViewModelCookie(UpdateApprenticeshipViewModel model)
@@ -594,17 +638,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
 
             await CheckUserAuthorization(async () =>
+            {
+                await _mediator.SendAsync(new ReviewApprenticeshipUpdateCommand
                 {
-                    await _mediator.SendAsync(new ReviewApprenticeshipUpdateCommand
-                    {
-                        AccountId = accountId,
-                        ApprenticeshipId = apprenticeshipId,
-                        UserId = userId,
-                        IsApproved = isApproved,
-                        UserDisplayName = userName,
-                        UserEmailAddress = userEmail
-                    });
-                }
+                    AccountId = accountId,
+                    ApprenticeshipId = apprenticeshipId,
+                    UserId = userId,
+                    IsApproved = isApproved,
+                    UserDisplayName = userName,
+                    UserEmailAddress = userEmail
+                });
+            }
                 , hashedAccountId, userId);
         }
 
@@ -625,41 +669,41 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(
                 async () =>
+                {
+
+                    var dataLockSummary = await _mediator.SendAsync(
+                        new GetDataLockSummaryQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
+
+                    //var dataLock = dataLocks.DataLockStatus
+                    //    .First(m => m.TriageStatus == TriageStatus.Restart);
+                    var dataLock = dataLockSummary.DataLockSummary
+                    .DataLockWithCourseMismatch.FirstOrDefault(m => m.TriageStatus == TriageStatus.Restart);
+
+                    if (dataLock == null)
+                        throw new InvalidStateException($"No data locks exist that can be restarted for apprenticeship: {apprenticeshipId}");
+
+                    var apprenticeship = await _mediator.SendAsync(
+                        new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
+
+                    var programms = await GetTrainingProgrammes();
+                    var currentProgram = programms.Single(m => m.Id == apprenticeship.Apprenticeship.TrainingCode);
+                    var newProgram = programms.Single(m => m.Id == dataLock.IlrTrainingCourseCode);
+
+                    return new OrchestratorResponse<DataLockStatusViewModel>
                     {
-
-                        var dataLockSummary = await _mediator.SendAsync(
-                            new GetDataLockSummaryQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
-
-                        //var dataLock = dataLocks.DataLockStatus
-                        //    .First(m => m.TriageStatus == TriageStatus.Restart);
-                        var dataLock =  dataLockSummary.DataLockSummary
-                        .DataLockWithCourseMismatch.FirstOrDefault(m => m.TriageStatus == TriageStatus.Restart);
-
-                        if (dataLock == null)
-                            throw new InvalidStateException($"No data locks exist that can be restarted for apprenticeship: {apprenticeshipId}");
-
-                        var apprenticeship = await _mediator.SendAsync(
-                            new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
-
-                        var programms = await GetTrainingProgrammes();
-                        var currentProgram = programms.Single(m => m.Id == apprenticeship.Apprenticeship.TrainingCode);
-                        var newProgram = programms.Single(m => m.Id == dataLock.IlrTrainingCourseCode);
-
-                        return new OrchestratorResponse<DataLockStatusViewModel>
-                            {
-                                Data = new DataLockStatusViewModel
-                                    {
-                                        HashedAccountId = hashedAccountId,
-                                        HashedApprenticeshipId = hashedApprenticeshipId,
-                                        CurrentProgram = currentProgram,
-                                        IlrProgram = newProgram,
-                                        PeriodStartData = dataLock.IlrEffectiveFromDate,
-                                        ProviderName = apprenticeship.Apprenticeship.ProviderName,
-                                        LearnerName = apprenticeship.Apprenticeship.ApprenticeshipName,
-                                        DateOfBirth = apprenticeship.Apprenticeship.DateOfBirth
-                                    }
-                           };
-            }, hashedAccountId, userId);
+                        Data = new DataLockStatusViewModel
+                        {
+                            HashedAccountId = hashedAccountId,
+                            HashedApprenticeshipId = hashedApprenticeshipId,
+                            CurrentProgram = currentProgram,
+                            IlrProgram = newProgram,
+                            PeriodStartData = dataLock.IlrEffectiveFromDate,
+                            ProviderName = apprenticeship.Apprenticeship.ProviderName,
+                            LearnerName = apprenticeship.Apprenticeship.ApprenticeshipName,
+                            DateOfBirth = apprenticeship.Apprenticeship.DateOfBirth
+                        }
+                    };
+                }, hashedAccountId, userId);
         }
 
         public async Task<OrchestratorResponse<DataLockStatusViewModel>> GetDataLockChangeStatus(string hashedAccountId, string hashedApprenticeshipId, string userId)
@@ -674,7 +718,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             new GetDataLockSummaryQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
 
                     if (dataLockSummary.DataLockSummary.DataLockWithOnlyPriceMismatch.Count() == 0)
-                            throw new InvalidStateException($"Apprenticeship does not contain any price data locks. Apprenticeship: {apprenticeshipId}");
+                        throw new InvalidStateException($"Apprenticeship does not contain any price data locks. Apprenticeship: {apprenticeshipId}");
 
                     var priceHistory = await _mediator.SendAsync(new GetPriceHistoryQueryRequest
                     {
@@ -702,24 +746,24 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 }, hashedAccountId, userId);
         }
 
-        public async Task ConfirmRequestChanges(string hashedAccountId,string hashedApprenticeshipId,string user,bool approved)
+        public async Task ConfirmRequestChanges(string hashedAccountId, string hashedApprenticeshipId, string user, bool approved)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
 
             await CheckUserAuthorization(
                 async () =>
-                    {
-                        await _mediator.SendAsync(
-                            new ResolveRequestedChangesCommand
-                            {
-                                AccountId = accountId,
-                                ApprenticeshipId = apprenticeshipId,
-                                Approved = approved,
-                                TriageStatus = TriageStatus.Change,
-                                UserId = user
-                            });
-                    },
+                {
+                    await _mediator.SendAsync(
+                        new ResolveRequestedChangesCommand
+                        {
+                            AccountId = accountId,
+                            ApprenticeshipId = apprenticeshipId,
+                            Approved = approved,
+                            TriageStatus = TriageStatus.Change,
+                            UserId = user
+                        });
+                },
                 hashedAccountId,
                 user);
         }
@@ -733,18 +777,18 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(
                 async () =>
+                {
+                    var data = await _mediator.SendAsync(new GetProviderPaymentPriorityRequest { AccountId = accountId });
+                    var result = _apprenticeshipMapper.MapPayment(data.Data);
+
+                    if (result.Items == null || result.Items.Count() < 2)
+                        return new OrchestratorResponse<PaymentOrderViewModel> { Status = HttpStatusCode.NotFound };
+
+                    return new OrchestratorResponse<PaymentOrderViewModel>
                     {
-                        var data = await _mediator.SendAsync(new GetProviderPaymentPriorityRequest { AccountId = accountId });
-                        var result = _apprenticeshipMapper.MapPayment(data.Data);
-
-                        if (result.Items == null || result.Items.Count() < 2)
-                            return new OrchestratorResponse<PaymentOrderViewModel> { Status = HttpStatusCode.NotFound };
-
-                        return new OrchestratorResponse<PaymentOrderViewModel>
-                                   {
-                                       Data = result
-                                   };
-                    }, hashedAccountId, user);
+                        Data = result
+                    };
+                }, hashedAccountId, user);
         }
 
         public async Task UpdatePaymentOrder(string hashedAccountId, IEnumerable<long> paymentItems, string user, string userName, string userEmail)
@@ -755,15 +799,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             await CheckUserAuthorization(
                 async () =>
+                {
+                    await _mediator.SendAsync(new UpdateProviderPaymentPriorityCommand
                     {
-                        await _mediator.SendAsync(new UpdateProviderPaymentPriorityCommand
-                                                {
-                                                    AccountId = accountId,
-                                                    ProviderPriorityOrder = paymentItems,
-                                                    UserId = user,
-                                                    UserEmailAddress = userEmail,
-                                                    UserDisplayName = userName
-                        });
+                        AccountId = accountId,
+                        ProviderPriorityOrder = paymentItems,
+                        UserId = user,
+                        UserEmailAddress = userEmail,
+                        UserDisplayName = userName
+                    });
 
                 }, hashedAccountId, user);
         }

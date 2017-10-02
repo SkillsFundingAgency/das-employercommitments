@@ -172,6 +172,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return View(response);
         }
 
+        //DCM-754-Impact
         [HttpPost]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/confirm", Name = "PostStatusChangeConfirmation")]
         public async Task<ActionResult> StatusChangeConfirmation(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date,Confirm")] ChangeStatusViewModel model)
@@ -247,9 +248,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
 
             var model = await _orchestrator.GetConfirmChangesModel(
-                apprenticeship.HashedAccountId, 
-                apprenticeship.HashedApprenticeshipId, 
-                OwinWrapper.GetClaimValue(@"sub"), 
+                apprenticeship.HashedAccountId,
+                apprenticeship.HashedApprenticeshipId,
+                OwinWrapper.GetClaimValue(@"sub"),
                 apprenticeship);
 
             var validatorResult = await _orchestrator.ValidateApprenticeship(apprenticeship, model.Data);
@@ -266,7 +267,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
                 return View("Edit", viewModel);
             }
-            
+
             if (!AnyChanges(model.Data))
             {
                 var viewModel = await _orchestrator.GetApprenticeshipForEdit(apprenticeship.HashedAccountId, apprenticeship.HashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
@@ -502,7 +503,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 Message = message,
                 Severity = FlashMessageSeverityLevel.Okay
             };
-            
+
             AddFlashMessageToCookie(flashmessage);
         }
 
@@ -541,9 +542,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 case ChangeStatusType.None:
                     return "Apprentice resumed.";
             }
-            return string.Empty;    
+            return string.Empty;
         }
-        
+
         private bool NeedReapproval(UpdateApprenticeshipViewModel model)
         {
             return
