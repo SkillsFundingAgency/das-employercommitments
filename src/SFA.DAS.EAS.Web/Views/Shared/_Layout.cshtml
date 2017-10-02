@@ -40,7 +40,7 @@
     <link href="@Styles.Url("~/bundles/screen")" media="all" rel="stylesheet" />
     <!--<![endif]-->
     @Scripts.Render("~/bundles/lodash")
-    
+
     <script>
         var sfa = sfa || {};
         sfa.dataLayer = sfa.dataLayer || {};
@@ -127,17 +127,6 @@
         </div>
     </header>
 
-    <div class="header-user">
-        <div class="header-inner">
-            <div class="phase-banner">
-                <p>
-                    <strong class="phase-tag">BETA</strong>
-                    <span>This is a new service – your <a href="https://www.surveymonkey.co.uk/r/2JPLQ9T" target="_blank">feedback</a> will help us to improve it. </span>
-                </p>
-            </div>   
-      </div>
-    </div>
-
     @if (HttpContext.Current.User.Identity.IsAuthenticated || Model?.GetType().GetProperty("HideHeaderSignInLink") == null)
     {
         <div id="floating-menu-holder">
@@ -164,7 +153,7 @@
 
                                     </ul>
                                 </li>
-                                    <li><a href="@Url.Action("SignOut", "Service")" role="menuitem" class="menu-main">Sign out</a></li>
+                                <li><a href="@Url.Action("SignOut", "Service")" role="menuitem" class="menu-main">Sign out</a></li>
 
                             }
                             else
@@ -180,25 +169,25 @@
             </div>
         </div> <!--/floating-menu-holder-->
     }
-        @if (HttpContext.Current.User.Identity.IsAuthenticated)
+    @if (HttpContext.Current.User.Identity.IsAuthenticated)
+    {
+        if (string.IsNullOrWhiteSpace(ViewBag.HideNav))
         {
-            if (string.IsNullOrWhiteSpace(ViewBag.HideNav))
-            {         
-                    <div class="header-organisation" role="navigation">
-                      
-                                <nav class="header-inner">
-                                    <ul role="menubar" id="global-nav-links">
-                                        <li><a href="@Url.ExternalUrlAction("teams")" class="@(ViewBag.Section == "home" ? "selected" : "")" role="menuitem">Home</a></li>
-                                        <li><a href="@Url.ExternalUrlAction("balance")" class="@(ViewBag.Section == "finance" ? "selected" : "")" role="menuitem">Finance</a></li>
-                                        <li><a href="@Url.Action("Index", "EmployerCommitments")" class="@(ViewBag.Section == "apprentices" ? "selected" : "")" role="menuitem">Apprentices</a></li>
-                                        <li><a href="@Url.ExternalUrlAction("teams", "view")" class="@(ViewBag.Section == "team" ? "selected" : "")" role="menuitem">Your team</a></li>
-                                        <li><a href="@Url.ExternalUrlAction("agreements")" class="@(ViewBag.Section == "organisations" ? "selected" : "")" role="menuitem">Your organisations and agreements</a></li>
-                                        <li><a href="@Url.ExternalUrlAction("schemes")" class="@(ViewBag.Section == "paye" ? "selected" : "")" role="menuitem">PAYE schemes</a></li>
-                                    </ul>
-                                </nav>              
-                        </div>         
-            }
+            <div class="header-organisation" role="navigation">
+
+                <nav class="header-inner">
+                    <ul role="menubar" id="global-nav-links">
+                        <li><a href="@Url.ExternalUrlAction("teams")" class="@(ViewBag.Section == "home" ? "selected" : "")" role="menuitem">Home</a></li>
+                        <li><a href="@Url.ExternalUrlAction("balance")" class="@(ViewBag.Section == "finance" ? "selected" : "")" role="menuitem">Finance</a></li>
+                        <li><a href="@Url.Action("Index", "EmployerCommitments")" class="@(ViewBag.Section == "apprentices" ? "selected" : "")" role="menuitem">Apprentices</a></li>
+                        <li><a href="@Url.ExternalUrlAction("teams", "view")" class="@(ViewBag.Section == "team" ? "selected" : "")" role="menuitem">Your team</a></li>
+                        <li><a href="@Url.ExternalUrlAction("agreements")" class="@(ViewBag.Section == "organisations" ? "selected" : "")" role="menuitem">Your organisations and agreements</a></li>
+                        <li><a href="@Url.ExternalUrlAction("schemes")" class="@(ViewBag.Section == "paye" ? "selected" : "")" role="menuitem">PAYE schemes</a></li>
+                    </ul>
+                </nav>
+            </div>
         }
+    }
     <main role="main" id="content">
 
         @RenderSection("breadcrumb", required: false)

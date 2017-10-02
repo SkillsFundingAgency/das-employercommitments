@@ -294,7 +294,7 @@ right: 0;
 }
 
 .validation-summary-max-funding{
-  border-color:$purple;
+  border-color: $govuk-blue;
   #warning-summary{
       margin-top:0;
   }
@@ -523,7 +523,7 @@ h2{
 #edit-started-apprentice{
   .approve-alert{   
       margin-top:30px;
-          .alert-blue{border-color:$link-hover-colour;}
+          .alert-blue{border-color: $govuk-blue;}
   }
   .last-child{
       margin-bottom:0px;
@@ -790,6 +790,18 @@ width: 100%;
     }
 
 } 
+
+#finish-editing{
+      .alert-blue{
+          border:5px solid $govuk-blue;
+          padding: 20px 15px 15px;
+          margin-top:30px;
+          p.heading-medium{margin-top:0;}
+          ul.list-bullet{
+              margin-bottom:0;
+        }
+      }
+}
 
 //all mobile media query breakpoints
 //==================================

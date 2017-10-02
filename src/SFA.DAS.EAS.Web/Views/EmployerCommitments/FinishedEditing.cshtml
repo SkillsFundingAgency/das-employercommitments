@@ -18,7 +18,7 @@
 
             @if (!Model.Data.CanApprove)
             {
-                <div class="panel panel-border-wide alert-default">
+                <div class="alert-blue">
                     <p class="heading-medium">You can't approve this cohort until: </p>
                     <ul class="list list-bullet">
                         @if (!Model.Data.HasSignedTheAgreement)
