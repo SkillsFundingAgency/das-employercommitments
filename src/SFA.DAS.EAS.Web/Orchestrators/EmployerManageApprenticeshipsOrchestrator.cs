@@ -368,7 +368,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     earliestDate = data.Apprenticeship.PauseDate.Value;
                 }
-                 else if (changeType == ChangeStatusType.Resume )
+                else if (changeType == ChangeStatusType.Resume )
                 {
                     if ( data.Apprenticeship.PauseDate.HasValue)
                     {
@@ -465,7 +465,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     ChangeConfirmed = false
                 };
 
-                if (changeType == ChangeStatusType.Resume &&  data.Apprenticeship.StartDate > _currentDateTime.Now)
+                if (changeType == ChangeStatusType.Resume )
                 {
                     var academicYearBreakInTrainingHasOccured = data.Apprenticeship.PauseDate.HasValue &&
                                                                  data.Apprenticeship.PauseDate < _academicYearDateProvider.CurrentAcademicYearStartDate &&
