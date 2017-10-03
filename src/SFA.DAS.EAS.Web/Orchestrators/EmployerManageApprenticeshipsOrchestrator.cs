@@ -407,7 +407,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             }, hashedAccountId, externalUserId);
         }
-        //DCM-754-Impact
+       
         private bool CanChangeDateStepBeSkipped(ChangeStatusType changeType, GetApprenticeshipQueryResponse data)
         {
             return data.Apprenticeship.IsWaitingToStart(_currentDateTime) // Not started
@@ -514,7 +514,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        //DCM-754-Impact
+       
         public async Task UpdateStatus(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusViewModel model, string externalUserId, string userName, string userEmail)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
@@ -567,7 +567,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         }
 
-        //DCM-754-Impact
+       
         private DateTimeViewModel DetermineChangeDate(ChangeStatusType changeType, Apprenticeship apprenticeship, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange)
         {
             if (changeType == ChangeStatusType.Pause || changeType == ChangeStatusType.Resume)

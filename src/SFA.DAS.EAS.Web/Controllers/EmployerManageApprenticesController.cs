@@ -172,7 +172,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return View(response);
         }
 
-        //DCM-754-Impact
+       
         [HttpPost]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/confirm", Name = "PostStatusChangeConfirmation")]
         public async Task<ActionResult> StatusChangeConfirmation(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date,Confirm")] ChangeStatusViewModel model)

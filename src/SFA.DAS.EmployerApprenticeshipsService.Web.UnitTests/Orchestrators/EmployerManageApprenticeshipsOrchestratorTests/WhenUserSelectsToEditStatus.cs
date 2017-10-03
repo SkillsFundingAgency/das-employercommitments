@@ -46,7 +46,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             response.Data.SkipStep.Should().BeTrue();
         }
 
-        //DCM-754-Impact-NoChange
         [Test]
         public async Task ThenShouldSkipSelectingChangeDateIfPausingLiveApprenticeship()
         {
@@ -56,7 +55,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             response.Data.SkipStep.Should().BeTrue();
         }
-        //DCM-754-Impact-NoChange
+
         [Test]
         public async Task ThenShouldSkipSelectingChangeDateIfResumingApprenticeship()
         {
@@ -66,7 +65,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             response.Data.SkipStep.Should().BeTrue();
         }
-        //DCM-754-Impact
+       
         [Test]
         public async Task ThenShouldSkipSelectingChangeDateIfPausingWaitingToStartApprenticeship()
         {
@@ -77,7 +76,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             response.Data.SkipStep.Should().BeTrue();
         }
-        //DCM-754-Impact
+       
         [Test]
         public async Task ThenShouldSkipSelectingChangeDateIfResumingWaitingToStartApprenticeship()
         {
@@ -88,7 +87,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             response.Data.SkipStep.Should().BeTrue();
         }
-        //DCM-754-Impact
+       
         [TestCase(PaymentStatus.Active)]
         [TestCase(PaymentStatus.Paused)]
         public async Task ThenShouldNotSkipSelectingChangeDateIfTrainingStarted(PaymentStatus paymentStatus)
@@ -112,7 +111,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             response.Data.EarliestDate.Should().Be(_testApprenticeship.StartDate.Value);
         }
-        //DCM-754-Impact
+       
         [TestCase("2016-03-01", "2017-10-19 18:00:00", "2017-08-01", Description = "R14 date has passed")]
         [TestCase("2016-03-01", "2017-10-17 18:00:00", "2016-03-01", Description = "R14 date has not passed")]
         public async Task ThenIfR14DateHasPassedThenEarliestDateShouldBeStartOfAcademicYear(DateTime startDate, DateTime now, DateTime expectedEarliestDate)
@@ -148,7 +147,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             response.Data.ChangeStatusViewModel.DateOfChange.DateTime.Should().Be(specifiedDate);
         }
 
-        //DCM-754-Impact
         [Test]
         public async Task IfPausingAndStartedTrainingThenChangeSpecifiedShouldSetDateOfChangeToTodaysDate()
         {
