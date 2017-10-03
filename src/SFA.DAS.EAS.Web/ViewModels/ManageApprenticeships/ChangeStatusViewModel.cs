@@ -22,7 +22,5 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public bool AcademicYearBreakInTraining { get; set; }
 
         public DateTimeViewModel PauseDate { get; set; }
-
-        public DateTimeViewModel ResumeDate { get; set; }
     }
 }

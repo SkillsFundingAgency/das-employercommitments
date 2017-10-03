@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using AutoMapper.Execution;
 using FluentValidation;
 using MediatR;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
@@ -368,9 +369,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     earliestDate = data.Apprenticeship.PauseDate.Value;
                 }
-                else if (changeType == ChangeStatusType.Resume )
+                else if (changeType == ChangeStatusType.Resume)
                 {
-                    if ( data.Apprenticeship.PauseDate.HasValue)
+                    if (data.Apprenticeship.PauseDate.HasValue)
                     {
                         earliestDate = data.Apprenticeship.PauseDate.Value;
                         if (data.Apprenticeship.PauseDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate)
@@ -465,24 +466,41 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     ChangeConfirmed = false
                 };
 
-                if (changeType == ChangeStatusType.Resume )
+                if (changeType == ChangeStatusType.Resume)
                 {
-                    var academicYearBreakInTrainingHasOccured = data.Apprenticeship.PauseDate.HasValue &&
-                                                                 data.Apprenticeship.PauseDate < _academicYearDateProvider.CurrentAcademicYearStartDate &&
-                                                                 _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod;
+                    DateTimeViewModel resumeDate = new DateTimeViewModel(data.Apprenticeship.PauseDate);
+                    DateTimeViewModel pauseDate = new DateTimeViewModel(data.Apprenticeship.PauseDate);
+                    bool academicYearBreakInTrainingHasOccured =false;
 
-                    var pauseDate = new DateTimeViewModel(data.Apprenticeship.PauseDate);
+                    if (!data.Apprenticeship.IsWaitingToStart(_currentDateTime))
+                    {
+                        if (data.Apprenticeship.PauseDate.HasValue)
+                        {
+                            if (data.Apprenticeship.PauseDate < _academicYearDateProvider.CurrentAcademicYearStartDate)
+                            {
+                                if (_currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod)
+                                {
+                                    academicYearBreakInTrainingHasOccured = true;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        resumeDate = new DateTimeViewModel(_currentDateTime.Now.Date);
+                    }
 
-                    var resumeDate = new DateTimeViewModel(academicYearBreakInTrainingHasOccured
-                                                            ? _academicYearDateProvider.CurrentAcademicYearStartDate
-                                                            : pauseDate.DateTime.Value);
+                    if (academicYearBreakInTrainingHasOccured &&  
+                             _academicYearDateProvider.LastAcademicYearFundingPeriod <= _currentDateTime.Now)
+                    {
+                        resumeDate = new DateTimeViewModel(_academicYearDateProvider.CurrentAcademicYearStartDate);
+                    }
 
                     viewmodel.AcademicYearBreakInTraining = academicYearBreakInTrainingHasOccured;
                     viewmodel.PauseDate = pauseDate;
-                    viewmodel.ResumeDate = resumeDate;
-                
+                    viewmodel.DateOfChange = resumeDate;
+
                 }
-                
                 return new OrchestratorResponse<ConfirmationStateChangeViewModel>
                 {
                     Data = new ConfirmationStateChangeViewModel
