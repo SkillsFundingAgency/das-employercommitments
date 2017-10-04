@@ -362,7 +362,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 CheckApprenticeshipStateValidForChange(data.Apprenticeship);
 
-                // ReSharper disable once PossibleInvalidOperationException
+                
                 DateTime earliestDate = data.Apprenticeship.StartDate.Value;
 
                 if (changeType == ChangeStatusType.Resume && data.Apprenticeship.StartDate.Value > _currentDateTime.Now)
@@ -506,7 +506,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ConfirmationStateChangeViewModel
                     {
                         ApprenticeName = data.Apprenticeship.ApprenticeshipName,
-                        // ReSharper disable once PossibleInvalidOperationException
+                        
                         DateOfBirth = data.Apprenticeship.DateOfBirth.Value,
                         ChangeStatusViewModel = viewmodel
                     }
@@ -540,9 +540,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     UserId = externalUserId,
                     ApprenticeshipId = apprenticeshipId,
                     EmployerAccountId = accountId,
-                    // ReSharper disable once PossibleInvalidOperationException
+                    
                     ChangeType = (Domain.Models.Apprenticeship.ChangeStatusType)model.ChangeType,
-                    // ReSharper disable once PossibleInvalidOperationException
+                    
                     DateOfChange = model.DateOfChange.DateTime.Value,
                     UserEmailAddress = userEmail,
                     UserDisplayName = userName
