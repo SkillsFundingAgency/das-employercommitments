@@ -388,7 +388,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 }
                 else if (resuming)
                 {
-                    earliestDate = mustInvokeAcademicYearFundingRule ? _academicYearDateProvider.CurrentAcademicYearStartDate: data.Apprenticeship.PauseDate.Value;
+                    earliestDate = mustInvokeAcademicYearFundingRule ? _academicYearDateProvider.CurrentAcademicYearStartDate : data.Apprenticeship.PauseDate.Value;
                 }
                 else
                 {
@@ -484,14 +484,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 };
 
                 bool notResuming = changeType != ChangeStatusType.Resume;
-                bool wasStartedThisAcademicYear = data.Apprenticeship.StartDate.Value >= _academicYearDateProvider.CurrentAcademicYearStartDate;
 
-                if (notResuming || wasStartedThisAcademicYear) return result;
-
+                if (notResuming) return result;
 
                 result.Data.ChangeStatusViewModel.PauseDate = new DateTimeViewModel(data.Apprenticeship.PauseDate, 90);
+                
 
-                result.Data.ChangeStatusViewModel.DateOfChange = new DateTimeViewModel(data.Apprenticeship.PauseDate, 90);
+                if (data.Apprenticeship.IsWaitingToStart(_currentDateTime))
+                {
+                    result.Data.ChangeStatusViewModel.DateOfChange = new DateTimeViewModel(_currentDateTime.Now.Date, 90);
+                    return result;
+                }
+
+                result.Data.ChangeStatusViewModel.DateOfChange = new DateTimeViewModel(data.Apprenticeship.PauseDate.Value, 90);
 
                 bool mustInvokeAcademicYearFundingRule = _academicYearValidator.Validate(data.Apprenticeship.PauseDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod;
 
@@ -501,7 +506,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 result.Data.ChangeStatusViewModel.DateOfChange = new DateTimeViewModel(_academicYearDateProvider.CurrentAcademicYearStartDate, 90);
 
-
+             
                 return result;
 
             }, hashedAccountId, externalUserId);
