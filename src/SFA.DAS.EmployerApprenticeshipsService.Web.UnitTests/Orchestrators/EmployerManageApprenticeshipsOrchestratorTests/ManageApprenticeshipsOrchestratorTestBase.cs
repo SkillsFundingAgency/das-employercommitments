@@ -33,18 +33,19 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         public void Setup()
         {
             MockMediator = new Mock<IMediator>();
+			
             MockDateTime = new Mock<ICurrentDateTime>();
-            AcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
-            ApprenticeshipMapper = new ApprenticeshipMapper(Mock.Of<IHashingService>(), MockDateTime.Object, MockMediator.Object);
-            _mockHashingService = new Mock<IHashingService>();
-
             MockDateTime.Setup(x => x.Now).Returns(DateTime.UtcNow);
+
+            AcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
             AcademicYearDateProvider.Setup(x => x.CurrentAcademicYearStartDate).Returns(new DateTime(2017, 8, 1));
             AcademicYearDateProvider.Setup(x => x.CurrentAcademicYearEndDate).Returns(new DateTime(2018, 7, 31));
             AcademicYearDateProvider.Setup(x => x.LastAcademicYearFundingPeriod).Returns(new DateTime(2017, 10, 18));
 
+            ApprenticeshipMapper = new ApprenticeshipMapper(Mock.Of<IHashingService>(), MockDateTime.Object, MockMediator.Object, Mock.Of<ILog>());
 
 
+            _mockHashingService = new Mock<IHashingService>();
             _mockHashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);
             _mockHashingService.Setup(x => x.DecodeValue("ABC321")).Returns(321L);
             _mockHashingService.Setup(x => x.DecodeValue("ABC456")).Returns(456L);

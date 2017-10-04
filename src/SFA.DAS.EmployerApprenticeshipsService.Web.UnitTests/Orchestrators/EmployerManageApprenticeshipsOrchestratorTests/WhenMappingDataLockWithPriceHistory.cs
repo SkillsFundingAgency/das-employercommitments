@@ -10,6 +10,7 @@ using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
@@ -24,7 +25,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             var hashingService = new Mock<IHashingService>();
             var currentDateTime = new Mock<ICurrentDateTime>();
             var mediator = new Mock<IMediator>();
-            _sut = new ApprenticeshipMapper(hashingService.Object, currentDateTime.Object, mediator.Object);
+            _sut = new ApprenticeshipMapper(hashingService.Object, currentDateTime.Object, mediator.Object, Mock.Of<ILog>());
         }
 
         [Test]
