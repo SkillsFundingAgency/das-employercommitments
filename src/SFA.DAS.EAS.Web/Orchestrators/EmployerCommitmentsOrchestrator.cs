@@ -33,9 +33,10 @@ using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.NLog.Logger;
-using WebGrease.Css.Extensions;
+
 using OrganisationType = SFA.DAS.Commitments.Api.Types.OrganisationType;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
+using SFA.DAS.EmployerCommitments.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
@@ -52,6 +53,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly IAcademicYearValidator _academicYearValidator;
         private readonly IAcademicYearDateProvider _academicYearDateProvider;
 
+        private readonly IApprenticeshipViewModelValidator _apprenticeshipValidation;
+
         public EmployerCommitmentsOrchestrator(
             IMediator mediator,
             IHashingService hashingService,
@@ -60,7 +63,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             ICommitmentMapper commitmentMapper,
             ILog logger,
             IAcademicYearValidator academicYearValidator,
-            IAcademicYearDateProvider academicYearDateProvider) : base(mediator, hashingService, logger)
+            IAcademicYearDateProvider academicYearDateProvider,
+            IApprenticeshipViewModelValidator apprenticeshipValidation) : base(mediator, hashingService, logger)
         {
             if (mediator == null)
                 throw new ArgumentNullException(nameof(mediator));
@@ -87,6 +91,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _logger = logger;
             _academicYearValidator = academicYearValidator;
             _academicYearDateProvider = academicYearDateProvider;
+            _apprenticeshipValidation = apprenticeshipValidation;
         }
 
         public async Task<OrchestratorResponse<CommitmentsIndexViewModel>> GetIndexViewModel(string hashedAccountId, string externalUserId)
@@ -1028,7 +1033,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Apprenticeship = new List<Apprenticeship> { await _apprenticeshipMapper.MapFrom(apprenticeship) }
                 });
 
-            return _apprenticeshipMapper.MapOverlappingErrors(overlappingErrors);
+            var result = _apprenticeshipMapper.MapOverlappingErrors(overlappingErrors);
+
+            foreach (var error in _apprenticeshipValidation.ValidateAcademicYear(apprenticeship))
+            {
+                result.AddIfNotExists(error.Key, error.Value);
+            }
+
+            return result;
         }
 
         public async Task DeleteApprenticeship(DeleteApprenticeshipConfirmationViewModel model, string externalUser, string userName, string userEmail)
