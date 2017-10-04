@@ -17,6 +17,7 @@ using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using CommitmentTrainingType = SFA.DAS.Commitments.Api.Types.Apprenticeship.Types.TrainingType;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 {
@@ -25,11 +26,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         private readonly IHashingService _hashingService;
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IMediator _mediator;
+        private readonly ILog _logger;
 
         public ApprenticeshipMapper(
             IHashingService hashingService,
             ICurrentDateTime currentDateTime,
-            IMediator mediator)
+            IMediator mediator,
+            ILog logger)
         {
             if (hashingService == null)
                 throw new ArgumentNullException(nameof(hashingService));
@@ -41,6 +44,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             _hashingService = hashingService;
             _currentDateTime = currentDateTime;
             _mediator = mediator;
+            _logger = logger;
         }
 
         public ApprenticeshipDetailsViewModel MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship)
@@ -143,6 +147,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                     apprenticeship.TrainingType = viewModel.TrainingType;
                     apprenticeship.TrainingCode = viewModel.TrainingCode;
                     apprenticeship.TrainingName = viewModel.TrainingName;
+
+                    _logger.Warn($"Apprentice training course has expired. TrainingName: {viewModel.TrainingName}, TrainingCode: {viewModel.TrainingCode}, Employer Ref: {viewModel.EmployerRef}, ApprenticeshipId: {apprenticeship.Id}, Apprenticeship ULN: {viewModel.ULN}");
                 }
                
             }
@@ -264,6 +270,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                     model.TrainingType = edited.TrainingType;
                     model.TrainingCode = edited.TrainingCode;
                     model.TrainingName = edited.TrainingName;
+
+                    _logger.Warn($"Apprentice training course has expired. TrainingName: {edited.TrainingName}, TrainingCode: {edited.TrainingCode}, Employer Ref: {edited.EmployerRef}, Apprenticeship ULN: {edited.ULN}");
                 }
                
             }
