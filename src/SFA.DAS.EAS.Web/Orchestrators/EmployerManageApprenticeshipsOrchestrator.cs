@@ -31,6 +31,7 @@ using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.Exceptions;
+using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
@@ -54,7 +55,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         private readonly ICookieStorageService<UpdateApprenticeshipViewModel>
             _apprenticshipsViewModelCookieStorageService;
-
         private string _searchPlaceholderText;
 
         private const string CookieName = "sfa-das-employerapprenticeshipsservice-apprentices";
@@ -68,7 +68,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             ILog logger,
             ICookieStorageService<UpdateApprenticeshipViewModel> apprenticshipsViewModelCookieStorageService,
             IApprenticeshipFiltersMapper apprenticeshipFiltersMapper,
-			IAcademicYearDateProvider academicYearDateProvider) : base(mediator, hashingService, logger)
+			IAcademicYearDateProvider academicYearDateProvider) 
+            : base(mediator, hashingService, logger)
         {
             if (mediator == null)
                 throw new ArgumentNullException(nameof(mediator));
@@ -310,7 +311,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 result.Add(error.Key, error.Value);
             }
-            
+
+            foreach (var error in _approvedApprenticeshipValidator.ValidateAcademicYear(updatedModel))
+            {
+                result.AddIfNotExists(error.Key, error.Value);
+            }
+
             return result;
         }
 
