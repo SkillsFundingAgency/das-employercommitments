@@ -401,7 +401,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         ChangeStatusViewModel = new ChangeStatusViewModel
                         {
                             ChangeType = changeType
-                        }
+                        },
+                        EarliestDateIsStartDate = earliestDate.Equals(data.Apprenticeship.StartDate.Value)
                     }
                 };
 

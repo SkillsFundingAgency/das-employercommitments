@@ -116,8 +116,12 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
                 .WithDefaultHeaders()
                 .Build();
 
-            For<IEmployerCommitmentApi>().Use<EmployerCommitmentApi>().
-                Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
+            For<IEmployerCommitmentApi>().Use<EmployerCommitmentApi>()
+                .Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
+                .Ctor<HttpClient>().Is(httpClient);
+
+            For<IValidationApi>().Use<ValidationApi>()
+                .Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
                 .Ctor<HttpClient>().Is(httpClient);
 
             For<IValidationApi>().Use<ValidationApi>()
