@@ -9,6 +9,7 @@ using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AccountTeam;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
+using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
@@ -25,6 +26,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         protected Mock<IAcademicYearDateProvider> _mockAcademicYearDateProvider;
         protected Mock<IMediator> MockMediator;
         protected EmployerCommitmentsOrchestrator EmployerCommitmentOrchestrator;
+        protected Mock<IApprenticeshipViewModelValidator> _mockApprenticeshipValidator;
 
         [SetUp]
         public void Setup()
@@ -36,6 +38,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             _mockCommitmentMapper = new Mock<ICommitmentMapper>();
             _mockAcademicYearValidator = new Mock<IAcademicYearValidator>();
             _mockAcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
+            _mockApprenticeshipValidator = new Mock<IApprenticeshipViewModelValidator>();
 
             _mockHashingService = new Mock<IHashingService>();
             _mockHashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);
@@ -64,7 +67,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 _mockCommitmentMapper.Object,
                 _mockLogger.Object,
                 _mockAcademicYearValidator.Object,
-                _mockAcademicYearDateProvider.Object);
+                _mockAcademicYearDateProvider.Object,
+                _mockApprenticeshipValidator.Object);
         }
     }
 }
