@@ -112,7 +112,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             response.Data.EarliestDate.Should().Be(_testApprenticeship.StartDate.Value);
         }
        
-        [TestCase("2016-03-01", "2017-10-19 18:00:00", "2017-08-01", Description = "R14 date has passed")]
+        [TestCase("2016-03-01", "2017-10-19 18:00:01", "2017-08-01", Description = "R14 date has passed")]
         [TestCase("2016-03-01", "2017-10-17 18:00:00", "2016-03-01", Description = "R14 date has not passed")]
         public async Task ThenIfR14DateHasPassedThenEarliestDateShouldBeStartOfAcademicYear(DateTime startDate, DateTime now, DateTime expectedEarliestDate)
         {
@@ -179,96 +179,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             response.Data.ChangeStatusViewModel.DateOfChange.DateTime.Should().Be(DateTime.UtcNow.Date);
         }
 
-        [Test]
-        public async Task IfResumingAStartedApprenticeshipAfterPauseInLastAcademicYearAndResumeIsBeforeR14CutoffTimeThenDateOfchangeIsPauseDate()
-        {
-
-            _testApprenticeship.StartDate = AcademicYearDateProvider.Object.CurrentAcademicYearStartDate.AddMonths(-6); // Apprenticeship was started last academic year
-            _testApprenticeship.PauseDate = AcademicYearDateProvider.Object.CurrentAcademicYearStartDate.AddMonths(-3); // Apprenticeship was was paused last academic year
-
-            MockDateTime.Setup(x => x.Now).Returns(AcademicYearDateProvider.Object.LastAcademicYearFundingPeriod.AddSeconds(-1)); // resume before r14 cutoff
-
-            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await Orchestrator.GetChangeStatusConfirmationViewModel(
-                "ABC123",
-                "CDE321",
-                ChangeStatusType.Resume,
-                WhenToMakeChangeOptions.Immediately,
-                null,
-                "user123");
-
-
-
-            response.Data.ChangeStatusViewModel.DateOfChange.DateTime.Should()
-                .Be(_testApprenticeship.PauseDate);
-        }
-
-        [Test]
-        public async Task IfResumingAStartedApprenticeshipAfterPauseInLastAcademicYearAndResumeIsAfterR14CutoffTimeThenDateOfchangeIsStartOfacademicYear()
-        {
-            _testApprenticeship.StartDate = AcademicYearDateProvider.Object.CurrentAcademicYearStartDate.AddMonths(-6); // Apprenticeship was started last academic year
-            _testApprenticeship.PauseDate = AcademicYearDateProvider.Object.CurrentAcademicYearStartDate.AddMonths(-3); // Apprenticeship was was paused last academic year
-
-            MockDateTime.Setup(x => x.Now).Returns(AcademicYearDateProvider.Object.LastAcademicYearFundingPeriod.AddSeconds(1)); // resume after r14 cutoff
-            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await Orchestrator.GetChangeStatusConfirmationViewModel(
-                "ABC123",
-                "CDE321",
-                ChangeStatusType.Resume,
-                WhenToMakeChangeOptions.Immediately,
-                null,
-                "user123");
-
-
-
-            response.Data.ChangeStatusViewModel.DateOfChange.DateTime.Should().Be(AcademicYearDateProvider.Object.CurrentAcademicYearStartDate);
-
-        }
-
-
-        [Test]
-        public async Task IfResumingAnAwaitingApprenticeshipAfterPauseInLastAcademicYearAndResumeIsBeforeR14CutoffTimeThenDateOfChangeIsTodaysDate()
-        {
-
-            _testApprenticeship.StartDate = AcademicYearDateProvider.Object.CurrentAcademicYearStartDate.AddMonths(6); // Apprenticeship was started last academic year
-            _testApprenticeship.PauseDate = AcademicYearDateProvider.Object.CurrentAcademicYearStartDate.AddMonths(-3); // Apprenticeship was was paused last academic year
-
-            MockDateTime.Setup(x => x.Now).Returns(AcademicYearDateProvider.Object.LastAcademicYearFundingPeriod.AddSeconds(-1)); // resume before r14 cutoff
-
-            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await Orchestrator.GetChangeStatusConfirmationViewModel(
-                "ABC123",
-                "CDE321",
-                ChangeStatusType.Resume,
-                WhenToMakeChangeOptions.Immediately,
-                null,
-                "user123");
-
-
-
-            response.Data.ChangeStatusViewModel.DateOfChange.DateTime.Should().Be(MockDateTime.Object.Now.Date);
-        }
-
-        [Test]
-        public async Task IfResumingAnAwaitingApprenticeshipAfterPauseInLastAcademicYearAndResumeIsAfterR14CutoffTimeThenDateOfChangeIsTodaysDate()
-        {
-            _testApprenticeship.StartDate = AcademicYearDateProvider.Object.CurrentAcademicYearStartDate.AddMonths(6); // Apprenticeship was started last academic year
-            _testApprenticeship.PauseDate = AcademicYearDateProvider.Object.CurrentAcademicYearStartDate.AddMonths(-3); // Apprenticeship was was paused last academic year
-
-            MockDateTime.Setup(x => x.Now).Returns(AcademicYearDateProvider.Object.LastAcademicYearFundingPeriod.AddSeconds(1)); // resume after r14 cutoff
-
-            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await Orchestrator.GetChangeStatusConfirmationViewModel(
-                "ABC123", 
-                "CDE321", 
-                ChangeStatusType.Resume, 
-                WhenToMakeChangeOptions.Immediately, 
-                null, 
-                "user123");
-
-
-
-            response.Data.ChangeStatusViewModel.DateOfChange.DateTime.Should().Be(MockDateTime.Object.Now.Date);
-
-        }
-
-
+     
 
     }
 }

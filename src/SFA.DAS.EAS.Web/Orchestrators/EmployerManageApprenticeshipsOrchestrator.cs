@@ -26,6 +26,7 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDate;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.Exceptions;
@@ -50,7 +51,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         private readonly IValidateApprovedApprenticeship _approvedApprenticeshipValidator;
         private readonly IAcademicYearDateProvider _academicYearDateProvider;
-
+        private readonly IAcademicYearValidator _academicYearValidator;
         private readonly ICookieStorageService<UpdateApprenticeshipViewModel>
             _apprenticshipsViewModelCookieStorageService;
         private string _searchPlaceholderText;
@@ -66,7 +67,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             ILog logger,
             ICookieStorageService<UpdateApprenticeshipViewModel> apprenticshipsViewModelCookieStorageService,
             IApprenticeshipFiltersMapper apprenticeshipFiltersMapper,
-			IAcademicYearDateProvider academicYearDateProvider) 
+            IAcademicYearDateProvider academicYearDateProvider,
+            IAcademicYearValidator academicYearValidator)
             : base(mediator, hashingService, logger)
         {
             if (mediator == null)
@@ -94,6 +96,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _apprenticeshipFiltersMapper = apprenticeshipFiltersMapper;
             _searchPlaceholderText = "Enter a name";
             _academicYearDateProvider = academicYearDateProvider;
+            _academicYearValidator = academicYearValidator;
         }
 
         public async Task<OrchestratorResponse<ManageApprenticeshipsViewModel>> GetApprenticeships(
@@ -368,26 +371,24 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 CheckApprenticeshipStateValidForChange(data.Apprenticeship);
 
-                
+
                 DateTime earliestDate = data.Apprenticeship.StartDate.Value;
 
-                if (changeType == ChangeStatusType.Resume && data.Apprenticeship.StartDate.Value > _currentDateTime.Now)
+                var resuming = changeType == ChangeStatusType.Resume;
+
+                var pausedDate = data.Apprenticeship.PauseDate.HasValue
+                    ? data.Apprenticeship.PauseDate.Value
+                    : _currentDateTime.Now.Date;
+
+                bool mustInvokeAcademicYearFundingRule = _academicYearValidator.Validate(pausedDate) == AcademicYearValidationResult.Success;
+
+                if (resuming && data.Apprenticeship.IsWaitingToStart(_currentDateTime))
                 {
                     earliestDate = data.Apprenticeship.PauseDate.Value;
                 }
-                else if (changeType == ChangeStatusType.Resume)
+                else if (resuming)
                 {
-                    if (data.Apprenticeship.PauseDate.HasValue)
-                    {
-                        earliestDate = data.Apprenticeship.PauseDate.Value;
-                        if (data.Apprenticeship.PauseDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate)
-                        {
-                            if (_currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod)
-                            {
-                                earliestDate = _academicYearDateProvider.CurrentAcademicYearStartDate;
-                            }
-                        }
-                    }
+                    earliestDate = mustInvokeAcademicYearFundingRule ? _academicYearDateProvider.CurrentAcademicYearStartDate: data.Apprenticeship.PauseDate.Value;
                 }
                 else
                 {
@@ -395,9 +396,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                                        && data.Apprenticeship.StartDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate
                         ? _academicYearDateProvider.CurrentAcademicYearStartDate
                         : data.Apprenticeship.StartDate.Value;
-
-
                 }
+
                 return new OrchestratorResponse<WhenToMakeChangeViewModel>
                 {
                     Data = new WhenToMakeChangeViewModel
@@ -414,7 +414,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             }, hashedAccountId, externalUserId);
         }
-       
+
         private bool CanChangeDateStepBeSkipped(ChangeStatusType changeType, GetApprenticeshipQueryResponse data)
         {
             return data.Apprenticeship.IsWaitingToStart(_currentDateTime) // Not started
@@ -465,63 +465,49 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         });
 
                 CheckApprenticeshipStateValidForChange(data.Apprenticeship);
-                ChangeStatusViewModel viewmodel = new ChangeStatusViewModel
-                {
-                    DateOfChange = DetermineChangeDate(changeType, data.Apprenticeship, whenToMakeChange, dateOfChange),
-                    ChangeType = changeType,
-                    WhenToMakeChange = whenToMakeChange,
-                    ChangeConfirmed = false
-                };
 
-                if (changeType == ChangeStatusType.Resume)
-                {
-                    DateTimeViewModel resumeDate = new DateTimeViewModel(data.Apprenticeship.PauseDate);
-                    DateTimeViewModel pauseDate = new DateTimeViewModel(data.Apprenticeship.PauseDate);
-                    bool academicYearBreakInTrainingHasOccured =false;
-
-                    if (!data.Apprenticeship.IsWaitingToStart(_currentDateTime))
-                    {
-                        if (data.Apprenticeship.PauseDate.HasValue)
-                        {
-                            if (data.Apprenticeship.PauseDate < _academicYearDateProvider.CurrentAcademicYearStartDate)
-                            {
-                                if (_currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod)
-                                {
-                                    academicYearBreakInTrainingHasOccured = true;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        resumeDate = new DateTimeViewModel(_currentDateTime.Now.Date);
-                    }
-
-                    if (academicYearBreakInTrainingHasOccured &&  
-                             _academicYearDateProvider.LastAcademicYearFundingPeriod <= _currentDateTime.Now)
-                    {
-                        resumeDate = new DateTimeViewModel(_academicYearDateProvider.CurrentAcademicYearStartDate);
-                    }
-
-                    viewmodel.AcademicYearBreakInTraining = academicYearBreakInTrainingHasOccured;
-                    viewmodel.PauseDate = pauseDate;
-                    viewmodel.DateOfChange = resumeDate;
-
-                }
-                return new OrchestratorResponse<ConfirmationStateChangeViewModel>
+                var result = new OrchestratorResponse<ConfirmationStateChangeViewModel>
                 {
                     Data = new ConfirmationStateChangeViewModel
                     {
                         ApprenticeName = data.Apprenticeship.ApprenticeshipName,
-                        
+
                         DateOfBirth = data.Apprenticeship.DateOfBirth.Value,
-                        ChangeStatusViewModel = viewmodel
+                        ChangeStatusViewModel = new ChangeStatusViewModel
+                        {
+                            DateOfChange = DetermineChangeDate(changeType, data.Apprenticeship, whenToMakeChange, dateOfChange),
+                            ChangeType = changeType,
+                            WhenToMakeChange = whenToMakeChange,
+                            ChangeConfirmed = false
+                        }
                     }
                 };
+
+                bool notResuming = changeType != ChangeStatusType.Resume;
+                bool wasStartedThisAcademicYear = data.Apprenticeship.StartDate.Value >= _academicYearDateProvider.CurrentAcademicYearStartDate;
+
+                if (notResuming || wasStartedThisAcademicYear) return result;
+
+
+                result.Data.ChangeStatusViewModel.PauseDate = new DateTimeViewModel(data.Apprenticeship.PauseDate, 90);
+
+                result.Data.ChangeStatusViewModel.DateOfChange = new DateTimeViewModel(data.Apprenticeship.PauseDate, 90);
+
+                bool mustInvokeAcademicYearFundingRule = _academicYearValidator.Validate(data.Apprenticeship.PauseDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod;
+
+                if (!mustInvokeAcademicYearFundingRule) return result;
+
+                result.Data.ChangeStatusViewModel.AcademicYearBreakInTraining = true;
+
+                result.Data.ChangeStatusViewModel.DateOfChange = new DateTimeViewModel(_academicYearDateProvider.CurrentAcademicYearStartDate, 90);
+
+
+                return result;
+
             }, hashedAccountId, externalUserId);
         }
 
-       
+
         public async Task UpdateStatus(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusViewModel model, string externalUserId, string userName, string userEmail)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
@@ -547,9 +533,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     UserId = externalUserId,
                     ApprenticeshipId = apprenticeshipId,
                     EmployerAccountId = accountId,
-                    
+
                     ChangeType = (Domain.Models.Apprenticeship.ChangeStatusType)model.ChangeType,
-                    
+
                     DateOfChange = model.DateOfChange.DateTime.Value,
                     UserEmailAddress = userEmail,
                     UserDisplayName = userName
@@ -574,7 +560,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         }
 
-       
+
         private DateTimeViewModel DetermineChangeDate(ChangeStatusType changeType, Apprenticeship apprenticeship, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange)
         {
             if (changeType == ChangeStatusType.Pause || changeType == ChangeStatusType.Resume)
