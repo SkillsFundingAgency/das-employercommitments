@@ -11,6 +11,7 @@ using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AccountTeam;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
+using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
@@ -41,7 +42,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 Mock.Of<ICommitmentMapper>(),
                 logger.Object,
                 Mock.Of<IAcademicYearValidator>(),
-                Mock.Of<IAcademicYearDateProvider>());
+                Mock.Of<IAcademicYearDateProvider>(),
+                Mock.Of<IApprenticeshipViewModelValidator>());
         }
 
         [Test]
