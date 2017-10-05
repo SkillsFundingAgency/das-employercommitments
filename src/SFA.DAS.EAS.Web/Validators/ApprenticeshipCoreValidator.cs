@@ -95,8 +95,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                 .NotNull().WithMessage(_validationText.LearnStartDate01.Text).WithErrorCode(_validationText.LearnStartDate01.ErrorCode)
                 .Must(ValidateDateWithoutDay).WithMessage(_validationText.LearnStartDate01.Text).WithErrorCode(_validationText.LearnStartDate01.ErrorCode)
                 .Must(NotBeBeforeMay2017).WithMessage(_validationText.LearnStartDate02.Text).WithErrorCode(_validationText.LearnStartDate02.ErrorCode)
-                .Must(StartDateWithinAYearOfTheEndOfTheCurrentTeachingYear).WithMessage(_validationText.LearnStartDate05.Text).WithErrorCode(_validationText.LearnStartDate05.ErrorCode)
-                .Must(BeWithinAcademicYearFundingPeriod).WithMessage(_validationText.AcademicYearStartDate01.Text).WithErrorCode(_validationText.AcademicYearStartDate01.ErrorCode);
+                .Must(StartDateWithinAYearOfTheEndOfTheCurrentTeachingYear).WithMessage(_validationText.LearnStartDate05.Text).WithErrorCode(_validationText.LearnStartDate05.ErrorCode);
         }
 
         protected virtual void ValidateEndDate()
@@ -172,18 +171,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         {
             // Check the day has value as the view model supports just month and year entry
             if (date.DateTime == null || !date.Day.HasValue) return false;
-
-            return true;
-        }
-
-        private bool BeWithinAcademicYearFundingPeriod(DateTimeViewModel startDate)
-        {
-            var result = _academicYearValidator.Validate(startDate.DateTime.Value);
-
-            if (result == AcademicYearValidationResult.NotWithinFundingPeriod)
-            {
-                return false;
-            }
 
             return true;
         }

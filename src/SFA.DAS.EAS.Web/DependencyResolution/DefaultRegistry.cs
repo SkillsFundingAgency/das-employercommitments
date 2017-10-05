@@ -83,6 +83,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<ICache>().Use<InMemoryCache>(); //RedisCache
 
             For<IApprenticeshipInfoServiceConfiguration>().Use(config.ApprenticeshipInfoService);
+            For<IApprenticeshipViewModelValidator>().Use<ApprenticeshipViewModelValidator>();
             For<IValidateApprovedApprenticeship>().Use<ApprovedApprenticeshipViewModelValidator>();
                 
             SetUpCommitmentApi(config);

@@ -16,6 +16,8 @@ using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
+using CommitmentTrainingType = SFA.DAS.Commitments.Api.Types.Apprenticeship.Types.TrainingType;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 {
@@ -24,11 +26,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         private readonly IHashingService _hashingService;
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IMediator _mediator;
+        private readonly ILog _logger;
 
         public ApprenticeshipMapper(
             IHashingService hashingService,
             ICurrentDateTime currentDateTime,
-            IMediator mediator)
+            IMediator mediator,
+            ILog logger)
         {
             if (hashingService == null)
                 throw new ArgumentNullException(nameof(hashingService));
@@ -40,6 +44,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             _hashingService = hashingService;
             _currentDateTime = currentDateTime;
             _mediator = mediator;
+            _logger = logger;
         }
 
         public ApprenticeshipDetailsViewModel MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship)
@@ -130,9 +135,22 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             if (!string.IsNullOrWhiteSpace(viewModel.TrainingCode))
             {
                 var training = await GetTrainingProgramme(viewModel.TrainingCode);
-                apprenticeship.TrainingType = training is Standard ? TrainingType.Standard : TrainingType.Framework;
-                apprenticeship.TrainingCode = viewModel.TrainingCode;
-                apprenticeship.TrainingName = training.Title;
+
+                if(training != null)
+                {
+                    apprenticeship.TrainingType = training is Standard ? TrainingType.Standard : TrainingType.Framework;
+                    apprenticeship.TrainingCode = viewModel.TrainingCode;
+                    apprenticeship.TrainingName = training.Title;
+                }
+                else
+                {
+                    apprenticeship.TrainingType = viewModel.TrainingType;
+                    apprenticeship.TrainingCode = viewModel.TrainingCode;
+                    apprenticeship.TrainingName = viewModel.TrainingName;
+
+                    _logger.Warn($"Apprentice training course has expired. TrainingName: {viewModel.TrainingName}, TrainingCode: {viewModel.TrainingCode}, Employer Ref: {viewModel.EmployerRef}, ApprenticeshipId: {apprenticeship.Id}, Apprenticeship ULN: {viewModel.ULN}");
+                }
+               
             }
 
             return apprenticeship;
@@ -240,9 +258,22 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             if (!string.IsNullOrWhiteSpace(edited.TrainingCode) && original.TrainingCode != edited.TrainingCode)
             {
                 var training = await GetTrainingProgramme(edited.TrainingCode);
-                model.TrainingType = training is Standard ? TrainingType.Standard : TrainingType.Framework;
-                model.TrainingCode = edited.TrainingCode;
-                model.TrainingName = training.Title;
+
+                if (training != null)
+                {
+                    model.TrainingType = training is Standard ? TrainingType.Standard : TrainingType.Framework;
+                    model.TrainingCode = edited.TrainingCode;
+                    model.TrainingName = training.Title;
+                }
+                else
+                {
+                    model.TrainingType = edited.TrainingType;
+                    model.TrainingCode = edited.TrainingCode;
+                    model.TrainingName = edited.TrainingName;
+
+                    _logger.Warn($"Apprentice training course has expired. TrainingName: {edited.TrainingName}, TrainingCode: {edited.TrainingCode}, Employer Ref: {edited.EmployerRef}, Apprenticeship ULN: {edited.ULN}");
+                }
+               
             }
 
             return model;
@@ -300,7 +331,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             // TODO: LWA - Need to check is this is called multiple times in a single request.
             var trainingProgrammes = await _mediator.SendAsync(new GetTrainingProgrammesQueryRequest());
 
-            return trainingProgrammes.TrainingProgrammes.Where(x => x.Id == trainingCode).Single();
+            return trainingProgrammes.TrainingProgrammes.FirstOrDefault(x => x.Id == trainingCode);
         }
 
         private static string NullableDecimalToString(decimal? item)
