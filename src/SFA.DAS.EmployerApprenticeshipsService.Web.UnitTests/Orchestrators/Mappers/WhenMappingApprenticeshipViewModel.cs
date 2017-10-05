@@ -42,10 +42,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void ShouldNotHaveLockedStatusIfNoDataLocksSuccesFound()
         {
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1) };
-            var dataLocks = new List<DataLockStatus>
-                                {
-                                    new DataLockStatus { ErrorCode = DataLockErrorCode.Dlock03 }
-                                };
+            var dataLocks = new List<DataLockStatus> { new DataLockStatus { ErrorCode = DataLockErrorCode.Dlock03 } };
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, dataLocks);
 
             viewModel.IsLockedForUpdated.Should().BeFalse();

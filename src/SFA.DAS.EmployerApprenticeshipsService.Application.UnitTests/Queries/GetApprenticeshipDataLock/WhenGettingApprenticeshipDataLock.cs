@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetApprentic
 
             var response = await handler.Handle(new GetApprenticeshipDataLockRequest { AccountId = 666, ApprenticeshipId = 123L });
 
-            response.DataLockStatus.Count().Should().Be(1);
+            response.DataLockStatus.Count().Should().Be(4);
         }
     }
 }

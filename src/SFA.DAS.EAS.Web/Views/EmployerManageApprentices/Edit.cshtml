@@ -1,5 +1,4 @@
-﻿@using System.Diagnostics.Eventing.Reader
-@model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<SFA.DAS.EmployerCommitments.Web.ViewModels.ExtendedApprenticeshipViewModel>
+﻿@model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<SFA.DAS.EmployerCommitments.Web.ViewModels.ExtendedApprenticeshipViewModel>
 
 @{
     ViewBag.Title = "Edit Apprentice detail";
@@ -23,7 +22,13 @@
                 <fieldset>
                     <legend class="visuallyhidden">Edit apprentice</legend>
 
-                    @if (Model.Data.Apprenticeship.HasStarted)
+                    @if (Model.Data.Apprenticeship.HasStarted &&
+                         !Model.Data.Apprenticeship.IsLockedForUpdated)
+                    {
+                        @Html.Partial("EditStartedApprenticeship", Model.Data)
+                    }
+                    else if (Model.Data.Apprenticeship.HasStarted &&
+                             Model.Data.Apprenticeship.IsLockedForUpdated)
                     {
                         @Html.Partial("EditStartedApprenticeship", Model.Data)
                     }
@@ -31,6 +36,8 @@
                     {
                         @Html.Partial("EditApprenticeship", Model.Data)
                     }
+
+
                 </fieldset>
             </div>
 

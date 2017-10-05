@@ -127,8 +127,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 ProviderRef = apprenticeship.ProviderRef,
                 EmployerRef = apprenticeship.EmployerRef,
                 HasStarted = !isStartDateInFuture,
-                IsLockedForUpdated = false,
-                IsInFirstCalendarMonthOfTraining = CalculateIfInFirstCalendarMonthOfTraining(apprenticeship.StartDate)
+                IsLockedForUpdated = false
             };
         }
 
@@ -334,14 +333,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             }
 
             return l;
-        }
-
-		private bool CalculateIfInFirstCalendarMonthOfTraining(DateTime? startDate)
-        {
-            if (!startDate.HasValue)
-                return false;
-
-            return _currentDateTime.Now.Year == startDate.Value.Year && _currentDateTime.Now.Month == startDate.Value.Month;
         }
 
         private async Task<ITrainingProgramme> GetTrainingProgramme(string trainingCode)
