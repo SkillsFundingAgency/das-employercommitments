@@ -1,9 +1,7 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
-using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLock
@@ -32,9 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataL
         {
             try
             {
-                var dataLockStatus = (await _commitmentApi.GetDataLocks(request.AccountId, request.ApprenticeshipId))
-                    .Where(m => m.Status == Status.Fail && !m.IsResolved);
-
+                var dataLockStatus = (await _commitmentApi.GetDataLocks(request.AccountId, request.ApprenticeshipId));
 
                 return new GetApprenticeshipDataLockResponse()
                            {

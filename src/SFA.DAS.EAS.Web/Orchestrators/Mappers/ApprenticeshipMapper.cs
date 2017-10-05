@@ -12,11 +12,11 @@ using SFA.DAS.Commitments.Api.Types.Validation.Types;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
-using CommitmentTrainingType = SFA.DAS.Commitments.Api.Types.Apprenticeship.Types.TrainingType;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
@@ -28,23 +28,25 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         private readonly IMediator _mediator;
         private readonly ILog _logger;
 
+        private readonly IAcademicYearValidator _academicYearValidator;
+
         public ApprenticeshipMapper(
             IHashingService hashingService,
             ICurrentDateTime currentDateTime,
             IMediator mediator,
-            ILog logger)
+            ILog logger,
+            IAcademicYearValidator academicYearValidator)
         {
-            if (hashingService == null)
-                throw new ArgumentNullException(nameof(hashingService));
-            if (currentDateTime == null)
-                throw new ArgumentNullException(nameof(currentDateTime));
-            if (mediator == null)
-                throw new ArgumentNullException(nameof(mediator));
+            if (hashingService == null) throw new ArgumentNullException(nameof(hashingService));
+            if (currentDateTime == null) throw new ArgumentNullException(nameof(currentDateTime));
+            if (mediator == null) throw new ArgumentNullException(nameof(mediator));
+            if (academicYearValidator== null) throw new ArgumentNullException(nameof(academicYearValidator));
 
             _hashingService = hashingService;
             _currentDateTime = currentDateTime;
             _mediator = mediator;
             _logger = logger;
+            _academicYearValidator = academicYearValidator;
         }
 
         public ApprenticeshipDetailsViewModel MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship)
@@ -83,6 +85,21 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             };
         }
 
+        public ApprenticeshipViewModel MapToApprenticeshipViewModel(Apprenticeship apprenticeship, IEnumerable<DataLockStatus> dataLocks)
+        {
+            var a = MapToApprenticeshipViewModel(apprenticeship);
+            a.IsLockedForUpdated = dataLocks.Any(m => m.ErrorCode == DataLockErrorCode.None);
+
+            if (_academicYearValidator .IsAfterLastAcademicYearFundingPeriod &&
+                 a.StartDate.DateTime.HasValue && 
+                 _academicYearValidator.Validate(a.StartDate.DateTime.Value) == AcademicYearValidationResult.NotWithinFundingPeriod)
+            {
+                a.IsLockedForUpdated = true;
+            }
+            
+            return a;
+        }
+
         public ApprenticeshipViewModel MapToApprenticeshipViewModel(Apprenticeship apprenticeship)
         {
             var isStartDateInFuture = apprenticeship.StartDate.HasValue && apprenticeship.StartDate.Value >
@@ -110,6 +127,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 ProviderRef = apprenticeship.ProviderRef,
                 EmployerRef = apprenticeship.EmployerRef,
                 HasStarted = !isStartDateInFuture,
+                IsLockedForUpdated = false,
                 IsInFirstCalendarMonthOfTraining = CalculateIfInFirstCalendarMonthOfTraining(apprenticeship.StartDate)
             };
         }

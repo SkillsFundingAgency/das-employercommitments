@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -19,6 +17,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.UpdateProviderPaymentPrio
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLock;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
@@ -27,7 +26,6 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDate;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.Exceptions;
@@ -189,8 +187,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     ApprenticeshipId = apprenticeshipId
                 });
 
+                var dataLocks = await _mediator.SendAsync(new GetApprenticeshipDataLockRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId});
+
                 AssertApprenticeshipIsEditable(data.Apprenticeship);
-                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(data.Apprenticeship);
+                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(data.Apprenticeship, dataLocks.DataLockStatus);
 
                 apprenticeship.HashedAccountId = hashedAccountId;
 
