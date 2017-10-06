@@ -22,6 +22,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
     {
         public Mock<IValidateApprovedApprenticeship> mockValidator;
         private Mock<IApprenticeshipMapper> mockMapper;
+        protected readonly Mock<ICurrentDateTime> CurrentDateTime = new Mock<ICurrentDateTime>();
 
         [SetUp]
         public void SetUp()
@@ -37,16 +38,19 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             mockValidator.Setup(m => m.ValidateAcademicYear(It.IsAny<UpdateApprenticeshipViewModel>()))
                 .Returns(new Dictionary<string, string>());
 
+            var academicYearDateProvider = Mock.Of<IAcademicYearDateProvider>();
+            
             Orchestrator = new EmployerManageApprenticeshipsOrchestrator(
                 MockMediator.Object,
                 Mock.Of<IHashingService>(),
                 mockMapper.Object,
                 mockValidator.Object,
-                new CurrentDateTime(),
+                CurrentDateTime.Object,
                 new Mock<ILog>().Object,
                 new Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>().Object,
                 ApprenticeshipFiltersMapper.Object,
-                Mock.Of<IAcademicYearDateProvider>()
+                academicYearDateProvider, 
+                new AcademicYearValidator(CurrentDateTime.Object, academicYearDateProvider)
                 );
         }
 

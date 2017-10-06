@@ -1,13 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
-using SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
+using System;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
@@ -33,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 {
                     Apprenticeship = _testApprenticeship
                 });
-            
+
         }
 
         [TestCase(PaymentStatus.Active)]
@@ -61,12 +60,12 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         public async Task ThenShouldSkipSelectingChangeDateIfResumingApprenticeship()
         {
             _testApprenticeship.PaymentStatus = PaymentStatus.Paused;
-
+            _testApprenticeship.PauseDate = MockDateTime.Object.Now.AddMonths(-1);
             OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Resume, "user123");
 
             response.Data.SkipStep.Should().BeTrue();
         }
-
+       
         [Test]
         public async Task ThenShouldSkipSelectingChangeDateIfPausingWaitingToStartApprenticeship()
         {
@@ -77,7 +76,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             response.Data.SkipStep.Should().BeTrue();
         }
-
+       
         [Test]
         public async Task ThenShouldSkipSelectingChangeDateIfResumingWaitingToStartApprenticeship()
         {
@@ -88,7 +87,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             response.Data.SkipStep.Should().BeTrue();
         }
-
+       
         [TestCase(PaymentStatus.Active)]
         [TestCase(PaymentStatus.Paused)]
         public async Task ThenShouldNotSkipSelectingChangeDateIfTrainingStarted(PaymentStatus paymentStatus)
@@ -112,15 +111,15 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             response.Data.EarliestDate.Should().Be(_testApprenticeship.StartDate.Value);
         }
-
-        [TestCase("2016-03-01", "2017-10-19", "2017-08-01", Description = "R14 date has passed")]
-        [TestCase("2016-03-01", "2017-10-17", "2016-03-01", Description = "R14 date has not passed")]
+       
+        [TestCase("2016-03-01", "2017-10-19 18:00:01", "2017-08-01", Description = "R14 date has passed")]
+        [TestCase("2016-03-01", "2017-10-17 18:00:00", "2016-03-01", Description = "R14 date has not passed")]
         public async Task ThenIfR14DateHasPassedThenEarliestDateShouldBeStartOfAcademicYear(DateTime startDate, DateTime now, DateTime expectedEarliestDate)
         {
             _testApprenticeship.PaymentStatus = PaymentStatus.Active;
             _testApprenticeship.StartDate = startDate;
             MockDateTime.Setup(x => x.Now).Returns(now);
-            
+
             OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Stop, "user123");
 
             response.Data.EarliestDate.Should().Be(expectedEarliestDate);
@@ -148,18 +147,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             response.Data.ChangeStatusViewModel.DateOfChange.DateTime.Should().Be(specifiedDate);
         }
 
-
         [Test]
         public async Task IfPausingAndStartedTrainingThenChangeSpecifiedShouldSetDateOfChangeToTodaysDate()
         {
             _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(-1); // Apprenticeship has already started
 
             OrchestratorResponse<ConfirmationStateChangeViewModel> response = await Orchestrator.GetChangeStatusConfirmationViewModel(
-                "ABC123", 
-                "CDE321", 
-                ChangeStatusType.Pause, 
-                WhenToMakeChangeOptions.Immediately, 
-                null, 
+                "ABC123",
+                "CDE321",
+                ChangeStatusType.Pause,
+                WhenToMakeChangeOptions.Immediately,
+                null,
                 "user123");
 
             response.Data.ChangeStatusViewModel.DateOfChange.DateTime.Should().Be(DateTime.UtcNow.Date);
@@ -181,36 +179,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             response.Data.ChangeStatusViewModel.DateOfChange.DateTime.Should().Be(DateTime.UtcNow.Date);
         }
 
-        [Test]
-        public async Task IfResumingAndStartedTrainingThenChangeSpecifiedShouldSetDateOfChangeToTodaysDate()
-        {
-            _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(-1); // Apprenticeship has already started
+     
 
-            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await Orchestrator.GetChangeStatusConfirmationViewModel(
-                "ABC123",
-                "CDE321",
-                ChangeStatusType.Resume,
-                WhenToMakeChangeOptions.Immediately,
-                null,
-                "user123");
-
-            response.Data.ChangeStatusViewModel.DateOfChange.DateTime.Should().Be(DateTime.UtcNow.Date);
-        }
-
-        [Test]
-        public async Task IfResumingAndWaitingToStartTrainingThenChangeSpecifiedShouldSetDateOfChangeToTodaysDate()
-        {
-            _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(2); // Apprenticeship is waiting to start
-
-            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await Orchestrator.GetChangeStatusConfirmationViewModel(
-                "ABC123",
-                "CDE321",
-                ChangeStatusType.Resume,
-                WhenToMakeChangeOptions.Immediately,
-                null,
-                "user123");
-
-            response.Data.ChangeStatusViewModel.DateOfChange.DateTime.Should().Be(DateTime.UtcNow.Date);
-        }
     }
 }
