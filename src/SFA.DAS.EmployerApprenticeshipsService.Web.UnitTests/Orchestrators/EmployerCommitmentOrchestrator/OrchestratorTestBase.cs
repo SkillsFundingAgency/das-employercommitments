@@ -66,8 +66,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 _mockApprenticeshipMapper.Object,
                 _mockCommitmentMapper.Object,
                 _mockLogger.Object,
-                _mockAcademicYearValidator.Object,
-                _mockAcademicYearDateProvider.Object,
                 _mockApprenticeshipValidator.Object);
         }
     }

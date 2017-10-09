@@ -196,19 +196,6 @@
                                 </div>
                                
                             }
-                            else if (group.ApprenticeshipsNotWithinFundingPeriod > 0)
-                            {
-
-                                <div class="overlap-notification" id="error-message-@group.GroupId">
-                                    <p class="heading-small">
-                                        Start @_addS("date", group.ApprenticeshipsNotWithinFundingPeriod) can't be in the previous academic year
-                                    </p>
-                                    <p>
-                                        The earliest date you can use is @group.EarliestAcademicYearDate.ToGdsFormatShortMonthWithoutDay()
-                                    </p>
-                                </div>
-
-                            }
                             else if (group.ApprenticeshipsOverFundingLimit > 0 && !Model.Data.Errors.Any())
                             {
                                 <div class="funding-cap-alert" id="max-funding-group-@group.GroupId">
@@ -260,17 +247,6 @@
                                                            aria-label="The unique learner number already exists for these training dates"
                                                            aria-describedby="max-funding-group-@group.GroupId"
                                                            title="The unique learner number already exists for these training dates">
-                                                            @apprenticeship.StartDate.Value.ToGdsFormatWithoutDay() to @apprenticeship.EndDate.Value.ToGdsFormatWithoutDay() &nbsp;
-                                                        </a>
-                                                    </td>
-                                                }
-                                                else if (!apprenticeship.IsWithinAcademicYearFundingPeriod && group.OverlapErrorCount == 0)
-                                                {
-                                                    <td class="overlap-alert">
-                                                        <a href="#error-message-@group.GroupId"
-                                                           aria-label="Start date can’t be in the previous academic year."
-                                                           aria-describedby="max-funding-group-@group.GroupId"
-                                                           title="Start date can’t be in the previous academic year.">
                                                             @apprenticeship.StartDate.Value.ToGdsFormatWithoutDay() to @apprenticeship.EndDate.Value.ToGdsFormatWithoutDay() &nbsp;
                                                         </a>
                                                     </td>
