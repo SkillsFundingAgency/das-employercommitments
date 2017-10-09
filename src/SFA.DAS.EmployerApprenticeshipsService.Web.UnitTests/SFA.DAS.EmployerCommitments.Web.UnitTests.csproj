@@ -152,7 +152,6 @@
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenMappingApprenticeshipFilters.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenMappingApprenticeshipSearchQuery.cs" />
     <Compile Include="Orchestrators\Mappers\WhenMappingToUpdateModel.cs" />
-    <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenMappingToUpdateModel.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenResumingAnAwaitingApprenticeshipAfterPauseInLastAcademicYear.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenResumingAStartedApprenticeshipAfterPauseInLastAcademicYear.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenUserSelectsToEditStatus.cs" />
