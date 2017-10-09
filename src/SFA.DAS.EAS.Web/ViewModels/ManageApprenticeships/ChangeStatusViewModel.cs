@@ -18,5 +18,9 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public DateTimeViewModel DateOfChange { get; set; }
 
         public bool? ChangeConfirmed { get; set; }
+
+        public bool AcademicYearBreakInTraining { get; set; }
+
+        public DateTimeViewModel PauseDate { get; set; }
     }
 }

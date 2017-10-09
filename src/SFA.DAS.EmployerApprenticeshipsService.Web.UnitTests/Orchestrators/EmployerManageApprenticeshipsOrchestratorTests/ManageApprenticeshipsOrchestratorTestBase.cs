@@ -27,11 +27,13 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         protected Mock<ICurrentDateTime> MockDateTime;
 
         public IValidateApprovedApprenticeship Validator;
-		 protected Mock<IAcademicYearDateProvider> AcademicYearDateProvider;
+        protected Mock<IAcademicYearDateProvider> AcademicYearDateProvider;
+        protected Mock<IAcademicYearValidator> MockAcademicYearValidator;
 
         [SetUp]
         public void Setup()
         {
+            MockAcademicYearValidator = new Mock<IAcademicYearValidator>();
             MockMediator = new Mock<IMediator>();
 			
             MockDateTime = new Mock<ICurrentDateTime>();
@@ -40,7 +42,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             AcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
             AcademicYearDateProvider.Setup(x => x.CurrentAcademicYearStartDate).Returns(new DateTime(2017, 8, 1));
             AcademicYearDateProvider.Setup(x => x.CurrentAcademicYearEndDate).Returns(new DateTime(2018, 7, 31));
-            AcademicYearDateProvider.Setup(x => x.LastAcademicYearFundingPeriod).Returns(new DateTime(2017, 10, 18));
+            AcademicYearDateProvider.Setup(x => x.LastAcademicYearFundingPeriod).Returns(new DateTime(2017, 10, 19, 18, 0, 0));
 
             ApprenticeshipMapper = new ApprenticeshipMapper(Mock.Of<IHashingService>(), MockDateTime.Object, MockMediator.Object, Mock.Of<ILog>(), Mock.Of<IAcademicYearValidator>());
 
@@ -54,27 +56,30 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 .ReturnsAsync(new GetUserAccountRoleResponse { User = new TeamMember() });
 
             ApprenticeshipFiltersMapper = new Mock<IApprenticeshipFiltersMapper>();
-            Mock<ICurrentDateTime> currentDateTime = new Mock<ICurrentDateTime>();
-            currentDateTime.Setup(x => x.Now).Returns(new DateTime(2018, 5, 1));
-            var academicYearProvider = new AcademicYearDateProvider(currentDateTime.Object);
+            //Mock<ICurrentDateTime> currentDateTime = new Mock<ICurrentDateTime>();
+            //currentDateTime.Setup(x => x.Now).Returns(new DateTime(2018, 5, 1));
+            var academicYearProvider = new AcademicYearDateProvider(MockDateTime.Object);
 
 
             Validator = new ApprovedApprenticeshipViewModelValidator(
                 new WebApprenticeshipValidationText(academicYearProvider),
-                currentDateTime.Object,
+                MockDateTime.Object,
                 academicYearProvider,
-                new AcademicYearValidator(currentDateTime.Object, academicYearProvider));
+                new AcademicYearValidator(MockDateTime.Object, academicYearProvider));
 
             Orchestrator = new EmployerManageApprenticeshipsOrchestrator(
                 MockMediator.Object,
                 _mockHashingService.Object,
-                ApprenticeshipMapper, 
+                ApprenticeshipMapper,
                 Validator,
                 MockDateTime.Object,
                 new Mock<ILog>().Object, new Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>().Object,
                 ApprenticeshipFiltersMapper.Object,
-                AcademicYearDateProvider.Object
+                AcademicYearDateProvider.Object,
+                new AcademicYearValidator(MockDateTime.Object, academicYearProvider)
                 );
         }
+
+
     }
 }
