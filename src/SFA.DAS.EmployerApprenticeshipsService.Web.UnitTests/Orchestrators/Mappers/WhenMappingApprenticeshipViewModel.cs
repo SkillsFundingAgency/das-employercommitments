@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using FluentAssertions;
-
 using Moq;
-
 using NUnit.Framework;
 
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;

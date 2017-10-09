@@ -22,13 +22,7 @@
                 <fieldset>
                     <legend class="visuallyhidden">Edit apprentice</legend>
 
-                    @if (Model.Data.Apprenticeship.HasStarted &&
-                         !Model.Data.Apprenticeship.IsLockedForUpdated)
-                    {
-                        @Html.Partial("EditStartedApprenticeship", Model.Data)
-                    }
-                    else if (Model.Data.Apprenticeship.HasStarted &&
-                             Model.Data.Apprenticeship.IsLockedForUpdated)
+                    @if (Model.Data.Apprenticeship.HasStarted)
                     {
                         @Html.Partial("EditStartedApprenticeship", Model.Data)
                     }
