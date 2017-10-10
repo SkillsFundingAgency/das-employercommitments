@@ -615,7 +615,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             });
 
             if (result.ApprenticeshipUpdate != null)
-                throw new InvalidStateException("Pending apprenticeship update");
+                throw new InvalidStateException($"Pending apprenticeship update, ApprenticeshipId: {apprenticeshipId}");
         }
 
         public async Task<OrchestratorResponse<UpdateApprenticeshipViewModel>>
@@ -690,8 +690,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     var dataLockSummary = await _mediator.SendAsync(
                         new GetDataLockSummaryQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
 
-                    //var dataLock = dataLocks.DataLockStatus
-                    //    .First(m => m.TriageStatus == TriageStatus.Restart);
                     var dataLock = dataLockSummary.DataLockSummary
                     .DataLockWithCourseMismatch.FirstOrDefault(m => m.TriageStatus == TriageStatus.Restart);
 
