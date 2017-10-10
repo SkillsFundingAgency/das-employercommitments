@@ -9,8 +9,6 @@ namespace SFA.DAS.EmployerCommitments.Web
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            var commitmentsAssetsFolder = CloudConfigurationManager.GetSetting("CommitmentsAssetsFolder");
-
             bundles.Add(new ScriptBundle("~/comt-assets/bundles/sfajs").Include(
                       "~/comt-assets/javascripts/jquery-1.11.0.min.js",
                       "~/comt-assets/javascripts/govuk-template.js",
