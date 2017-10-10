@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using AutoMapper.Execution;
+
 using FluentValidation;
 using MediatR;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
@@ -18,7 +18,6 @@ using SFA.DAS.EmployerCommitments.Application.Commands.UpdateProviderPaymentPrio
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLock;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
