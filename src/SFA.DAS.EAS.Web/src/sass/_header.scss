@@ -59,7 +59,7 @@
 
 .breadcrumbs {
     li {
-        background-image: url('/comt-dist/images/separator.png');
+        background-image: url('/comt-assets/images/separator.png');
     }
 
     a {
@@ -420,18 +420,18 @@ a#link-settings {
     border-left: 2px solid $department-for-education;
     padding-top: 20px;
     padding-left: 6px;
-    background: url(/comt-dist/images/org_crest_13px.png) no-repeat 5px 0;
+    background: url(/comt-assets/images/org_crest_13px.png) no-repeat 5px 0;
 
     @include media(tablet) {
         padding-top: 30px;
         padding-left: 7px;
-        background: url(/comt-dist/images/org_crest_18px.png) no-repeat 5px 0;
+        background: url(/comt-assets/images/org_crest_18px.png) no-repeat 5px 0;
     }
 
     @include media(desktop) {
         padding-top: 45px;
         padding-left: 10px;
-        background: url(/comt-dist/images/org_crest_27px.png) no-repeat 10px 0;
+        background: url(/comt-assets/images/org_crest_27px.png) no-repeat 10px 0;
     }
 }
 

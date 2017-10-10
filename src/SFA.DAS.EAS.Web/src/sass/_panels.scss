@@ -34,7 +34,7 @@
     position: relative;
 
     .icon {
-        @include icon(icon-important, 35, 35, '../../comt-dist/images');
+        @include icon(icon-important, 35, 35, '../../comt-assets/images');
         position: absolute;
         top: 20px;
         left: 0;

@@ -2105,7 +2105,7 @@ table.top-border {
 }
 
 .breadcrumbs li {
-  background-image: url("/comt-dist/images/separator.png");
+  background-image: url("/comt-assets/images/separator.png");
 }
 
 .breadcrumbs a {
@@ -2468,13 +2468,13 @@ a#link-settings:focus {
   border-left: 2px solid #003a69;
   padding-top: 20px;
   padding-left: 6px;
-  background: url(/comt-dist/images/org_crest_13px.png) no-repeat 5px 0;
+  background: url(/comt-assets/images/org_crest_13px.png) no-repeat 5px 0;
   padding-top: 30px;
   padding-left: 7px;
-  background: url(/comt-dist/images/org_crest_18px.png) no-repeat 5px 0;
+  background: url(/comt-assets/images/org_crest_18px.png) no-repeat 5px 0;
   padding-top: 45px;
   padding-left: 10px;
-  background: url(/comt-dist/images/org_crest_27px.png) no-repeat 10px 0;
+  background: url(/comt-assets/images/org_crest_27px.png) no-repeat 10px 0;
 }
 
 .organisation-logo {
@@ -2643,7 +2643,7 @@ a#link-settings:focus {
 }
 
 .previous-next-navigation li a:before {
-  background: url("/comt-dist/images/arrow-sprite.png");
+  background: url("/comt-assets/images/arrow-sprite.png");
   background-position: -4px -2px;
   margin-top: -2px;
   margin-left: -30px;
@@ -2723,7 +2723,7 @@ legend {
 }
 
 .button-start {
-  background-image: url("/comt-dist/images/icon-pointer.png");
+  background-image: url("/comt-assets/images/icon-pointer.png");
 }
 
 .button-secondary {
@@ -2996,7 +2996,7 @@ legend {
   text-indent: -5000px;
   color: #fff;
   background-color: #005ea5;
-  background-image: url(/comt-dist/images/icon-search.png);
+  background-image: url(/comt-assets/images/icon-search.png);
   background-repeat: no-repeat;
   background-position: 12px 13px;
 }
@@ -3277,7 +3277,7 @@ table.responsive tr th.tw-70 {
 .panel-warning .icon {
   width: 35px;
   height: 35px;
-  background-image: url("/public/images/../../comt-dist/images/icon-important.png");
+  background-image: url("/public/images/../../comt-assets/images/icon-important.png");
   position: absolute;
   top: 20px;
   left: 0;
@@ -3285,7 +3285,7 @@ table.responsive tr th.tw-70 {
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   .panel-warning .icon {
-    background-image: url("/public/images/../../comt-dist/images/icon-important-2x.png");
+    background-image: url("/public/images/../../comt-assets/images/icon-important-2x.png");
     background-size: 100%;
   }
 }
@@ -3525,7 +3525,7 @@ table.responsive tr th.tw-70 {
 .legal-warning .icon {
   width: 35px;
   height: 35px;
-  background-image: url("/public/images/../../comt-dist/images/icon-important.png");
+  background-image: url("/public/images/../../comt-assets/images/icon-important.png");
   position: absolute;
   top: 5px;
   left: 0;
@@ -3533,7 +3533,7 @@ table.responsive tr th.tw-70 {
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   .legal-warning .icon {
-    background-image: url("/public/images/../../comt-dist/images/icon-important-2x.png");
+    background-image: url("/public/images/../../comt-assets/images/icon-important-2x.png");
     background-size: 100%;
   }
 }
@@ -4224,7 +4224,7 @@ table .float-right, h2 .float-right {
 }
 
 #apprentice-details .flash-alert .icon-green-tick {
-  background: url(/comt-dist/images/icon-green-tick.png) no-repeat 0 -4px;
+  background: url(/comt-assets/images/icon-green-tick.png) no-repeat 0 -4px;
   width: 30px;
   height: 22px;
   margin-left: -2px;
@@ -4354,7 +4354,7 @@ table .float-right, h2 .float-right {
 }
 
 .grid-row .flash-alert .icon-green-tick {
-  background: url(/comt-dist/images/icon-green-tick.png) no-repeat 0 -4px;
+  background: url(/comt-assets/images/icon-green-tick.png) no-repeat 0 -4px;
   width: 30px;
   height: 22px;
   margin-left: -2px;
@@ -4368,7 +4368,7 @@ table .float-right, h2 .float-right {
 }
 
 #agreement-not-signed .notice .icon-important {
-  background-image: url("/comt-dist/images/icon-important.png");
+  background-image: url("/comt-assets/images/icon-important.png");
   top: 13%;
 }
 
@@ -4574,7 +4574,7 @@ h2 .float-right {
 
 .filter-option-select .container-head {
   padding-left: 5px;
-  background: url(/comt-dist/css/images/option-select-toggle-sprite.png) no-repeat right 5px;
+  background: url(/comt-assets/css/images/option-select-toggle-sprite.png) no-repeat right 5px;
   cursor: pointer;
   display: block;
   position: relative;
@@ -4617,7 +4617,7 @@ h2 .float-right {
 }
 
 .filter-option-select .showHide {
-  background: url(/comt-dist/css/images/option-select-toggle-sprite.png) no-repeat;
+  background: url(/comt-assets/css/images/option-select-toggle-sprite.png) no-repeat;
   background-position: right -77px;
   cursor: pointer;
   display: block;
@@ -4759,7 +4759,7 @@ h2 .float-right {
 }
 
 #manage-all-apprentices .previous-next-navigation li.next a:before {
-  background: transparent url("/comt-dist/css/images/pagination-arrow-sprite.png") no-repeat -102px -11px;
+  background: transparent url("/comt-assets/css/images/pagination-arrow-sprite.png") no-repeat -102px -11px;
   margin: -4px -32px 0 0;
   display: block;
   float: right;
@@ -4773,7 +4773,7 @@ h2 .float-right {
 }
 
 #manage-all-apprentices .previous-next-navigation li.previous a:before {
-  background: transparent url("/comt-dist/css/images/pagination-arrow-sprite.png") no-repeat -20px -11px;
+  background: transparent url("/comt-assets/css/images/pagination-arrow-sprite.png") no-repeat -20px -11px;
   margin: -4px 0 0 -32px;
   display: block;
   float: left;
