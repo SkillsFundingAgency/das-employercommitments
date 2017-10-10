@@ -27,37 +27,12 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         }
 
         [Test]
-        public void ShouldNotHaveLockedStatusIfNoDataLocksFound()
-        {
-            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1) };
-            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, new List<DataLockStatus>());
-
-            viewModel.IsLockedForUpdated.Should().BeFalse();
-            viewModel.HasStarted.Should().BeTrue();
-        }
-
-        [Test]
         public void ShouldNotHaveLockedStatusIfNoDataLocksSuccesFound()
         {
-            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1) };
-            var dataLocks = new List<DataLockStatus> { new DataLockStatus { ErrorCode = DataLockErrorCode.Dlock03 } };
-            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, dataLocks);
+            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1), HasHadDataLockSuccess = false };
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
 
             viewModel.IsLockedForUpdated.Should().BeFalse();
-            viewModel.HasStarted.Should().BeTrue();
-        }
-
-        [Test]
-        public void ShouldHaveLockedStatusIfDataLocksSuccesFound()
-        {
-            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1) };
-            var dataLocks = new List<DataLockStatus>
-                                {
-                                    new DataLockStatus { ErrorCode = DataLockErrorCode.None }
-                                };
-            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, dataLocks);
-
-            viewModel.IsLockedForUpdated.Should().BeTrue();
             viewModel.HasStarted.Should().BeTrue();
         }
 
@@ -65,14 +40,14 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         [Test]
         public void ShouldHaveLockedStatusIfAtLeastOneDataLocksSuccesFound()
         {
-            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1) };
+            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1), HasHadDataLockSuccess = true };
             var dataLocks = new List<DataLockStatus>
                                 {
                                     new DataLockStatus { ErrorCode = DataLockErrorCode.Dlock04 },
                                     new DataLockStatus { ErrorCode = DataLockErrorCode.None },
                                     new DataLockStatus { ErrorCode = DataLockErrorCode.Dlock07 }
                                 };
-            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, dataLocks);
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
 
             viewModel.IsLockedForUpdated.Should().BeTrue();
             viewModel.HasStarted.Should().BeTrue();
@@ -84,9 +59,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             AcademicYearValidator.Setup(m => m.IsAfterLastAcademicYearFundingPeriod).Returns(true);
             AcademicYearValidator.Setup(m => m.Validate(It.IsAny<DateTime>())).Returns(AcademicYearValidationResult.NotWithinFundingPeriod);
 
-            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-5) };
+            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-5), HasHadDataLockSuccess = false };
             var dataLocks = new List<DataLockStatus>();
-            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, dataLocks);
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
 
             viewModel.IsLockedForUpdated.Should().BeTrue();
             viewModel.HasStarted.Should().BeTrue();

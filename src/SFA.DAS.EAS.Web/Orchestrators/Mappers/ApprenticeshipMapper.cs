@@ -85,26 +85,21 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             };
         }
 
-        public ApprenticeshipViewModel MapToApprenticeshipViewModel(Apprenticeship apprenticeship, IEnumerable<DataLockStatus> dataLocks)
-        {
-            var a = MapToApprenticeshipViewModel(apprenticeship);
-            a.IsLockedForUpdated = dataLocks.Any(m => m.ErrorCode == DataLockErrorCode.None);
-
-            if (_academicYearValidator .IsAfterLastAcademicYearFundingPeriod &&
-                 a.StartDate.DateTime.HasValue && 
-                 _academicYearValidator.Validate(a.StartDate.DateTime.Value) == AcademicYearValidationResult.NotWithinFundingPeriod)
-            {
-                a.IsLockedForUpdated = true;
-            }
-            
-            return a;
-        }
-
         public ApprenticeshipViewModel MapToApprenticeshipViewModel(Apprenticeship apprenticeship)
         {
             var isStartDateInFuture = apprenticeship.StartDate.HasValue && apprenticeship.StartDate.Value >
                                       new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1);
 
+            var isLockedForUpdated = apprenticeship.HasHadDataLockSuccess;
+
+            if (_academicYearValidator.IsAfterLastAcademicYearFundingPeriod &&
+                 apprenticeship.StartDate.HasValue &&
+                 _academicYearValidator.Validate(apprenticeship.StartDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod)
+            {
+                isLockedForUpdated = true;
+            }
+
+            
             return new ApprenticeshipViewModel
             {
                 HashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id),
@@ -127,7 +122,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 ProviderRef = apprenticeship.ProviderRef,
                 EmployerRef = apprenticeship.EmployerRef,
                 HasStarted = !isStartDateInFuture,
-                IsLockedForUpdated = false
+                IsLockedForUpdated = isLockedForUpdated
             };
         }
 

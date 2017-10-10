@@ -191,10 +191,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     ApprenticeshipId = apprenticeshipId
                 });
 
-                var dataLocks = await _mediator.SendAsync(new GetApprenticeshipDataLockRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId});
-
                 AssertApprenticeshipIsEditable(data.Apprenticeship);
-                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(data.Apprenticeship, dataLocks.DataLockStatus);
+                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(data.Apprenticeship);
 
                 apprenticeship.HashedAccountId = hashedAccountId;
 
