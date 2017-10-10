@@ -1176,7 +1176,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 throw new InvalidStateException("Null commitment");
 
             if (!allowedAgreementStatuses.Contains(commitment.AgreementStatus))
-                throw new InvalidStateException($"Invalid commitment state (agreement status is {commitment.AgreementStatus}, expected {string.Join(",", allowedAgreementStatuses)})");
+                throw new InvalidStateException($"Invalid commitment state (agreement status is {commitment.AgreementStatus}, expected {string.Join(",", allowedAgreementStatuses)}), CommitmentId: {commitment.Id}");
         }
 
         private async Task AssertCommitmentStatus(long commitmentId, long accountId)
@@ -1196,7 +1196,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 throw new InvalidStateException("Null commitment");
 
             if (!allowedEditStatuses.Contains(commitment.EditStatus))
-                throw new InvalidStateException($"Invalid commitment state (edit status is {commitment.EditStatus}, expected {string.Join(",", allowedEditStatuses)})");
+                throw new InvalidStateException($"Invalid commitment state (edit status is {commitment.EditStatus}, expected {string.Join(",", allowedEditStatuses)}), CommitmentId: {commitment.Id}");
         }
 
         private bool IsWithinAcademicFundingPeriod(DateTime? startDate)
