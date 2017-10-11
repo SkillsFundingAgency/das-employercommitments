@@ -236,7 +236,6 @@
     <Compile Include="Services\CurrentDateTime.cs" />
     <Compile Include="Services\EmployerAccountService.cs" />
     <Compile Include="Services\FeatureToggleService.cs" />
-    <Compile Include="Services\HashingService.cs" />
     <Compile Include="Services\HttpClientWrapper.cs" />
     <Compile Include="Services\ProviderEmailLookupService.cs" />
     <Compile Include="Services\RestService.cs" />

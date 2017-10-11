@@ -53,6 +53,7 @@ using StructureMap.Graph;
 using StructureMap.TypeRules;
 using IConfiguration = SFA.DAS.EmployerCommitments.Domain.Interfaces.IConfiguration;
 using NotificationsApiClientConfiguration = SFA.DAS.EmployerCommitments.Domain.Configuration.NotificationsApiClientConfiguration;
+using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 {
@@ -85,14 +86,15 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<IApprenticeshipInfoServiceConfiguration>().Use(config.ApprenticeshipInfoService);
             For<IApprenticeshipViewModelValidator>().Use<ApprenticeshipViewModelValidator>();
             For<IValidateApprovedApprenticeship>().Use<ApprovedApprenticeshipViewModelValidator>();
-                
+
+            ConfigureHashingService(config);
             SetUpCommitmentApi(config);
 
             For<IEventsApi>().Use<EventsApi>()
                 .Ctor<IEventsApiClientConfiguration>().Is(config.EventsApi)
                 .SelectConstructor(() => new EventsApi(null)); // The default one isn't the one we want to use.;
-                     
 
+          
             ConfigureNotificationsApi();
 
             RegisterMapper();
@@ -265,5 +267,11 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
                 x.GetInstance<IRequestContext>(),
                 null)).AlwaysUnique();
         }
+
+        private void ConfigureHashingService(EmployerCommitmentsServiceConfiguration config)
+        {
+            For<IHashingService>().Use(x => new HashingService.HashingService(config.AllowedHashstringCharacters, config.Hashstring));
+        }
+
     }
 }
