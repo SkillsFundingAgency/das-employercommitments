@@ -349,11 +349,13 @@
     <Compile Include="Authentication\IOwinWrapper.cs" />
     <Compile Include="Authentication\OwinWrapper.cs" />
     <Compile Include="Controllers\AccessDeniedController.cs" />
+    <Compile Include="Controllers\DataLockController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="DependencyResolution\StructureMapValidatorFactory.cs" />
     <Compile Include="DependencyResolution\ValidationRegistry.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Extensions\ValidationResultExtensions.cs" />
+    <Compile Include="Orchestrators\DataLockOrchestrator.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestrator.cs" />
     <Compile Include="Orchestrators\Mappers\ApprenticeshipFiltersMapper.cs" />
     <Compile Include="Orchestrators\Mappers\IApprenticeshipFiltersMapper.cs" />
@@ -483,6 +485,8 @@
     <Content Include="Views\Shared\ApprenticeshipUpdate.cshtml" />
     <Compile Include="WebRole.cs" />
     <Compile Include="Validators\ApprenticeshipViewModelValidator.cs" />
+    <Content Include="Views\DataLock\RequestRestart.cshtml" />
+    <Content Include="Views\DataLock\RequestChanges.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="dist\css\external-links\external-link-24x24.png" />
@@ -901,13 +905,11 @@
     <Content Include="Views\EmployerManageApprentices\ChangeStatus.cshtml" />
     <Content Include="Views\EmployerManageApprentices\StatusChangeConfirmation.cshtml" />
     <Content Include="Views\EmployerManageApprentices\WhenToApplyChange.cshtml" />
-    <Content Include="Views\EmployerManageApprentices\RequestRestart.cshtml" />
     <Content Include="src\sass\_notifications.scss" />
     <Content Include="src\sass\_navigation.scss" />
     <Content Include="Views\Shared\ApprenticeshipFilters.cshtml" />
     <Content Include="Views\EmployerManageApprentices\PaymentOrder.cshtml" />
     <Content Include="Views\EmployerCommitments\ViewApprenticeshipEntry.cshtml" />
-    <Content Include="Views\EmployerManageApprentices\RequestChanges.cshtml" />
     <Content Include="Views\Settings\NotificationUnsubscribe.cshtml" />
     <Content Include="Views\Shared\Pagination.cshtml" />
     <Content Include="src\sass\_search.scss" />

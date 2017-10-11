@@ -29,42 +29,42 @@
         @foreach (var p in Model.Data.PriceChanges)
         {
             <h2 class="heading-small">@p.Title</h2>
-                        <table class="changes">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th class="current">Currently</th>
-                                    <th class="changed">Change to</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>From date</td>
-                                    <td>
-                                        @{
-                                            if (!p.MissingPriceHistory)
-                                            {
-                                                <span>@p.CurrentStartDate.Date.ToGdsFormat()</span>
-                                            }
-                                        }
-                                    </td>
-                                    <td>@p.IlrStartDate.Date.ToGdsFormat()</td>
-                                </tr>
-                                <tr>
-                                    <td>Total apprenticeship training price</td>
-                                    <td>
-                                        @{
-                                            if (!p.MissingPriceHistory)
-                                            {
-                                                <span>@FormatCost(p.CurrentCost)</span>
-                                            }
-                                        }
-                                    </td>
-                                    <td>@FormatCost(p.IlrCost)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                }
+            <table class="changes">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="current">Currently</th>
+                        <th class="changed">Change to</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>From date</td>
+                        <td>
+                            @{
+                                if (!p.MissingPriceHistory)
+                                {
+                                    <span>@p.CurrentStartDate.Date.ToGdsFormat()</span>
+                                }
+                            }
+                        </td>
+                        <td>@p.IlrStartDate.Date.ToGdsFormat()</td>
+                    </tr>
+                    <tr>
+                        <td>Total apprenticeship training price</td>
+                        <td>
+                            @{
+                                if (!p.MissingPriceHistory)
+                                {
+                                    <span>@FormatCost(p.CurrentCost)</span>
+                                }
+                            }
+                        </td>
+                        <td>@FormatCost(p.IlrCost)</td>
+                    </tr>
+                </tbody>
+            </table>
+                                }
         <form method="POST" action="@Url.Action("ConfirmRequestChanges")" novalidate="novalidate" id="approve-changes" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
             <h3 class="heading-medium">Are you happy to approve these changes?</h3>
@@ -88,14 +88,14 @@
                     </label>
                 </fieldset>
             </div>
-            <button type="submit" class="button" aria-label="Continue" id="submit-req-changes">Continue</button>           
+            <button type="submit" class="button" aria-label="Continue" id="submit-req-changes">Continue</button>
             <a class="button-link break-line" href="@Url.Action("Details", "EmployerManageApprentices", new { Model.Data.HashedAccountId, Model.Data.HashedApprenticeshipId })" aria-label="Back to apprentice details">
                 Cancel and return
-            </a>          
+            </a>
             @Html.Hidden("HashedAccountId", Model.Data.HashedAccountId)
             @Html.Hidden("HashedApprenticeshipId", Model.Data.HashedApprenticeshipId)
         </form>
-</div>
+    </div>
 </div>
 
 

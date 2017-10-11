@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
+
+using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetUserAccountRole;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Domain.Models.UserProfile;
 using SFA.DAS.NLog.Logger;
 
@@ -89,6 +93,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 LogUnauthorizedUserAttempt(hashedAccountId, externalUserId);
             }
+        }
+
+        protected async Task<List<ITrainingProgramme>> GetTrainingProgrammes()
+        {
+            var programmes = await _mediator.SendAsync(new GetTrainingProgrammesQueryRequest());
+
+            return programmes.TrainingProgrammes;
         }
 
         private async Task CheckUserIsConnectedToAccount(string hashedAccountId, string externalUserId)
