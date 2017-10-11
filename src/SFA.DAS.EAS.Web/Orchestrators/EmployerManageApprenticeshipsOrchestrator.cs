@@ -602,7 +602,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             });
 
             if (result.ApprenticeshipUpdate != null)
-                throw new InvalidStateException("Pending apprenticeship update");
+                throw new InvalidStateException($"Pending apprenticeship update, ApprenticeshipId: {apprenticeshipId}");
         }
 
         public async Task<OrchestratorResponse<UpdateApprenticeshipViewModel>>
