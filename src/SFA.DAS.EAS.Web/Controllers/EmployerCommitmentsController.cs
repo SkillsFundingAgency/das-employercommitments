@@ -682,7 +682,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 case SaveStatus.Save:
                     return new AcknowledgementContent
                                {
-                                   Title = "Message sent",
+                                   Title = "Cohort sent to your training provider",
                                    Text =
                                    "Your training provider will review your request and contact you as soon as possible - either with questions or to ask you to review the apprentice details they've added."
                                };
