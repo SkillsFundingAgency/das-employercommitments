@@ -39,12 +39,6 @@
                                 There are no <a href="@Url.Action("Details", new { hashedAccountId = Model.Data.HashedAccountId, hashedCommitmentId = Model.Data.HashedCommitmentId })">overlapping training dates</a> for your apprentices
                             </li>
                         }
-                        @if (Model.Data.HasAcademicFundingPeriodErrors)
-                        {
-                            <li>
-                                There are no <a href="@Url.Action("Details", new { hashedAccountId = Model.Data.HashedAccountId, hashedCommitmentId = Model.Data.HashedCommitmentId })">start dates </a> in the previous academic year
-                            </li>
-                        }
                     </ul>
                 </div>
             }

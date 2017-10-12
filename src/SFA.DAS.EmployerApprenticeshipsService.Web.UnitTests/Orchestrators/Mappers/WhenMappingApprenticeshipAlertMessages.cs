@@ -5,6 +5,11 @@ using NUnit.Framework;
 
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Web.Orchestrators;
+using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
+using SFA.DAS.NLog.Logger;
+using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 {
