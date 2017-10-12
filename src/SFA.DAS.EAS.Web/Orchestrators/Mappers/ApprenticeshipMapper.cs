@@ -90,13 +90,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             var isStartDateInFuture = apprenticeship.StartDate.HasValue && apprenticeship.StartDate.Value >
                                       new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1);
 
-            var isLockedForUpdated = apprenticeship.HasHadDataLockSuccess;
+            var isLockedForUpdate = apprenticeship.HasHadDataLockSuccess;
 
             if (_academicYearValidator.IsAfterLastAcademicYearFundingPeriod &&
                  apprenticeship.StartDate.HasValue &&
                  _academicYearValidator.Validate(apprenticeship.StartDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod)
             {
-                isLockedForUpdated = true;
+                isLockedForUpdate = true;
             }
 
             
@@ -122,7 +122,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 ProviderRef = apprenticeship.ProviderRef,
                 EmployerRef = apprenticeship.EmployerRef,
                 HasStarted = !isStartDateInFuture,
-                IsLockedForUpdated = isLockedForUpdated
+                IsLockedForUpdate = isLockedForUpdate
             };
         }
 

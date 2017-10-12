@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    @if (Model.Apprenticeship.IsLockedForUpdated)
+    @if (Model.Apprenticeship.IsLockedForUpdate)
     {
         <div class="form-group">
             <hr/>
@@ -109,7 +109,7 @@
 
         <hr />
 
-        @if (Model.Apprenticeship.IsLockedForUpdated)
+        @if (Model.Apprenticeship.IsLockedForUpdate)
         {
             <label for="Cost">
                 <span class="form-label-bold">Total agreed apprenticeship price (excluding VAT)</span>

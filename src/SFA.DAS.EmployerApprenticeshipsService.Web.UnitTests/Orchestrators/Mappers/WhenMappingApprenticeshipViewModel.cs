@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1), HasHadDataLockSuccess = false };
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
 
-            viewModel.IsLockedForUpdated.Should().BeFalse();
+            viewModel.IsLockedForUpdate.Should().BeFalse();
             viewModel.HasStarted.Should().BeTrue();
         }
 
@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
                                 };
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
 
-            viewModel.IsLockedForUpdated.Should().BeTrue();
+            viewModel.IsLockedForUpdate.Should().BeTrue();
             viewModel.HasStarted.Should().BeTrue();
         }
 
@@ -63,7 +63,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             var dataLocks = new List<DataLockStatus>();
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
 
-            viewModel.IsLockedForUpdated.Should().BeTrue();
+            viewModel.IsLockedForUpdate.Should().BeTrue();
             viewModel.HasStarted.Should().BeTrue();
         }
     }
