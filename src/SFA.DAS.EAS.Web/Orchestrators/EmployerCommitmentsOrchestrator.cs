@@ -37,6 +37,7 @@ using SFA.DAS.NLog.Logger;
 using OrganisationType = SFA.DAS.Commitments.Api.Types.OrganisationType;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Web.Validators;
+using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {

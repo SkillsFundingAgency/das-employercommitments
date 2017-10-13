@@ -37,6 +37,7 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.NLog.Logger;
 using ChangeStatusType = SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships.ChangeStatusType;
+using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {

@@ -7,6 +7,7 @@ using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using FluentAssertions;
+using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.ApprenticeshipSearch
 {
