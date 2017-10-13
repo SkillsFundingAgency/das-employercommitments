@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 model.AddErrorsFromModelState(ModelState);
                 var viewModel = await _orchestrator.GetDataLockChangeStatus(model.HashedAccountId, model.HashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
                 viewModel.Data.ErrorDictionary = model.ErrorDictionary;
-                return View("RequestChanges", "EmployerManageApprenticesController", viewModel);
+                return View("RequestChanges", viewModel);
             }
 
             await _orchestrator.ConfirmRequestChanges(model.HashedAccountId, model.HashedApprenticeshipId, OwinWrapper.GetClaimValue("sub"), model.ChangesConfirmed ?? false);

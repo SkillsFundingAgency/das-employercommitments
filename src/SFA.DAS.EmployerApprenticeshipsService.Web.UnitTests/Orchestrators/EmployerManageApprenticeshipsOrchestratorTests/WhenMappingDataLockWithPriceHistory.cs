@@ -66,7 +66,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             var result = _sut.MapPriceChanges(dls, h);
 
             result.Count.Should().Be(1);
-            result[0].Title.Should().Be("Change 1");
             result[0].CurrentCost.Should().Be(100);
             result[0].IlrCost.Should().Be(500);
             result[0].CurrentStartDate.Should().Be(now);
@@ -95,9 +94,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             var result = _sut.MapPriceChanges(dls, h);
 
             result.Count.Should().Be(3);
-            FormatPrice(result[0]).Should().Be("Change 1 1000 1001 - 1 Jun 2018 1 Jun 2018");
-            FormatPrice(result[1]).Should().Be("Change 2 2000 2002 - 1 Sep 2018 1 Sep 2018");
-            FormatPrice(result[2]).Should().Be("Change 3 3000 3003 - 1 Nov 2018 1 Nov 2018");
+            FormatPrice(result[0]).Should().Be("1000 1001 - 1 Jun 2018 1 Jun 2018");
+            FormatPrice(result[1]).Should().Be("2000 2002 - 1 Sep 2018 1 Sep 2018");
+            FormatPrice(result[2]).Should().Be("3000 3003 - 1 Nov 2018 1 Nov 2018");
         }
 
         [Test]
@@ -122,9 +121,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             var result = _sut.MapPriceChanges(dls, h);
 
             result.Count.Should().Be(3);
-            FormatPrice(result[0]).Should().Be("Change 1 1000 1001 - 1 Jun 2018 1 Jun 2018");
-            FormatPrice(result[1]).Should().Be("Change 2 2000 2002 - 1 Sep 2018 1 Sep 2018");
-            FormatPrice(result[2]).Should().Be("Change 3 2000 3003 - 1 Sep 2018 1 Oct 2018");
+            FormatPrice(result[0]).Should().Be("1000 1001 - 1 Jun 2018 1 Jun 2018");
+            FormatPrice(result[1]).Should().Be("2000 2002 - 1 Sep 2018 1 Sep 2018");
+            FormatPrice(result[2]).Should().Be("2000 3003 - 1 Sep 2018 1 Oct 2018");
         }
 
         [Test]
@@ -148,8 +147,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             var result = _sut.MapPriceChanges(dls, h);
 
             result.Count.Should().Be(2);
-            FormatPrice(result[0]).Should().Be("Change 1 2000 2002 - 1 Sep 2018 1 Sep 2018");
-            FormatPrice(result[1]).Should().Be("Change 2 3000 3003 - 1 Nov 2018 1 Nov 2018");
+            FormatPrice(result[0]).Should().Be("2000 2002 - 1 Sep 2018 1 Sep 2018");
+            FormatPrice(result[1]).Should().Be("3000 3003 - 1 Nov 2018 1 Nov 2018");
         }
 
         [Test]
@@ -174,15 +173,15 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             var result = _sut.MapPriceChanges(dls, h);
 
             result.Count.Should().Be(3);
-            FormatPrice(result[0]).Should().Be("Change 1 0 1001 - 1 Jan 0001 1 Jun 2018"); // Missing History
+            FormatPrice(result[0]).Should().Be("0 1001 - 1 Jan 0001 1 Jun 2018"); // Missing History
             result[0].MissingPriceHistory.Should().BeTrue();
-            FormatPrice(result[1]).Should().Be("Change 2 2000 2002 - 1 Sep 2018 1 Sep 2018");
-            FormatPrice(result[2]).Should().Be("Change 3 2000 3003 - 1 Sep 2018 1 Oct 2018");
+            FormatPrice(result[1]).Should().Be("2000 2002 - 1 Sep 2018 1 Sep 2018");
+            FormatPrice(result[2]).Should().Be("2000 3003 - 1 Sep 2018 1 Oct 2018");
         }
 
         private string FormatPrice(PriceChange price)
         {
-            return $"{price.Title} {price.CurrentCost} {price.IlrCost} - {price.CurrentStartDate.ToGdsFormat()} {price.IlrStartDate.ToGdsFormat()}";
+            return $"{price.CurrentCost} {price.IlrCost} - {price.CurrentStartDate.ToGdsFormat()} {price.IlrStartDate.ToGdsFormat()}";
         }
     }
 }

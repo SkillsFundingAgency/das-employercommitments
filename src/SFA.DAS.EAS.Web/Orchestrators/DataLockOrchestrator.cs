@@ -113,6 +113,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             ProviderName = apprenticeship.Apprenticeship.ProviderName,
                             LearnerName = apprenticeship.Apprenticeship.ApprenticeshipName,
                             DateOfBirth = apprenticeship.Apprenticeship.DateOfBirth,
+                            CourseChanges =  await _apprenticeshipMapper.MapCourseChanges(dataLockSummary.DataLockSummary.DataLockWithCourseMismatch, apprenticeship.Apprenticeship),
                             PriceChanges = _apprenticeshipMapper.MapPriceChanges(dataLockSummary.DataLockSummary.DataLockWithOnlyPriceMismatch, priceHistory.History)
 
                         }

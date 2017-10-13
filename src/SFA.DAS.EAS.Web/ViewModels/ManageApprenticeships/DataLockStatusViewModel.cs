@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 using FluentValidation.Attributes;
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
@@ -32,5 +34,10 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public bool? ChangesConfirmed { get; set; }
 
         public IList<PriceChange> PriceChanges { get; set; }
+
+        public IEnumerable<CourseChange> CourseChanges { get; set; }
+
+        public int TotalChanges => PriceChanges?.Count ?? 0 + CourseChanges?.Count() ?? 0;
+
     }
 }
