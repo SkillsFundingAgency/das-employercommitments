@@ -5,10 +5,10 @@ module.exports = function(grunt) {
     sass: {
       dev: {
         files: {
-            'comt-dist/css/screen.css': 'src/sass/screen.scss',
-            'comt-dist/css/screen-ie6.css': 'src/sass/screen-ie6.scss',
-            'comt-dist/css/screen-ie7.css': 'src/sass/screen-ie7.scss',
-            'comt-dist/css/screen-ie8.css': 'src/sass/screen-ie8.scss'
+            'comt-assets/css/screen.css': 'src/sass/screen.scss',
+            'comt-assets/css/screen-ie6.css': 'src/sass/screen-ie6.scss',
+            'comt-assets/css/screen-ie7.css': 'src/sass/screen-ie7.scss',
+            'comt-assets/css/screen-ie8.css': 'src/sass/screen-ie8.scss'
         },
         options: {
 	      includePaths: [
