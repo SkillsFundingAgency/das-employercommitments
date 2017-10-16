@@ -4608,13 +4608,13 @@ table .float-right, h2 .float-right {
 	Label for the data
 	*/
   .viewCommitment td:nth-of-type(1):before {
-    content: "Apprentice";
+    content: "Name";
     font-weight: normal;
     margin-top: 5px;
     min-height: 30px;
   }
   .viewCommitment td:nth-of-type(2):before {
-    content: "Training course";
+    content: "Date of birth";
     font-weight: normal;
     margin-top: 5px;
   }
