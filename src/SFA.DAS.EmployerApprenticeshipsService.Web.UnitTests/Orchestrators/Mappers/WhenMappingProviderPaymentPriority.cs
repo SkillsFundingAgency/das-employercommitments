@@ -1,31 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using FluentAssertions;
-using MediatR;
-using Moq;
 using NUnit.Framework;
+
 using SFA.DAS.Commitments.Api.Types.ProviderPayment;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.HashingService;
 
-namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
+namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 {
     [TestFixture]
-    public class WhenMappingProviderPaymentPriority
+    public class WhenMappingProviderPaymentPriority : ApprenticeshipMapperBase
     {
-        private ApprenticeshipMapper _sut;
-
-        [SetUp]
-        public void SetUp()
-        {
-            var hashingService = new Mock<IHashingService>();
-            var currentDateTime = new Mock<ICurrentDateTime>();
-            var mediator = new Mock<IMediator>();
-            _sut = new ApprenticeshipMapper(hashingService.Object, currentDateTime.Object, mediator.Object, Mock.Of<ILog>());
-        }
-
         [Test]
         public void ShouldMapToViewModel()
         {
@@ -38,7 +27,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                                     new ProviderPaymentPriorityItem
                                         { ProviderId = 333L, PriorityOrder = 3, ProviderName = "Provider 3"}
                                 };
-            var mapped = _sut.MapPayment(inputData);
+            var mapped = Sut.MapPayment(inputData);
 
             mapped.Items.Count().Should().Be(3);
             var first = mapped.Items.Single(m => m.ProviderId == 111);

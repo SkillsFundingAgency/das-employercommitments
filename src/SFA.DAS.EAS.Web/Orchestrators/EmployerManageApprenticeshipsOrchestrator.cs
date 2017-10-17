@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using AutoMapper.Execution;
+
 using FluentValidation;
 using MediatR;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;

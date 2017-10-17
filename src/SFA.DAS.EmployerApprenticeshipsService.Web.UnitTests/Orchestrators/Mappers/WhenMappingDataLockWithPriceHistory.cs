@@ -1,40 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using FluentAssertions;
-using MediatR;
-using Moq;
 using NUnit.Framework;
+
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.DataLock;
-using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
-using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.HashingService;
 
-namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
+namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 {
     [TestFixture]
-    public class WhenMappingDataLockWithPriceHistory
+    public class WhenMappingDataLockWithPriceHistory : ApprenticeshipMapperBase
     {
-        private ApprenticeshipMapper _sut;
-
-        [SetUp]
-        public void SetUp()
-        {
-            var hashingService = new Mock<IHashingService>();
-            var currentDateTime = new Mock<ICurrentDateTime>();
-            var mediator = new Mock<IMediator>();
-            _sut = new ApprenticeshipMapper(hashingService.Object, currentDateTime.Object, mediator.Object, Mock.Of<ILog>());
-        }
-
         [Test]
         public void WithEmptyLists()
         {
             var dls = new List<DataLockStatus>();
             var h = new List<PriceHistory>();
-            var result = _sut.MapPriceChanges(dls, h);
+            var result = Sut.MapPriceChanges(dls, h);
 
             result.Count.Should().Be(0);
         }
@@ -64,7 +51,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                                 }
                         };
 
-            var result = _sut.MapPriceChanges(dls, h);
+            var result = Sut.MapPriceChanges(dls, h);
 
             result.Count.Should().Be(1);
             result[0].Title.Should().Be("Change 1");
@@ -93,7 +80,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                               new DataLockStatus { IlrEffectiveFromDate = date.AddMonths(5), IlrTotalCost = 3003 }
                           };
 
-            var result = _sut.MapPriceChanges(dls, h);
+            var result = Sut.MapPriceChanges(dls, h);
 
             result.Count.Should().Be(3);
             FormatPrice(result[0]).Should().Be("Change 1 1000 1001 - 1 Jun 2018 1 Jun 2018");
@@ -120,7 +107,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                               new DataLockStatus { IlrEffectiveFromDate = date.AddMonths(4), IlrTotalCost = 3003 } // Oct
                           };
 
-            var result = _sut.MapPriceChanges(dls, h);
+            var result = Sut.MapPriceChanges(dls, h);
 
             result.Count.Should().Be(3);
             FormatPrice(result[0]).Should().Be("Change 1 1000 1001 - 1 Jun 2018 1 Jun 2018");
@@ -146,7 +133,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                               new DataLockStatus { IlrEffectiveFromDate = date.AddMonths(5), IlrTotalCost = 3003 }
                           };
 
-            var result = _sut.MapPriceChanges(dls, h);
+            var result = Sut.MapPriceChanges(dls, h);
 
             result.Count.Should().Be(2);
             FormatPrice(result[0]).Should().Be("Change 1 2000 2002 - 1 Sep 2018 1 Sep 2018");
@@ -172,7 +159,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                               new DataLockStatus { IlrEffectiveFromDate = date.AddMonths(4), IlrTotalCost = 3003 } // Oct
                           };
 
-            var result = _sut.MapPriceChanges(dls, h);
+            var result = Sut.MapPriceChanges(dls, h);
 
             result.Count.Should().Be(3);
             FormatPrice(result[0]).Should().Be("Change 1 0 1001 - 1 Jan 0001 1 Jun 2018"); // Missing History

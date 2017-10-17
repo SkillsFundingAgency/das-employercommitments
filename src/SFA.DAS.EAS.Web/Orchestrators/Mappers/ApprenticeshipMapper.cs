@@ -6,17 +6,16 @@ using MediatR;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.DataLock;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
-using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.Commitments.Api.Types.ProviderPayment;
 using SFA.DAS.Commitments.Api.Types.Validation.Types;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
-using CommitmentTrainingType = SFA.DAS.Commitments.Api.Types.Apprenticeship.Types.TrainingType;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.HashingService;
 
@@ -29,23 +28,25 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         private readonly IMediator _mediator;
         private readonly ILog _logger;
 
+        private readonly IAcademicYearValidator _academicYearValidator;
+
         public ApprenticeshipMapper(
             IHashingService hashingService,
             ICurrentDateTime currentDateTime,
             IMediator mediator,
-            ILog logger)
+            ILog logger,
+            IAcademicYearValidator academicYearValidator)
         {
-            if (hashingService == null)
-                throw new ArgumentNullException(nameof(hashingService));
-            if (currentDateTime == null)
-                throw new ArgumentNullException(nameof(currentDateTime));
-            if (mediator == null)
-                throw new ArgumentNullException(nameof(mediator));
+            if (hashingService == null) throw new ArgumentNullException(nameof(hashingService));
+            if (currentDateTime == null) throw new ArgumentNullException(nameof(currentDateTime));
+            if (mediator == null) throw new ArgumentNullException(nameof(mediator));
+            if (academicYearValidator== null) throw new ArgumentNullException(nameof(academicYearValidator));
 
             _hashingService = hashingService;
             _currentDateTime = currentDateTime;
             _mediator = mediator;
             _logger = logger;
+            _academicYearValidator = academicYearValidator;
         }
 
         public ApprenticeshipDetailsViewModel MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship)
@@ -89,6 +90,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             var isStartDateInFuture = apprenticeship.StartDate.HasValue && apprenticeship.StartDate.Value >
                                       new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1);
 
+            var isLockedForUpdate = apprenticeship.HasHadDataLockSuccess;
+
+            if (_academicYearValidator.IsAfterLastAcademicYearFundingPeriod &&
+                 apprenticeship.StartDate.HasValue &&
+                 _academicYearValidator.Validate(apprenticeship.StartDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod)
+            {
+                isLockedForUpdate = true;
+            }
+
+            
             return new ApprenticeshipViewModel
             {
                 HashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id),
@@ -111,7 +122,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 ProviderRef = apprenticeship.ProviderRef,
                 EmployerRef = apprenticeship.EmployerRef,
                 HasStarted = !isStartDateInFuture,
-                IsInFirstCalendarMonthOfTraining = CalculateIfInFirstCalendarMonthOfTraining(apprenticeship.StartDate)
+                IsLockedForUpdate = isLockedForUpdate
             };
         }
 
@@ -317,14 +328,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             }
 
             return l;
-        }
-
-		private bool CalculateIfInFirstCalendarMonthOfTraining(DateTime? startDate)
-        {
-            if (!startDate.HasValue)
-                return false;
-
-            return _currentDateTime.Now.Year == startDate.Value.Year && _currentDateTime.Now.Month == startDate.Value.Month;
         }
 
         private async Task<ITrainingProgramme> GetTrainingProgramme(string trainingCode)
