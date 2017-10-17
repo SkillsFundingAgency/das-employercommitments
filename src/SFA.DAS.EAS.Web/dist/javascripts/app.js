@@ -230,9 +230,25 @@ $('.container-head').on('click touchstart', (function () {
 
 }));
 
-var placeholderText = $('.js-enabled #search-input').data('default-value');
+
+//floating menu
+$(window).scroll(function () {
+    if ($(window).scrollTop() >= 110) {
+        $('.floating-menu').addClass('fixed-header');
+        $('.js-float').addClass('width-adjust');
+    }
+    else {
+        $('.floating-menu').removeClass('fixed-header');
+        $('.js-float').removeClass('width-adjust');
+    }
+});
+
+
 
 //clear search box text
+
+var placeholderText = $('.js-enabled #search-input').data('default-value');
+
 window.onload = function () {
     if ($('.js-enabled #search-input').val() === "") {
         $('.js-enabled #search-input').addClass('placeholder-text');

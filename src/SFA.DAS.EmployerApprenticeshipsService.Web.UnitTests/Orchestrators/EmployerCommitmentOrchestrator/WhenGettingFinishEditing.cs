@@ -118,46 +118,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             //Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, actual.Status);
         }
-
-        [Test]
-        public async Task ThenShouldAlsoCallAcademiYearValidator()
-        {
-            //Arrange
-            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetCommitmentQueryRequest>()))
-               .ReturnsAsync(new GetCommitmentQueryResponse
-               {
-                   Commitment = new CommitmentView
-                   {
-                       Id = 123,
-                       LegalEntityId = "321",
-                       EditStatus = EditStatus.EmployerOnly,
-                       Apprenticeships = Enumerable.Repeat(new Apprenticeship
-                       {
-                           StartDate = DateTime.Now,
-                           EndDate = DateTime.Now.AddYears(1)
-                       }, 2).ToList()
-                   }
-               });
-
-            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
-                .ReturnsAsync(new GetAccountLegalEntitiesResponse
-                {
-                    LegalEntities = new List<LegalEntity> { new LegalEntity
-                    {
-                        Code = "321",
-                        AgreementStatus = EmployerAgreementStatus.Signed
-                    } }
-                });
-
-            _mockAcademicYearValidator
-                .Setup(x => x.Validate(It.IsAny<DateTime>()))
-                .Returns(AcademicYearValidationResult.Success);
-
-            //Act
-            var actual = await EmployerCommitmentOrchestrator.GetFinishEditingViewModel("ABC123", "XYZ123", "ABC321");
-
-            //Assert
-            _mockAcademicYearValidator.Verify(x => x.Validate(It.IsAny<DateTime>()), Times.AtLeastOnce);
-        }
+       
     }
 }
