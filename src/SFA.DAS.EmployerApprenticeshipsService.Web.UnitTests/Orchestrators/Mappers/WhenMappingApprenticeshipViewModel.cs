@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
 
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
-using SFA.DAS.Commitments.Api.Types.DataLock;
-using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
@@ -23,6 +20,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         {
             _now = new DateTime(DateTime.Now.Year, 11, 01);
 
+            AcademicYearValidator.Setup(m => m.IsAfterLastAcademicYearFundingPeriod).Returns(true);
+            AcademicYearValidator.Setup(m => m.Validate(It.IsAny<DateTime>())).Returns(AcademicYearValidationResult.Success);
+
             MockDateTime.Setup(m => m.Now).Returns(_now);
         }
 
@@ -31,6 +31,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         {
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1), HasHadDataLockSuccess = false };
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
+            var n = MockDateTime.Object.Now;
+
+            n.Should().Be(_now);
 
             viewModel.IsLockedForUpdate.Should().BeFalse();
             viewModel.HasStarted.Should().BeTrue();
@@ -41,12 +44,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void ShouldHaveLockedStatusIfAtLeastOneDataLocksSuccesFound()
         {
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1), HasHadDataLockSuccess = true };
-            var dataLocks = new List<DataLockStatus>
-                                {
-                                    new DataLockStatus { ErrorCode = DataLockErrorCode.Dlock04 },
-                                    new DataLockStatus { ErrorCode = DataLockErrorCode.None },
-                                    new DataLockStatus { ErrorCode = DataLockErrorCode.Dlock07 }
-                                };
+
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
 
             viewModel.IsLockedForUpdate.Should().BeTrue();
@@ -60,7 +58,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             AcademicYearValidator.Setup(m => m.Validate(It.IsAny<DateTime>())).Returns(AcademicYearValidationResult.NotWithinFundingPeriod);
 
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-5), HasHadDataLockSuccess = false };
-            var dataLocks = new List<DataLockStatus>();
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
 
             viewModel.IsLockedForUpdate.Should().BeTrue();

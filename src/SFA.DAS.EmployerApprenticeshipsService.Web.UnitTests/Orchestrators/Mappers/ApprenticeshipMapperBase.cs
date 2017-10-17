@@ -14,7 +14,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         protected Mock<IMediator> MockMediator;
         protected ApprenticeshipMapper Sut;
         protected Mock<ICurrentDateTime> MockDateTime;
-
         protected Mock<IAcademicYearValidator> AcademicYearValidator;
 
         public ApprenticeshipMapperBase()
