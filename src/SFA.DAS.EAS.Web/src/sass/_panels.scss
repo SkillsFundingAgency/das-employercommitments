@@ -32,12 +32,14 @@
     padding-left: 50px;
     padding-top: 15px;
     position: relative;
+
     .icon {
-        @include icon(icon-important, 35, 35, '../../dist/images');
+        @include icon(icon-important, 35, 35, '../../comt-assets/images');
         position: absolute;
         top: 20px;
         left: 0;
     }
+
     p {
         font-weight: 600;
     }

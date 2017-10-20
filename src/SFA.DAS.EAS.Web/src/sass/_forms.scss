@@ -29,7 +29,7 @@ legend {
  }
 
 .button-start {
-    background-image: url('/dist/images/icon-pointer.png');
+    background-image: url('/comt-assets/images/icon-pointer.png');
 }
 
 .button-secondary {
@@ -86,11 +86,14 @@ legend {
 .search-field {
     position: relative;
     margin-bottom: 15px;
+
     fieldset {
         width: auto;
     }
+
     .search-input {
         padding: 0 50px 0 0;
+
         input {
             border-radius: 0;
             font-size: 16px;
@@ -104,10 +107,12 @@ legend {
             border-right: none;
             line-height: 48px;
         }
+
         label {
             display: block;
         }
     }
+
     .search-submit {
         position: absolute;
         bottom: 0;
@@ -115,6 +120,7 @@ legend {
         height: 50px;
         width: 50px;
         overflow: visible;
+
         button {
             border-radius: 0;
             box-shadow: none;
@@ -129,7 +135,7 @@ legend {
             text-indent: -5000px;
             color: #fff;
             background-color: $govuk-blue;
-            background-image: url(/dist/images/icon-search.png);
+            background-image: url(/comt-assets/images/icon-search.png);
             background-repeat: no-repeat;
             background-position: 12px 13px;
         }

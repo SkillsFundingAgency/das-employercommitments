@@ -7,9 +7,9 @@
 }
 
 @section pageSpecificJS {
-    @Scripts.Render("~/bundles/apprentice")
-    @Scripts.Render("~/bundles/characterLimitation")
-    @Scripts.Render("~/bundles/lengthLimitation")
+    @Scripts.Render("~/comt-assets/bundles/apprentice")
+    @Scripts.Render("~/comt-assets/bundles/characterLimitation")
+    @Scripts.Render("~/comt-assets/bundles/lengthLimitation")
 }
 
 <div class="grid-row">
@@ -30,6 +30,8 @@
                     {
                         @Html.Partial("EditApprenticeship", Model.Data)
                     }
+
+
                 </fieldset>
             </div>
 

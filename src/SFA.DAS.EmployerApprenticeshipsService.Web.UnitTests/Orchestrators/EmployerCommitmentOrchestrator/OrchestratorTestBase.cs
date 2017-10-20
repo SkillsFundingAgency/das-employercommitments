@@ -10,6 +10,7 @@ using SFA.DAS.EmployerCommitments.Domain.Models.AccountTeam;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.Validators;
+using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
@@ -66,8 +67,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 _mockApprenticeshipMapper.Object,
                 _mockCommitmentMapper.Object,
                 _mockLogger.Object,
-                _mockAcademicYearValidator.Object,
-                _mockAcademicYearDateProvider.Object,
                 _mockApprenticeshipValidator.Object);
         }
     }

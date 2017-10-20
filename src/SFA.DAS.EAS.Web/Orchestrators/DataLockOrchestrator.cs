@@ -13,6 +13,7 @@ using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Exceptions;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
+using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators

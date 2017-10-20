@@ -1,5 +1,5 @@
 ﻿@mixin green-tick {
-  background:url(/dist/images/icon-green-tick.png) no-repeat 0 -4px;
+  background:url(/comt-assets/images/icon-green-tick.png) no-repeat 0 -4px;
   width: 30px;
   height: 22px;
   margin-left: -2px;
@@ -205,7 +205,7 @@
   .notice{
       margin:60px 0;
       .icon-important{
-          background-image: url('/dist/images/icon-important.png');
+          background-image: url('/comt-assets/images/icon-important.png');
           top:13%;
       }
   }
@@ -413,58 +413,66 @@ h2{
 }
 
 //start -- Apprentice Filter Styles
-.filter-option-select 
-{ 
-  margin-bottom: 30px;
-  background-color:$panel-colour;
-  padding: 5px;
-      .container-head {
-          padding-left: 5px;
-          background: url(/dist/css/images/option-select-toggle-sprite.png) no-repeat right 5px;
-          cursor: pointer;
-          display: block;
-          position: relative;
-          }
-      .option-select-label{
-          margin-right: 40px;
-          font-weight: bold;
-          padding: 5px;
-          text-transform:none;
-          display: block;
-          margin-top: 0;
-          }
-      .options-container {
-          position: relative;
-          background-color: #fff;          
-          height:200px; //container height
-          overflow:auto;
-          .item{ border-bottom: 1px solid #bfc1c3; } //// wrap labels per item for borders
-              label{
-                  font-size: 16px;
-                  line-height: 1.25; 
-                  padding-right: 10px;
-                  display:block;  
-                  font-weight: 400;
-                  text-transform: none;  
-                  padding: 7px 0 7px 2px;                   
-                  cursor: pointer;       
-                  margin-left:20px; // wrap labels         
-                  }
-                input{
-                  margin-left:-16px; // wrap labels
-              }
-          }
-        .showHide {
-           background: url(/dist/css/images/option-select-toggle-sprite.png) no-repeat;
-           background-position: right -77px;
-           cursor: pointer;
-           display: block;
-           position: relative; 
+.filter-option-select {
+    margin-bottom: 30px;
+    background-color: $panel-colour;
+    padding: 5px;
 
-          }
-          .hideOptions {
-              display: none; 
-          }
+    .container-head {
+        padding-left: 5px;
+        background: url(/comt-assets/css/images/option-select-toggle-sprite.png) no-repeat right 5px;
+        cursor: pointer;
+        display: block;
+        position: relative;
+    }
+
+    .option-select-label {
+        margin-right: 40px;
+        font-weight: bold;
+        padding: 5px;
+        text-transform: none;
+        display: block;
+        margin-top: 0;
+    }
+
+    .options-container {
+        position: relative;
+        background-color: #fff;
+        height: 200px; //container height
+        overflow: auto;
+
+        .item {
+            border-bottom: 1px solid #bfc1c3;
+        }
+        //// wrap labels per item for borders
+        label {
+            font-size: 16px;
+            line-height: 1.25;
+            padding-right: 10px;
+            display: block;
+            font-weight: 400;
+            text-transform: none;
+            padding: 7px 0 7px 2px;
+            cursor: pointer;
+            margin-left: 20px; // wrap labels
+        }
+
+        input {
+            margin-left: -16px; // wrap labels
+        }
+    }
+
+    .showHide {
+        background: url(/comt-assets/css/images/option-select-toggle-sprite.png) no-repeat;
+        background-position: right -77px;
+        cursor: pointer;
+        display: block;
+        position: relative;
+    }
+
+    .hideOptions {
+        display: none;
+    }
 }
 
 #manage-all-apprentices {
@@ -535,85 +543,100 @@ h2{
 
 
 
-// pagination 
-#manage-all-apprentices{
-  .panel{
-      background:$grey-3;
-      border-color:$purple;
-  }
-.previous-next-navigation {
-padding-left: 0;
-position: relative;
-overflow: hidden;
-margin: 60px 0 0;
-width: 100%; 
-  li 
-  {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 20px;
-    line-height: 1.11111;
-    font-weight: 400;
-    text-transform: none;
-    font-size-adjust: 0.5;
-    display: block;
-    padding: 0;
-    margin: 0;
-    width: 50%;
-    float: left; 
-    a 
-    {
-    display: block;
-    text-decoration: none; 
-    font-size: 24px;
-    line-height: 0.9em;
-        span {
-        display: block;
-        font-family: "nta", Arial, sans-serif;
-        font-size: 12px;
-        line-height: 1.25;
-        font-weight: 400;
-        text-transform: none;
-        font-size-adjust: 0.5; 
+// pagination
+#manage-all-apprentices {
+    .panel {
+        background: $grey-3;
+        border-color: $purple;
+    }
+
+    .previous-next-navigation {
+        padding-left: 0;
+        position: relative;
+        overflow: hidden;
+        margin: 60px 0 0;
+        width: 100%;
+
+        li {
+            font-family: "nta", Arial, sans-serif;
+            font-size: 20px;
+            line-height: 1.11111;
+            font-weight: 400;
+            text-transform: none;
+            font-size-adjust: 0.5;
+            display: block;
+            padding: 0;
+            margin: 0;
+            width: 50%;
+            float: left;
+
+            a {
+                display: block;
+                text-decoration: none;
+                font-size: 24px;
+                line-height: 0.9em;
+
+                span {
+                    display: block;
+                    font-family: "nta", Arial, sans-serif;
+                    font-size: 12px;
+                    line-height: 1.25;
+                    font-weight: 400;
+                    text-transform: none;
+                    font-size-adjust: 0.5;
+                }
+
+                &:hover {
+                    background: $highlight-colour;
+
+                    .page-numbers {
+                        text-decoration: underline;
+                    }
+                }
+
+                &:focus {
+                    .page-numbers {
+                        text-decoration: underline;
+                    }
+                }
+            }
         }
-        &:hover {
-             background:$highlight-colour;
-            .page-numbers {text-decoration: underline;}
+
+        li.next {
+            float: right;
+            text-align: right;
+
+            a {
+                padding: 15px 35px 15px 0;
+            }
+
+            a:before {
+                background: transparent url("/comt-assets/css/images/pagination-arrow-sprite.png") no-repeat -102px -11px;
+                margin: -4px -32px 0 0;
+                display: block;
+                float: right;
+                width: 30px;
+                height: 38px;
+                content: " ";
+            }
         }
-        &:focus{
-             .page-numbers {text-decoration: underline;}
+
+        li.previous {
+            a {
+                padding: 15px 0 15px 35px;
+            }
+
+            a:before {
+                background: transparent url("/comt-assets/css/images/pagination-arrow-sprite.png") no-repeat -20px -11px;
+                margin: -4px 0 0 -32px;
+                display: block;
+                float: left;
+                width: 30px;
+                height: 38px;
+                content: " ";
+            }
         }
     }
-    
- }
-  li.next 
-  {
-    float: right;
-    text-align: right; 
-        a {padding: 15px 35px 15px 0;}
-        a:before {
-        background: transparent url("/dist/css/images/pagination-arrow-sprite.png") no-repeat -102px -11px;
-        margin: -4px -32px 0 0;
-        display: block;
-        float: right;
-        width: 30px;
-        height: 38px;
-        content: " "; }
-    }
-  li.previous
-      { 
-      a{padding: 15px 0 15px 35px; }
-      a:before 
-      {
-        background: transparent url("/dist/css/images/pagination-arrow-sprite.png") no-repeat -20px -11px;
-        margin: -4px 0 0 -32px;
-        display: block;
-        float: left;
-        width: 30px;
-        height: 38px;
-        content: " "; 
-      }
-      }
-  }
 }
 // END -pagination styles
 
@@ -673,6 +696,95 @@ width: 100%;
         float:left;
 
     }
+}
+
+/*floating menu style - EMPLOYER */
+#floating-menu-holder{
+    width: 100%;
+    background: $mauve;
+    .fixed-header {
+	  position: fixed;
+	  top:0; left:0;
+	  max-width: 100%; 
+	}
+    .width-adjust{
+      max-width: 960px;
+      margin: 0 auto;
+      }
+
+}
+  .floating-menu{ 
+	clear:both;
+	max-width:960px;
+	width:100%;
+	background:$mauve;
+	color:#fff;
+    z-index:1;
+    margin:0 auto;
+        nav#user-nav{
+            clear:both;
+            float:left;
+            margin:0 0 0 20px;   
+                 @include media(tablet){
+                     margin:0;                  
+                     clear:none;
+                     float:right;
+                 }
+                li{
+                    a{
+                        border:0;                     
+                        color:#fff;  
+                                
+                    }
+                    .has-sub-menu{ 
+                        a.menu-main{
+                            border:0;
+                            color:#fff;
+                        }  
+                  
+                    }  
+                .open{
+                     a.menu-main{color:#4c2c92;}
+                    }  
+                            
+                }         
+            }
+    
+        p.floating-head-text{
+              float:left; 
+              margin:10px 0 0 10px;
+              font-weight:bold;
+              font-size:19px;
+
+              @include media(tablet){
+                 margin:10px 0 0 0px;
+                 }
+            }
+  }
+ /* - END floating menu style */
+
+  .js-enabled #user-nav li.has-sub-menu>a:before{
+      border-left-color:#fff;
+  }
+.js-enabled #user-nav li.has-sub-menu.open>a{
+    color:#4c2c92;
+}
+
+.floating-menu nav#user-nav #settings-menu{
+    a.sub-menu-item{
+        color:#4c2c92;
+    }
+}
+
+.header-organisation ul li.menu-link>a{
+    top:auto;
+}
+
+.floating-menu nav#user-nav #settings-menu a.sub-menu-item{
+    color:#fff;
+       @include media(tablet){
+            color:#4c2c92;
+            }
 }
 
 

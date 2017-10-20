@@ -1,41 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using FluentAssertions;
-using MediatR;
 using Moq;
 using NUnit.Framework;
+
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
-using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
-using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.NLog.Logger;
+using SFA.DAS.HashingService;
 
-namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
+namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 {
     [TestFixture]
-    public class WhenMappingToUpdateModel
+    public class WhenMappingToUpdateModel : ApprenticeshipMapperBase
     {
-        private Mock<IMediator> _mockMediator;
-
-        private ApprenticeshipMapper _mappingTjänst;
-        [SetUp]
-        public void SetUp()
-        {
-            var mockHashingService = new Mock<IHashingService>();
-            var mockCurrentDateTime = new Mock<ICurrentDateTime>();
-            _mockMediator = new Mock<IMediator>();
-
-            _mappingTjänst = new ApprenticeshipMapper(mockHashingService.Object, mockCurrentDateTime.Object, _mockMediator.Object, Mock.Of<ILog>());
-        }
+        
 
         [Test]
         public async Task TwoEmptyModelIsEqueal()
         {
-            var model = await _mappingTjänst.CompareAndMapToApprenticeshipViewModel(new Apprenticeship(), new ApprenticeshipViewModel());
+            var model = await Sut.CompareAndMapToApprenticeshipViewModel(new Apprenticeship(), new ApprenticeshipViewModel());
 
             model.FirstName.Should().BeNull();
             model.LastName.Should().BeNull();
@@ -61,7 +50,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                                   Cost = "5"
                               };
 
-            var model = await _mappingTjänst.CompareAndMapToApprenticeshipViewModel(a , updated);
+            var model = await Sut.CompareAndMapToApprenticeshipViewModel(a , updated);
 
             model.FirstName.Should().Be("Fredrik");
             model.LastName.Should().Be("Stockborg");
@@ -80,7 +69,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             var updated = new ApprenticeshipViewModel { Cost = updatedCost };
 
-            var model = await _mappingTjänst.CompareAndMapToApprenticeshipViewModel(a, updated);
+            var model = await Sut.CompareAndMapToApprenticeshipViewModel(a, updated);
             model.Cost.Should().Be(updatedCost);
         }
 
@@ -104,7 +93,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 EndDate = ed
             };
 
-            var model = await _mappingTjänst.CompareAndMapToApprenticeshipViewModel(a, updated);
+            var model = await Sut.CompareAndMapToApprenticeshipViewModel(a, updated);
 
             model.DateOfBirth.Should().Be(dob);
             model.StartDate.Should().Be(sd);
@@ -131,7 +120,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 EndDate = ed
             };
 
-            var model = await _mappingTjänst.CompareAndMapToApprenticeshipViewModel(a, updated);
+            var model = await Sut.CompareAndMapToApprenticeshipViewModel(a, updated);
 
             model.DateOfBirth.Should().BeNull();
             model.StartDate.Should().BeNull();
@@ -151,7 +140,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 TrainingCode = "abba-1234"
             };
 
-            var model = await _mappingTjänst.CompareAndMapToApprenticeshipViewModel(a, updated);
+            var model = await Sut.CompareAndMapToApprenticeshipViewModel(a, updated);
 
             model.TrainingCode.Should().BeNull();
             model.TrainingName.Should().BeNull();
@@ -171,7 +160,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 TrainingCode = "abba-555"
             };
 
-            _mockMediator.Setup(m => m.SendAsync(It.IsAny<GetTrainingProgrammesQueryRequest>()))
+            MockMediator.Setup(m => m.SendAsync(It.IsAny<GetTrainingProgrammesQueryRequest>()))
                 .ReturnsAsync(
                     new GetTrainingProgrammesQueryResponse { TrainingProgrammes = new List<ITrainingProgramme>
                                     {
@@ -180,7 +169,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                                     }
                     });
 
-            var model = await _mappingTjänst.CompareAndMapToApprenticeshipViewModel(a, updated);
+            var model = await Sut.CompareAndMapToApprenticeshipViewModel(a, updated);
 
             model.TrainingCode.Should().Be("abba-555");
             model.TrainingName.Should().Be("Framework Title");
@@ -200,7 +189,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 TrainingCode = "standard-007"
             };
 
-            _mockMediator.Setup(m => m.SendAsync(It.IsAny<GetTrainingProgrammesQueryRequest>()))
+            MockMediator.Setup(m => m.SendAsync(It.IsAny<GetTrainingProgrammesQueryRequest>()))
                 .ReturnsAsync(
                     new GetTrainingProgrammesQueryResponse
                     {
@@ -211,7 +200,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                                     }
                     });
 
-            var model = await _mappingTjänst.CompareAndMapToApprenticeshipViewModel(a, updated);
+            var model = await Sut.CompareAndMapToApprenticeshipViewModel(a, updated);
 
             model.TrainingCode.Should().Be("standard-007");
             model.TrainingName.Should().Be("Standard Title");
@@ -234,7 +223,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 EmployerRef = "",
             };
 
-            var model = await _mappingTjänst.CompareAndMapToApprenticeshipViewModel(a, updated);
+            var model = await Sut.CompareAndMapToApprenticeshipViewModel(a, updated);
 
             model.FirstName.Should().BeNull();
             model.LastName.Should().BeNull();
@@ -258,7 +247,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 EmployerRef = null,
             };
 
-            var model = await _mappingTjänst.CompareAndMapToApprenticeshipViewModel(a, updated);
+            var model = await Sut.CompareAndMapToApprenticeshipViewModel(a, updated);
 
             model.FirstName.Should().BeNull();
             model.LastName.Should().BeNull();

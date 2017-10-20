@@ -11,6 +11,7 @@ using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Domain.Models.UserProfile;
 using SFA.DAS.NLog.Logger;
+using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {

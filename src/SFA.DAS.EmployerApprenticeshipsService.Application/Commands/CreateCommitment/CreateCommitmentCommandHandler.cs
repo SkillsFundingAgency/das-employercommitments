@@ -10,6 +10,7 @@ using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Notifications.Api.Types;
+using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
 {
