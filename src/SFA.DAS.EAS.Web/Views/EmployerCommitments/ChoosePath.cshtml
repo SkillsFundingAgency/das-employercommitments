@@ -9,10 +9,6 @@
     ViewBag.PageID = "choose-add-path";
 }
 
-@*@section pageSpecificJS {
-    @Scripts.Render("~/bundles/jqueryvalcustom")
-}*@
-
 <div class="grid-row">
     <div class="column-two-thirds">
         <form method="POST" action="@Url.Action("CreateCommitment")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">

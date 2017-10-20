@@ -1,4 +1,6 @@
-﻿using System.Web.Optimization;
+﻿using Microsoft.Azure;
+using System;
+using System.Web.Optimization;
 
 namespace SFA.DAS.EmployerCommitments.Web
 {
@@ -7,43 +9,42 @@ namespace SFA.DAS.EmployerCommitments.Web
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/sfajs").Include(
-                      "~/dist/javascripts/jquery-1.11.0.min.js",
-                      "~/dist/javascripts/govuk-template.js",
-                      "~/dist/javascripts/selection-buttons.js",
-                      "~/dist/javascripts/showhide-content.js",
-                      "~/dist/javascripts/stacker.js",
-                      "~/dist/javascripts/app.js"));  
+            bundles.Add(new ScriptBundle("~/comt-assets/bundles/sfajs").Include(
+                      "~/comt-assets/javascripts/jquery-1.11.0.min.js",
+                      "~/comt-assets/javascripts/govuk-template.js",
+                      "~/comt-assets/javascripts/selection-buttons.js",
+                      "~/comt-assets/javascripts/showhide-content.js",
+                      "~/comt-assets/javascripts/stacker.js",
+                      "~/comt-assets/javascripts/app.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/apprentice").Include(
-                      "~/dist/javascripts/apprentice/select2.min.js",
-                      "~/dist/javascripts/apprentice/dropdown.js"
-                   
+            bundles.Add(new ScriptBundle("~/comt-assets/bundles/apprentice").Include(
+                      "~/comt-assets/javascripts/apprentice/select2.min.js",
+                      "~/comt-assets/javascripts/apprentice/dropdown.js"
+
                       ));
 
-            bundles.Add(new ScriptBundle("~/bundles/characterLimitation").Include(                
-                    "~/dist/javascripts/character-limit.js"
+            bundles.Add(new ScriptBundle("~/comt-assets/bundles/characterLimitation").Include(
+                    "~/comt-assets/javascripts/character-limit.js"
                     ));
 
-            bundles.Add(new ScriptBundle("~/bundles/lengthLimitation").Include(
-                    "~/dist/javascripts/length-limit.js"
+            bundles.Add(new ScriptBundle("~/comt-assets/bundles/lengthLimitation").Include(
+                    "~/comt-assets/javascripts/length-limit.js"
                     ));
 
-            bundles.Add(new ScriptBundle("~/bundles/paymentOrder").Include(
-                  "~/dist/javascripts/payment-order.js"
+            bundles.Add(new ScriptBundle("~/comt-assets/bundles/paymentOrder").Include(
+                  "~/comt-assets/javascripts/payment-order.js"
                  ));
 
-            bundles.Add(new ScriptBundle("~/bundles/jqueryvalcustom").Include(
+            bundles.Add(new ScriptBundle("~/comt-assets/bundles/jqueryvalcustom").Include(
                       "~/Scripts/jquery.validate.js", "~/Scripts/jquery.validate.unobtrusive.custom.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/lodash").Include(
-                        "~/dist/javascripts/lodash.js"));
+            bundles.Add(new ScriptBundle("~/comt-assets/bundles/lodash").Include(
+                        "~/comt-assets/javascripts/lodash.js"));
 
-            bundles.Add(new StyleBundle("~/bundles/screenie6").Include("~/dist/css/screen-ie6.css"));
-            bundles.Add(new StyleBundle("~/bundles/screenie7").Include("~/dist/css/screen-ie7.css"));
-            bundles.Add(new StyleBundle("~/bundles/screenie8").Include("~/dist/css/screen-ie8.css"));
-            bundles.Add(new StyleBundle("~/bundles/screen").Include("~/dist/css/screen.css"));
-
+            bundles.Add(new StyleBundle("~/comt-assets/bundles/screenie6").Include("~/comt-assets/css/screen-ie6.css"));
+            bundles.Add(new StyleBundle("~/comt-assets/bundles/screenie7").Include("~/comt-assets/css/screen-ie7.css"));
+            bundles.Add(new StyleBundle("~/comt-assets/bundles/screenie8").Include("~/comt-assets/css/screen-ie8.css"));
+            bundles.Add(new StyleBundle("~/comt-assets/bundles/screen").Include("~/comt-assets/css/screen.css"));
         }
     }
 }

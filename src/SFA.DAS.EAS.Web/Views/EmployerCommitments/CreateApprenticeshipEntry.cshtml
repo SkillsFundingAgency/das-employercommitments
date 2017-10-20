@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.EmployerCommitments.Web
+
 @model OrchestratorResponse<SFA.DAS.EmployerCommitments.Web.ViewModels.ExtendedApprenticeshipViewModel>
 
 @{
@@ -8,9 +9,9 @@
 }
 
 @section pageSpecificJS {
-    @Scripts.Render("~/bundles/apprentice")
-    @Scripts.Render("~/bundles/characterLimitation")
-    @Scripts.Render("~/bundles/lengthLimitation")
+    @Scripts.Render("~/comt-assets/bundles/apprentice")
+    @Scripts.Render("~/comt-assets/bundles/characterLimitation")
+    @Scripts.Render("~/comt-assets/bundles/lengthLimitation")
 }
 
 <div class="grid-row">
