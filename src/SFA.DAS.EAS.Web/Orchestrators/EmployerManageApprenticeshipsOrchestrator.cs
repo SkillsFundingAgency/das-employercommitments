@@ -159,7 +159,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(data.Apprenticeship);
 
                 detailsViewModel.PendingDataLockRestart = data.Apprenticeship.DataLockCourseTriaged;
-                detailsViewModel.PendingDataLockChange = data.Apprenticeship.DataLockPriceTriaged;
+                detailsViewModel.PendingDataLockChange = data.Apprenticeship.DataLockPriceTriaged || data.Apprenticeship.DataLockCourseChangeTriaged;
 
                 return new OrchestratorResponse<ApprenticeshipDetailsViewModel> { Data = detailsViewModel };
             }, hashedAccountId, externalUserId);

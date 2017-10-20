@@ -71,11 +71,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 PendingChanges = pendingChange,
                 Alerts = MapRecordStatus(apprenticeship.PendingUpdateOriginator, 
                     apprenticeship.DataLockCourseTriaged, 
-                    apprenticeship.DataLockPriceTriaged),
+                    apprenticeship.DataLockPriceTriaged || apprenticeship.DataLockCourseChangeTriaged),
                 EmployerReference = apprenticeship.EmployerRef,
                 CohortReference = _hashingService.HashValue(apprenticeship.CommitmentId),
                 EnableEdit = pendingChange == PendingChanges.None
                             && !apprenticeship.DataLockCourseTriaged
+                            && !apprenticeship.DataLockCourseChangeTriaged
                             && !apprenticeship.DataLockPriceTriaged
                             && new []{ PaymentStatus.Active, PaymentStatus.Paused,  }.Contains(apprenticeship.PaymentStatus),
                 CanEditStatus = !(new List<PaymentStatus> { PaymentStatus.Completed, PaymentStatus.Withdrawn }).Contains(apprenticeship.PaymentStatus)
@@ -381,7 +382,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             }
         }
 
-        private IEnumerable<string> MapRecordStatus(Originator? pendingUpdateOriginator, bool dataLockCourseTriaged, bool dataLockPriceTriaged)
+        private IEnumerable<string> MapRecordStatus(Originator? pendingUpdateOriginator, bool dataLockCourseTriaged, bool changeRequested)
         {
             const string ChangesPending = "Changes pending";
             const string ChangesForReview = "Changes for review";
@@ -399,7 +400,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             if (dataLockCourseTriaged)
                 statuses.Add(ChangesRequested);
 
-            if (dataLockPriceTriaged)
+            if (changeRequested)
                 statuses.Add(ChangesForReview);
 
             return statuses.Distinct();

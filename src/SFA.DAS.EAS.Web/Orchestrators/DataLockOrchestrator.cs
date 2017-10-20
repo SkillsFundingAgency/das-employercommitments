@@ -91,9 +91,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     var dataLockSummary = await _mediator.SendAsync(
                             new GetDataLockSummaryQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
 
-                    if (!dataLockSummary.DataLockSummary.DataLockWithOnlyPriceMismatch.Any())
-                        throw new InvalidStateException($"Apprenticeship does not contain any price data locks. Apprenticeship: {apprenticeshipId}");
-
                     var priceHistory = await _mediator.SendAsync(new GetPriceHistoryQueryRequest
                     {
                         AccountId = accountId,
@@ -102,6 +99,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                     var apprenticeship = await _mediator.SendAsync(
                         new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
+
+                    var dataLockPrice =
+                        dataLockSummary.DataLockSummary.DataLockWithCourseMismatch
+                        .Concat(dataLockSummary.DataLockSummary.DataLockWithOnlyPriceMismatch)
+                        .Where(m => m.ErrorCode.HasFlag(DataLockErrorCode.Dlock07));
 
                     return new OrchestratorResponse<DataLockStatusViewModel>
                     {
@@ -114,7 +116,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             LearnerName = apprenticeship.Apprenticeship.ApprenticeshipName,
                             DateOfBirth = apprenticeship.Apprenticeship.DateOfBirth,
                             CourseChanges =  await _apprenticeshipMapper.MapCourseChanges(dataLockSummary.DataLockSummary.DataLockWithCourseMismatch, apprenticeship.Apprenticeship),
-                            PriceChanges = _apprenticeshipMapper.MapPriceChanges(dataLockSummary.DataLockSummary.DataLockWithOnlyPriceMismatch, priceHistory.History)
+                            PriceChanges = _apprenticeshipMapper.MapPriceChanges(dataLockPrice, priceHistory.History)
 
                         }
                     };
