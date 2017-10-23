@@ -19,78 +19,104 @@
         <form method="post" action="@Url.RouteUrl("PostWhenToApplyChange")" novalidate onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
-            
+
             <h1 class="heading-xlarge">@ViewBag.Title</h1>
-            
-            <fieldset>
-                <legend class="visually-hidden" aria-hidden="true">Select stop date</legend>
-                <p>No previous payments will be refunded.</p>
-                <div class="form-group">
-                    <legend class="visually-hidden">Date of status change</legend>
-                   
-                    @Html.ValidationMessage("WhenToMakeChange", "Please choose an option", new { id = "error-message-WhenToMakeChange" })
-                    <label for=@($"WhenToMakeChange-{WhenToMakeChangeOptions.Immediately}") class="block-label selection-button-radio">
-                        @Html.RadioButton("WhenToMakeChange", WhenToMakeChangeOptions.Immediately, new { id = $"WhenToMakeChange-{WhenToMakeChangeOptions.Immediately}", dataOptionName = $"{WhenToMakeChangeOptions.Immediately}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{WhenToMakeChangeOptions.Immediately}')" })
-                        Today
-                    </label>
-                    
-                    @if (Model.Data.EarliestDateIsStartDate)
-                    {
-                        <div class="panel panel-border-wide" id="stop-today">
-                            <p class="strong">
-                                If you want to stop and restart this apprenticeship, select 'before today' and enter the original start date.
-                            </p>
-                        </div>
-                    }
 
-                    <label for=@($"WhenToMakeChange-{WhenToMakeChangeOptions.SpecificDate}") class="block-label selection-button-radio" id="before-today">
-                        @Html.RadioButton("WhenToMakeChange", WhenToMakeChangeOptions.SpecificDate, new { id = $"WhenToMakeChange-{WhenToMakeChangeOptions.SpecificDate}", dataOptionName = $"{WhenToMakeChangeOptions.SpecificDate}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{WhenToMakeChangeOptions.SpecificDate}')" })
-                        Before today
-                    </label>
-                </div>
+            <table class="apprentice-to-stop">
+                <thead>
+                    <tr>
+                        <th colspan="2" class="visually-hidden">Stop apprentice</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td class="bold">Model.Data.ApprenticeName</td>
+                    </tr>
+                    <tr>
+                        <td>Unique learner number</td>
+                        <td class="bold">Model.uniqueLearnerNumber</td>
+                    </tr>
+                    <tr>
+                        <td>Apprenticeship training course</td>
+                        <td class="bold">Model.Data.trainingCourse</td>
+                    </tr>
+                    </tbody>
+                </table>
 
-                <div class="form-error-group form-group @Html.AddClassIfPropertyInError("DateOfChange", "error")" id="stop-effective">
-                    <span class="form-label-bold">Enter stop date</span>
-                    <span class="form-hint">The earliest date you can enter is @Model.Data.EarliestDate.ToFullDateEntryFormat()</span>
 
-                    <div class="form-date">
-                        @Html.ValidationMessage("DateOfChange", new { id = "error-message-DateOfChange", @class = "error-message" })
-                        <div class="form-group form-group-day">
-                            <label for="DateOfChange.Day">
-                                Day
+
+
+
+                    <fieldset>
+                        <legend class="visually-hidden" aria-hidden="true">Select stop date</legend>
+                        <p class="strong">When did this apprentice stop?</p>
+                        <div class="form-group">
+                            <legend class="visually-hidden">Date of status change</legend>
+
+                            @Html.ValidationMessage("WhenToMakeChange", "Please choose an option", new { id = "error-message-WhenToMakeChange" })
+                            <label for=@($"WhenToMakeChange-{WhenToMakeChangeOptions.Immediately}") class="block-label selection-button-radio">
+                                @Html.RadioButton("WhenToMakeChange", WhenToMakeChangeOptions.Immediately, new { id = $"WhenToMakeChange-{WhenToMakeChangeOptions.Immediately}", dataOptionName = $"{WhenToMakeChangeOptions.Immediately}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{WhenToMakeChangeOptions.Immediately}')" })
+                                Today
                             </label>
-                            @Html.TextBox("DateOfChange.Day", Model.Data.ChangeStatusViewModel.DateOfChange.Day, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "31", aria_labelledby = "DateOfChange.Day" })
-                        </div>
-                        <div class="form-group form-group-month">
-                            <label for="DateOfChange.Month">
-                                Month
-                            </label>
-                            @Html.TextBox("DateOfChange.Month", Model.Data.ChangeStatusViewModel.DateOfChange.Month, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "DateOfChange.Month" })
 
-                        </div>
-                        <div class="form-group form-group-year">
-                            <label for="DateOfChange.Year">
-                                Year
-                            </label>
-                            @Html.TextBox("DateOfChange.Year", Model.Data.ChangeStatusViewModel.DateOfChange.Year, new { @class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "DateOfChange.Year" })
-                        </div>
-                    </div>
-                    
-                    @if (Model.Data.EarliestDateIsStartDate)
-                    {
-                        <div class="panel panel-border-wide">
-                            <p class="strong">
-                                If you want to stop and restart this apprenticeship, enter the original start <br/>date: @Model.Data.EarliestDate.ToFullDateEntryFormat().
-                            </p>
-                        </div>
-                    }
-                </div>
+                            @if (Model.Data.EarliestDateIsStartDate)
+                            {
+                                <div class="panel panel-border-wide" id="stop-today">
+                                    <p class="strong">
+                                        If you want to stop and restart this apprenticeship, select 'before today' and enter the original start date.
+                                    </p>
+                                </div>
+                            }
 
-                <div class="form-group">
-                    <button class="button" type="submit" id="submit-apply-change">Continue</button>
-                    <a class="text-link cancel-link" href=@Url.RouteUrl("OnProgrammeApprenticeshipDetails") aria-label="Cancel">Cancel</a>
-                </div>
-            </fieldset>
+                            <label for=@($"WhenToMakeChange-{WhenToMakeChangeOptions.SpecificDate}") class="block-label selection-button-radio" id="before-today">
+                                @Html.RadioButton("WhenToMakeChange", WhenToMakeChangeOptions.SpecificDate, new { id = $"WhenToMakeChange-{WhenToMakeChangeOptions.SpecificDate}", dataOptionName = $"{WhenToMakeChangeOptions.SpecificDate}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{WhenToMakeChangeOptions.SpecificDate}')" })
+                                Before today
+                            </label>
+                        </div>
+
+                        <div class="form-error-group form-group @Html.AddClassIfPropertyInError("DateOfChange", "error")" id="stop-effective">
+                            <span class="form-label-bold">Enter stop date</span>
+                            <span class="form-hint">The earliest date you can enter is @Model.Data.EarliestDate.ToFullDateEntryFormat()</span>
+
+                            <div class="form-date">
+                                @Html.ValidationMessage("DateOfChange", new { id = "error-message-DateOfChange", @class = "error-message" })
+                                <div class="form-group form-group-day">
+                                    <label for="DateOfChange.Day">
+                                        Day
+                                    </label>
+                                    @Html.TextBox("DateOfChange.Day", Model.Data.ChangeStatusViewModel.DateOfChange.Day, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "31", aria_labelledby = "DateOfChange.Day" })
+                                </div>
+                                <div class="form-group form-group-month">
+                                    <label for="DateOfChange.Month">
+                                        Month
+                                    </label>
+                                    @Html.TextBox("DateOfChange.Month", Model.Data.ChangeStatusViewModel.DateOfChange.Month, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "DateOfChange.Month" })
+
+                                </div>
+                                <div class="form-group form-group-year">
+                                    <label for="DateOfChange.Year">
+                                        Year
+                                    </label>
+                                    @Html.TextBox("DateOfChange.Year", Model.Data.ChangeStatusViewModel.DateOfChange.Year, new { @class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "DateOfChange.Year" })
+                                </div>
+                            </div>
+
+                            @if (Model.Data.EarliestDateIsStartDate)
+                            {
+                                <div class="panel panel-border-wide">
+                                    <p class="strong">
+                                        If you want to stop and restart this apprenticeship, enter the original start <br />date: @Model.Data.EarliestDate.ToFullDateEntryFormat().
+                                    </p>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            <button class="button" type="submit" id="submit-apply-change">Continue</button>
+                            <a class="text-link cancel-link" href=@Url.RouteUrl("OnProgrammeApprenticeshipDetails") aria-label="Cancel">Cancel</a>
+                        </div>
+                    </fieldset>
         </form>
     </div>
 </div>

@@ -68,14 +68,14 @@
                             </p>
                 break;
             case ChangeStatusType.Stop:
-                <p class="lede">
+                @*<p class="lede">
                     You're about to stop this apprentice and any payments you've
                     authorised to their training provider.
                 </p>
 
                         <div class="panel panel-border-wide">
                             <p>You won't be able to undo this change.</p>
-                        </div>
+                        </div>*@
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(Model.Data.ChangeStatusViewModel.ChangeType), "Not a valid value");
@@ -93,10 +93,18 @@
                         <td>Name</td>
                         <td class="bold">@Model.Data.ApprenticeName</td>
                     </tr>
+                    <tr>
+                        <td>Unique learner number</td>
+                        <td class="bold">Model.uniqueLearnerNumber</td>
+                    </tr>
+                    <tr>
+                        <td>Date change takes effect</td>
+                        <td class="bold">Model.Data.DateOfChange</td>
+                    </tr>
                     @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Resume)
                     {
                         <tr>
-                            <td>Paused on</td>
+                            <td>Paused date</td>
                             <td class="bold">
                                 @Model.Data.ChangeStatusViewModel.PauseDate.DateTime.Value.ToGdsFormat()
                             </td>
@@ -135,11 +143,11 @@
 
                     @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Resume)
                     {
-                        <legend class="form-label-bold">@Model.Data.ChangeStatusViewModel.ChangeType.Value?</legend>
+                        <legend class="form-label-bold">Would you like to @Model.Data.ChangeStatusViewModel.ChangeType.Value this apprentice?</legend>
                     }
                     else
                     {
-                        <legend class="form-label-bold">Would you like to @pageAction this apprentice ?</legend>
+                        <legend class="form-label-bold">Would you like to permanently @pageAction payments for this apprentice?</legend>
                     }
 
 
