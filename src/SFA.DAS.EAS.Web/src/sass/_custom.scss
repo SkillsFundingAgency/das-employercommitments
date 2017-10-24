@@ -826,6 +826,12 @@ h2{
       }
 }
 
+#apprentices-home-page{
+    h2.heading-medium{
+        margin-top:0;
+    }
+}
+
 //all mobile media query breakpoints
 //==================================
 @media only screen and (max-device-width: 640px),
