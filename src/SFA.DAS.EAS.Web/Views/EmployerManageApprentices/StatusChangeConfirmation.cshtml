@@ -95,12 +95,20 @@
                     </tr>
                     <tr>
                         <td>Unique learner number</td>
-                        <td class="bold">Model.uniqueLearnerNumber</td>
+                        <td class="bold">@Model.Data.ApprenticeULN</td>
                     </tr>
-                    <tr>
-                        <td>Date change takes effect</td>
-                        <td class="bold">Model.Data.DateOfChange</td>
-                    </tr>
+
+                    @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Pause)
+                    {
+                        <tr>
+                            <td>Date change takes effect</td>
+                            <td class="bold">
+                                @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormat()
+                            </td>
+                        </tr>
+                    }
+
+                    
                     @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Resume)
                     {
                         <tr>
