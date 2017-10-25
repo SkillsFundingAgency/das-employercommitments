@@ -17,6 +17,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public DateTime? PeriodStartData { get; set; }
 
+        public DateTime? PeriodEndData { get; set; }
+
         public string HashedAccountId { get; set; }
 
         public string HashedApprenticeshipId { get; set; }
