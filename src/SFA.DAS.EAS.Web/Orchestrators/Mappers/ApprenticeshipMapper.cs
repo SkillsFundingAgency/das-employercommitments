@@ -323,6 +323,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                     CurrentStartDate = h?.FromDate ?? DateTime.MinValue,
                     CurrentCost = h?.Cost ?? default(decimal),
                     IlrStartDate = dl.IlrEffectiveFromDate ?? DateTime.MinValue,
+                    IlrEndDate = dl.IlrEffectiveToDate,
                     IlrCost = dl.IlrTotalCost ?? default(decimal),
                     MissingPriceHistory = h == null
                 });

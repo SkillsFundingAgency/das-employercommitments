@@ -9,7 +9,6 @@ using SFA.DAS.EmployerCommitments.Application.Commands.ResolveRequestedChanges;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetPriceHistoryQueryRequest;
-using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Exceptions;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
@@ -73,6 +72,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             CurrentProgram = currentProgram,
                             IlrProgram = newProgram,
                             PeriodStartData = dataLock.IlrEffectiveFromDate,
+                            PeriodEndData = dataLock.IlrEffectiveToDate,
                             ProviderName = apprenticeship.Apprenticeship.ProviderName,
                             LearnerName = apprenticeship.Apprenticeship.ApprenticeshipName,
                             DateOfBirth = apprenticeship.Apprenticeship.DateOfBirth

@@ -9,6 +9,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public DateTime IlrStartDate { get; set; }
 
+        public DateTime? IlrEndDate { get; set; }
+
         public decimal CurrentCost { get; set; }
 
         public decimal IlrCost { get; set; }

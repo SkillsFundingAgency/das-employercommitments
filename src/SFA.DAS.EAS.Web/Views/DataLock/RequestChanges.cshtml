@@ -71,16 +71,28 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>From date</td>
+                        <td>Price period</td>
                         <td>
                             @{
                                 if (!p.MissingPriceHistory)
                                 {
-                                    <span>@p.CurrentStartDate.Date.ToGdsFormat()</span>
+                                    <span>From @p.CurrentStartDate.Date.ToGdsFormat()</span>
                                 }
                             }
                         </td>
-                        <td>@p.IlrStartDate.Date.ToGdsFormat()</td>
+                        <td>
+                            @{
+                                var priceDetail = $"From {p.IlrStartDate.Date.ToGdsFormat()}";
+
+                                if (p.IlrEndDate.HasValue)
+                                {
+                                    priceDetail = $"{p.IlrStartDate.Date.ToGdsFormat()} to {p.IlrEndDate.Value.ToGdsFormat()}";
+                                }
+
+                                @priceDetail
+
+                            }
+                        </td>
                     </tr>
                     <tr>
                         <td>Total apprenticeship training price</td>
