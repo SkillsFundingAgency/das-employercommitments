@@ -713,6 +713,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             CurrentProgram = currentProgram,
                             IlrProgram = newProgram,
                             PeriodStartData = dataLock.IlrEffectiveFromDate,
+                            PeriodEndData = dataLock.IlrEffectiveToDate,
                             ProviderName = apprenticeship.Apprenticeship.ProviderName,
                             LearnerName = apprenticeship.Apprenticeship.ApprenticeshipName,
                             DateOfBirth = apprenticeship.Apprenticeship.DateOfBirth
