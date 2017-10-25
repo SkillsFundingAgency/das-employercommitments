@@ -26,9 +26,41 @@
         </table>
 
         <p>@Model.Data.ProviderName has requested these changes:</p>
+        @{ var count = 0; }
+        @foreach (var dl in Model.Data.CourseChanges)
+        {
+            count++;
+            <h2 class="heading-small">Change: @count</h2>
+            <table class="changes">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="current">Currently</th>
+                        <th class="changed">Change to</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>From date</td>
+                        <td>
+                            @dl.CurrentStartDate.ToGdsFormat()
+                        </td>
+                        <td>@dl.IlrStartDate.Date.ToGdsFormat()</td>
+                    </tr>
+                    <tr>
+                        <td>Total apprenticeship training price</td>
+                        <td>
+                            @dl.CurrentTrainingProgram
+                        </td>
+                        <td>@dl.IlrTrainingProgram</td>
+                    </tr>
+                </tbody>
+            </table>
+                                }
         @foreach (var p in Model.Data.PriceChanges)
         {
-            <h2 class="heading-small">@p.Title</h2>
+            count++;
+            <h2 class="heading-small">Change: @count</h2>
             <table class="changes">
                 <thead>
                     <tr>
@@ -76,8 +108,9 @@
                     </tr>
                 </tbody>
             </table>
-                                }
-        <form method="POST" action="@Url.Action("ConfirmRequestChanges")" novalidate="novalidate" id="approve-changes" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
+        }
+
+        <form method="POST" action="@Url.Action("ConfirmRequestChanges", "DataLock")" novalidate="novalidate" id="approve-changes" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
             <h3 class="heading-medium">Are you happy to approve these changes?</h3>
             <div class="form-group @(!string.IsNullOrEmpty(Model.Data.ChangesConfirmedError) ? "error" : "")">

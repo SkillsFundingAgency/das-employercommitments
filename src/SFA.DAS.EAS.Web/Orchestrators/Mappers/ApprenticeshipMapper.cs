@@ -6,6 +6,7 @@ using MediatR;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.DataLock;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
+using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.Commitments.Api.Types.ProviderPayment;
 using SFA.DAS.Commitments.Api.Types.Validation.Types;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
@@ -74,11 +75,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 PendingChanges = pendingChange,
                 Alerts = MapRecordStatus(apprenticeship.PendingUpdateOriginator, 
                     apprenticeship.DataLockCourseTriaged, 
-                    apprenticeship.DataLockPriceTriaged),
+                    apprenticeship.DataLockPriceTriaged || apprenticeship.DataLockCourseChangeTriaged),
                 EmployerReference = apprenticeship.EmployerRef,
                 CohortReference = _hashingService.HashValue(apprenticeship.CommitmentId),
                 EnableEdit = pendingChange == PendingChanges.None
                             && !apprenticeship.DataLockCourseTriaged
+                            && !apprenticeship.DataLockCourseChangeTriaged
                             && !apprenticeship.DataLockPriceTriaged
                             && new []{ PaymentStatus.Active, PaymentStatus.Paused,  }.Contains(apprenticeship.PaymentStatus),
                 CanEditStatus = !(new List<PaymentStatus> { PaymentStatus.Completed, PaymentStatus.Withdrawn }).Contains(apprenticeship.PaymentStatus)
@@ -318,7 +320,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
                 l.Add(new PriceChange
                 {
-                    Title = $"Change {i}",
                     CurrentStartDate = h?.FromDate ?? DateTime.MinValue,
                     CurrentCost = h?.Cost ?? default(decimal),
                     IlrStartDate = dl.IlrEffectiveFromDate ?? DateTime.MinValue,
@@ -329,6 +330,34 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             }
 
             return l;
+        }
+
+        public async Task<IEnumerable<CourseChange>> MapCourseChanges(IEnumerable<DataLockStatus> dataLocks, Apprenticeship apprenticeship)
+        {
+            var l = new List<CourseChange>();
+
+            foreach (var dl in dataLocks.Where(m => m.TriageStatus == TriageStatus.Change))
+            {
+                var course = new CourseChange
+                                 {
+                                     CurrentStartDate = apprenticeship.StartDate.Value,
+                                     CurrentTrainingProgram = apprenticeship.TrainingName,
+                                     IlrStartDate = dl.IlrEffectiveFromDate.Value,
+                                     IlrTrainingProgram =
+                                         (await GetTrainingProgramme(dl.IlrTrainingCourseCode)).Title
+                                 };
+                l.Add(course);
+            }
+
+            return l;
+        }
+
+        private bool CalculateIfInFirstCalendarMonthOfTraining(DateTime? startDate)
+        {
+            if (!startDate.HasValue)
+                return false;
+
+            return _currentDateTime.Now.Year == startDate.Value.Year && _currentDateTime.Now.Month == startDate.Value.Month;
         }
 
         private async Task<ITrainingProgramme> GetTrainingProgramme(string trainingCode)
@@ -368,7 +397,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             }
         }
 
-        private IEnumerable<string> MapRecordStatus(Originator? pendingUpdateOriginator, bool dataLockCourseTriaged, bool dataLockPriceTriaged)
+        private IEnumerable<string> MapRecordStatus(Originator? pendingUpdateOriginator, bool dataLockCourseTriaged, bool changeRequested)
         {
             const string ChangesPending = "Changes pending";
             const string ChangesForReview = "Changes for review";
@@ -386,7 +415,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             if (dataLockCourseTriaged)
                 statuses.Add(ChangesRequested);
 
-            if (dataLockPriceTriaged)
+            if (changeRequested)
                 statuses.Add(ChangesForReview);
 
             return statuses.Distinct();
