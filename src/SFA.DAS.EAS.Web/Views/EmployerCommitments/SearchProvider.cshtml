@@ -55,11 +55,7 @@
 
 @section gaDataLayer {
     <script>
-        var extraProperties = {
-            'vpv': '/accounts/apprentices/provider/create/add-provider-reference',
-            'org': '@Model.Data.LegalEntityCode'
-        };
-
-        _.assignIn(sfa.dataLayer, extraProperties);
+        sfa.dataLayer.vpv = '/accounts/apprentices/provider/create/add-provider-reference';
+        sfa.dataLayer.org = '@Model.Data.LegalEntityCode';
     </script>
 }

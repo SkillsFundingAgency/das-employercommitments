@@ -65,11 +65,7 @@
 
 @section gaDataLayer {
     <script>
-        var extraProperties = {
-            'vpv': '/accounts/apprentices/apprenticeships/create/apprentice-entry',
-            'cohortRef': '@Model.Data.Apprenticeship.HashedCommitmentId'
-        };
-
-        _.assignIn(sfa.dataLayer, extraProperties);
+        sfa.dataLayer.vpv = '/accounts/apprentices/apprenticeships/create/apprentice-entry';
+        sfa.dataLayer.cohortRef = '@Model.Data.Apprenticeship.HashedCommitmentId';
     </script>
 }
