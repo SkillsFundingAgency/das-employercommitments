@@ -77,6 +77,9 @@
     <Reference Include="SFA.DAS.Commitments.Api.Types, Version=2.0.0.43313, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.2.0.0.43313\lib\net45\SFA.DAS.Commitments.Api.Types.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.Common.Domain, Version=1.1.0.44010, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Common.Domain.1.1.0.44010\lib\net45\SFA.DAS.Common.Domain.dll</HintPath>
+    </Reference>
     <Reference Include="SFA.DAS.EAS.Account.Api.Client, Version=1.0.0.35577, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.0.0.35577\lib\net45\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
       <Private>True</Private>
@@ -166,7 +169,6 @@
     <Compile Include="Models\Organisation\Address.cs" />
     <Compile Include="Models\Organisation\EmployerAgreementStatus.cs" />
     <Compile Include="Models\Organisation\LegalEntity.cs" />
-    <Compile Include="Models\Organisation\OrganisationSubType.cs" />
     <Compile Include="Models\Settings\UserLegalEntitySetting.cs" />
     <Compile Include="Models\ReferenceData\Organisation.cs" />
     <Compile Include="Attributes\QueueNameAttribute.cs" />
@@ -203,7 +205,6 @@
     <Compile Include="Models\ReferenceData\Charity.cs" />
     <Compile Include="Models\ReferenceData\PagedResponse.cs" />
     <Compile Include="Models\ReferenceData\PublicSectorOrganisation.cs" />
-    <Compile Include="Models\Organisation\OrganisationType.cs" />
     <Compile Include="Models\AccountTeam\Membership.cs" />
     <Compile Include="Models\AccountTeam\MembershipView.cs" />
     <Compile Include="Models\FeatureToggle\FeatureToggleItem.cs" />
