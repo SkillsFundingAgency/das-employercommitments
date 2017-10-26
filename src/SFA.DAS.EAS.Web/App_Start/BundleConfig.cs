@@ -38,9 +38,6 @@ namespace SFA.DAS.EmployerCommitments.Web
             bundles.Add(new ScriptBundle("~/comt-assets/bundles/jqueryvalcustom").Include(
                       "~/Scripts/jquery.validate.js", "~/Scripts/jquery.validate.unobtrusive.custom.js"));
 
-            bundles.Add(new ScriptBundle("~/comt-assets/bundles/lodash").Include(
-                        "~/comt-assets/javascripts/lodash.js"));
-
             bundles.Add(new StyleBundle("~/comt-assets/bundles/screenie6").Include("~/comt-assets/css/screen-ie6.css"));
             bundles.Add(new StyleBundle("~/comt-assets/bundles/screenie7").Include("~/comt-assets/css/screen-ie7.css"));
             bundles.Add(new StyleBundle("~/comt-assets/bundles/screenie8").Include("~/comt-assets/css/screen-ie8.css"));

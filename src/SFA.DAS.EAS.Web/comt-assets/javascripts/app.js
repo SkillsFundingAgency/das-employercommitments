@@ -167,7 +167,6 @@ sfa.tagHelper = {
     }
 };
 
-
 if ($('#js-breadcrumbs')) {
     sfa.backLink.init();
 }

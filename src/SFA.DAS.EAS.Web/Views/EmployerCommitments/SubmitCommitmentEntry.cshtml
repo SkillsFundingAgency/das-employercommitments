@@ -52,12 +52,8 @@
 
 @section gaDataLayer {
     <script>
-        var extraProperties = {
-            'vpv': '/accounts/apprentices/submit/submit-instructions',
-            'org': '@Model.Data.LegalEntityCode',
-            'prn': '@Model.Data.ProviderId'
-        };
-
-        _.assignIn(sfa.dataLayer, extraProperties);
+        sfa.dataLayer.vpv = '/accounts/apprentices/submit/submit-instructions';
+        sfa.dataLayer.org = '@Model.Data.LegalEntityCode';
+        sfa.dataLayer.prn = '@Model.Data.ProviderId';
     </script>
 }
