@@ -181,12 +181,16 @@ if (successMessage.length > 0) {
 var errorMessage = $('.error-summary');
 
 if (errorMessage.length > 0) {
-    var errorContent = errorMessage.find('ul li a').eq(0).text(),
-        dataLoadedObj = dataLayer[0];
 
-    if (dataLoadedObj.event === 'dataLoaded') {
-        dataLoadedObj.error = errorContent;
-        dataLayer[0] = dataLoadedObj;
+    var errors = errorMessage.find('ul li a');
+
+    for (var i = 0; i < errors.length; i++) {
+        dataLayer.push({
+            'event': 'dataLayerEvent',
+            'eventCat': 'Form Error',
+            'eventAct': $('h1.heading-xlarge').text(),
+            'eventLab': $(errors[i]).text()
+        });
     }
 }
 
