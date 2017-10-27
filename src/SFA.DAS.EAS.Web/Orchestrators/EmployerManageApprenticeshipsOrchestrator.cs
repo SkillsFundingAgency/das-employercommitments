@@ -407,7 +407,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         {
                             ChangeType = changeType
                         },
-                        EarliestDateIsStartDate = earliestDate.Equals(data.Apprenticeship.StartDate.Value)
+                        EarliestDateIsStartDate = earliestDate.Equals(data.Apprenticeship.StartDate.Value),
+                        ApprenticeshipULN = data.Apprenticeship.ULN,
+                        ApprenticeshipName = data.Apprenticeship.ApprenticeshipName,
+                        TrainingName = data.Apprenticeship.TrainingName
+
                     }
                 };
 
@@ -470,7 +474,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ConfirmationStateChangeViewModel
                     {
                         ApprenticeName = data.Apprenticeship.ApprenticeshipName,
-
+                        ApprenticeULN = data.Apprenticeship.ULN,
                         DateOfBirth = data.Apprenticeship.DateOfBirth.Value,
                         ChangeStatusViewModel = new ChangeStatusViewModel
                         {
