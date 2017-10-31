@@ -63,19 +63,19 @@
                         break;
                     case ChangeStatusType.Resume:
                         <p class="lede">
-                                You're about to resume this apprentice and any payments
-                                you've authorised to their training provider.
-                            </p>
-                break;
-            case ChangeStatusType.Stop:
-                @*<p class="lede">
-                    You're about to stop this apprentice and any payments you've
-                    authorised to their training provider.
-                </p>
+                            You're about to resume this apprentice and any payments
+                            you've authorised to their training provider.
+                        </p>
+                        break;
+                    case ChangeStatusType.Stop:
+                        <p class="lede">
+                            You're about to stop this apprentice and any payments you've
+                            authorised to their training provider.
+                        </p>
 
                         <div class="panel panel-border-wide">
                             <p>You won't be able to undo this change.</p>
-                        </div>*@
+                        </div>
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(Model.Data.ChangeStatusViewModel.ChangeType), "Not a valid value");
@@ -108,11 +108,11 @@
                         </tr>
                     }
 
-                    
+
                     @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Resume)
                     {
                         <tr>
-                            <td>Paused date</td>
+                            <td>Pause date</td>
                             <td class="bold">
                                 @Model.Data.ChangeStatusViewModel.PauseDate.DateTime.Value.ToGdsFormat()
                             </td>
@@ -139,11 +139,11 @@
             @if (Model.Data.ChangeStatusViewModel.AcademicYearBreakInTraining)
             {
                 <div class="panel panel-border-wide">
-                        <strong  class="bold-small">
-                            You can only resume in this academic year.
-                            @Model.Data.ApprenticeName will resume on @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormat().
-                        </strong>
-                   
+                    <strong class="bold-small">
+                        You can only resume in this academic year.
+                        @Model.Data.ApprenticeName will resume on @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormat().
+                    </strong>
+
                 </div>
             }
             <div class="form-group">
@@ -151,11 +151,11 @@
 
                     @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Resume)
                     {
-                        <legend class="form-label-bold">Would you like to @Model.Data.ChangeStatusViewModel.ChangeType.Value this apprentice?</legend>
+                        <legend class="form-label-bold">Would you like to @Model.Data.ChangeStatusViewModel.ChangeType.Value.ToString().ToLower() this apprentice?</legend>
                     }
                     else
                     {
-                        <legend class="form-label-bold">Would you like to permanently @pageAction payments for this apprentice?</legend>
+                        <legend class="form-label-bold">Would you like to @pageAction this apprentice?</legend>
                     }
 
 
