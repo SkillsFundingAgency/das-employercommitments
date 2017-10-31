@@ -38,7 +38,6 @@
     <!--[if gt IE 8]><!-->
     <link href="@Styles.Url("~/comt-assets/bundles/screen")" media="all" rel="stylesheet" />
     <!--<![endif]-->
-    @Scripts.Render("~/comt-assets/bundles/lodash")
 
     <script>
         var sfa = sfa || {};
@@ -48,12 +47,13 @@
     @RenderSection("gaDataLayer", required: false)
 
     <script>
-        window.dataLayer = window.dataLayer || []; dataLayer.push(_.assignIn({
-            'event': 'dataLoaded',
-            'loggedIn': '@ViewBag.GaData.IsAuthenticated',
-            'userID': '@ViewBag.GaData.UserId',
-            'acc': '@ViewBag.GaData.Acc'
-        }, sfa.dataLayer));
+        window.dataLayer = window.dataLayer || [];
+        sfa.dataLayer.event = 'dataLoaded'
+        sfa.dataLayer.loggedIn = '@ViewBag.GaData.IsAuthenticated'
+        sfa.dataLayer.userID = '@ViewBag.GaData.UserId'
+        sfa.dataLayer.acc = '@ViewBag.GaData.Acc'
+
+        dataLayer.push(sfa.dataLayer);
     </script>
 
     <!-- Google Tag Manager -->

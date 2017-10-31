@@ -56,10 +56,6 @@
 
 @section gaDataLayer {
     <script>
-        var extraProperties = {
-            'vpv': '/accounts/apprentices/choosePath/choose-add-path',
-        };
-
-        _.assignIn(sfa.dataLayer, extraProperties);
+        sfa.dataLayer.vpv = '/accounts/apprentices/choosePath/choose-add-path';
     </script>
 }

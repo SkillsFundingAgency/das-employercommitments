@@ -122,15 +122,11 @@ else
 
 @section gaDataLayer {
     <script>
-        var extraProperties = {
-            'vpv': '/accounts/apprentices/manage/list-all-apprentices',
-            'statuses': '@Model.Data.Filters.Status.Count',
-            'alerts': '@Model.Data.Filters.RecordStatus.Count',
-            'courses': '@Model.Data.Filters.Course.Count',
-            'providers': '@Model.Data.Filters.Provider.Count'
-        };
-
-        _.assignIn(sfa.dataLayer, extraProperties);
+        sfa.dataLayer.vpv = '/accounts/apprentices/manage/list-all-apprentices';
+        sfa.dataLayer.statuses = '@Model.Data.Filters.Status.Count';
+        sfa.dataLayer.alerts = '@Model.Data.Filters.RecordStatus.Count';
+        sfa.dataLayer.courses = '@Model.Data.Filters.Course.Count';
+        sfa.dataLayer.providers = '@Model.Data.Filters.Provider.Count';
     </script>
 }
 
