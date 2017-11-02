@@ -4801,6 +4801,10 @@ h2 .float-right {
   margin: 7px 0 15px 0;
 }
 
+#search-form legend {
+  margin-bottom: 0;
+}
+
 #search-form .heading-medium {
   margin-top: 0;
 }
