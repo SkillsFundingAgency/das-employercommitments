@@ -4,8 +4,6 @@ using FluentValidation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
-using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
-using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerCommitments.Web.Validators
 {
@@ -17,17 +15,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         private readonly IApprenticeshipValidationErrorText _validationText;
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IAcademicYearDateProvider _academicYear;
-        private readonly IAcademicYearValidator _academicYearValidator;
 
         public ApprenticeshipCoreValidator(IApprenticeshipValidationErrorText validationText,
                                             ICurrentDateTime currentDateTime,
-                                            IAcademicYearDateProvider academicYear,
-                                            IAcademicYearValidator academicYearValidator)
+                                            IAcademicYearDateProvider academicYear)
         {
             _validationText = validationText;
             _currentDateTime = currentDateTime;
             _academicYear = academicYear;
-            _academicYearValidator = academicYearValidator;
 
             ValidateFirstName();
 

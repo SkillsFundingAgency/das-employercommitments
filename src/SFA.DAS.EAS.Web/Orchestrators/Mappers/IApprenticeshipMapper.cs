@@ -28,5 +28,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         PaymentOrderViewModel MapPayment(IList<ProviderPaymentPriorityItem> data);
 
         IList<PriceChange> MapPriceChanges(IEnumerable<DataLockStatus> dataLockWithOnlyPriceMismatch, List<PriceHistory> history);
+
+        Task<IEnumerable<CourseChange>> MapCourseChanges(IEnumerable<DataLockStatus> dataLocks, Apprenticeship apprenticeship);
     }
 }

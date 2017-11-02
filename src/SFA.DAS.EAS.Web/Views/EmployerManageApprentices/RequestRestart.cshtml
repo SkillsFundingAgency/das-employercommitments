@@ -31,7 +31,9 @@
                     <td>
                         @if (Model.Data.PeriodStartData.HasValue)
                         {
-                            @Model.Data.PeriodStartData.Value.ToGdsFormat()
+                            var dateDetails = $"From {Model.Data.PeriodStartData.Value.ToGdsFormat()} onwards";
+                            @dateDetails
+                      
                         }
                         else
                         {

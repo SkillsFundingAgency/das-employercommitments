@@ -854,7 +854,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             orchestratorResponse.FlashMessage = new FlashMessageViewModel
             {
-                Headline = "Errors to fix",
+                Headline = "There are errors on this page that need your attention",
                 Message = "Check the following details:",
                 ErrorMessages = errorDictionary,
                 Severity = FlashMessageSeverityLevel.Error

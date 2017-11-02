@@ -28,16 +28,13 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 
         public bool HasOverlappingErrors { get; set; }
 
-        public bool HasAcademicFundingPeriodErrors { get; set; }
-
         public bool CanApprove
         {
             get
             {
-                return !NotReadyForApproval && 
-                    HasSignedTheAgreement && 
-                    !HasOverlappingErrors &&
-                    !HasAcademicFundingPeriodErrors;
+                return !NotReadyForApproval &&
+                    HasSignedTheAgreement &&
+                    !HasOverlappingErrors;
             }
 
         }

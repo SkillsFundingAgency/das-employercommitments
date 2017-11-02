@@ -31,11 +31,7 @@
 
 @section gaDataLayer {
     <script>
-        var extraProperties = {
-            'vpv': '/accounts/apprentices/agreement-not-signed',
-            'org': '@Model.LegalEntityCode'
-        };
-
-        _.assignIn(sfa.dataLayer, extraProperties);
+        sfa.dataLayer.vpv = '/accounts/apprentices/agreement-not-signed';
+        sfa.dataLayer.org = '@Model.LegalEntityCode';
     </script>
 }

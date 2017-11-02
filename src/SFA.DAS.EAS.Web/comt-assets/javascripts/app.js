@@ -167,6 +167,32 @@ sfa.tagHelper = {
     }
 };
 
+// Push confirmation messages to the Google dateLayer array
+var successMessage = $('.success-summary h1');
+if (successMessage.length > 0) {
+    var dataLoadedObj = dataLayer[0];
+    if (dataLoadedObj.event === 'dataLoaded') {
+        dataLoadedObj.success = successMessage.text();
+        dataLayer[0] = dataLoadedObj;
+    }
+}
+
+// Push error messages to the Google dateLayer array
+var errorMessage = $('.error-summary');
+
+if (errorMessage.length > 0) {
+
+    var errors = errorMessage.find('ul li a');
+
+    for (var i = 0; i < errors.length; i++) {
+        dataLayer.push({
+            'event': 'dataLayerEvent',
+            'eventCat': 'Form Error',
+            'eventAct': $('h1.heading-xlarge').text(),
+            'eventLab': $(errors[i]).text()
+        });
+    }
+}
 
 if ($('#js-breadcrumbs')) {
     sfa.backLink.init();
@@ -230,9 +256,25 @@ $('.container-head').on('click touchstart', (function () {
 
 }));
 
-var placeholderText = $('.js-enabled #search-input').data('default-value');
+
+//floating menu
+$(window).scroll(function () {
+    if ($(window).scrollTop() >= 110) {
+        $('.floating-menu').addClass('fixed-header');
+        $('.js-float').addClass('width-adjust');
+    }
+    else {
+        $('.floating-menu').removeClass('fixed-header');
+        $('.js-float').removeClass('width-adjust');
+    }
+});
+
+
 
 //clear search box text
+
+var placeholderText = $('.js-enabled #search-input').data('default-value');
+
 window.onload = function () {
     if ($('.js-enabled #search-input').val() === "") {
         $('.js-enabled #search-input').addClass('placeholder-text');

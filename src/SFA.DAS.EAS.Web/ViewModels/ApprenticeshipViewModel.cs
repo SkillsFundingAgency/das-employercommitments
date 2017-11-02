@@ -79,5 +79,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string EndDateOverlapError => GetErrorMessage("EndDateOverlap");
         public string EmployerRefError => GetErrorMessage(nameof(EmployerRef));
         public string TrainingCodeError => GetErrorMessage(nameof(TrainingCode));
+        public bool IsLockedForUpdate { get; set; }
     }
 }

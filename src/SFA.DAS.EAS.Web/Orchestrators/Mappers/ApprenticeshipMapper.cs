@@ -12,12 +12,13 @@ using SFA.DAS.Commitments.Api.Types.Validation.Types;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
-using CommitmentTrainingType = SFA.DAS.Commitments.Api.Types.Apprenticeship.Types.TrainingType;
 using SFA.DAS.NLog.Logger;
+using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 {
@@ -28,23 +29,25 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         private readonly IMediator _mediator;
         private readonly ILog _logger;
 
+        private readonly IAcademicYearValidator _academicYearValidator;
+
         public ApprenticeshipMapper(
             IHashingService hashingService,
             ICurrentDateTime currentDateTime,
             IMediator mediator,
-            ILog logger)
+            ILog logger,
+            IAcademicYearValidator academicYearValidator)
         {
-            if (hashingService == null)
-                throw new ArgumentNullException(nameof(hashingService));
-            if (currentDateTime == null)
-                throw new ArgumentNullException(nameof(currentDateTime));
-            if (mediator == null)
-                throw new ArgumentNullException(nameof(mediator));
+            if (hashingService == null) throw new ArgumentNullException(nameof(hashingService));
+            if (currentDateTime == null) throw new ArgumentNullException(nameof(currentDateTime));
+            if (mediator == null) throw new ArgumentNullException(nameof(mediator));
+            if (academicYearValidator== null) throw new ArgumentNullException(nameof(academicYearValidator));
 
             _hashingService = hashingService;
             _currentDateTime = currentDateTime;
             _mediator = mediator;
             _logger = logger;
+            _academicYearValidator = academicYearValidator;
         }
 
         public ApprenticeshipDetailsViewModel MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship)
@@ -72,11 +75,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 PendingChanges = pendingChange,
                 Alerts = MapRecordStatus(apprenticeship.PendingUpdateOriginator, 
                     apprenticeship.DataLockCourseTriaged, 
-                    apprenticeship.DataLockPriceTriaged),
+                    apprenticeship.DataLockPriceTriaged || apprenticeship.DataLockCourseChangeTriaged),
                 EmployerReference = apprenticeship.EmployerRef,
                 CohortReference = _hashingService.HashValue(apprenticeship.CommitmentId),
                 EnableEdit = pendingChange == PendingChanges.None
                             && !apprenticeship.DataLockCourseTriaged
+                            && !apprenticeship.DataLockCourseChangeTriaged
                             && !apprenticeship.DataLockPriceTriaged
                             && new []{ PaymentStatus.Active, PaymentStatus.Paused,  }.Contains(apprenticeship.PaymentStatus),
                 CanEditStatus = !(new List<PaymentStatus> { PaymentStatus.Completed, PaymentStatus.Withdrawn }).Contains(apprenticeship.PaymentStatus)
@@ -88,6 +92,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             var isStartDateInFuture = apprenticeship.StartDate.HasValue && apprenticeship.StartDate.Value >
                                       new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1);
 
+            var isLockedForUpdate = apprenticeship.HasHadDataLockSuccess;
+
+            if (_academicYearValidator.IsAfterLastAcademicYearFundingPeriod &&
+                 apprenticeship.StartDate.HasValue &&
+                 _academicYearValidator.Validate(apprenticeship.StartDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod)
+            {
+                isLockedForUpdate = true;
+            }
+
+            
             return new ApprenticeshipViewModel
             {
                 HashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id),
@@ -110,7 +124,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 ProviderRef = apprenticeship.ProviderRef,
                 EmployerRef = apprenticeship.EmployerRef,
                 HasStarted = !isStartDateInFuture,
-                IsInFirstCalendarMonthOfTraining = CalculateIfInFirstCalendarMonthOfTraining(apprenticeship.StartDate)
+                IsLockedForUpdate = isLockedForUpdate
             };
         }
 
@@ -306,10 +320,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
                 l.Add(new PriceChange
                 {
-                    Title = $"Change {i}",
                     CurrentStartDate = h?.FromDate ?? DateTime.MinValue,
                     CurrentCost = h?.Cost ?? default(decimal),
                     IlrStartDate = dl.IlrEffectiveFromDate ?? DateTime.MinValue,
+                    IlrEndDate = dl.IlrEffectiveToDate,
                     IlrCost = dl.IlrTotalCost ?? default(decimal),
                     MissingPriceHistory = h == null
                 });
@@ -318,7 +332,27 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             return l;
         }
 
-		private bool CalculateIfInFirstCalendarMonthOfTraining(DateTime? startDate)
+        public async Task<IEnumerable<CourseChange>> MapCourseChanges(IEnumerable<DataLockStatus> dataLocks, Apprenticeship apprenticeship)
+        {
+            var l = new List<CourseChange>();
+
+            foreach (var dl in dataLocks.Where(m => m.TriageStatus == TriageStatus.Change))
+            {
+                var course = new CourseChange
+                                 {
+                                     CurrentStartDate = apprenticeship.StartDate.Value,
+                                     CurrentTrainingProgram = apprenticeship.TrainingName,
+                                     IlrStartDate = dl.IlrEffectiveFromDate.Value,
+                                     IlrTrainingProgram =
+                                         (await GetTrainingProgramme(dl.IlrTrainingCourseCode)).Title
+                                 };
+                l.Add(course);
+            }
+
+            return l;
+        }
+
+        private bool CalculateIfInFirstCalendarMonthOfTraining(DateTime? startDate)
         {
             if (!startDate.HasValue)
                 return false;
@@ -363,7 +397,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             }
         }
 
-        private IEnumerable<string> MapRecordStatus(Originator? pendingUpdateOriginator, bool dataLockCourseTriaged, bool dataLockPriceTriaged)
+        private IEnumerable<string> MapRecordStatus(Originator? pendingUpdateOriginator, bool dataLockCourseTriaged, bool changeRequested)
         {
             const string ChangesPending = "Changes pending";
             const string ChangesForReview = "Changes for review";
@@ -381,7 +415,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             if (dataLockCourseTriaged)
                 statuses.Add(ChangesRequested);
 
-            if (dataLockPriceTriaged)
+            if (changeRequested)
                 statuses.Add(ChangesForReview);
 
             return statuses.Distinct();
