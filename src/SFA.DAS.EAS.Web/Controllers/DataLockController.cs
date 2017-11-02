@@ -58,8 +58,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
 
             await _orchestrator.ConfirmRequestChanges(model.HashedAccountId, model.HashedApprenticeshipId, OwinWrapper.GetClaimValue("sub"), model.ChangesConfirmed ?? false);
+                     
 
             return RedirectToAction("Details", "EmployerManageApprentices", new { model.HashedAccountId, model.HashedApprenticeshipId });
         }
+       
     }
 }

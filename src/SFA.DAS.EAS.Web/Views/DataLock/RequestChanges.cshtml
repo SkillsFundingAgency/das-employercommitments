@@ -2,7 +2,7 @@
 @model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships.DataLockStatusViewModel>
 
 @{
-    ViewBag.Title = "Review Changes";
+    ViewBag.Title = "Review changes";
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "review-datalock-changes";
 }
@@ -48,7 +48,7 @@
                         <td>@dl.IlrStartDate.Date.ToGdsFormat()</td>
                     </tr>
                     <tr>
-                        <td>Total apprenticeship training price</td>
+                        <td>Apprenticeship training course</td>
                         <td>
                             @dl.CurrentTrainingProgram
                         </td>
@@ -56,7 +56,7 @@
                     </tr>
                 </tbody>
             </table>
-                                }
+        }
         @foreach (var p in Model.Data.PriceChanges)
         {
             count++;
@@ -108,7 +108,7 @@
                     </tr>
                 </tbody>
             </table>
-        }
+                                }
 
         <form method="POST" action="@Url.Action("ConfirmRequestChanges", "DataLock")" novalidate="novalidate" id="approve-changes" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
