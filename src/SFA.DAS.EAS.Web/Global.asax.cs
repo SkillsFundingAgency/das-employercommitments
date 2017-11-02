@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Helpers;
@@ -18,6 +19,7 @@ using SFA.DAS.EmployerCommitments.Infrastructure.Logging;
 using SFA.DAS.EmployerCommitments.Web.DependencyResolution;
 using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
 using SFA.DAS.EmployerUsers.WebClientComponents;
+using SFA.DAS.Web.Policy;
 
 namespace SFA.DAS.EmployerCommitments.Web
 {
@@ -71,15 +73,12 @@ namespace SFA.DAS.EmployerCommitments.Web
 
         protected void Application_PreSendRequestHeaders(object sender, EventArgs e)
         {
-            //TODO: Add to defaultRegistry adnd resolve, or, instantiate locally
-            //var  httpContextPolicyProvider = DependencyResolver.Current.GetService<HttpContextPolicyProvider>()
-            //var httpContextPolicyProvider = new HttpContextPolicyProvider(new List<IHttpContextPolicy>()
-            //{
-            //    new ResponseHeaderRestrictionPolicy()
-            //});
-            //httpContextPolicyProvider.Apply(
-            //    new System.Web.HttpContextWrapper(HttpContext.Current), PolicyConcerns.HttpResponse);
-
+            new HttpContextPolicyProvider(
+                new List<IHttpContextPolicy>()
+                {
+                    new ResponseHeaderRestrictionPolicy()
+                }
+            ).Apply(new HttpContextWrapper(HttpContext.Current), PolicyConcern.HttpResponse);
         }
     }
 }
