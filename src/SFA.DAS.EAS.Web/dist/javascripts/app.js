@@ -270,7 +270,7 @@ $("#search-input").on("blur", (function () {
 }));
 
 // Push confirmation messages to the Google dateLayer array
-var successMessage = $('.success-summary h1');
+var successMessage = $('.green-box h1');
 if (successMessage.length > 0) {
     var dataLoadedObj = dataLayer[0];
     if (dataLoadedObj.event === 'dataLoaded') {
