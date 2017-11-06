@@ -9,10 +9,6 @@
 
 @model OrchestratorResponse<SFA.DAS.EmployerCommitments.Web.ViewModels.SelectLegalEntityViewModel>
 
-@*@section pageSpecificJS {
-    @Scripts.Render("~/bundles/jqueryvalcustom")
-}*@
-
 <div class="grid-row">
     <form method="POST" action="@Url.Action("SetLegalEntity")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
         <div class="column-two-thirds">
@@ -62,10 +58,6 @@
 
 @section gaDataLayer {
     <script>
-        var extraProperties = {
-            'vpv': '/accounts/apprentices/legalEntity/create/choose-organisation',
-        };
-
-        _.assignIn(sfa.dataLayer, extraProperties);
+        sfa.dataLayer.vpv = '/accounts/apprentices/legalEntity/create/choose-organisation';
     </script>
 }

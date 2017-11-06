@@ -368,11 +368,7 @@ else
 
 @section gaDataLayer {
     <script>
-        var extraProperties = {
-            'vpv': '/accounts/apprentices/details/apprentice-detail',
-            'cohortRef': '@Model.Data.HashedId'
-        };
-
-        _.assignIn(sfa.dataLayer, extraProperties);
+        sfa.dataLayer.vpv = '/accounts/apprentices/details/apprentice-detail';
+        sfa.dataLayer.cohortRef = '@Model.Data.HashedId';
     </script>
 }

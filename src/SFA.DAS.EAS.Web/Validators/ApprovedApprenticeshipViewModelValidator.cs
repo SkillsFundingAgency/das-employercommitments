@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
             ICurrentDateTime currentDateTime, 
             IAcademicYearDateProvider academicYear,
             IAcademicYearValidator academicYearValidator) 
-            : base(validationText, currentDateTime, academicYear, academicYearValidator)
+            : base(validationText, currentDateTime, academicYear)
         {
             _validationText = validationText;
             _academicYearValidator = academicYearValidator;

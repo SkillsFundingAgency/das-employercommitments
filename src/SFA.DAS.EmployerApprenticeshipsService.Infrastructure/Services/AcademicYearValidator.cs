@@ -27,5 +27,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
 
             return AcademicYearValidationResult.Success;
         }
+
+        public bool IsAfterLastAcademicYearFundingPeriod => _currentDateTime.Now > _academicYear.LastAcademicYearFundingPeriod;
     }
 }

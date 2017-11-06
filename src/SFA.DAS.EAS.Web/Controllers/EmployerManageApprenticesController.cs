@@ -398,42 +398,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{hashedApprenticeshipId}/datalock/restart", Name = "RequestRestart")]
-        public async Task<ActionResult> RequestRestart(string hashedAccountId, string hashedApprenticeshipId)
-        {
-            var model = await _orchestrator.GetDataLockStatusForRestartRequest(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-
-            return View(model);
-        }
-
-        [HttpGet]
-        [Route("{hashedApprenticeshipId}/datalock/changes", Name = "RequestChanges")]
-        public async Task<ActionResult> RequestChanges(string hashedAccountId, string hashedApprenticeshipId)
-        {
-            var model = await _orchestrator.GetDataLockChangeStatus(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [Route("{hashedApprenticeshipId}/datalock/confirmchanges", Name = "ConfirmRequestChanges")]
-        public async Task<ActionResult> ConfirmRequestChanges(DataLockStatusViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                model.AddErrorsFromModelState(ModelState);
-                var viewModel = await _orchestrator.GetDataLockChangeStatus(model.HashedAccountId, model.HashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-                viewModel.Data.ErrorDictionary = model.ErrorDictionary;
-                return View("RequestChanges", viewModel);
-            }
-
-            await _orchestrator.ConfirmRequestChanges(model.HashedAccountId, model.HashedApprenticeshipId, OwinWrapper.GetClaimValue("sub"), model.ChangesConfirmed ?? false);
-            // Apply changes 
-            // Message?sky
-            return RedirectToAction("Details", new { model.HashedAccountId, model.HashedApprenticeshipId });
-        }
-
-        [HttpGet]
         [Route("paymentorder", Name = "PaymentOrder")]
         public async Task<ActionResult> PaymentOrder(string hashedAccountId)
         {

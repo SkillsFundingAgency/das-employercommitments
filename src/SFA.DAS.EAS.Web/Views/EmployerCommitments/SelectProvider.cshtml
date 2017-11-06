@@ -9,10 +9,6 @@
     ViewBag.PageID = "confirm-training-provider";
 }
 
-@*@section pageSpecificJS {
-    @Scripts.Render("~/bundles/jqueryvalcustom")
-}*@
-
 <div class="grid-row">
     <div class="column-two-thirds">
 
@@ -79,12 +75,8 @@
 
 @section gaDataLayer {
     <script>
-        var extraProperties = {
-            'vpv': '/accounts/apprentices/provider/create/confirm-training-provider',
-            'prn': '@Model.Data.ProviderId',
-            'org': '@Model.Data.LegalEntityCode'
-        };
-
-        _.assignIn(sfa.dataLayer, extraProperties);
+        sfa.dataLayer.vpv = '/accounts/apprentices/provider/create/confirm-training-provider';
+        sfa.dataLayer.prn = '@Model.Data.ProviderId';
+        sfa.dataLayer.org = '@Model.Data.LegalEntityCode';
     </script>
 }

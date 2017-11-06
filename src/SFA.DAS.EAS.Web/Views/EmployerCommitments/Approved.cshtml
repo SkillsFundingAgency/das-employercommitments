@@ -74,12 +74,8 @@
 
 @section gaDataLayer {
     <script>
-        var extraProperties = {
-            'vpv': '/accounts/apprentices/acknowledgement/cohort-approved',
-            'cohortRef': '@Model.Data.HashedCommitmentId',
-            'success': '@ViewBag.Title'
-        };
-
-        _.assignIn(sfa.dataLayer, extraProperties);
+        sfa.dataLayer.vpv = '/accounts/apprentices/acknowledgement/cohort-approved';
+        sfa.dataLayer.cohortRef = '@Model.Data.HashedCommitmentId';
+        sfa.dataLayer.success = '@ViewBag.Title';
     </script>
 }
