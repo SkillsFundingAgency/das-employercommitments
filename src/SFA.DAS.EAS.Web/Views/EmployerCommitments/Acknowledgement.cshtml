@@ -6,7 +6,6 @@
     ViewBag.Section = "apprentices";
     ViewBag.PageID = "instructions-sent-end";
 }
-
 <div class="grid-row">
     <div class="column-full">
         <div class="govuk-box-highlight green-box">
@@ -19,7 +18,6 @@
 
 <div class="grid-row">
     <div class="column-full">
-
         <table class="instructionSent">
             <tbody>
                 <tr>
@@ -28,35 +26,22 @@
                 </tr>
                 <tr>
                     <td>Sent to </td>
-                    <td  class="strong">@Model.Data.ProviderName</td>
-                    
-                </tr>
-                @*<tr>
-                    <td>Sent from</td>
-                    <td  class="strong">Alice Jones</td>
-                   
-                </tr>*@
+                    <td  class="strong">@Model.Data.ProviderName</td>       
+                </tr>   
                 <tr>
                     <td>On behalf of</td>
                     <td  class="strong">@Model.Data.LegalEntityName</td>
                 </tr>
-                @*<tr>
-                    <td>Date</td>
-                    <td  class="strong">Thursday 18 May 2017</td>
-                </tr>*@
                 <tr>
                     <td>Message</td>
                     <td  class="strong">@Model.Data.Message</td>
                 </tr>
             </tbody>
         </table>
-
-
         <h2 class="heading-medium">What happens next?</h2>
         <p id="changeMainCopy">
             @Model.Data.Content.Text
         </p>
-
         @if (!string.IsNullOrEmpty(Model.Data.BackLink?.Url))
         {
             <p>
@@ -72,14 +57,11 @@
                 <div class="panel panel-filled">
                     <h2 class="heading-medium">Help us improve this section</h2>
                     <p>Take a 3 minute survey about adding apprentices so that we can improve the service.</p>
-                    <a href=" https://www.surveymonkey.co.uk/r/viewlevy" target="_blank" class="button" title="Take the survey" aria-label="Take the survey">Take the survey</a>
-
-
+                    <a href="https://www.surveymonkey.co.uk/r/2JPLQ9T" target="_blank" class="button" title="Take the survey" aria-label="Take the survey">Take the survey</a>
                 </div>
             </aside>
         </div>
 </div>
-
 
 @section breadcrumb {
     <div class="breadcrumbs">       
