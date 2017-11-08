@@ -168,7 +168,7 @@ sfa.tagHelper = {
 };
 
 // Push confirmation messages to the Google dateLayer array
-var successMessage = $('.success-summary h1');
+var successMessage = $('.green-box h1');
 if (successMessage.length > 0) {
     var dataLoadedObj = dataLayer[0];
     if (dataLoadedObj.event === 'dataLoaded') {
@@ -295,32 +295,5 @@ $("#search-input").on("blur", (function () {
     }
 }));
 
-// Push confirmation messages to the Google dateLayer array
-var successMessage = $('.green-box h1');
-if (successMessage.length > 0) {
-    var dataLoadedObj = dataLayer[0];
-    if (dataLoadedObj.event === 'dataLoaded') {
-        dataLoadedObj.success = successMessage.text();
-        dataLayer[0] = dataLoadedObj;
-    }
-}
 
-
-// Push error messages to the Google dateLayer array
-
-var errorMessage = $('.error-summary');
-
-if (errorMessage.length > 0) {
-    //This will display error details
-    //var errorContent = errorMessage.find('ul li a').eq(0).text(),
-    //   dataLoadedObj = dataLayer[0];
-
-    //This is just a generic message of H1 tag
-    var errorContent = errorMessage.find('h1').eq(0).text(),
-       dataLoadedObj = dataLayer[0];
-    if (dataLoadedObj.event === 'dataLoaded') {
-        dataLoadedObj.error_message = errorContent;
-        dataLayer[0] = dataLoadedObj;
-    }
-}
 
