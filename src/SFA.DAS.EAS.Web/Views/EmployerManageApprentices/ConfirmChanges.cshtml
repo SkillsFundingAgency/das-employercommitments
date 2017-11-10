@@ -9,7 +9,7 @@
 }
 
 <div class="grid-row">
-    <div class="column-two-thirds">
+    <div class="column-full">
         <form method="POST" action="@Url.Action("SubmitChanges")" novalidate="novalidate" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             
             @Html.AntiForgeryToken()
