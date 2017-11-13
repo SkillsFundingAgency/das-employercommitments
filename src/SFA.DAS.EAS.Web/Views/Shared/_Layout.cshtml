@@ -133,7 +133,7 @@
                 <div class="js-float">
                     <p class="floating-head-text">Your employer account </p>
                     <nav id="user-nav">
-                        <ul role="menubar">
+                        <ul role="menubar" class="js-hidden">
                             <li><a href="@Url.ExternalUrlAction("service", "help", true)" class="menu-main">Help</a></li>
                             @if (HttpContext.Current.User.Identity.IsAuthenticated)
                             {
