@@ -9,7 +9,7 @@
 
 
 <div class="grid-row">
-    <div class="column-two-thirds">
+    <div class="column-full">
         <h1 class="heading-xlarge">Change apprentice details</h1>
 
         <p>
@@ -32,7 +32,7 @@
                         <td>
                             @if (Model.Data.PeriodStartData.HasValue)
                             {
-                                @Model.Data.PeriodStartData.Value.ToGdsFormat()
+                              <span>From </span>@Model.Data.PeriodStartData.Value.ToGdsFormat()
                             }
                             else
                             {
