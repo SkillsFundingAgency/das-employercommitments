@@ -321,6 +321,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 l.Add(new PriceChange
                 {
                     CurrentStartDate = h?.FromDate ?? DateTime.MinValue,
+                    CurrentEndDate = h?.ToDate,
                     CurrentCost = h?.Cost ?? default(decimal),
                     IlrStartDate = dl.IlrEffectiveFromDate ?? DateTime.MinValue,
                     IlrEndDate = dl.IlrEffectiveToDate,
@@ -341,8 +342,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 var course = new CourseChange
                                  {
                                      CurrentStartDate = apprenticeship.StartDate.Value,
+                                     CurrentEndDate = apprenticeship.EndDate.Value,
                                      CurrentTrainingProgram = apprenticeship.TrainingName,
                                      IlrStartDate = dl.IlrEffectiveFromDate.Value,
+                                     IlrEndDate = dl.IlrEffectiveToDate.Value,
                                      IlrTrainingProgram =
                                          (await GetTrainingProgramme(dl.IlrTrainingCourseCode)).Title
                                  };

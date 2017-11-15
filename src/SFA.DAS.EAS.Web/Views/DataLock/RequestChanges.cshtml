@@ -30,6 +30,13 @@
         @foreach (var dl in Model.Data.CourseChanges)
         {
             count++;
+
+            var ilrPeriod = dl.IlrEndDate.HasValue
+                ? $"From {dl.CurrentStartDate.Date.ToGdsFormat()} to {dl.IlrEndDate.Value.ToGdsFormat()}"
+                : $"From {dl.CurrentStartDate.Date.ToGdsFormat()} onwards";
+
+            var dasPeriod = $"From {dl.CurrentStartDate.ToGdsFormat()} onwards";
+
             <h2 class="heading-small">Change @count</h2>
             <table class="changes">
                 <thead>
@@ -41,11 +48,9 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>From date</td>
-                        <td>
-                            @dl.CurrentStartDate.ToGdsFormat()
-                        </td>
-                        <td>@dl.IlrStartDate.Date.ToGdsFormat()</td>
+                        <td>Period</td>
+                        <td><span>@dasPeriod</span></td>
+                        <td>@ilrPeriod</td>
                     </tr>
                     <tr>
                         <td>Apprenticeship training course</td>
@@ -60,6 +65,17 @@
         @foreach (var p in Model.Data.PriceChanges)
         {
             count++;
+
+            var ilrPeriod = p.IlrEndDate.HasValue
+                ? $"From {p.CurrentStartDate.Date.ToGdsFormat()} to {p.IlrEndDate.Value.ToGdsFormat()}"
+                : $"From {p.CurrentStartDate.Date.ToGdsFormat()} onwards";
+
+            var dasPeriod = p.MissingPriceHistory
+                ? string.Empty
+                : p.CurrentEndDate.HasValue
+                    ? $"From {p.CurrentStartDate.Date.ToGdsFormat()} to {p.CurrentEndDate.Value.ToGdsFormat()}"
+                    : $"From {p.CurrentStartDate.ToGdsFormat()} onwards";
+
             <h2 class="heading-small">Change @count</h2>
             <table class="changes">
                 <thead>
@@ -72,27 +88,8 @@
                 <tbody>
                     <tr>
                         <td>Price period</td>
-                        <td>
-                            @{
-                                if (!p.MissingPriceHistory)
-                                {
-                                    <span>From @p.CurrentStartDate.Date.ToGdsFormat()</span>
-                                }
-                            }
-                        </td>
-                        <td>
-                            @{
-                                var priceDetail = $"From {p.IlrStartDate.Date.ToGdsFormat()}";
-
-                                if (p.IlrEndDate.HasValue)
-                                {
-                                    priceDetail = $"{p.IlrStartDate.Date.ToGdsFormat()} to {p.IlrEndDate.Value.ToGdsFormat()}";
-                                }
-
-                                @priceDetail
-
-                            }
-                        </td>
+                        <td><span>@dasPeriod</span></td>
+                        <td>@ilrPeriod</td>
                     </tr>
                     <tr>
                         <td>Total apprenticeship training price</td>
@@ -108,7 +105,7 @@
                     </tr>
                 </tbody>
             </table>
-                                }
+        }
 
         <form method="POST" action="@Url.Action("ConfirmRequestChanges", "DataLock")" novalidate="novalidate" id="approve-changes" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
