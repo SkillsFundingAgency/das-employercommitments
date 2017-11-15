@@ -4,8 +4,9 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 {
     public class PriceChange
     {
-
         public DateTime CurrentStartDate { get; set; }
+
+        public DateTime? CurrentEndDate { get; set; }
 
         public DateTime IlrStartDate { get; set; }
 

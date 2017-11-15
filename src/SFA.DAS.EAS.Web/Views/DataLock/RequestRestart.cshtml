@@ -26,19 +26,17 @@
             </thead>
             <tbody>
                 @if (Model.Data.CurrentProgram.Id != Model.Data.IlrProgram.Id)
-            {
+                {
+
+                    var period = Model.Data.PeriodStartData.HasValue
+                        ? Model.Data.PeriodEndData.HasValue
+                            ? $"From {Model.Data.PeriodStartData.Value.ToGdsFormat()} to {Model.Data.PeriodEndData.Value.ToGdsFormat()}"
+                            : $"From {Model.Data.PeriodStartData.Value.ToGdsFormat()} onwards"
+                        : "--";
+
                     <tr>
                         <td>Apprenticeship training course</td>
-                        <td>
-                            @if (Model.Data.PeriodStartData.HasValue)
-                            {
-                              <span>From </span>@Model.Data.PeriodStartData.Value.ToGdsFormat()
-                            }
-                            else
-                            {
-                                <span>--</span>
-                            }
-                        </td>
+                        <td>@period</td>
                         <td>@Model.Data.CurrentProgram.Title</td>
                         <td>@Model.Data.IlrProgram.Title</td>
                     </tr>
