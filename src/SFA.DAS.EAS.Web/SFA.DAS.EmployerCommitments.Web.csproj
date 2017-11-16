@@ -511,6 +511,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ReviewChanges.cshtml</DependentUpon>
     </Compile>
+    <Compile Include="Views\EmployerManageApprentices\ViewChanges.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewChanges.cshtml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Shared\ApprenticeshipUpdate.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -942,7 +947,10 @@
     <Content Include="Views\Error\InvalidState.cshtml" />
     <Content Include="Views\EmployerCommitments\AgreementNotSigned.cshtml" />
     <Content Include="Views\EmployerManageApprentices\Edit.cshtml" />
-    <Content Include="Views\EmployerManageApprentices\ViewChanges.cshtml" />
+    <Content Include="Views\EmployerManageApprentices\ViewChanges.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ViewChanges.generated.cs</LastGenOutput>
+    </Content>
     <Content Include="Views\EmployerManageApprentices\ConfirmChanges.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ConfirmChanges.generated.cs</LastGenOutput>

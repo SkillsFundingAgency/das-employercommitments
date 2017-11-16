@@ -22,11 +22,11 @@
             <h1 class="heading-xlarge">@ViewBag.Title</h1>
             
             @{ Html.RenderPartial("_CoreDetail", new CoreDetailsViewModel
-                {
-                    LearnerName = learnerName,
-                    ULN = uln,
-                    DateOfBirth = dateOfBirth.DateTime
-                }); }
+               {
+                   LearnerName = learnerName,
+                   ULN = uln,
+                   DateOfBirth = dateOfBirth.DateTime
+               }); }
             
             @{ Html.RenderPartial("ApprenticeshipUpdate", Model.Data); }
                 <h2 class="heading-medium">Do you want to make these changes?</h2>
