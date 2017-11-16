@@ -345,7 +345,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                                      CurrentEndDate = apprenticeship.EndDate.Value,
                                      CurrentTrainingProgram = apprenticeship.TrainingName,
                                      IlrStartDate = dl.IlrEffectiveFromDate.Value,
-                                     IlrEndDate = dl.IlrEffectiveToDate.Value,
+                                     IlrEndDate = dl.IlrEffectiveToDate,
                                      IlrTrainingProgram =
                                          (await GetTrainingProgramme(dl.IlrTrainingCourseCode)).Title
                                  };
