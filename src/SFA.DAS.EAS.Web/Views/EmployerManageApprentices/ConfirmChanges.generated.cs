@@ -95,11 +95,11 @@ WriteLiteral("</h1>\r\n            \r\n");
 
             
                Html.RenderPartial("_CoreDetail", new CoreDetailsViewModel
-                {
-                    LearnerName = learnerName,
-                    ULN = uln,
-                    DateOfBirth = dateOfBirth.DateTime
-                }); 
+               {
+                   LearnerName = learnerName,
+                   ULN = uln,
+                   DateOfBirth = dateOfBirth.DateTime
+               }); 
 WriteLiteral("\r\n            \r\n");
 
             
@@ -110,10 +110,10 @@ WriteLiteral(" class=\"heading-medium\"");
 
 WriteLiteral(">Do you want to make these changes?</h2>\r\n                <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 1365), Tuple.Create("\"", 1457)
-, Tuple.Create(Tuple.Create("", 1373), Tuple.Create("form-group", 1373), true)
-, Tuple.Create(Tuple.Create(" ", 1383), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Data.ChangesConfirmedError) ? "error" : ""
-, 1384), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 1360), Tuple.Create("\"", 1452)
+, Tuple.Create(Tuple.Create("", 1368), Tuple.Create("form-group", 1368), true)
+, Tuple.Create(Tuple.Create(" ", 1378), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Data.ChangesConfirmedError) ? "error" : ""
+, 1379), false)
 );
 
 WriteLiteral(">\r\n                    <fieldset>\r\n                        <legend");
@@ -192,9 +192,9 @@ WriteLiteral(" class=\"breadcrumbs\"");
 
 WriteLiteral(">\r\n        <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 3031), Tuple.Create("\"", 3089)
-, Tuple.Create(Tuple.Create("", 3038), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", "EmployerManageApprentices")
-, 3038), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 3026), Tuple.Create("\"", 3084)
+, Tuple.Create(Tuple.Create("", 3033), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", "EmployerManageApprentices")
+, 3033), false)
 );
 
 WriteLiteral(" aria-label=\"Back to apprentice details\"");

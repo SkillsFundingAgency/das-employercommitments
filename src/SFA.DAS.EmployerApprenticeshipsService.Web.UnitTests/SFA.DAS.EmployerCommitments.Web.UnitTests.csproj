@@ -209,6 +209,7 @@
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingUln.cs" />
     <Compile Include="Validators\ProviderSelectionTest\WhenValidatingProviderId.cs" />
     <Compile Include="Views\EmployerManageApprentices\ConfirmChangesPage.cs" />
+    <Compile Include="Views\EmployerManageApprentices\ViewChangesPage.cs" />
     <Compile Include="Views\OfflineBrowserCapabilities.cs" />
     <Compile Include="Views\OfflineHttpContext.cs" />
     <Compile Include="Views\OfflineHttpRequest.cs" />
