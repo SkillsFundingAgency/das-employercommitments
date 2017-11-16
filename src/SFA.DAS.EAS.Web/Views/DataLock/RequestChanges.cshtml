@@ -1,33 +1,27 @@
 ﻿@using SFA.DAS.EmployerCommitments.Web.Extensions
+@using SFA.DAS.EmployerCommitments.Web.ViewModels
 @model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships.DataLockStatusViewModel>
 
 @{
     ViewBag.Title = "Review changes";
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "review-datalock-changes";
+
+    var learnerName = Model.Data.LearnerName;
+    var uln = Model.Data.ULN;
+    var dateOfBirth = Model.Data.DateOfBirth;
 }
 
 <div class="grid-row">
     <div class="column-full">
         <h1 class="heading-xlarge">@ViewBag.Title</h1>
 
-        <table class="core-detail">
-            <tr>
-                <td class="first-child">Name</td>
-                <td class="first-child">@Model.Data.LearnerName</td>
-            </tr>
-            <tr>
-                <td class="first-child">Unique learner number</td>
-                <td class="first-child">@Model.Data.ULN</td>
-            </tr>
-            @if (Model.Data.DateOfBirth != null)
-            {
-                <tr>
-                    <td>Date of birth</td>
-                    <td>@Model.Data.DateOfBirth.Value.ToGdsFormat()</td>
-                </tr>
-            }
-        </table>
+        @{ Html.RenderPartial("_CoreDetail", new CoreDetailsViewModel
+           {
+               LearnerName = learnerName,
+               ULN = uln,
+               DateOfBirth = dateOfBirth
+           }); }
 
         <p>@Model.Data.ProviderName has requested these changes:</p>
         @{ var count = 0; }
@@ -115,7 +109,7 @@
                                 }
 
         <form method="POST" action="@Url.Action("ConfirmRequestChanges", "DataLock")" novalidate="novalidate" id="approve-changes" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
-            @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
             <h3 class="heading-medium">Are you happy to approve these changes?</h3>
             <div class="form-group @(!string.IsNullOrEmpty(Model.Data.ChangesConfirmedError) ? "error" : "")">
                 <fieldset>

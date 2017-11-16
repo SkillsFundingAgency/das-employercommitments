@@ -1,0 +1,20 @@
+﻿@using SFA.DAS.EmployerCommitments.Web.Extensions
+@using SFA.DAS.EmployerCommitments.Web.ViewModels
+@model CoreDetailsViewModel 
+<table class="core-detail">
+    <tr>
+        <td class="first-child">Name</td>
+        <td id="learnerName" class="first-child">@Model.LearnerName</td>
+    </tr>
+    <tr>
+        <td class="first-child">Unique learner number</td>
+        <td id="uln" class="first-child">@Model.ULN</td>
+    </tr>
+    @if (Model.DateOfBirth.HasValue)
+    {
+        <tr>
+            <td>Date of birth</td>
+            <td id="dateOfBirth">@Model.DateOfBirth.Value.ToGdsFormat()</td>
+        </tr>
+    }
+</table>

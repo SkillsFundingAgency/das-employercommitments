@@ -6,6 +6,10 @@
     ViewBag.Section = "apprentices";
 
     Model.Data.CurrentTableHeadingText = "Previous";
+
+    var learnerName = $"{Model.Data.FirstName} {Model.Data.LastName}";
+    var uln = Model.Data.OriginalApprenticeship.ULN;
+    var dateOfBirth = Model.Data.DateOfBirth;
 }
 
 <div class="grid-row">
@@ -15,6 +19,14 @@
             @Html.AntiForgeryToken()
 
             <h1 class="heading-xlarge">@ViewBag.Title</h1>
+            
+            @{ Html.RenderPartial("_CoreDetail", new
+               {
+                   LearnerName = learnerName,
+                   ULN = uln,
+                   DateOfBirth = dateOfBirth
+               }); }
+
             <p class="lede">@Model.Data.ProviderName are reviewing these changes:</p>
             @Html.Partial("ApprenticeshipUpdate", Model.Data)
 
