@@ -63,5 +63,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             viewModel.IsLockedForUpdate.Should().BeTrue();
             viewModel.HasStarted.Should().BeTrue();
         }
+
+        [Test]
+        public void ThenULNIsMapped()
+        {
+            var uln = "IAMAULN";
+
+            var apprenticeship = new Apprenticeship { ULN = uln };
+
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+
+            Assert.AreEqual(uln, viewModel.ULN);
+        }
     }
 }

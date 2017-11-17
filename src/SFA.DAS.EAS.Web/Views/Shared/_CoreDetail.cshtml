@@ -1,0 +1,16 @@
+﻿@using SFA.DAS.EmployerCommitments.Web.ViewModels
+@model CoreDetailsViewModel 
+<table class="core-detail">
+    <tr>
+        <td class="first-child">Name</td>
+        <td id="learnerName" class="first-child">@Model.LearnerName</td>
+    </tr>
+    <tr>
+        <td class="first-child">Unique learner number</td>
+        <td id="uln" class="first-child">@Model.ULN</td>
+    </tr>
+    <tr>
+        <td class="first-child">Training name</td>
+        <td id="trainingName" class="first-child">@Model.TrainingName</td>
+    </tr>
+</table>

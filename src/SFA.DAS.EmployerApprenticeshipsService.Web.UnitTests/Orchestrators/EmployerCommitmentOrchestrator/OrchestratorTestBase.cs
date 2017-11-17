@@ -17,34 +17,34 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
 {
     public abstract class OrchestratorTestBase
     {
-        private Mock<ILog> _mockLogger;
-        private Mock<IHashingService> _mockHashingService;
         private Mock<ICommitmentStatusCalculator> _mockCalculator;
-        private Mock<IApprenticeshipMapper> _mockApprenticeshipMapper;
         private Mock<ICommitmentMapper> _mockCommitmentMapper;
 
-        protected Mock<IAcademicYearValidator> _mockAcademicYearValidator;
-        protected Mock<IAcademicYearDateProvider> _mockAcademicYearDateProvider;
+        protected Mock<IApprenticeshipMapper> MockApprenticeshipMapper;
+        protected Mock<ILog> MockLogger;
+        protected Mock<IHashingService> MockHashingService;
+        protected Mock<IAcademicYearValidator> MockAcademicYearValidator;
+        protected Mock<IAcademicYearDateProvider> MockAcademicYearDateProvider;
         protected Mock<IMediator> MockMediator;
         protected EmployerCommitmentsOrchestrator EmployerCommitmentOrchestrator;
-        protected Mock<IApprenticeshipViewModelValidator> _mockApprenticeshipValidator;
+        protected Mock<IApprenticeshipViewModelValidator> MockApprenticeshipValidator;
 
         [SetUp]
         public void Setup()
         {
             MockMediator = new Mock<IMediator>();
-            _mockLogger = new Mock<ILog>();
+            MockLogger = new Mock<ILog>();
             _mockCalculator = new Mock<ICommitmentStatusCalculator>();
-            _mockApprenticeshipMapper = new Mock<IApprenticeshipMapper>();
+            MockApprenticeshipMapper = new Mock<IApprenticeshipMapper>();
             _mockCommitmentMapper = new Mock<ICommitmentMapper>();
-            _mockAcademicYearValidator = new Mock<IAcademicYearValidator>();
-            _mockAcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
-            _mockApprenticeshipValidator = new Mock<IApprenticeshipViewModelValidator>();
+            MockAcademicYearValidator = new Mock<IAcademicYearValidator>();
+            MockAcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
+            MockApprenticeshipValidator = new Mock<IApprenticeshipViewModelValidator>();
 
-            _mockHashingService = new Mock<IHashingService>();
-            _mockHashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);
-            _mockHashingService.Setup(x => x.DecodeValue("ABC321")).Returns(321L);
-            _mockHashingService.Setup(x => x.DecodeValue("ABC456")).Returns(456L);
+            MockHashingService = new Mock<IHashingService>();
+            MockHashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);
+            MockHashingService.Setup(x => x.DecodeValue("ABC321")).Returns(321L);
+            MockHashingService.Setup(x => x.DecodeValue("ABC456")).Returns(456L);
 
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetCommitmentQueryRequest>()))
                 .ReturnsAsync(new GetCommitmentQueryResponse
@@ -62,12 +62,12 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
 
             EmployerCommitmentOrchestrator = new EmployerCommitmentsOrchestrator(
                 MockMediator.Object,
-                _mockHashingService.Object,
+                MockHashingService.Object,
                 _mockCalculator.Object,
-                _mockApprenticeshipMapper.Object,
+                MockApprenticeshipMapper.Object,
                 _mockCommitmentMapper.Object,
-                _mockLogger.Object,
-                _mockApprenticeshipValidator.Object);
+                MockLogger.Object,
+                MockApprenticeshipValidator.Object);
         }
     }
 }
