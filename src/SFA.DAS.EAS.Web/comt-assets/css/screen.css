@@ -5512,7 +5512,7 @@ h2 .float-right {
 
 @media (min-width: 641px) {
   .floating-menu p.floating-head-text {
-    margin: 10px 0 0 0px;
+    margin: 10px 0 10px 0px;
   }
 }
 
