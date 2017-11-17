@@ -7,7 +7,7 @@ using SFA.DAS.EmployerCommitments.Web.Views.DataLock;
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.DataLock
 {
     [TestFixture]
-    public class RequestChangesPage : ViewModelTestingBase<DataLockStatusViewModel, RequestChanges>
+    public class RequestChangesPage : OrchestratedViewModelTestingBase<DataLockStatusViewModel, RequestChanges>
     {
         private const string Uln = "IAMAULN";
         private const string TrainingName = "IAMATRAININGNAME";

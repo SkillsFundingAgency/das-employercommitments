@@ -5,7 +5,7 @@ using SFA.DAS.EmployerCommitments.Web.Views.EmployerManageApprentices;
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerManageApprentices
 {
     [TestFixture]
-    public class ReviewChangesPage : ViewModelTestingBase<UpdateApprenticeshipViewModel, ReviewChanges>
+    public class ReviewChangesPage : OrchestratedViewModelTestingBase<UpdateApprenticeshipViewModel, ReviewChanges>
     {
         private ApprenticeshipDetailsViewModel _originalApprenticeship;
 
