@@ -28,7 +28,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Views.Shared
     using System.Web.UI;
     using System.Web.WebPages;
     using SFA.DAS.EmployerCommitments;
-    using SFA.DAS.EmployerCommitments.Web.Extensions;
     using SFA.DAS.EmployerCommitments.Web.ViewModels;
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "2.0.0.0")]
