@@ -208,8 +208,11 @@
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingTrainingDates.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingUln.cs" />
     <Compile Include="Validators\ProviderSelectionTest\WhenValidatingProviderId.cs" />
+    <Compile Include="Views\EmployerCommitments\EmployerCommitmentsDetailsPage.cs" />
+    <Compile Include="Views\EmployerManageApprentices\ListAllPage.cs" />
+    <Compile Include="Views\EmployerManageApprentices\EditStartedApprenticeshipsPage.cs" />
     <Compile Include="Views\EmployerManageApprentices\ConfirmChangesPage.cs" />
-    <Compile Include="Views\EmployerManageApprentices\ViewChangesPage.cs" />
+    <Compile Include="Views\EmployerManageApprentices\OrchestratedViewChangesPage.cs" />
     <Compile Include="Views\OfflineBrowserCapabilities.cs" />
     <Compile Include="Views\OfflineHttpContext.cs" />
     <Compile Include="Views\OfflineHttpRequest.cs" />
@@ -220,6 +223,7 @@
     <Compile Include="Views\HtmlAgilityPackExtensions.cs" />
     <Compile Include="Views\EmployerManageApprentices\ReviewChangesPage.cs" />
     <Compile Include="Views\StartPageHelper.cs" />
+    <Compile Include="Views\OrchestratedViewModelTestingBase.cs" />
     <Compile Include="Views\ViewModelTestingBase.cs" />
     <Compile Include="Views\ViewPageActivator.cs" />
     <Compile Include="Views\ViewRenderer.cs" />

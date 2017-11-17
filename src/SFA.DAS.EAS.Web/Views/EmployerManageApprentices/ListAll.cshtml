@@ -82,9 +82,9 @@ else
                                 <td>
                                     @apprenticeship.FirstName @apprenticeship.LastName &nbsp;
                                 </td>
-                                <td>@apprenticeship.ULN</td>
+                                <td id="apprenticeUln">@apprenticeship.ULN</td>
                                 <td>
-                                    @if (apprenticeship.DateOfBirth != null)
+                                    @if (apprenticeship.DateOfBirth.HasValue)
                                     {
                                         @apprenticeship.DateOfBirth.Value.ToGdsFormat()
                                     } &nbsp;

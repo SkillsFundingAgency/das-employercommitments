@@ -1,14 +1,11 @@
-using System;
 using NUnit.Framework;
-using SFA.DAS.EmployerCommitments.Web.Extensions;
-using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.EmployerCommitments.Web.Views.EmployerManageApprentices;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerManageApprentices
 {
     [TestFixture]
-    public class ViewChangesPage : ViewModelTestingBase<UpdateApprenticeshipViewModel, ViewChanges>
+    public class OrchestratedViewChangesPage : OrchestratedViewModelTestingBase<UpdateApprenticeshipViewModel, ViewChanges>
     {
         private ApprenticeshipDetailsViewModel _originalApprenticeship;
 
