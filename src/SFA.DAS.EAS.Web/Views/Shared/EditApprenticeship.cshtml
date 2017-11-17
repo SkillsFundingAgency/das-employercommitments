@@ -21,6 +21,12 @@
 
 </div>
 
+<div class="form-error-group form-group">
+    @Html.Label("ULN", "Unique learner number", new { @class = "form-label form-label-bold" })
+    @Html.Label("ULNDescription", "This will be added by your training provider.", new { @class = "form-control form-control-3-4" })
+
+</div>
+
 <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.DateOfBirthError) ? "error" : "")">
     <hr />
     <span class="form-label-bold">Date of birth</span>

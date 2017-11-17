@@ -214,6 +214,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">Name</th>
+                                        <th scope="col">Unique leaner number</th>
                                         <th scope="col">Date of birth</th>
                                         <th scope="col">Training dates</th>
                                         <th scope="col" colspan="2">Cost</th>
@@ -225,6 +226,9 @@
                                         <tr>
                                             <td>
                                                 @GetValueOrDefault(apprenticeship.ApprenticeName)
+                                            </td>
+                                            <td>
+                                               @apprenticeship.ApprenticeUln
                                             </td>
                                             <td>
                                                 @if (apprenticeship.ApprenticeDateOfBirth.HasValue)
