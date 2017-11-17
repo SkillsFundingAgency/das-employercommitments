@@ -72,25 +72,21 @@ WriteLiteral(">");
 
                                     Write(Model.ULN);
 
-WriteLiteral("</td>\r\n    </tr>\r\n");
+WriteLiteral("</td>\r\n    </tr>\r\n    <tr>\r\n        <td");
 
-    
-     if (Model.DateOfBirth.HasValue)
-    {
+WriteLiteral(" class=\"first-child\"");
 
-WriteLiteral("        <tr>\r\n            <td>Date of birth</td>\r\n            <td");
+WriteLiteral(">Training name</td>\r\n        <td");
 
-WriteLiteral(" id=\"dateOfBirth\"");
+WriteLiteral(" id=\"trainingName\"");
+
+WriteLiteral(" class=\"first-child\"");
 
 WriteLiteral(">");
 
-                            Write(Model.DateOfBirth.Value.ToGdsFormat());
+                                             Write(Model.TrainingName);
 
-WriteLiteral("</td>\r\n        </tr>\r\n");
-
-    }
-
-WriteLiteral("</table>");
+WriteLiteral("</td>\r\n    </tr>\r\n</table>");
 
         }
     }
