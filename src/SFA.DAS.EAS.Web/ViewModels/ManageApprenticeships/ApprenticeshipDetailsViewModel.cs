@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 {
@@ -11,6 +10,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
+
+        public string ULN { get; set;}
 
         public DateTime? DateOfBirth { get; set; }
 

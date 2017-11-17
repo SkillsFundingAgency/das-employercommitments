@@ -1,0 +1,4 @@
+﻿GeneratePrettyNames: true
+TrimLeadingUnderscores: true
+GenerateAbsolutePathLinePragmas: false
+DisableLinePragmas: true

@@ -111,6 +111,5 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             viewModel.Alerts.Count().Should().Be(1);
             viewModel.Alerts.FirstOrDefault().Should().Be("Changes requested");
         }
-
     }
 }
