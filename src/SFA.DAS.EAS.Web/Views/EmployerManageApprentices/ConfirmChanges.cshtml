@@ -1,4 +1,5 @@
-﻿@using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
+﻿@using SFA.DAS.EmployerCommitments.Web.ViewModels
+@using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 @model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<UpdateApprenticeshipViewModel>
 @{
     ViewBag.Title = "Confirm changes";
@@ -6,6 +7,10 @@
     ViewBag.PageID = "confirm-edited-changes";
 
     Model.Data.CurrentTableHeadingText = "Current";
+
+    var learnerName = $"{Model.Data?.FirstName} {Model.Data?.LastName}";
+    var uln = Model.Data?.OriginalApprenticeship?.ULN;
+    var trainingName = Model.Data?.TrainingName;
 }
 
 <div class="grid-row">
@@ -16,7 +21,14 @@
 
             <h1 class="heading-xlarge">@ViewBag.Title</h1>
             
-            @Html.Partial("ApprenticeshipUpdate", Model.Data)
+            @{ Html.RenderPartial("_CoreDetail", new CoreDetailsViewModel
+               {
+                   LearnerName = learnerName,
+                   ULN = uln,
+                   TrainingName = trainingName
+               }); }
+            
+            @{ Html.RenderPartial("ApprenticeshipUpdate", Model.Data); }
                 <h2 class="heading-medium">Do you want to make these changes?</h2>
                 <div class="form-group @(!string.IsNullOrEmpty(Model.Data.ChangesConfirmedError) ? "error" : "")">
                     <fieldset>

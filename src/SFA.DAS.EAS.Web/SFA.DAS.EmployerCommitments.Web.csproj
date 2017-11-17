@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -28,6 +29,7 @@
     <TargetFrameworkProfile />
     <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
     <Use64BitIISExpress />
+    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -373,6 +375,7 @@
     <Compile Include="Validators\DataLockStatusViewModelViewModelValidator.cs" />
     <Compile Include="Validators\ProviderPriorityReOrderListValidator.cs" />
     <Compile Include="ViewModels\CommitmentsIndexViewModel.cs" />
+    <Compile Include="ViewModels\CoreDetailsViewModel.cs" />
     <Compile Include="ViewModels\GoogleAnalyicsDetailsViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IPaginationViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\ApprenticeshipFiltersViewModel.cs" />
@@ -489,11 +492,51 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Views\EmployerManageApprentices\EditStartedApprenticeship.cshtml" />
-    <Content Include="Views\Shared\ApprenticeshipUpdate.cshtml" />
+    <Content Include="Views\Shared\ApprenticeshipUpdate.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ApprenticeshipUpdate.generated.cs</LastGenOutput>
+    </Content>
+    <Compile Include="Views\DataLock\RequestChanges.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RequestChanges.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EmployerManageApprentices\ConfirmChanges.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ConfirmChanges.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EmployerManageApprentices\ReviewChanges.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReviewChanges.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EmployerManageApprentices\ViewChanges.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewChanges.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\ApprenticeshipUpdate.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ApprenticeshipUpdate.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\_CoreDetail.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>_CoreDetail.cshtml</DependentUpon>
+    </Compile>
     <Compile Include="WebRole.cs" />
     <Compile Include="Validators\ApprenticeshipViewModelValidator.cs" />
     <Content Include="Views\DataLock\RequestRestart.cshtml" />
-    <Content Include="Views\DataLock\RequestChanges.cshtml" />
+    <Content Include="Views\DataLock\RequestChanges.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>RequestChanges.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Shared\_CoreDetail.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>_CoreDetail.generated.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="comt-assets\css\external-links\external-link-24x24.png" />
@@ -904,10 +947,19 @@
     <Content Include="Views\Error\InvalidState.cshtml" />
     <Content Include="Views\EmployerCommitments\AgreementNotSigned.cshtml" />
     <Content Include="Views\EmployerManageApprentices\Edit.cshtml" />
-    <Content Include="Views\EmployerManageApprentices\ViewChanges.cshtml" />
-    <Content Include="Views\EmployerManageApprentices\ConfirmChanges.cshtml" />
+    <Content Include="Views\EmployerManageApprentices\ViewChanges.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ViewChanges.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\EmployerManageApprentices\ConfirmChanges.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ConfirmChanges.generated.cs</LastGenOutput>
+    </Content>
     <Content Include="Views\Shared\EditApprenticeship.cshtml" />
-    <Content Include="Views\EmployerManageApprentices\ReviewChanges.cshtml" />
+    <Content Include="Views\EmployerManageApprentices\ReviewChanges.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ReviewChanges.generated.cs</LastGenOutput>
+    </Content>
     <Content Include="src\sass\_accordions.scss" />
     <Content Include="Views\EmployerManageApprentices\ChangeStatus.cshtml" />
     <Content Include="Views\EmployerManageApprentices\StatusChangeConfirmation.cshtml" />
@@ -939,11 +991,18 @@
   <ItemGroup>
     <Folder Include="Views\Service\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Views\razorgenerator.directives" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">

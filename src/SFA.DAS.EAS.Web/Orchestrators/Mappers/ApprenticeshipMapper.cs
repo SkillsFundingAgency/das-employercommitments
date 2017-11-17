@@ -65,6 +65,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 HashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id),
                 FirstName = apprenticeship.FirstName,
                 LastName = apprenticeship.LastName,
+                ULN = apprenticeship.ULN,
                 DateOfBirth = apprenticeship.DateOfBirth,
                 StartDate = apprenticeship.StartDate,
                 EndDate = apprenticeship.EndDate,
@@ -82,7 +83,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                             && !apprenticeship.DataLockCourseTriaged
                             && !apprenticeship.DataLockCourseChangeTriaged
                             && !apprenticeship.DataLockPriceTriaged
-                            && new []{ PaymentStatus.Active, PaymentStatus.Paused,  }.Contains(apprenticeship.PaymentStatus),
+                            && new []{ PaymentStatus.Active, PaymentStatus.Paused  }.Contains(apprenticeship.PaymentStatus),
                 CanEditStatus = !(new List<PaymentStatus> { PaymentStatus.Completed, PaymentStatus.Withdrawn }).Contains(apprenticeship.PaymentStatus)
             };
         }
@@ -92,16 +93,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             var isStartDateInFuture = apprenticeship.StartDate.HasValue && apprenticeship.StartDate.Value >
                                       new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1);
 
-            var isLockedForUpdate = apprenticeship.HasHadDataLockSuccess;
+            var isLockedForUpdate = apprenticeship.HasHadDataLockSuccess || _academicYearValidator.IsAfterLastAcademicYearFundingPeriod &&
+                                    apprenticeship.StartDate.HasValue &&
+                                    _academicYearValidator.Validate(apprenticeship.StartDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod;
 
-            if (_academicYearValidator.IsAfterLastAcademicYearFundingPeriod &&
-                 apprenticeship.StartDate.HasValue &&
-                 _academicYearValidator.Validate(apprenticeship.StartDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod)
-            {
-                isLockedForUpdate = true;
-            }
-
-            
             return new ApprenticeshipViewModel
             {
                 HashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id),
@@ -173,11 +168,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         public Dictionary<string, string> MapOverlappingErrors(GetOverlappingApprenticeshipsQueryResponse overlappingErrors)
         {
             var dict = new Dictionary<string, string>();
-            const string StartText = "The start date is not valid";
-            const string EndText = "The end date is not valid";
+            const string startText = "The start date is not valid";
+            const string endText = "The end date is not valid";
 
-            const string StartDateKey = "StartDateOverlap";
-            const string EndDateKey = "EndDateOverlap";
+            const string startDateKey = "StartDateOverlap";
+            const string endDateKey = "EndDateOverlap";
 
 
             foreach (var item in overlappingErrors.GetFirstOverlappingApprenticeships())
@@ -185,18 +180,18 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 switch (item.ValidationFailReason)
                 {
                     case ValidationFailReason.OverlappingStartDate:
-                        dict.AddIfNotExists(StartDateKey, StartText);
+                        dict.AddIfNotExists(startDateKey, startText);
                         break;
                     case ValidationFailReason.OverlappingEndDate:
-                        dict.AddIfNotExists(EndDateKey, EndText);
+                        dict.AddIfNotExists(endDateKey, endText);
                         break;
                     case ValidationFailReason.DateEmbrace:
-                        dict.AddIfNotExists(StartDateKey, StartText);
-                        dict.AddIfNotExists(EndDateKey, EndText);
+                        dict.AddIfNotExists(startDateKey, startText);
+                        dict.AddIfNotExists(endDateKey, endText);
                         break;
                     case ValidationFailReason.DateWithin:
-                        dict.AddIfNotExists(StartDateKey, StartText);
-                        dict.AddIfNotExists(EndDateKey, EndText);
+                        dict.AddIfNotExists(startDateKey, startText);
+                        dict.AddIfNotExists(endDateKey, endText);
                         break;
                 }
             }
@@ -402,24 +397,24 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
         private IEnumerable<string> MapRecordStatus(Originator? pendingUpdateOriginator, bool dataLockCourseTriaged, bool changeRequested)
         {
-            const string ChangesPending = "Changes pending";
-            const string ChangesForReview = "Changes for review";
-            const string ChangesRequested = "Changes requested";
+            const string changesPending = "Changes pending";
+            const string changesForReview = "Changes for review";
+            const string changesRequested = "Changes requested";
 
             var statuses = new List<string>();
 
             if (pendingUpdateOriginator != null)
             {
                 var t = pendingUpdateOriginator == Originator.Employer 
-                    ? ChangesPending : ChangesForReview;
+                    ? changesPending : changesForReview;
                 statuses.Add(t);
             }
 
             if (dataLockCourseTriaged)
-                statuses.Add(ChangesRequested);
+                statuses.Add(changesRequested);
 
             if (changeRequested)
-                statuses.Add(ChangesForReview);
+                statuses.Add(changesForReview);
 
             return statuses.Distinct();
         }
