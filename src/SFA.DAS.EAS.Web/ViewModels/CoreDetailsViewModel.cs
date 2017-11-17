@@ -7,5 +7,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string LearnerName { get; set; }
         public string ULN { get; set; }
         public DateTime? DateOfBirth { get; set; }
+        public string TrainingName { get; set; }
     }
 }

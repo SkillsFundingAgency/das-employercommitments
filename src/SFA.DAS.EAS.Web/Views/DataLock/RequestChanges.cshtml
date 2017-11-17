@@ -7,9 +7,9 @@
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "review-datalock-changes";
 
-    var learnerName = Model.Data.LearnerName;
-    var uln = Model.Data.ULN;
-    var dateOfBirth = Model.Data.DateOfBirth;
+    var learnerName = Model.Data?.LearnerName;
+    var uln = Model.Data?.ULN;
+    var trainingName = Model.Data?.CurrentProgram?.Title;
 }
 
 <div class="grid-row">
@@ -20,7 +20,7 @@
            {
                LearnerName = learnerName,
                ULN = uln,
-               DateOfBirth = dateOfBirth
+               TrainingName = trainingName
            }); }
 
         <p>@Model.Data.ProviderName has requested these changes:</p>

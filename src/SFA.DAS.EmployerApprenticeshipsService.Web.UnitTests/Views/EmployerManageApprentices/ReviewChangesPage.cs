@@ -12,11 +12,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerManageApprenti
     {
         private ApprenticeshipDetailsViewModel _originalApprenticeship;
 
-        private DateTime _dateOfBirth;
-
-        private DateTimeViewModel _dateOfBirthModel;
-
         private const string Uln = "IAMAULN";
+
+        private const string TrainingName = "IAMATRAININGNAME";
 
         private const string FirstName = "IAMAFIRSTNAME";
 
@@ -25,9 +23,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerManageApprenti
         [SetUp]
         public void Setup()
         {
-            _dateOfBirth = DateTime.Today;
             _originalApprenticeship = new ApprenticeshipDetailsViewModel {ULN = Uln};
-            _dateOfBirthModel = new DateTimeViewModel(_dateOfBirth);
         }
 
         [Test]
@@ -57,29 +53,15 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerManageApprenti
         }
 
         [Test]
-        public void ShouldDisplayDateOfBirth()
-        {
-          
-
-            var model = new UpdateApprenticeshipViewModel
-            {
-                DateOfBirth = _dateOfBirthModel,
-                OriginalApprenticeship = _originalApprenticeship
-            };
-
-            AssertParsedContent(model, "#dateOfBirth", _dateOfBirth.ToGdsFormat());
-        }
-
-        [Test]
-        public void ShouldNotDisplayDateOfBirth()
+        public void ShouldDisplayTrainingName()
         {
             var model = new UpdateApprenticeshipViewModel
             {
-                DateOfBirth = new DateTimeViewModel (default(DateTime?)),
+                TrainingName = TrainingName,
                 OriginalApprenticeship = _originalApprenticeship
             };
 
-            AssertParsedContent(model, "#dateOfBirth", string.Empty);
+            AssertParsedContent(model, "#trainingName", TrainingName);
         }
     }
 }

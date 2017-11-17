@@ -10,7 +10,7 @@
 
     var learnerName = $"{Model.Data?.FirstName} {Model.Data?.LastName}";
     var uln = Model.Data?.OriginalApprenticeship?.ULN;
-    var dateOfBirth = Model.Data?.DateOfBirth;
+    var trainingName = Model.Data?.TrainingName;
 }
 
 <div class="grid-row">
@@ -25,7 +25,7 @@
                {
                    LearnerName = learnerName,
                    ULN = uln,
-                   DateOfBirth = dateOfBirth.DateTime
+                   TrainingName = trainingName
                }); }
             <p class="lede">@Model.Data.ProviderName have suggested these changes: </p>
 

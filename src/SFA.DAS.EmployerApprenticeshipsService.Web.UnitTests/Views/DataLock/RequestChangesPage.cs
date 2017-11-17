@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.EmployerCommitments.Web.Views.DataLock;
@@ -10,62 +11,48 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.DataLock
     [TestFixture]
     public class RequestChangesPage : ViewModelTestingBase<DataLockStatusViewModel, RequestChanges>
     {
+        private const string Uln = "IAMAULN";
+        private const string TrainingName = "IAMATRAININGNAME";
+
+        private const string LearnerName = "IAMALEARNER";
+
         [Test]
         public void ShouldDisplayLearnerName()
         {
-            const string learnerName = "IAMALEARNER";
-
             var model = new DataLockStatusViewModel
             {
-                LearnerName = learnerName,
+                LearnerName = LearnerName,
                 CourseChanges = new List<CourseChange>(),
                 PriceChanges = new List<PriceChange>()
             };
 
-            AssertParsedContent(model, "#learnerName", learnerName);
+            AssertParsedContent(model, "#learnerName", LearnerName);
         }
 
         [Test]
         public void ShouldDisplayUln()
         {
-            const string uln = "IAMAULN";
-
             var model = new DataLockStatusViewModel
             {
-                ULN = uln,
+                ULN = Uln,
                 CourseChanges = new List<CourseChange>(),
                 PriceChanges = new List<PriceChange>()
             };
 
-            AssertParsedContent(model, "#uln", uln);
+            AssertParsedContent(model, "#uln", Uln);
         }
 
         [Test]
-        public void ShouldDisplayDateOfBirth()
-        {
-            var dateOfBirth = DateTime.Today;
-
-            var model = new DataLockStatusViewModel
-                {
-                    DateOfBirth = dateOfBirth,
-                    CourseChanges = new List<CourseChange>(),
-                    PriceChanges = new List<PriceChange>()
-            };
-
-            AssertParsedContent(model, "#dateOfBirth", dateOfBirth.ToGdsFormat());
-        }
-
-        [Test]
-        public void ShouldNotDisplayDateOfBirth()
+        public void ShouldDisplayTrainingName()
         {
             var model = new DataLockStatusViewModel
-                {
-                    DateOfBirth = null,
-                    CourseChanges = new List<CourseChange>(),
-                    PriceChanges = new List<PriceChange>()
+            {
+                CurrentProgram = new Standard { Title = TrainingName},
+                CourseChanges = new List<CourseChange>(),
+                PriceChanges = new List<PriceChange>()
             };
 
-            AssertParsedContent(model, "#dateOfBirth", string.Empty);
+            AssertParsedContent(model, "#trainingName", TrainingName);
         }
     }
 }
