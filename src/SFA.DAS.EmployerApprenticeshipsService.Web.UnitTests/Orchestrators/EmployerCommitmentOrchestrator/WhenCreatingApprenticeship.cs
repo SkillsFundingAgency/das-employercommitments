@@ -7,7 +7,7 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels;
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
 {
     [TestFixture]
-    public class WhenCreatingApprenticeship : OrchestratorTestBase
+    public class WhenGettingDataLockChangeStatus : OrchestratorTestBase
     {
         [Test]
         public async Task ShouldCallMediatorToCreate()
