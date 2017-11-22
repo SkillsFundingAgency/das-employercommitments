@@ -1,7 +1,4 @@
-using System;
 using NUnit.Framework;
-using SFA.DAS.EmployerCommitments.Web.Extensions;
-using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.EmployerCommitments.Web.Views.EmployerManageApprentices;
 
@@ -18,7 +15,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerManageApprenti
 
         private const string FirstName = "IAMAFIRSTNAME";
 
-        private const string Lastname = "IAMALASTNAME";
+        private const string LastName = "IAMALASTNAME";
 
         [SetUp]
         public void Setup()
@@ -29,12 +26,12 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerManageApprenti
         [Test]
         public void ShouldDisplayLearnerName()
         {
-            var learnerName = $"{FirstName} {Lastname}";
+            var learnerName = $"{FirstName} {LastName}";
 
             var model = new UpdateApprenticeshipViewModel
             {
                 FirstName = FirstName,
-                LastName = Lastname,
+                LastName = LastName,
                 OriginalApprenticeship = _originalApprenticeship
             };
 
