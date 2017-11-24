@@ -45,7 +45,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.DataLock
         {
             var model = new DataLockStatusViewModel
             {
-                CurrentProgram = new Standard { Title = TrainingName},
+                TrainingName = TrainingName,
                 CourseChanges = new List<CourseChange>(),
                 PriceChanges = new List<PriceChange>()
             };

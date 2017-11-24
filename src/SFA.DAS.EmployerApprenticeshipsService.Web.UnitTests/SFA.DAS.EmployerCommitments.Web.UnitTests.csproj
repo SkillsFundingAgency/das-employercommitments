@@ -209,6 +209,7 @@
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingUln.cs" />
     <Compile Include="Validators\ProviderSelectionTest\WhenValidatingProviderId.cs" />
     <Compile Include="Views\EmployerCommitments\EmployerCommitmentsDetailsPage.cs" />
+    <Compile Include="Views\EmployerCommitments\ViewApprenticeshipEntryPage.cs" />
     <Compile Include="Views\EmployerManageApprentices\ListAllPage.cs" />
     <Compile Include="Views\EmployerManageApprentices\EditStartedApprenticeshipsPage.cs" />
     <Compile Include="Views\EmployerManageApprentices\ConfirmChangesPage.cs" />

@@ -8,9 +8,9 @@
 
     Model.Data.CurrentTableHeadingText = "Previous";
 
-    var learnerName = $"{Model.Data?.FirstName} {Model.Data?.LastName}";
+    var learnerName = $"{Model.Data?.OriginalApprenticeship?.FirstName} {Model.Data?.OriginalApprenticeship?.LastName}";
     var uln = Model.Data?.OriginalApprenticeship?.ULN;
-    var trainingName = Model.Data?.TrainingName;
+    var trainingName = Model.Data?.OriginalApprenticeship?.TrainingName;
 }
 
 <div class="grid-row">

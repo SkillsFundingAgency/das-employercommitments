@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Views.DataLock
 
     var learnerName = Model.Data?.LearnerName;
     var uln = Model.Data?.ULN;
-    var trainingName = Model.Data?.CurrentProgram?.Title;
+    var trainingName = Model.Data?.TrainingName;
 
 WriteLiteral("\r\n\r\n<div");
 
@@ -98,6 +98,13 @@ WriteLiteral("\r\n");
         {
             count++;
 
+            var ilrPeriod = dl.IlrEndDate.HasValue
+                ? $"From {dl.CurrentStartDate.Date.ToGdsFormat()} to {dl.IlrEndDate.Value.ToGdsFormat()}"
+                : $"From {dl.CurrentStartDate.Date.ToGdsFormat()} onwards";
+
+            var dasPeriod = $"From {dl.CurrentStartDate.ToGdsFormat()} onwards";
+
+
 WriteLiteral("            <h2");
 
 WriteLiteral(" class=\"heading-small\"");
@@ -122,16 +129,14 @@ WriteLiteral(">Currently</th>\r\n                        <th");
 WriteLiteral(" class=\"changed\"");
 
 WriteLiteral(">Change to</th>\r\n                    </tr>\r\n                </thead>\r\n           " +
-"     <tbody>\r\n                    <tr>\r\n                        <td>From date</t" +
-"d>\r\n                        <td>\r\n");
+"     <tbody>\r\n                    <tr>\r\n                        <td>Period</td>\r" +
+"\n                        <td><span>");
 
-WriteLiteral("                            ");
+                             Write(dasPeriod);
 
-                       Write(dl.CurrentStartDate.ToGdsFormat());
+WriteLiteral("</span></td>\r\n                        <td>");
 
-WriteLiteral("\r\n                        </td>\r\n                        <td>");
-
-                       Write(dl.IlrStartDate.Date.ToGdsFormat());
+                       Write(ilrPeriod);
 
 WriteLiteral("</td>\r\n                    </tr>\r\n                    <tr>\r\n                     " +
 "   <td>Apprenticeship training course</td>\r\n                        <td>\r\n");
@@ -154,6 +159,17 @@ WriteLiteral("        ");
          foreach (var p in Model.Data.PriceChanges)
         {
             count++;
+
+            var ilrPeriod = p.IlrEndDate.HasValue
+                ? $"From {p.CurrentStartDate.Date.ToGdsFormat()} to {p.IlrEndDate.Value.ToGdsFormat()}"
+                : $"From {p.CurrentStartDate.Date.ToGdsFormat()} onwards";
+
+            var dasPeriod = p.MissingPriceHistory
+                ? string.Empty
+                : p.CurrentEndDate.HasValue
+                    ? $"From {p.CurrentStartDate.Date.ToGdsFormat()} to {p.CurrentEndDate.Value.ToGdsFormat()}"
+                    : $"From {p.CurrentStartDate.ToGdsFormat()} onwards";
+
 
 WriteLiteral("            <h2");
 
@@ -180,41 +196,16 @@ WriteLiteral(" class=\"changed\"");
 
 WriteLiteral(">Change to</th>\r\n                    </tr>\r\n                </thead>\r\n           " +
 "     <tbody>\r\n                    <tr>\r\n                        <td>Price period" +
-"</td>\r\n                        <td>\r\n");
+"</td>\r\n                        <td><span>");
 
-                            
-                              
-                                if (!p.MissingPriceHistory)
-                                {
+                             Write(dasPeriod);
 
-WriteLiteral("                                    <span>From ");
+WriteLiteral("</span></td>\r\n                        <td>");
 
-                                          Write(p.CurrentStartDate.Date.ToGdsFormat());
+                       Write(ilrPeriod);
 
-WriteLiteral("</span>\r\n");
-
-                                }
-                            
-WriteLiteral("\r\n                        </td>\r\n                        <td>\r\n");
-
-                            
-                              
-                                var priceDetail = $"From {p.IlrStartDate.Date.ToGdsFormat()}";
-
-                                if (p.IlrEndDate.HasValue)
-                                {
-                                    priceDetail = $"{p.IlrStartDate.Date.ToGdsFormat()} to {p.IlrEndDate.Value.ToGdsFormat()}";
-                                }
-
-                                
-                           Write(priceDetail);
-
-                                            
-
-                            
-WriteLiteral("\r\n                        </td>\r\n                    </tr>\r\n                    <" +
-"tr>\r\n                        <td>Total apprenticeship training price</td>\r\n     " +
-"                   <td>\r\n");
+WriteLiteral("</td>\r\n                    </tr>\r\n                    <tr>\r\n                     " +
+"   <td>Total apprenticeship training price</td>\r\n                        <td>\r\n");
 
                             
                               
@@ -236,26 +227,26 @@ WriteLiteral("\r\n                        </td>\r\n                        <td>"
 WriteLiteral("</td>\r\n                    </tr>\r\n                </tbody>\r\n            </table>\r" +
 "\n");
 
-                                }
+        }
 
 WriteLiteral("\r\n        <form");
 
 WriteLiteral(" method=\"POST\"");
 
-WriteAttribute("action", Tuple.Create(" action=\"", 4141), Tuple.Create("\"", 4198)
-, Tuple.Create(Tuple.Create("", 4150), Tuple.Create<System.Object, System.Int32>(Url.Action("ConfirmRequestChanges", "DataLock")
-, 4150), false)
+WriteAttribute("action", Tuple.Create(" action=\"", 4114), Tuple.Create("\"", 4171)
+, Tuple.Create(Tuple.Create("", 4123), Tuple.Create<System.Object, System.Int32>(Url.Action("ConfirmRequestChanges", "DataLock")
+, 4123), false)
 );
 
 WriteLiteral(" novalidate=\"novalidate\"");
 
 WriteLiteral(" id=\"approve-changes\"");
 
-WriteAttribute("onsubmit", Tuple.Create(" onsubmit=\"", 4244), Tuple.Create("\"", 4302)
-, Tuple.Create(Tuple.Create("", 4255), Tuple.Create("sfa.tagHelper.submitRadioForm(\'", 4255), true)
-                                                                                            , Tuple.Create(Tuple.Create("", 4286), Tuple.Create<System.Object, System.Int32>(ViewBag.Title
-, 4286), false)
-, Tuple.Create(Tuple.Create("", 4300), Tuple.Create("\')", 4300), true)
+WriteAttribute("onsubmit", Tuple.Create(" onsubmit=\"", 4217), Tuple.Create("\"", 4275)
+, Tuple.Create(Tuple.Create("", 4228), Tuple.Create("sfa.tagHelper.submitRadioForm(\'", 4228), true)
+                                                                                            , Tuple.Create(Tuple.Create("", 4259), Tuple.Create<System.Object, System.Int32>(ViewBag.Title
+, 4259), false)
+, Tuple.Create(Tuple.Create("", 4273), Tuple.Create("\')", 4273), true)
 );
 
 WriteLiteral(">\r\n");
@@ -270,10 +261,10 @@ WriteLiteral(" class=\"heading-medium\"");
 
 WriteLiteral(">Are you happy to approve these changes?</h3>\r\n            <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 4441), Tuple.Create("\"", 4533)
-, Tuple.Create(Tuple.Create("", 4449), Tuple.Create("form-group", 4449), true)
-, Tuple.Create(Tuple.Create(" ", 4459), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Data.ChangesConfirmedError) ? "error" : ""
-, 4460), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 4414), Tuple.Create("\"", 4506)
+, Tuple.Create(Tuple.Create("", 4422), Tuple.Create("form-group", 4422), true)
+, Tuple.Create(Tuple.Create(" ", 4432), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Data.ChangesConfirmedError) ? "error" : ""
+, 4433), false)
 );
 
 WriteLiteral(">\r\n                <fieldset>\r\n                    <legend");
@@ -344,9 +335,9 @@ WriteLiteral(">Continue</button>\r\n            <a");
 
 WriteLiteral(" class=\"button-link break-line\"");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 5956), Tuple.Create("\"", 6085)
-, Tuple.Create(Tuple.Create("", 5963), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", "EmployerManageApprentices", new { Model.Data.HashedAccountId, Model.Data.HashedApprenticeshipId })
-, 5963), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 5929), Tuple.Create("\"", 6058)
+, Tuple.Create(Tuple.Create("", 5936), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", "EmployerManageApprentices", new { Model.Data.HashedAccountId, Model.Data.HashedApprenticeshipId })
+, 5936), false)
 );
 
 WriteLiteral(" aria-label=\"Back to apprentice details\"");
@@ -373,9 +364,9 @@ WriteLiteral(" class=\"breadcrumbs\"");
 
 WriteLiteral(">\r\n        <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 6449), Tuple.Create("\"", 6578)
-, Tuple.Create(Tuple.Create("", 6456), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", "EmployerManageApprentices", new { Model.Data.HashedAccountId, Model.Data.HashedApprenticeshipId} )
-, 6456), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 6422), Tuple.Create("\"", 6551)
+, Tuple.Create(Tuple.Create("", 6429), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", "EmployerManageApprentices", new { Model.Data.HashedAccountId, Model.Data.HashedApprenticeshipId} )
+, 6429), false)
 );
 
 WriteLiteral(" aria-label=\"Back to apprentice details\"");

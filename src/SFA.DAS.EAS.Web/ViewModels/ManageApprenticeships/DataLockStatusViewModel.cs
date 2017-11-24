@@ -42,5 +42,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public int TotalChanges => PriceChanges?.Count ?? 0 + CourseChanges?.Count() ?? 0;
 
         public string ULN { get; set; }
+
+        public string TrainingName { get; set; }
     }
 }

@@ -22,12 +22,17 @@
                     <td>@Model.Data.FirstName</td>
                 </tr>
 
-                <tr>
-                    <td>Last name</td>
-                    <td>@Model.Data.LastName</td>
-                </tr>
+            <tr>
+                <td>Last name</td>
+                <td>@Model.Data.LastName</td>
+            </tr>
+                
+            <tr>
+                <td>Unique learner number</td>
+                <td id="uln">@Model.Data.ULN</td>
+            </tr>
 
-                <tr>
+            <tr>
                     <td>Date of birth</td>
                     <td>
                         @if (Model.Data.DateOfBirth.DateTime.HasValue)
