@@ -20,7 +20,13 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerManageApprenti
         [SetUp]
         public void Setup()
         {
-            _originalApprenticeship = new ApprenticeshipDetailsViewModel { ULN = Uln };
+            _originalApprenticeship = new ApprenticeshipDetailsViewModel
+            {
+                ULN = Uln,
+                TrainingName = TrainingName,
+                FirstName = FirstName,
+                LastName = LastName
+            };
         }
 
         [Test]
