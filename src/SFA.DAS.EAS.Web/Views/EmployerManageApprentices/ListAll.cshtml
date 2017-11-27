@@ -68,6 +68,7 @@ else
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Unique leaner number</th>
                             <th>Date of birth</th>
                             <th>Status</th>
                             <th>Alerts</th>
@@ -81,8 +82,9 @@ else
                                 <td>
                                     @apprenticeship.FirstName @apprenticeship.LastName &nbsp;
                                 </td>
+                                <td id="apprenticeUln">@apprenticeship.ULN</td>
                                 <td>
-                                    @if (apprenticeship.DateOfBirth != null)
+                                    @if (apprenticeship.DateOfBirth.HasValue)
                                     {
                                         @apprenticeship.DateOfBirth.Value.ToGdsFormat()
                                     } &nbsp;

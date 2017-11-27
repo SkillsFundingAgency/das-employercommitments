@@ -113,7 +113,7 @@
         </div>
 
 
-        <div class="column-two-thirds" employer-details">
+        <div class="column-two-thirds employer-details">
             <p class="strong">Message:</p>
             <p>@(string.IsNullOrWhiteSpace(Model.Data.LatestMessage) ? "No message added" : Model.Data.LatestMessage)</p>
         </div>
@@ -172,7 +172,7 @@
 
                         @foreach (var group in Model.Data.ApprenticeshipGroups)
                         {
-                            var groupTitle = string.Format($"{group.Apprenticeships.Count()} x {group.GroupName}");
+                            var groupTitle = string.Format($"{@group.Apprenticeships.Count} x {group.GroupName}");
 
                             <div class="group-header">
 
@@ -214,6 +214,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">Name</th>
+                                        <th scope="col">Unique leaner number</th>
                                         <th scope="col">Date of birth</th>
                                         <th scope="col">Training dates</th>
                                         <th scope="col" colspan="2">Cost</th>
@@ -225,6 +226,9 @@
                                         <tr>
                                             <td>
                                                 @GetValueOrDefault(apprenticeship.ApprenticeName)
+                                            </td>
+                                            <td id="apprenticeUln">
+                                               @apprenticeship.ApprenticeUln
                                             </td>
                                             <td>
                                                 @if (apprenticeship.ApprenticeDateOfBirth.HasValue)
@@ -314,10 +318,7 @@
 
     public string GetApprenticesCountText(IList<ApprenticeshipListItemViewModel> apprenticeships)
     {
-        if (apprenticeships.Count == 1)
-            return "1 Apprentice";
-
-        return $"{apprenticeships.Count} Apprentices";
+        return apprenticeships.Count == 1 ? "1 Apprentice" : $"{apprenticeships.Count} Apprentices";
     }
 
     readonly Func<string, int, string> _addS = (word, count) => count == 1 ? word : $"{word}s";
@@ -339,10 +340,7 @@
 
     public string FormatCost(decimal? cost)
     {
-        if (!cost.HasValue)
-            return string.Empty;
-
-        return $"£{cost.Value:n0}";
+        return !cost.HasValue ? string.Empty : $"£{cost.Value:n0}";
     }
 }
 

@@ -25,5 +25,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 
         public IEnumerable<OverlappingApprenticeship> OverlappingApprenticeships { get; set; }
 
+        public string ApprenticeUln { get; set; }
     }
 }

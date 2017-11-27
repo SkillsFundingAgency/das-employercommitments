@@ -1129,6 +1129,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 HashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id),
                 ApprenticeName = apprenticeship.ApprenticeshipName,
                 ApprenticeDateOfBirth = apprenticeship.DateOfBirth,
+                ApprenticeUln = apprenticeship.ULN,
                 TrainingCode = apprenticeship.TrainingCode,
                 TrainingName = apprenticeship.TrainingName,
                 Cost = apprenticeship.Cost,

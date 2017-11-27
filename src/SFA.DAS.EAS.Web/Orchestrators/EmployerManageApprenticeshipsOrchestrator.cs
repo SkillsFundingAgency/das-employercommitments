@@ -8,9 +8,7 @@ using FluentValidation;
 using MediatR;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
-using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeshipUpdate;
-using SFA.DAS.EmployerCommitments.Application.Commands.ResolveRequestedChanges;
 using SFA.DAS.EmployerCommitments.Application.Commands.ReviewApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UndoApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStatus;
@@ -18,10 +16,8 @@ using SFA.DAS.EmployerCommitments.Application.Commands.UpdateProviderPaymentPrio
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetPriceHistoryQueryRequest;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
 using SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDate;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -53,7 +49,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly IAcademicYearValidator _academicYearValidator;
         private readonly ICookieStorageService<UpdateApprenticeshipViewModel>
             _apprenticshipsViewModelCookieStorageService;
-        private string _searchPlaceholderText;
+        private readonly string _searchPlaceholderText;
 
         private const string CookieName = "sfa-das-employerapprenticeshipsservice-apprentices";
 
@@ -199,7 +195,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ExtendedApprenticeshipViewModel
                     {
                         Apprenticeship = apprenticeship,
-                        ApprenticeshipProgrammes = await GetTrainingProgrammes(),
+                        ApprenticeshipProgrammes = await GetTrainingProgrammes()
                     }
                 };
             }, hashedAccountId, externalUserId);
@@ -371,7 +367,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 CheckApprenticeshipStateValidForChange(data.Apprenticeship);
 
 
-                DateTime earliestDate = data.Apprenticeship.StartDate.Value;
+                var earliestDate = data.Apprenticeship.StartDate.Value;
 
                 var resuming = changeType == ChangeStatusType.Resume;
 
@@ -379,7 +375,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     ? data.Apprenticeship.PauseDate.Value
                     : _currentDateTime.Now.Date;
 
-                bool mustInvokeAcademicYearFundingRule = _academicYearValidator.Validate(pausedDate) == AcademicYearValidationResult.Success;
+                var mustInvokeAcademicYearFundingRule = _academicYearValidator.Validate(pausedDate) == AcademicYearValidationResult.Success;
 
                 if (resuming && data.Apprenticeship.IsWaitingToStart(_currentDateTime))
                 {
@@ -486,7 +482,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     }
                 };
 
-                bool notResuming = changeType != ChangeStatusType.Resume;
+                var notResuming = changeType != ChangeStatusType.Resume;
 
                 if (notResuming) return result;
 
@@ -501,7 +497,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 result.Data.ChangeStatusViewModel.DateOfChange = new DateTimeViewModel(data.Apprenticeship.PauseDate.Value, 90);
 
-                bool mustInvokeAcademicYearFundingRule = _academicYearValidator.Validate(data.Apprenticeship.PauseDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod;
+                var mustInvokeAcademicYearFundingRule = _academicYearValidator.Validate(data.Apprenticeship.PauseDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod;
 
                 if (!mustInvokeAcademicYearFundingRule) return result;
 
@@ -666,7 +662,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         private void AssertApprenticeshipIsEditable(Apprenticeship apprenticeship)
         {
-            var editable = new[] { PaymentStatus.Active, PaymentStatus.Paused, }.Contains(apprenticeship.PaymentStatus);
+            var editable = new[] { PaymentStatus.Active, PaymentStatus.Paused }.Contains(apprenticeship.PaymentStatus);
 
             if (!editable)
             {

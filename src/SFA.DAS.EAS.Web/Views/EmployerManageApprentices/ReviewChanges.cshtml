@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships.UpdateApprenticeshipViewModel>
+﻿@using SFA.DAS.EmployerCommitments.Web.ViewModels
+@model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships.UpdateApprenticeshipViewModel>
 
 @{
     ViewBag.Title = "Review changes";
@@ -6,6 +7,10 @@
     ViewBag.PageID = "review-changes";
 
     Model.Data.CurrentTableHeadingText = "Previous";
+
+    var learnerName = $"{Model.Data?.OriginalApprenticeship?.FirstName} {Model.Data?.OriginalApprenticeship?.LastName}";
+    var uln = Model.Data?.OriginalApprenticeship?.ULN;
+    var trainingName = Model.Data?.OriginalApprenticeship?.TrainingName;
 }
 
 <div class="grid-row">
@@ -14,7 +19,14 @@
             
             @Html.AntiForgeryToken()
 
-            <h1 class="heading-xlarge">Review changes</h1>
+            <h1 class="heading-xlarge">@ViewBag.Title</h1>
+            
+            @{ Html.RenderPartial("_CoreDetail", new CoreDetailsViewModel
+               {
+                   LearnerName = learnerName,
+                   ULN = uln,
+                   TrainingName = trainingName
+               }); }
             <p class="lede">@Model.Data.ProviderName have suggested these changes: </p>
 
             @Html.Partial("ApprenticeshipUpdate", Model.Data)

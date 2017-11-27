@@ -11,9 +11,9 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public string HashedAccountId { get; set; }
         public int TotalResults { get; set; }
-        public int PageNumber { get; internal set; }
-        public int TotalPages { get; internal set; }
-        public int PageSize { get; internal set; }
+        public int PageNumber { get; set; }
+        public int TotalPages { get; set; }
+        public int PageSize { get; set; }
 
         public int TotalApprenticeshipsBeforeFilter { get; set; }
 
