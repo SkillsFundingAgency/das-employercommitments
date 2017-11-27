@@ -4964,7 +4964,7 @@ h2 .float-right {
 
 .normal-form-label .grey-text {
   color: #6f777b;
-  margin-top: 10px;
+  margin-bottom: 0;
 }
 
 @media only screen and (max-device-width: 640px), only screen and (max-device-width: 667px), only screen and (max-width: 480px) {
