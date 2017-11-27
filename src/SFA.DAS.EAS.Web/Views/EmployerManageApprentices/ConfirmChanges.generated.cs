@@ -47,9 +47,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Views.EmployerManageApprentices
 
     Model.Data.CurrentTableHeadingText = "Current";
 
-    var learnerName = $"{Model.Data?.FirstName} {Model.Data?.LastName}";
+    var learnerName = $"{Model.Data?.OriginalApprenticeship?.FirstName} {Model.Data?.OriginalApprenticeship?.LastName}";
     var uln = Model.Data?.OriginalApprenticeship?.ULN;
-    var trainingName = Model.Data?.TrainingName;
+    var trainingName = Model.Data?.OriginalApprenticeship?.TrainingName;
 
 WriteLiteral("\r\n\r\n<div");
 
@@ -63,18 +63,18 @@ WriteLiteral(">\r\n        <form");
 
 WriteLiteral(" method=\"POST\"");
 
-WriteAttribute("action", Tuple.Create(" action=\"", 670), Tuple.Create("\"", 707)
-, Tuple.Create(Tuple.Create("", 679), Tuple.Create<System.Object, System.Int32>(Url.Action("SubmitChanges")
-, 679), false)
+WriteAttribute("action", Tuple.Create(" action=\"", 742), Tuple.Create("\"", 779)
+, Tuple.Create(Tuple.Create("", 751), Tuple.Create<System.Object, System.Int32>(Url.Action("SubmitChanges")
+, 751), false)
 );
 
 WriteLiteral(" novalidate=\"novalidate\"");
 
-WriteAttribute("onsubmit", Tuple.Create(" onsubmit=\"", 732), Tuple.Create("\"", 790)
-, Tuple.Create(Tuple.Create("", 743), Tuple.Create("sfa.tagHelper.submitRadioForm(\'", 743), true)
-                                                    , Tuple.Create(Tuple.Create("", 774), Tuple.Create<System.Object, System.Int32>(ViewBag.Title
-, 774), false)
-, Tuple.Create(Tuple.Create("", 788), Tuple.Create("\')", 788), true)
+WriteAttribute("onsubmit", Tuple.Create(" onsubmit=\"", 804), Tuple.Create("\"", 862)
+, Tuple.Create(Tuple.Create("", 815), Tuple.Create("sfa.tagHelper.submitRadioForm(\'", 815), true)
+                                                    , Tuple.Create(Tuple.Create("", 846), Tuple.Create<System.Object, System.Int32>(ViewBag.Title
+, 846), false)
+, Tuple.Create(Tuple.Create("", 860), Tuple.Create("\')", 860), true)
 );
 
 WriteLiteral(">\r\n            \r\n");
@@ -110,10 +110,10 @@ WriteLiteral(" class=\"heading-medium\"");
 
 WriteLiteral(">Do you want to make these changes?</h2>\r\n                <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 1355), Tuple.Create("\"", 1447)
-, Tuple.Create(Tuple.Create("", 1363), Tuple.Create("form-group", 1363), true)
-, Tuple.Create(Tuple.Create(" ", 1373), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Data.ChangesConfirmedError) ? "error" : ""
-, 1374), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 1427), Tuple.Create("\"", 1519)
+, Tuple.Create(Tuple.Create("", 1435), Tuple.Create("form-group", 1435), true)
+, Tuple.Create(Tuple.Create(" ", 1445), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Data.ChangesConfirmedError) ? "error" : ""
+, 1446), false)
 );
 
 WriteLiteral(">\r\n                    <fieldset>\r\n                        <legend");
@@ -192,9 +192,9 @@ WriteLiteral(" class=\"breadcrumbs\"");
 
 WriteLiteral(">\r\n        <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 3021), Tuple.Create("\"", 3079)
-, Tuple.Create(Tuple.Create("", 3028), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", "EmployerManageApprentices")
-, 3028), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 3093), Tuple.Create("\"", 3151)
+, Tuple.Create(Tuple.Create("", 3100), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", "EmployerManageApprentices")
+, 3100), false)
 );
 
 WriteLiteral(" aria-label=\"Back to apprentice details\"");
