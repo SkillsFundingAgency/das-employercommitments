@@ -549,6 +549,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ApprenticeshipUpdate.cshtml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Shared\EditApprenticeship.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditApprenticeship.cshtml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Shared\Pagination.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -994,7 +999,10 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ConfirmChanges.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Views\Shared\EditApprenticeship.cshtml" />
+    <Content Include="Views\Shared\EditApprenticeship.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>EditApprenticeship.generated.cs</LastGenOutput>
+    </Content>
     <Content Include="Views\EmployerManageApprentices\ReviewChanges.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ReviewChanges.generated.cs</LastGenOutput>

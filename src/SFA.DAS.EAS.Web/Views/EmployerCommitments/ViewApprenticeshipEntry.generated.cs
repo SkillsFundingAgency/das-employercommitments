@@ -90,8 +90,26 @@ WriteLiteral(" id=\"uln\"");
 
 WriteLiteral(">");
 
-                        Write(Model.Data.ULN);
+                              if (!string.IsNullOrEmpty(Model.Data.ULN))
+                             {
 
+WriteLiteral("                                 <span>");
+
+                                  Write(Model.Data.ULN);
+
+WriteLiteral("</span>\r\n");
+
+                             }
+                             else
+                             {
+
+WriteLiteral("                                 <span");
+
+WriteLiteral(" class=\"missing\"");
+
+WriteLiteral(">&ndash;&ndash;</span>\r\n");
+
+                             }
 WriteLiteral("</td>\r\n            </tr>\r\n\r\n            <tr>\r\n                    <td>Date of bir" +
 "th</td>\r\n                    <td>\r\n");
 
@@ -247,9 +265,9 @@ WriteLiteral(">&ndash;&ndash;</span>\r\n");
 WriteLiteral("                    </td>\r\n                </tr>\r\n\r\n            </tbody>\r\n       " +
 " </table>\r\n\r\n    </div>\r\n</div>\r\n\r\n\r\n\r\n<a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 4179), Tuple.Create("\"", 4247)
-, Tuple.Create(Tuple.Create("", 4186), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", new { Model.Data.HashedCommitmentId })
-, 4186), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 4511), Tuple.Create("\"", 4579)
+, Tuple.Create(Tuple.Create("", 4518), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", new { Model.Data.HashedCommitmentId })
+, 4518), false)
 );
 
 WriteLiteral(" aria-label=\"Back\"");
@@ -264,9 +282,9 @@ WriteLiteral(" class=\"breadcrumbs\"");
 
 WriteLiteral(">\r\n        <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 4362), Tuple.Create("\"", 4430)
-, Tuple.Create(Tuple.Create("", 4369), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", new { Model.Data.HashedCommitmentId })
-, 4369), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 4694), Tuple.Create("\"", 4762)
+, Tuple.Create(Tuple.Create("", 4701), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", new { Model.Data.HashedCommitmentId })
+, 4701), false)
 );
 
 WriteLiteral(" aria-label=\"Back\"");
