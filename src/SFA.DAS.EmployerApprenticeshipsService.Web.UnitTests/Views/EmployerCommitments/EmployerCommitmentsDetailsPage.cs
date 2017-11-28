@@ -47,5 +47,36 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerCommitments
 
             AssertParsedContent(model, "#apprenticeUln", Uln);
         }
+
+        [Test]
+        public void ShouldNotDisplayUln()
+        {
+            var item = new ApprenticeshipListItemViewModel
+            {
+                ApprenticeUln = string.Empty,
+                CanBeApproved = true,
+                OverlappingApprenticeships = new List<OverlappingApprenticeship>()
+            };
+
+            var model = new CommitmentDetailsViewModel
+            {
+                HasApprenticeships = true,
+                ApprenticeshipGroups = new List<ApprenticeshipListItemGroupViewModel>
+                {
+                    new ApprenticeshipListItemGroupViewModel
+                    {
+                        Apprenticeships = new List<ApprenticeshipListItemViewModel>
+                        {
+                            item
+                        }
+                    }
+                },
+                Errors = new Dictionary<string, string>(),
+                Warnings = new Dictionary<string, string>(),
+                Apprenticeships = new List<ApprenticeshipListItemViewModel> { item }
+            };
+
+            AssertParsedContent(model, "#apprenticeUln", "–");
+        }
     }
 }

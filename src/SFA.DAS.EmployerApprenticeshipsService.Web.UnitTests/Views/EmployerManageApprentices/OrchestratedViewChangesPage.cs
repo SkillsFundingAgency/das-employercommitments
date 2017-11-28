@@ -20,7 +20,13 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerManageApprenti
         [SetUp]
         public void Setup()
         {
-            _originalApprenticeship = new ApprenticeshipDetailsViewModel { ULN = Uln };
+            _originalApprenticeship = new ApprenticeshipDetailsViewModel
+            {
+                ULN = Uln,
+                FirstName = FirstName,
+                LastName = LastName,
+                TrainingName = TrainingName
+            };
         }
 
         [Test]
@@ -30,8 +36,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerManageApprenti
 
             var model = new UpdateApprenticeshipViewModel
             {
-                FirstName = FirstName,
-                LastName = LastName,
                 OriginalApprenticeship = _originalApprenticeship
             };
 
@@ -54,7 +58,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerManageApprenti
         {
             var model = new UpdateApprenticeshipViewModel
             {
-                TrainingName = TrainingName,
                 OriginalApprenticeship = _originalApprenticeship
             };
 

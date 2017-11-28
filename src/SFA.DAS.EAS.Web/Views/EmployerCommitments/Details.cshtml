@@ -228,7 +228,15 @@
                                                 @GetValueOrDefault(apprenticeship.ApprenticeName)
                                             </td>
                                             <td id="apprenticeUln">
-                                               @apprenticeship.ApprenticeUln
+                                                @if (!string.IsNullOrEmpty(apprenticeship.ApprenticeUln))
+                                                {
+                                                    <span>@apprenticeship.ApprenticeUln</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="missing">&ndash;</span>
+                                                }
+                                                
                                             </td>
                                             <td>
                                                 @if (apprenticeship.ApprenticeDateOfBirth.HasValue)
