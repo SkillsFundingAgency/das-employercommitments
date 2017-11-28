@@ -124,32 +124,44 @@ WriteLiteral("    ");
 
 Write(Html.TextBox("LastName", Model.Apprenticeship.LastName, new { @class = "form-control form-control-3-4" }));
 
-WriteLiteral("\r\n</div>\r\n    \r\n<div");
+WriteLiteral("\r\n</div>\r\n<div");
 
-WriteLiteral(" class=\"form-error-group form-group\"");
+WriteLiteral(" id=\"form-error-group form-group\"");
 
-WriteLiteral(">\r\n");
+WriteLiteral(">\r\n    <div");
 
-WriteLiteral("    ");
+WriteLiteral(" class=\"form-group\"");
 
-Write(Html.Label("ULN", "Unique learner number", new { @class = "form-label form-label-bold" }));
+WriteLiteral(">\r\n        <hr />\r\n        <label");
 
-WriteLiteral("\r\n");
+WriteLiteral(" class=\"form-label form-label-bold\"");
 
-WriteLiteral("    ");
+WriteLiteral(" for=\"ULN\"");
 
-Write(Html.Label("ULNDescription", Model.Apprenticeship.ULN, new { @id="uln", @class = "form-control form-control-3-4" }));
+WriteLiteral(">Unique learner number</label>\r\n        <span");
 
-WriteLiteral("\r\n</div>\r\n\r\n<div");
+WriteLiteral(" id=\"uln\"");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 1543), Tuple.Create("\"", 1657)
-, Tuple.Create(Tuple.Create("", 1551), Tuple.Create("form-error-group", 1551), true)
-, Tuple.Create(Tuple.Create(" ", 1567), Tuple.Create("form-group", 1568), true)
-, Tuple.Create(Tuple.Create(" ", 1578), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.DateOfBirthError) ? "error" : ""
-, 1579), false)
+WriteLiteral(">");
+
+                  Write(Model.Apprenticeship.ULN);
+
+WriteLiteral("</span>\r\n");
+
+WriteLiteral("        ");
+
+   Write(Html.Hidden("ULN", Model.Apprenticeship.ULN));
+
+WriteLiteral("\r\n        <br/>\r\n        <br />\r\n        <hr />\r\n    </div>\r\n</div>\r\n\r\n<div");
+
+WriteAttribute("class", Tuple.Create(" class=\"", 1624), Tuple.Create("\"", 1738)
+, Tuple.Create(Tuple.Create("", 1632), Tuple.Create("form-error-group", 1632), true)
+, Tuple.Create(Tuple.Create(" ", 1648), Tuple.Create("form-group", 1649), true)
+, Tuple.Create(Tuple.Create(" ", 1659), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.DateOfBirthError) ? "error" : ""
+, 1660), false)
 );
 
-WriteLiteral(">\r\n        <hr />\r\n        <span");
+WriteLiteral(">\r\n       \r\n        <span");
 
 WriteLiteral(" class=\"form-label-bold\"");
 
@@ -255,10 +267,10 @@ WriteLiteral("</span>\r\n        </div>\r\n");
 
 WriteLiteral("        <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 3726), Tuple.Create("\"", 3824)
-, Tuple.Create(Tuple.Create("", 3734), Tuple.Create("form-group", 3734), true)
-, Tuple.Create(Tuple.Create(" ", 3744), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.TrainingCodeError) ? "error" : ""
-, 3745), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 3800), Tuple.Create("\"", 3898)
+, Tuple.Create(Tuple.Create("", 3808), Tuple.Create("form-group", 3808), true)
+, Tuple.Create(Tuple.Create(" ", 3818), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.TrainingCodeError) ? "error" : ""
+, 3819), false)
 );
 
 WriteLiteral(">\r\n            <hr />\r\n            <label");
@@ -310,9 +322,9 @@ WriteLiteral(">Please select</option>\r\n");
 
 WriteLiteral("                    <option");
 
-WriteAttribute("value", Tuple.Create(" value=\"", 4640), Tuple.Create("\"", 4673)
-, Tuple.Create(Tuple.Create("", 4648), Tuple.Create<System.Object, System.Int32>(apprenticeshipProduct.Id
-, 4648), false)
+WriteAttribute("value", Tuple.Create(" value=\"", 4714), Tuple.Create("\"", 4747)
+, Tuple.Create(Tuple.Create("", 4722), Tuple.Create<System.Object, System.Int32>(apprenticeshipProduct.Id
+, 4722), false)
 );
 
 WriteLiteral(" ");
@@ -401,11 +413,11 @@ WriteLiteral(" </span>\r\n        </div>\r\n");
 
 WriteLiteral("        <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 5872), Tuple.Create("\"", 6053)
-, Tuple.Create(Tuple.Create("", 5880), Tuple.Create("form-error-group", 5880), true)
-, Tuple.Create(Tuple.Create(" ", 5896), Tuple.Create("form-group", 5897), true)
-, Tuple.Create(Tuple.Create(" ", 5907), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) || !string.IsNullOrEmpty(Model.Apprenticeship.StartDateOverlapError) ? "error" : ""
-, 5908), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 5946), Tuple.Create("\"", 6127)
+, Tuple.Create(Tuple.Create("", 5954), Tuple.Create("form-error-group", 5954), true)
+, Tuple.Create(Tuple.Create(" ", 5970), Tuple.Create("form-group", 5971), true)
+, Tuple.Create(Tuple.Create(" ", 5981), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) || !string.IsNullOrEmpty(Model.Apprenticeship.StartDateOverlapError) ? "error" : ""
+, 5982), false)
 );
 
 WriteLiteral(">\r\n            <hr />\r\n\r\n            <span");
@@ -492,11 +504,11 @@ WriteLiteral("\r\n                </div>\r\n            </div>\r\n\r\n        </
 
 WriteLiteral("        <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 7781), Tuple.Create("\"", 7958)
-, Tuple.Create(Tuple.Create("", 7789), Tuple.Create("form-error-group", 7789), true)
-, Tuple.Create(Tuple.Create(" ", 7805), Tuple.Create("form-group", 7806), true)
-, Tuple.Create(Tuple.Create(" ", 7816), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EndDateError) || !string.IsNullOrEmpty(Model.Apprenticeship.EndDateOverlapError) ? "error" : ""
-, 7817), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 7855), Tuple.Create("\"", 8032)
+, Tuple.Create(Tuple.Create("", 7863), Tuple.Create("form-error-group", 7863), true)
+, Tuple.Create(Tuple.Create(" ", 7879), Tuple.Create("form-group", 7880), true)
+, Tuple.Create(Tuple.Create(" ", 7890), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EndDateError) || !string.IsNullOrEmpty(Model.Apprenticeship.EndDateOverlapError) ? "error" : ""
+, 7891), false)
 );
 
 WriteLiteral(">\r\n\r\n            <span");
@@ -583,11 +595,11 @@ WriteLiteral("\r\n                </div>\r\n            </div>\r\n\r\n\r\n      
 
 WriteLiteral("\r\n\r\n    <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 9644), Tuple.Create("\"", 9751)
-, Tuple.Create(Tuple.Create("", 9652), Tuple.Create("form-error-group", 9652), true)
-, Tuple.Create(Tuple.Create(" ", 9668), Tuple.Create("form-group", 9669), true)
-, Tuple.Create(Tuple.Create(" ", 9679), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.CostError) ? "error" : ""
-, 9680), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 9718), Tuple.Create("\"", 9825)
+, Tuple.Create(Tuple.Create("", 9726), Tuple.Create("form-error-group", 9726), true)
+, Tuple.Create(Tuple.Create(" ", 9742), Tuple.Create("form-group", 9743), true)
+, Tuple.Create(Tuple.Create(" ", 9753), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.CostError) ? "error" : ""
+, 9754), false)
 );
 
 WriteLiteral(">\r\n\r\n        <hr />\r\n\r\n");
@@ -696,11 +708,11 @@ WriteLiteral(">£ </span>\r\n");
 
 WriteLiteral("\r\n    </div>\r\n\r\n    <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 11427), Tuple.Create("\"", 11535)
-, Tuple.Create(Tuple.Create("", 11435), Tuple.Create("form-group", 11435), true)
-, Tuple.Create(Tuple.Create(" ", 11445), Tuple.Create("last-child", 11446), true)
-, Tuple.Create(Tuple.Create(" ", 11456), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EmployerRefError) ? "error" : ""
-, 11457), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 11501), Tuple.Create("\"", 11609)
+, Tuple.Create(Tuple.Create("", 11509), Tuple.Create("form-group", 11509), true)
+, Tuple.Create(Tuple.Create(" ", 11519), Tuple.Create("last-child", 11520), true)
+, Tuple.Create(Tuple.Create(" ", 11530), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EmployerRefError) ? "error" : ""
+, 11531), false)
 );
 
 WriteLiteral(">\r\n        <hr />\r\n");

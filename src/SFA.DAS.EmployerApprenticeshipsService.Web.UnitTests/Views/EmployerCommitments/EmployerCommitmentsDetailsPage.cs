@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerCommitments
                 Apprenticeships = new List<ApprenticeshipListItemViewModel> { item }
             };
 
-            AssertParsedContent(model, "#apprenticeUln", "––");
+            AssertParsedContent(model, "#apprenticeUln", "–");
         }
     }
 }
