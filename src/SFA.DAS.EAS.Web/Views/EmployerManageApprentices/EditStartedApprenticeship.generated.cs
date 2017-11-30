@@ -124,7 +124,90 @@ WriteLiteral("    ");
 
 Write(Html.TextBox("LastName", Model.Apprenticeship.LastName, new { @class = "form-control form-control-3-4" }));
 
-WriteLiteral("\r\n</div>\r\n<div");
+WriteLiteral("\r\n</div>\r\n\r\n<div");
+
+WriteAttribute("class", Tuple.Create(" class=\"", 1268), Tuple.Create("\"", 1382)
+, Tuple.Create(Tuple.Create("", 1276), Tuple.Create("form-error-group", 1276), true)
+, Tuple.Create(Tuple.Create(" ", 1292), Tuple.Create("form-group", 1293), true)
+, Tuple.Create(Tuple.Create(" ", 1303), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.DateOfBirthError) ? "error" : ""
+, 1304), false)
+);
+
+WriteLiteral(">\r\n       \r\n    <span");
+
+WriteLiteral(" class=\"form-label-bold\"");
+
+WriteLiteral(">Date of birth</span>\r\n    <span");
+
+WriteLiteral(" class=\"form-hint\"");
+
+WriteLiteral(">For example, 08 12 2001</span>\r\n\r\n    <div");
+
+WriteLiteral(" class=\"form-date\"");
+
+WriteLiteral(">\r\n\r\n");
+
+        
+         if (!string.IsNullOrEmpty(Model.Apprenticeship.DateOfBirthError))
+        {
+
+WriteLiteral("            <span");
+
+WriteLiteral(" class=\"error-message\"");
+
+WriteLiteral(" id=\"error-message-dateofbirth\"");
+
+WriteLiteral(">");
+
+                                                                  Write(Model.Apprenticeship.DateOfBirthError);
+
+WriteLiteral("</span>\r\n");
+
+        }
+
+WriteLiteral("\r\n        <div");
+
+WriteLiteral(" class=\"form-group form-group-day\"");
+
+WriteLiteral(">\r\n            <label");
+
+WriteLiteral(" for=\"DateOfBirth.Day\"");
+
+WriteLiteral(">\r\n                Day\r\n            </label>\r\n\r\n");
+
+WriteLiteral("            ");
+
+       Write(Html.TextBox("DateOfBirth.Day", Model.Apprenticeship.DateOfBirth.Day, new { @class = "form-control length-limit", type = "number", maxlength = "2", min="1", max="31", aria_labelledby = "DateOfBirth.Day" }));
+
+WriteLiteral("\r\n\r\n        </div>\r\n        <div");
+
+WriteLiteral(" class=\"form-group form-group-month\"");
+
+WriteLiteral(">\r\n            <label");
+
+WriteLiteral(" for=\"DateOfBirth.Month\"");
+
+WriteLiteral(">\r\n                Month\r\n            </label>\r\n\r\n");
+
+WriteLiteral("            ");
+
+       Write(Html.TextBox("DateOfBirth.Month", Model.Apprenticeship.DateOfBirth.Month, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "DateOfBirth.Month" }));
+
+WriteLiteral("\r\n\r\n        </div>\r\n        <div");
+
+WriteLiteral(" class=\"form-group form-group-year\"");
+
+WriteLiteral(">\r\n            <label");
+
+WriteLiteral(" for=\"DateOfBirth.Year\"");
+
+WriteLiteral(">\r\n                Year\r\n            </label>\r\n\r\n");
+
+WriteLiteral("            ");
+
+       Write(Html.TextBox("DateOfBirth.Year", Model.Apprenticeship.DateOfBirth.Year, new { @class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "DateOfBirth.Year" }));
+
+WriteLiteral("\r\n        </div>\r\n    </div>\r\n</div>\r\n\r\n<div");
 
 WriteLiteral(" id=\"form-error-group form-group\"");
 
@@ -152,90 +235,7 @@ WriteLiteral("        ");
 
    Write(Html.Hidden("ULN", Model.Apprenticeship.ULN));
 
-WriteLiteral("\r\n        <br/>\r\n        <br />\r\n        <hr />\r\n    </div>\r\n</div>\r\n\r\n<div");
-
-WriteAttribute("class", Tuple.Create(" class=\"", 1624), Tuple.Create("\"", 1738)
-, Tuple.Create(Tuple.Create("", 1632), Tuple.Create("form-error-group", 1632), true)
-, Tuple.Create(Tuple.Create(" ", 1648), Tuple.Create("form-group", 1649), true)
-, Tuple.Create(Tuple.Create(" ", 1659), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.DateOfBirthError) ? "error" : ""
-, 1660), false)
-);
-
-WriteLiteral(">\r\n       \r\n        <span");
-
-WriteLiteral(" class=\"form-label-bold\"");
-
-WriteLiteral(">Date of birth</span>\r\n        <span");
-
-WriteLiteral(" class=\"form-hint\"");
-
-WriteLiteral(">For example, 08 12 2001</span>\r\n\r\n        <div");
-
-WriteLiteral(" class=\"form-date\"");
-
-WriteLiteral(">\r\n\r\n");
-
-            
-             if (!string.IsNullOrEmpty(Model.Apprenticeship.DateOfBirthError))
-            {
-
-WriteLiteral("                <span");
-
-WriteLiteral(" class=\"error-message\"");
-
-WriteLiteral(" id=\"error-message-dateofbirth\"");
-
-WriteLiteral(">");
-
-                                                                      Write(Model.Apprenticeship.DateOfBirthError);
-
-WriteLiteral("</span>\r\n");
-
-            }
-
-WriteLiteral("\r\n            <div");
-
-WriteLiteral(" class=\"form-group form-group-day\"");
-
-WriteLiteral(">\r\n                <label");
-
-WriteLiteral(" for=\"DateOfBirth.Day\"");
-
-WriteLiteral(">\r\n                    Day\r\n                </label>\r\n\r\n");
-
-WriteLiteral("                ");
-
-           Write(Html.TextBox("DateOfBirth.Day", Model.Apprenticeship.DateOfBirth.Day, new { @class = "form-control length-limit", type = "number", maxlength = "2", min="1", max="31", aria_labelledby = "DateOfBirth.Day" }));
-
-WriteLiteral("\r\n\r\n            </div>\r\n            <div");
-
-WriteLiteral(" class=\"form-group form-group-month\"");
-
-WriteLiteral(">\r\n                <label");
-
-WriteLiteral(" for=\"DateOfBirth.Month\"");
-
-WriteLiteral(">\r\n                    Month\r\n                </label>\r\n\r\n");
-
-WriteLiteral("                ");
-
-           Write(Html.TextBox("DateOfBirth.Month", Model.Apprenticeship.DateOfBirth.Month, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "DateOfBirth.Month" }));
-
-WriteLiteral("\r\n\r\n            </div>\r\n            <div");
-
-WriteLiteral(" class=\"form-group form-group-year\"");
-
-WriteLiteral(">\r\n                <label");
-
-WriteLiteral(" for=\"DateOfBirth.Year\"");
-
-WriteLiteral(">\r\n                    Year\r\n                </label>\r\n\r\n");
-
-WriteLiteral("                ");
-
-           Write(Html.TextBox("DateOfBirth.Year", Model.Apprenticeship.DateOfBirth.Year, new { @class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "DateOfBirth.Year" }));
-
-WriteLiteral("\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n");
+WriteLiteral("\r\n    </div>\r\n</div>\r\n\r\n");
 
     
      if (Model.Apprenticeship.IsLockedForUpdate)
@@ -267,10 +267,10 @@ WriteLiteral("</span>\r\n        </div>\r\n");
 
 WriteLiteral("        <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 3800), Tuple.Create("\"", 3898)
-, Tuple.Create(Tuple.Create("", 3808), Tuple.Create("form-group", 3808), true)
-, Tuple.Create(Tuple.Create(" ", 3818), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.TrainingCodeError) ? "error" : ""
-, 3819), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 3647), Tuple.Create("\"", 3745)
+, Tuple.Create(Tuple.Create("", 3655), Tuple.Create("form-group", 3655), true)
+, Tuple.Create(Tuple.Create(" ", 3665), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.TrainingCodeError) ? "error" : ""
+, 3666), false)
 );
 
 WriteLiteral(">\r\n            <hr />\r\n            <label");
@@ -322,9 +322,9 @@ WriteLiteral(">Please select</option>\r\n");
 
 WriteLiteral("                    <option");
 
-WriteAttribute("value", Tuple.Create(" value=\"", 4714), Tuple.Create("\"", 4747)
-, Tuple.Create(Tuple.Create("", 4722), Tuple.Create<System.Object, System.Int32>(apprenticeshipProduct.Id
-, 4722), false)
+WriteAttribute("value", Tuple.Create(" value=\"", 4561), Tuple.Create("\"", 4594)
+, Tuple.Create(Tuple.Create("", 4569), Tuple.Create<System.Object, System.Int32>(apprenticeshipProduct.Id
+, 4569), false)
 );
 
 WriteLiteral(" ");
@@ -413,11 +413,11 @@ WriteLiteral(" </span>\r\n        </div>\r\n");
 
 WriteLiteral("        <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 5946), Tuple.Create("\"", 6127)
-, Tuple.Create(Tuple.Create("", 5954), Tuple.Create("form-error-group", 5954), true)
-, Tuple.Create(Tuple.Create(" ", 5970), Tuple.Create("form-group", 5971), true)
-, Tuple.Create(Tuple.Create(" ", 5981), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) || !string.IsNullOrEmpty(Model.Apprenticeship.StartDateOverlapError) ? "error" : ""
-, 5982), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 5793), Tuple.Create("\"", 5974)
+, Tuple.Create(Tuple.Create("", 5801), Tuple.Create("form-error-group", 5801), true)
+, Tuple.Create(Tuple.Create(" ", 5817), Tuple.Create("form-group", 5818), true)
+, Tuple.Create(Tuple.Create(" ", 5828), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) || !string.IsNullOrEmpty(Model.Apprenticeship.StartDateOverlapError) ? "error" : ""
+, 5829), false)
 );
 
 WriteLiteral(">\r\n            <hr />\r\n\r\n            <span");
@@ -504,11 +504,11 @@ WriteLiteral("\r\n                </div>\r\n            </div>\r\n\r\n        </
 
 WriteLiteral("        <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 7855), Tuple.Create("\"", 8032)
-, Tuple.Create(Tuple.Create("", 7863), Tuple.Create("form-error-group", 7863), true)
-, Tuple.Create(Tuple.Create(" ", 7879), Tuple.Create("form-group", 7880), true)
-, Tuple.Create(Tuple.Create(" ", 7890), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EndDateError) || !string.IsNullOrEmpty(Model.Apprenticeship.EndDateOverlapError) ? "error" : ""
-, 7891), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 7702), Tuple.Create("\"", 7879)
+, Tuple.Create(Tuple.Create("", 7710), Tuple.Create("form-error-group", 7710), true)
+, Tuple.Create(Tuple.Create(" ", 7726), Tuple.Create("form-group", 7727), true)
+, Tuple.Create(Tuple.Create(" ", 7737), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EndDateError) || !string.IsNullOrEmpty(Model.Apprenticeship.EndDateOverlapError) ? "error" : ""
+, 7738), false)
 );
 
 WriteLiteral(">\r\n\r\n            <span");
@@ -595,11 +595,11 @@ WriteLiteral("\r\n                </div>\r\n            </div>\r\n\r\n\r\n      
 
 WriteLiteral("\r\n\r\n    <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 9718), Tuple.Create("\"", 9825)
-, Tuple.Create(Tuple.Create("", 9726), Tuple.Create("form-error-group", 9726), true)
-, Tuple.Create(Tuple.Create(" ", 9742), Tuple.Create("form-group", 9743), true)
-, Tuple.Create(Tuple.Create(" ", 9753), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.CostError) ? "error" : ""
-, 9754), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 9565), Tuple.Create("\"", 9672)
+, Tuple.Create(Tuple.Create("", 9573), Tuple.Create("form-error-group", 9573), true)
+, Tuple.Create(Tuple.Create(" ", 9589), Tuple.Create("form-group", 9590), true)
+, Tuple.Create(Tuple.Create(" ", 9600), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.CostError) ? "error" : ""
+, 9601), false)
 );
 
 WriteLiteral(">\r\n\r\n        <hr />\r\n\r\n");
@@ -708,11 +708,11 @@ WriteLiteral(">£ </span>\r\n");
 
 WriteLiteral("\r\n    </div>\r\n\r\n    <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 11501), Tuple.Create("\"", 11609)
-, Tuple.Create(Tuple.Create("", 11509), Tuple.Create("form-group", 11509), true)
-, Tuple.Create(Tuple.Create(" ", 11519), Tuple.Create("last-child", 11520), true)
-, Tuple.Create(Tuple.Create(" ", 11530), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EmployerRefError) ? "error" : ""
-, 11531), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 11348), Tuple.Create("\"", 11456)
+, Tuple.Create(Tuple.Create("", 11356), Tuple.Create("form-group", 11356), true)
+, Tuple.Create(Tuple.Create(" ", 11366), Tuple.Create("last-child", 11367), true)
+, Tuple.Create(Tuple.Create(" ", 11377), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EmployerRefError) ? "error" : ""
+, 11378), false)
 );
 
 WriteLiteral(">\r\n        <hr />\r\n");

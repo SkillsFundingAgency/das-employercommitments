@@ -21,28 +21,13 @@
 
 </div>
 
-@if (!string.IsNullOrEmpty(Model.Apprenticeship?.ULN))
-{
-    <div class="form-error-group form-group">
-        @Html.Label("ULN", "Unique learner number", new {@class = "form-label form-label-bold"})
-        @Html.Label("ULNDescription", Model.Apprenticeship.ULN, new {@id = "uln", @class = "form-control form-control-3-4"})
-    </div>
-}
-else
-{
-    <div class="form-error-group form-group normal-form-label">
-        <hr/>
-        <p class="form-label form-label-bold">Unique learner number</p>
-        <p class="grey-text">This will be added by your training provider.</p>
-    </div>
-}
 <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.DateOfBirthError) ? "error" : "")">
     <hr />
     <span class="form-label-bold">Date of birth</span>
     <span class="form-hint">For example, 08 12 2001</span>
 
     <div id="DateOfBirth" class="form-date">
-        
+
         @if (!string.IsNullOrEmpty(Model.Apprenticeship.DateOfBirthError))
         {
             <span class="error-message" id="error-message-DateOfBirth">@Model.Apprenticeship.DateOfBirthError</span>
@@ -74,6 +59,24 @@ else
     </div>
 </div>
 
+
+@if (!string.IsNullOrEmpty(Model.Apprenticeship?.ULN))
+{
+    <div class="form-error-group form-group">
+        <hr/>
+        <span class="form-label-bold">Unique learner number</span>
+        <span id="uln">@Model.Apprenticeship.ULN</span>
+    </div>
+}
+else
+{
+    <div class="form-error-group form-group normal-form-label">
+        <hr />
+        <span class="form-label form-label-bold">Unique learner number</span>
+        <p class="grey-text">This will be added by your training provider.</p>
+    </div>
+}
+
 <div class="form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.TrainingCodeError) ? "error" : "")">
     <hr />
     <label class="form-label-bold" for="TrainingCode">Apprenticeship training course</label>
@@ -86,7 +89,7 @@ else
         <option value="">Please select</option>
         @foreach (var apprenticeshipProduct in Model.ApprenticeshipProgrammes)
         {
-            <option value="@apprenticeshipProduct.Id" @if (apprenticeshipProduct.Id == Model.Apprenticeship.TrainingCode) { @Html.Raw("selected")   }>
+            <option value="@apprenticeshipProduct.Id" @if (apprenticeshipProduct.Id == Model.Apprenticeship.TrainingCode) { @Html.Raw("selected")    }>
                 @apprenticeshipProduct.Title
             </option>
         }
@@ -110,20 +113,20 @@ else
         {
             <span class="error-message" id="error-message-StartDate">The date overlaps with existing training dates for the same apprentice. Please check the date - contact your training provider for help.</span>
         }
-       
+
         <div class="form-group form-group-month">
             <label for="StartDate.Month">
                 Month
             </label>
 
-            @Html.TextBox("StartDate.Month", Model.Apprenticeship.StartDate.Month, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "StartDate.Month"})
+            @Html.TextBox("StartDate.Month", Model.Apprenticeship.StartDate.Month, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "StartDate.Month" })
 
         </div>
         <div class="form-group form-group-month">
             <label for="StartDate.Year">
                 Year
             </label>
-            @Html.TextBox("StartDate.Year", Model.Apprenticeship.StartDate.Year, new {@class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "StartDate.Year"})
+            @Html.TextBox("StartDate.Year", Model.Apprenticeship.StartDate.Year, new { @class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "StartDate.Year" })
         </div>
     </div>
 
@@ -143,20 +146,20 @@ else
         {
             <span class="error-message" id="error-message-EndDate">The date overlaps with existing training dates for the same apprentice. Please check the date - contact your training provider for help.</span>
         }
-       
+
         <div class="form-group form-group-month">
             <label for="EndDate.Month">
                 Month
             </label>
 
-            @Html.TextBox("EndDate.Month", Model.Apprenticeship.EndDate.Month, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "EndDate.Month"})
+            @Html.TextBox("EndDate.Month", Model.Apprenticeship.EndDate.Month, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "EndDate.Month" })
 
         </div>
         <div class="form-group form-group-month">
             <label for="EndDate.Year">
                 Year
             </label>
-            @Html.TextBox("EndDate.Year", Model.Apprenticeship.EndDate.Year, new {@class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "EndDate.Year"})
+            @Html.TextBox("EndDate.Year", Model.Apprenticeship.EndDate.Year, new { @class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "EndDate.Year" })
         </div>
     </div>
 
