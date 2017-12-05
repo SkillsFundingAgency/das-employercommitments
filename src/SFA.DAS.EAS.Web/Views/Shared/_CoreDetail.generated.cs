@@ -75,7 +75,7 @@ WriteLiteral("</td>\r\n    </tr>\r\n    <tr>\r\n        <td");
 
 WriteLiteral(" class=\"first-child\"");
 
-WriteLiteral(">Training name</td>\r\n        <td");
+WriteLiteral(">Apprenticeship training course</td>\r\n        <td");
 
 WriteLiteral(" id=\"trainingName\"");
 
