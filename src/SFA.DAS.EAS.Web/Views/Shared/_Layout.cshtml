@@ -133,14 +133,14 @@
                 <div class="js-float">
                     <p class="floating-head-text">Your employer account </p>
                     <nav id="user-nav">
-                        <ul role="menubar" class="js-hidden">
+                        <ul role="menubar">
                             <li><a href="@Url.ExternalUrlAction("service", "help", true)" class="menu-main">Help</a></li>
                             @if (HttpContext.Current.User.Identity.IsAuthenticated)
                             {
 
                                 <li class="has-sub-menu">
                                     <a href="/" role="menuitem" class="menu-main">Settings</a>
-                                    <ul role="menu" id="settings-menu">
+                                    <ul role="menu" id="settings-menu" class="js-hidden">
                                         <li><a href="@Url.ExternalUrlAction("service", "accounts",true)" role="menuitem" class="sub-menu-item">Your accounts</a></li>
                                         @if (string.IsNullOrWhiteSpace(ViewBag.HideNav))
                                         {
