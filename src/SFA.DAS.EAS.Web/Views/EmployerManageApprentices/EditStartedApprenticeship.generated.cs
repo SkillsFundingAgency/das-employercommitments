@@ -229,13 +229,7 @@ WriteLiteral(">");
 
                   Write(Model.Apprenticeship.ULN);
 
-WriteLiteral("</span>\r\n");
-
-WriteLiteral("        ");
-
-   Write(Html.Hidden("ULN", Model.Apprenticeship.ULN));
-
-WriteLiteral("\r\n    </div>\r\n</div>\r\n\r\n");
+WriteLiteral("</span>\r\n    </div>\r\n</div>\r\n\r\n");
 
     
      if (Model.Apprenticeship.IsLockedForUpdate)
@@ -267,10 +261,10 @@ WriteLiteral("</span>\r\n        </div>\r\n");
 
 WriteLiteral("        <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 3647), Tuple.Create("\"", 3745)
-, Tuple.Create(Tuple.Create("", 3655), Tuple.Create("form-group", 3655), true)
-, Tuple.Create(Tuple.Create(" ", 3665), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.TrainingCodeError) ? "error" : ""
-, 3666), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 3592), Tuple.Create("\"", 3690)
+, Tuple.Create(Tuple.Create("", 3600), Tuple.Create("form-group", 3600), true)
+, Tuple.Create(Tuple.Create(" ", 3610), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.TrainingCodeError) ? "error" : ""
+, 3611), false)
 );
 
 WriteLiteral(">\r\n            <hr />\r\n            <label");
@@ -322,9 +316,9 @@ WriteLiteral(">Please select</option>\r\n");
 
 WriteLiteral("                    <option");
 
-WriteAttribute("value", Tuple.Create(" value=\"", 4561), Tuple.Create("\"", 4594)
-, Tuple.Create(Tuple.Create("", 4569), Tuple.Create<System.Object, System.Int32>(apprenticeshipProduct.Id
-, 4569), false)
+WriteAttribute("value", Tuple.Create(" value=\"", 4506), Tuple.Create("\"", 4539)
+, Tuple.Create(Tuple.Create("", 4514), Tuple.Create<System.Object, System.Int32>(apprenticeshipProduct.Id
+, 4514), false)
 );
 
 WriteLiteral(" ");
@@ -413,11 +407,11 @@ WriteLiteral(" </span>\r\n        </div>\r\n");
 
 WriteLiteral("        <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 5793), Tuple.Create("\"", 5974)
-, Tuple.Create(Tuple.Create("", 5801), Tuple.Create("form-error-group", 5801), true)
-, Tuple.Create(Tuple.Create(" ", 5817), Tuple.Create("form-group", 5818), true)
-, Tuple.Create(Tuple.Create(" ", 5828), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) || !string.IsNullOrEmpty(Model.Apprenticeship.StartDateOverlapError) ? "error" : ""
-, 5829), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 5738), Tuple.Create("\"", 5919)
+, Tuple.Create(Tuple.Create("", 5746), Tuple.Create("form-error-group", 5746), true)
+, Tuple.Create(Tuple.Create(" ", 5762), Tuple.Create("form-group", 5763), true)
+, Tuple.Create(Tuple.Create(" ", 5773), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) || !string.IsNullOrEmpty(Model.Apprenticeship.StartDateOverlapError) ? "error" : ""
+, 5774), false)
 );
 
 WriteLiteral(">\r\n            <hr />\r\n\r\n            <span");
@@ -504,11 +498,11 @@ WriteLiteral("\r\n                </div>\r\n            </div>\r\n\r\n        </
 
 WriteLiteral("        <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 7702), Tuple.Create("\"", 7879)
-, Tuple.Create(Tuple.Create("", 7710), Tuple.Create("form-error-group", 7710), true)
-, Tuple.Create(Tuple.Create(" ", 7726), Tuple.Create("form-group", 7727), true)
-, Tuple.Create(Tuple.Create(" ", 7737), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EndDateError) || !string.IsNullOrEmpty(Model.Apprenticeship.EndDateOverlapError) ? "error" : ""
-, 7738), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 7647), Tuple.Create("\"", 7824)
+, Tuple.Create(Tuple.Create("", 7655), Tuple.Create("form-error-group", 7655), true)
+, Tuple.Create(Tuple.Create(" ", 7671), Tuple.Create("form-group", 7672), true)
+, Tuple.Create(Tuple.Create(" ", 7682), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EndDateError) || !string.IsNullOrEmpty(Model.Apprenticeship.EndDateOverlapError) ? "error" : ""
+, 7683), false)
 );
 
 WriteLiteral(">\r\n\r\n            <span");
@@ -595,11 +589,11 @@ WriteLiteral("\r\n                </div>\r\n            </div>\r\n\r\n\r\n      
 
 WriteLiteral("\r\n\r\n    <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 9565), Tuple.Create("\"", 9672)
-, Tuple.Create(Tuple.Create("", 9573), Tuple.Create("form-error-group", 9573), true)
-, Tuple.Create(Tuple.Create(" ", 9589), Tuple.Create("form-group", 9590), true)
-, Tuple.Create(Tuple.Create(" ", 9600), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.CostError) ? "error" : ""
-, 9601), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 9510), Tuple.Create("\"", 9617)
+, Tuple.Create(Tuple.Create("", 9518), Tuple.Create("form-error-group", 9518), true)
+, Tuple.Create(Tuple.Create(" ", 9534), Tuple.Create("form-group", 9535), true)
+, Tuple.Create(Tuple.Create(" ", 9545), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.CostError) ? "error" : ""
+, 9546), false)
 );
 
 WriteLiteral(">\r\n\r\n        <hr />\r\n\r\n");
@@ -708,11 +702,11 @@ WriteLiteral(">£ </span>\r\n");
 
 WriteLiteral("\r\n    </div>\r\n\r\n    <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 11348), Tuple.Create("\"", 11456)
-, Tuple.Create(Tuple.Create("", 11356), Tuple.Create("form-group", 11356), true)
-, Tuple.Create(Tuple.Create(" ", 11366), Tuple.Create("last-child", 11367), true)
-, Tuple.Create(Tuple.Create(" ", 11377), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EmployerRefError) ? "error" : ""
-, 11378), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 11293), Tuple.Create("\"", 11401)
+, Tuple.Create(Tuple.Create("", 11301), Tuple.Create("form-group", 11301), true)
+, Tuple.Create(Tuple.Create(" ", 11311), Tuple.Create("last-child", 11312), true)
+, Tuple.Create(Tuple.Create(" ", 11322), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EmployerRefError) ? "error" : ""
+, 11323), false)
 );
 
 WriteLiteral(">\r\n        <hr />\r\n");
