@@ -249,7 +249,7 @@ WriteLiteral(@">
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Unique leaner number</th>
+                            <th>Unique learner number</th>
                             <th>Date of birth</th>
                             <th>Status</th>
                             <th>Alerts</th>
@@ -319,25 +319,25 @@ WriteLiteral("\r\n                                        </div>\r\n");
 WriteLiteral("                                </td>\r\n                                <td>\r\n    " +
 "                                <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 4700), Tuple.Create("\"", 4827)
-, Tuple.Create(Tuple.Create("", 4707), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", new {Model.Data.HashedAccountId, hashedApprenticeshipId = apprenticeship.HashedApprenticeshipId})
-, 4707), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 4701), Tuple.Create("\"", 4828)
+, Tuple.Create(Tuple.Create("", 4708), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", new {Model.Data.HashedAccountId, hashedApprenticeshipId = apprenticeship.HashedApprenticeshipId})
+, 4708), false)
 );
 
-WriteAttribute("title", Tuple.Create("\r\n                                       title=\"", 4828), Tuple.Create("\"", 4932)
-, Tuple.Create(Tuple.Create("", 4876), Tuple.Create("View", 4876), true)
-, Tuple.Create(Tuple.Create("  ", 4880), Tuple.Create<System.Object, System.Int32>(apprenticeship.FirstName
-, 4882), false)
-, Tuple.Create(Tuple.Create(" ", 4907), Tuple.Create<System.Object, System.Int32>(apprenticeship.LastName
-, 4908), false)
+WriteAttribute("title", Tuple.Create("\r\n                                       title=\"", 4829), Tuple.Create("\"", 4933)
+, Tuple.Create(Tuple.Create("", 4877), Tuple.Create("View", 4877), true)
+, Tuple.Create(Tuple.Create("  ", 4881), Tuple.Create<System.Object, System.Int32>(apprenticeship.FirstName
+, 4883), false)
+, Tuple.Create(Tuple.Create(" ", 4908), Tuple.Create<System.Object, System.Int32>(apprenticeship.LastName
+, 4909), false)
 );
 
-WriteAttribute("aria-label", Tuple.Create("\r\n                                       aria-label=\"", 4933), Tuple.Create("\"", 5041)
-, Tuple.Create(Tuple.Create("", 4986), Tuple.Create("View", 4986), true)
-, Tuple.Create(Tuple.Create(" ", 4990), Tuple.Create<System.Object, System.Int32>(apprenticeship.FirstName
-, 4991), false)
- , Tuple.Create(Tuple.Create(" ", 5016), Tuple.Create<System.Object, System.Int32>(apprenticeship.LastName
-, 5017), false)
+WriteAttribute("aria-label", Tuple.Create("\r\n                                       aria-label=\"", 4934), Tuple.Create("\"", 5042)
+, Tuple.Create(Tuple.Create("", 4987), Tuple.Create("View", 4987), true)
+, Tuple.Create(Tuple.Create(" ", 4991), Tuple.Create<System.Object, System.Int32>(apprenticeship.FirstName
+, 4992), false)
+ , Tuple.Create(Tuple.Create(" ", 5017), Tuple.Create<System.Object, System.Int32>(apprenticeship.LastName
+, 5018), false)
 );
 
 WriteLiteral(">View</a>\r\n                                </td>\r\n                            </t" +
@@ -368,9 +368,9 @@ WriteLiteral(" class=\"breadcrumbs\"");
 
 WriteLiteral(">\r\n        <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 5385), Tuple.Create("\"", 5435)
-, Tuple.Create(Tuple.Create("", 5392), Tuple.Create<System.Object, System.Int32>(Url.Action("Index", "EmployerCommitments")
-, 5392), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 5386), Tuple.Create("\"", 5436)
+, Tuple.Create(Tuple.Create("", 5393), Tuple.Create<System.Object, System.Int32>(Url.Action("Index", "EmployerCommitments")
+, 5393), false)
 );
 
 WriteLiteral(" aria-label=\"Back to apprentices\"");
