@@ -257,6 +257,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                     var viewModel = _apprenticeshipMapper.MapFrom(data.ApprenticeshipUpdate);
 
+                    if (viewModel == null)
+                    {
+                        throw new InvalidStateException("Attempting to update an already updated Apprenticeship");
+                    }
+
                     var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(apprenticeshipResult.Apprenticeship);
                     viewModel.OriginalApprenticeship = apprenticeship;
                     viewModel.HashedAccountId = hashedAccountId;
@@ -417,8 +422,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private bool CanChangeDateStepBeSkipped(ChangeStatusType changeType, GetApprenticeshipQueryResponse data)
         {
             return data.Apprenticeship.IsWaitingToStart(_currentDateTime) // Not started
-                || (data.Apprenticeship.PaymentStatus == PaymentStatus.Paused && changeType == ChangeStatusType.Resume) // Resuming 
-                || (data.Apprenticeship.PaymentStatus == PaymentStatus.Active && changeType == ChangeStatusType.Pause); // Pausing
+                || data.Apprenticeship.PaymentStatus == PaymentStatus.Paused && changeType == ChangeStatusType.Resume // Resuming 
+                || data.Apprenticeship.PaymentStatus == PaymentStatus.Active && changeType == ChangeStatusType.Pause; // Pausing
         }
 
         public async Task<ValidateWhenToApplyChangeResult> ValidateWhenToApplyChange(string hashedAccountId,
