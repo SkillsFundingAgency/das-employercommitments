@@ -9,9 +9,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Exceptions
         {
             if (filterContext.Exception.GetType() == typeof(InvalidStateException))
             {
-                LogManager.GetCurrentClassLogger().Error(filterContext.Exception, "Invalid state exception");
+                LogManager.GetCurrentClassLogger().Info(filterContext.Exception, "Invalid state exception");
 
-                // ToDo: Handle exception, Redirect or error page and User message?
                 filterContext.ExceptionHandled = true;
             }
         }

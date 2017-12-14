@@ -227,6 +227,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/changes/confirm")]
+        [OutputCache(CacheProfile = "NoCache")]
         public async Task<ActionResult> ConfirmChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
             var model = await _orchestrator.GetOrchestratorResponseUpdateApprenticeshipViewModelFromCookie(hashedAccountId, hashedApprenticeshipId);
@@ -330,6 +331,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/changes/view", Name = "ViewChanges")]
+        [OutputCache(CacheProfile = "NoCache")]
         public async Task<ActionResult> ViewChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
             var viewModel = await _orchestrator
