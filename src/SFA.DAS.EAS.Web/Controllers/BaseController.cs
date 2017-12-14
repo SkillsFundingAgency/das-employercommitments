@@ -7,6 +7,7 @@ using SFA.DAS.EmployerCommitments.Application;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggle;
 using SFA.DAS.EmployerCommitments.Web.Authentication;
+using SFA.DAS.EmployerCommitments.Web.Exceptions;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers

@@ -1,7 +1,6 @@
 ﻿using MediatR;
 
 using Moq;
-
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.HashingService;

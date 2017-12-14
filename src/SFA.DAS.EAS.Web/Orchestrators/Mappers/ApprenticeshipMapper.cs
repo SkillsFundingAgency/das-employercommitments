@@ -221,19 +221,21 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
         public UpdateApprenticeshipViewModel MapFrom(ApprenticeshipUpdate apprenticeshipUpdate)
         {
-            return new UpdateApprenticeshipViewModel
-            {
-                Cost = NullableDecimalToString(apprenticeshipUpdate.Cost),
-                DateOfBirth = new DateTimeViewModel(apprenticeshipUpdate.DateOfBirth),
-                FirstName = apprenticeshipUpdate.FirstName,
-                LastName = apprenticeshipUpdate.LastName,
-                StartDate = new DateTimeViewModel(apprenticeshipUpdate.StartDate),
-                EndDate = new DateTimeViewModel(apprenticeshipUpdate.EndDate),
-                TrainingName = apprenticeshipUpdate.TrainingName,
-                TrainingCode = apprenticeshipUpdate.TrainingCode,
-                TrainingType = apprenticeshipUpdate.TrainingType,
-                EmployerRef = apprenticeshipUpdate.EmployerRef
-            };
+            return apprenticeshipUpdate == null
+                ? null
+                : new UpdateApprenticeshipViewModel
+                {
+                    Cost = NullableDecimalToString(apprenticeshipUpdate.Cost),
+                    DateOfBirth = new DateTimeViewModel(apprenticeshipUpdate.DateOfBirth),
+                    FirstName = apprenticeshipUpdate.FirstName,
+                    LastName = apprenticeshipUpdate.LastName,
+                    StartDate = new DateTimeViewModel(apprenticeshipUpdate.StartDate),
+                    EndDate = new DateTimeViewModel(apprenticeshipUpdate.EndDate),
+                    TrainingName = apprenticeshipUpdate.TrainingName,
+                    TrainingCode = apprenticeshipUpdate.TrainingCode,
+                    TrainingType = apprenticeshipUpdate.TrainingType,
+                    EmployerRef = apprenticeshipUpdate.EmployerRef
+                };
         }
 
         public async Task<UpdateApprenticeshipViewModel> CompareAndMapToApprenticeshipViewModel(
