@@ -825,17 +825,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
         }
 
-        protected override void OnException(ExceptionContext filterContext)
-        {
-            if (filterContext.Exception is InvalidStateException)
-            {
-                var hashedAccountId = filterContext.RouteData.Values["hashedAccountId"];
-
-                filterContext.ExceptionHandled = true;
-                filterContext.Result = RedirectToAction("InvalidState", "Error", new { hashedAccountId });
-            }
-        }
-
         private void SetFlashMessageOnModel<T>(OrchestratorResponse<T> model)
         {
             var flashMessage = GetFlashMessageViewModelFromCookie();
