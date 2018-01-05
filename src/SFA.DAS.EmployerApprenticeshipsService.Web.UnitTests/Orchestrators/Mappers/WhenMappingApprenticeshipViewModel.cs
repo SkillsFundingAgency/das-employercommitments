@@ -75,5 +75,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             Assert.AreEqual(uln, viewModel.ULN);
         }
+
+        [Test]
+        public void ThenStopDateIsMapped()
+        {
+            var expectedStopDate = new DateTime(2018, 3, 3);
+
+            var apprenticeship = new Apprenticeship { StopDate = expectedStopDate };
+
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+
+            Assert.AreEqual(expectedStopDate, viewModel.StopDate);
+        }
     }
 }
