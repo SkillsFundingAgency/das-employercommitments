@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 {
@@ -20,13 +19,9 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public DateTime? EndDate { get; set; }
 
-        public DateTime? StopDate { get; set; }
-
         public string TrainingName { get; set; }
 
         public decimal? Cost { get; set; }
-
-        public PaymentStatus PaymentStatus { get; set; }
 
         public string Status { get; set; }
 

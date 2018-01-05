@@ -1,5 +1,4 @@
-﻿@using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types
-@using SFA.DAS.EmployerCommitments.Web.Extensions
+﻿@using SFA.DAS.EmployerCommitments.Web.Extensions
 @using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 @model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<ApprenticeshipDetailsViewModel>
 
@@ -77,19 +76,6 @@
                     }
                 </td>
             </tr>
-            @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)
-            {
-                <tr>
-                    <th scope="row">Stop applies from</th>
-                    <td>
-                        @if (Model.Data.StopDate.HasValue)
-                        {
-                            @Model.Data.StopDate.Value.ToGdsFormat()
-                        }
-                    </td>
-                    <td>@*positional markup :( *@</td>
-                </tr>
-            }
             </tbody>
         </table>
 
