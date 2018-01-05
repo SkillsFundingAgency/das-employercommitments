@@ -1,4 +1,5 @@
-﻿@using SFA.DAS.EmployerCommitments.Web.Extensions
+﻿@using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types
+@using SFA.DAS.EmployerCommitments.Web.Extensions
 @using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 @model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<ApprenticeshipDetailsViewModel>
 
@@ -66,16 +67,29 @@
         <h2 class="heading-medium visually-hidden">Apprentice status</h2>
         <table id="app-status" class="details-list">
             <tbody>
+            <tr>
+                <th scope="row">Status</th>
+                <td>@Model.Data.Status</td>
+                <td>
+                    @if (Model.Data.CanEditStatus)
+                    {
+                        @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
+                    }
+                </td>
+            </tr>
+            @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)
+            {
                 <tr>
-                    <th scope="row">Status</th>
-                    <td>@Model.Data.Status</td>
+                    <th scope="row">Stop applies from</th>
                     <td>
-                        @if (Model.Data.CanEditStatus)
+                        @if (Model.Data.StopDate.HasValue)
                         {
-                            @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
+                            @Model.Data.StopDate.Value.ToGdsFormat()
                         }
                     </td>
+                    <td>@*positional markup :( *@</td>
                 </tr>
+            }
             </tbody>
         </table>
 
