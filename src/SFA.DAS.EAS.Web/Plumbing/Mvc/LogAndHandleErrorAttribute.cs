@@ -9,12 +9,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc
         private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
         public override void OnException(ExceptionContext filterContext)
         {
-            var error = filterContext.Exception;
-            Logger.Error(error, "Unhandled exception - " + error.Message);
-            var ai = new TelemetryClient();
-            ai.TrackException(filterContext.Exception);
+            if (filterContext != null && !filterContext.ExceptionHandled)
+            {
+                var error = filterContext.Exception;
+                Logger.Error(error, "Unhandled exception - " + error.Message);
+                var ai = new TelemetryClient();
+                ai.TrackException(filterContext.Exception);
 
-            base.OnException(filterContext);
+                base.OnException(filterContext);
+            }
         }
     }
 }

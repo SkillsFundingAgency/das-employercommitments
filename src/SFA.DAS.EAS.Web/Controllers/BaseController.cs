@@ -7,6 +7,7 @@ using SFA.DAS.EmployerCommitments.Application;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggle;
 using SFA.DAS.EmployerCommitments.Web.Authentication;
+using SFA.DAS.EmployerCommitments.Web.Exceptions;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
@@ -179,6 +180,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         public void RemoveFlashMessageFromCookie()
         {
             _flashMessage.Delete(FlashMessageCookieName);
+        }
+
+        protected override void OnException(ExceptionContext filterContext)
+        {
+            if (filterContext.Exception is InvalidStateException)
+            {
+                var hashedAccountId = filterContext.RouteData.Values["hashedAccountId"];
+
+                filterContext.ExceptionHandled = true;
+                filterContext.Result = RedirectToAction("InvalidState", "Error", new { hashedAccountId });
+            }
         }
     }
 }
