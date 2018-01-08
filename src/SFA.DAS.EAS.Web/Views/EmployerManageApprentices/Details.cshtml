@@ -1,4 +1,5 @@
-﻿@using SFA.DAS.EmployerCommitments.Web.Extensions
+﻿@using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types
+@using SFA.DAS.EmployerCommitments.Web.Extensions
 @using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 @model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<ApprenticeshipDetailsViewModel>
 
@@ -12,7 +13,7 @@
         <h1 class="heading-xlarge">@Model.Data.FirstName @Model.Data.LastName</h1>
 
         @if (Model.Data.PendingChanges == PendingChanges.ReadyForApproval)
-            {
+        {
             <div class="panel panel-border-wide alert-default">
                 <h3 class="heading-small">Changes for review</h3>
                 <p>
@@ -38,7 +39,7 @@
 
 
         @if (Model.Data.PendingDataLockRestart)
-            {
+        {
             <div class="panel panel-border-wide">
                 <h3 class="heading-small">
                     Changes requested
@@ -51,7 +52,7 @@
             </div>
         }
         @if (Model.Data.PendingDataLockChange)
-            {
+        {
             <div class="panel panel-border-wide">
                 <h3>
                     Changes for review
@@ -76,6 +77,19 @@
                     }
                 </td>
             </tr>
+            @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)
+            {
+                <tr>
+                    <th scope="row">Stop applies from</th>
+                    <td>
+                        @if (Model.Data.StopDate.HasValue)
+                        {
+                            @Model.Data.StopDate.Value.ToGdsFormat()
+                        }
+                    </td>
+                    <td>@*this td is required*@</td>
+                </tr>
+            }
             </tbody>
         </table>
 
