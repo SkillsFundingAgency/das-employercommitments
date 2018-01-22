@@ -428,6 +428,20 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return RedirectToRoute("CommitmentsHome");
         }
 
+        [HttpGet]
+        [Route("{hashedApprenticeshipId}/details/statuschange", Name = "EditStopDateOption")]
+        [OutputCache(CacheProfile = "NoCache")]
+        public async Task<ActionResult> EditStopDate(string hashedAccountId, string hashedApprenticeshipId)
+        {
+            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+                return View("AccessDenied");
+
+            var response = await _orchestrator.GetApprenticeship(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
+
+            return View(response);
+        }
+
+
         private void UpdatePriorityOrder(PaymentOrderViewModel data, ProviderPriorityReOrderViewModel paymentOrderItem)
         {
             var newList = new List<PaymentOrderItem>(data.Items.Count());

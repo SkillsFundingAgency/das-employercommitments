@@ -1,0 +1,100 @@
+﻿@using SFA.DAS.EmployerCommitments.Web
+@using SFA.DAS.EmployerCommitments.Web.Extensions
+@using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
+@model OrchestratorResponse<EditApprenticeshipStopDateViewModel>
+
+@{
+    ViewBag.Title = "Edit stop date";
+    ViewBag.PageId = "change-stop";
+    ViewBag.Section = "apprentices";
+}
+
+
+@section pageSpecificJS {
+    @Scripts.Render("~/comt-assets/bundles/lengthLimitation")
+}
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <form method="post" action="@Url.RouteUrl("PostWhenToApplyChange")" novalidate onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
+            @Html.AntiForgeryToken()
+            @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
+
+            <h1 class="heading-xlarge">@ViewBag.Title</h1>
+
+            <table class="apprentice-to-stop">
+                <thead>
+                    <tr>
+                        <th colspan="2" class="visually-hidden">Stop apprentice</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td class="bold">@Model.Data.ApprenticeshipName</td>
+                    </tr>
+                <tr>
+                    <td>Unique learner number</td>
+                    <td class="bold">@Model.Data.ApprenticeshipULN</td>
+                </tr>
+                    <tr>
+                        <td>Current stop date</td>
+                        <td class="bold">@Model.Data.CurrentStopDate</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
+
+
+            <fieldset>
+                <div class="form-error-group form-group @Html.AddClassIfPropertyInError("DateOfChange", "error")" id="stop-effective">
+                    <span class="form-label-bold">Enter new stop date</span>
+                    <span class="form-hint">The earliest date you can enter is @Model.Data.EarliestDate.ToFullDateEntryFormat()</span>
+
+                    <div class="form-date">
+                        @Html.ValidationMessage("DateOfChange", new { id = "error-message-DateOfChange", @class = "error-message" })
+                        <div class="form-group form-group-day">
+                            <label for="DateOfChange.Day">
+                                Day
+                            </label>
+                            @Html.TextBox("DateOfChange.Day", Model.Data.EditStopDate.NewStopDate.Day, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "31", aria_labelledby = "DateOfChange.Day" })
+                        </div>
+                        <div class="form-group form-group-month">
+                            <label for="DateOfChange.Month">
+                                Month
+                            </label>
+                            @Html.TextBox("DateOfChange.Month", Model.Data.EditStopDate.NewStopDate.Month, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "DateOfChange.Month" })
+
+                        </div>
+                        <div class="form-group form-group-year">
+                            <label for="DateOfChange.Year">
+                                Year
+                            </label>
+                            @Html.TextBox("DateOfChange.Year", Model.Data.EditStopDate.NewStopDate.Year, new { @class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "DateOfChange.Year" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="button" type="submit" id="submit-apply-change">Confirm new stop date</button>
+                    <a class="text-link cancel-link" href=@Url.RouteUrl("OnProgrammeApprenticeshipDetails") aria-label="Cancel">Cancel</a>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
+@section breadcrumb {
+    <div class="breadcrumbs">
+        <a href="@Url.RouteUrl("OnProgrammeApprenticeshipDetails")" aria-label="Back to apprentices details" class="back-link">Back</a>
+    </div>
+}
+
+@section gaDataLayer {
+    <script>
+        sfa.dataLayer.vpv = '/accounts/apprentices/manage/when-to-apply-stop'
+    </script>
+}

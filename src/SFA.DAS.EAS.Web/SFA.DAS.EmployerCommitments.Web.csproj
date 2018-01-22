@@ -384,8 +384,10 @@
     <Compile Include="ViewModels\Interfaces\IPaginationViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\ApprenticeshipFiltersViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\ChangeStatusChoiceViewModel.cs" />
+    <Compile Include="ViewModels\ManageApprenticeships\EditApprenticeshipStopDateViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\CourseChange.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\DataLockStatusViewModel.cs" />
+    <Compile Include="ViewModels\ManageApprenticeships\EditStopDateViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PaymentOrderViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PriceChange.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PriceHistoryViewModel.cs" />
@@ -522,6 +524,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ConfirmChanges.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EmployerManageApprentices\Details.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Details.cshtml</DependentUpon>
     </Compile>
     <Compile Include="Views\EmployerManageApprentices\EditStartedApprenticeship.generated.cs">
       <AutoGen>True</AutoGen>
@@ -985,7 +992,10 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ListAll.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Views\EmployerManageApprentices\Details.cshtml" />
+    <Content Include="Views\EmployerManageApprentices\Details.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Details.generated.cs</LastGenOutput>
+    </Content>
     <Content Include="Views\EmployerCommitments\YourCohorts.cshtml" />
     <Content Include="Views\EmployerCommitments\DeleteApprenticeshipConfirmation.cshtml" />
     <Content Include="Views\EmployerCommitments\RequestList.cshtml" />
@@ -1052,6 +1062,7 @@
     <Folder Include="Views\Service\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\EmployerManageApprentices\EditStopDate.cshtml" />
     <None Include="Views\razorgenerator.directives" />
   </ItemGroup>
   <ItemGroup>
