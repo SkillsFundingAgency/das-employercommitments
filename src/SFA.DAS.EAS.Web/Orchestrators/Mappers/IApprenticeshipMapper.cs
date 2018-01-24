@@ -15,6 +15,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
         ApprenticeshipDetailsViewModel MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship);
 
+        EditApprenticeshipStopDateViewModel MapToEditApprenticeshipStopDateViewModel(Apprenticeship apprenticeship);
+
         ApprenticeshipViewModel MapToApprenticeshipViewModel(Apprenticeship apprenticeship);
 
         Task<UpdateApprenticeshipViewModel> CompareAndMapToApprenticeshipViewModel(Apprenticeship original, ApprenticeshipViewModel edited);

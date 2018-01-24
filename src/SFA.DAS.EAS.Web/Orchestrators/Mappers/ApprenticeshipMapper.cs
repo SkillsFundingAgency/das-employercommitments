@@ -90,6 +90,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             };
         }
 
+        public EditApprenticeshipStopDateViewModel MapToEditApprenticeshipStopDateViewModel(Apprenticeship apprenticeship)
+        {
+            return new EditApprenticeshipStopDateViewModel
+            {
+                HashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id),
+                ApprenticeshipULN = apprenticeship.ULN
+            };
+        }
+
         public ApprenticeshipViewModel MapToApprenticeshipViewModel(Apprenticeship apprenticeship)
         {
             var isStartDateInFuture = apprenticeship.StartDate.HasValue && apprenticeship.StartDate.Value >
