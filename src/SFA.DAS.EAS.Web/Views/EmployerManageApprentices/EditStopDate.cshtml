@@ -16,6 +16,7 @@
     <div class="column-two-thirds">
         <form method="post" action="@Url.RouteUrl("PostEditStopDate")" novalidate onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
+            @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
             <h1 class="heading-xlarge">@ViewBag.Title</h1>
             <table class="apprentice-to-stop">
                 <thead>

@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 
             if (model.NewStopDate?.DateTime != null && model.NewStopDate.DateTime < earliestDate)
             {
-                dict.Add($"{nameof(model.NewStopDate)}",$"Stop date must be on or before {earliestDate.ToGdsFormat()}");
+                dict.Add($"{nameof(EditStopDateViewModel.NewStopDate)}",$"Stop date must be on or after {earliestDate.ToGdsFormat()}");
             }
 
             return dict;

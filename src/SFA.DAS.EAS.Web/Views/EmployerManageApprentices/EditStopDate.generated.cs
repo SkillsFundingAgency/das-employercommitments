@@ -94,6 +94,12 @@ WriteLiteral("            ");
 
        Write(Html.AntiForgeryToken());
 
+WriteLiteral("\r\n");
+
+WriteLiteral("            ");
+
+       Write(Html.Partial("ValidationSummary", Html.ViewData.ModelState));
+
 WriteLiteral("\r\n            <h1");
 
 WriteLiteral(" class=\"heading-xlarge\"");
@@ -146,11 +152,11 @@ WriteLiteral("                            ");
 WriteLiteral("\r\n                        </td>\r\n                    </tr>\r\n                </tbo" +
 "dy>\r\n            </table>\r\n\r\n            <fieldset>\r\n                <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 1715), Tuple.Create("\"", 1806)
-, Tuple.Create(Tuple.Create("", 1723), Tuple.Create("form-error-group", 1723), true)
-, Tuple.Create(Tuple.Create(" ", 1739), Tuple.Create("form-group", 1740), true)
-, Tuple.Create(Tuple.Create(" ", 1750), Tuple.Create<System.Object, System.Int32>(Html.AddClassIfPropertyInError("NewStopDate", "error")
-, 1751), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 1789), Tuple.Create("\"", 1880)
+, Tuple.Create(Tuple.Create("", 1797), Tuple.Create("form-error-group", 1797), true)
+, Tuple.Create(Tuple.Create(" ", 1813), Tuple.Create("form-group", 1814), true)
+, Tuple.Create(Tuple.Create(" ", 1824), Tuple.Create<System.Object, System.Int32>(Html.AddClassIfPropertyInError("NewStopDate", "error")
+, 1825), false)
 );
 
 WriteLiteral(" id=\"edit-stopdate-effective\"");
@@ -236,9 +242,9 @@ WriteLiteral(">Confirm new stop date</button> &nbsp;&nbsp;&nbsp;\r\n            
 
 WriteLiteral(" class=\"text-link cancel-link\"");
 
-WriteAttribute("href", Tuple.Create(" href=", 3949), Tuple.Create("", 4004)
-, Tuple.Create(Tuple.Create("", 3955), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("OnProgrammeApprenticeshipDetails")
-, 3955), false)
+WriteAttribute("href", Tuple.Create(" href=", 4023), Tuple.Create("", 4078)
+, Tuple.Create(Tuple.Create("", 4029), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("OnProgrammeApprenticeshipDetails")
+, 4029), false)
 );
 
 WriteLiteral(" aria-label=\"Cancel\"");
@@ -254,9 +260,9 @@ WriteLiteral(" class=\"breadcrumbs\"");
 
 WriteLiteral(">\r\n        <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 4189), Tuple.Create("\"", 4245)
-, Tuple.Create(Tuple.Create("", 4196), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("OnProgrammeApprenticeshipDetails")
-, 4196), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 4263), Tuple.Create("\"", 4319)
+, Tuple.Create(Tuple.Create("", 4270), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("OnProgrammeApprenticeshipDetails")
+, 4270), false)
 );
 
 WriteLiteral(" aria-label=\"Back to apprentices details\"");

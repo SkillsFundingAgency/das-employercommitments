@@ -116,11 +116,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             var viewmodel = await _orchestrator.GetApprenticeshipStopDateDetails(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
 
-            viewmodel.Data.AddErrorsFromModelState(ModelState);
-            viewmodel.Data.AddErrorsFromDictionary(validatorResult);
-            SetErrorMessage(viewmodel, viewmodel.Data.ErrorDictionary);
+            if (validationFailed)
+            {
+                viewmodel.Data.AddErrorsFromDictionary(validatorResult);
+                SetErrorMessageToModelState(viewmodel.Data.ErrorDictionary);
+            }
 
-            return View("editstopdate", new OrchestratorResponse<EditApprenticeshipStopDateViewModel> { Data = viewmodel.Data, FlashMessage = viewmodel.FlashMessage });
+            return View("editstopdate", new OrchestratorResponse<EditApprenticeshipStopDateViewModel> { Data = viewmodel.Data });
         }
 
         [HttpPost]
@@ -529,6 +531,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 ErrorMessages = errorDictionary,
                 Severity = FlashMessageSeverityLevel.Error
             };
+        }
+
+        private void SetErrorMessageToModelState(Dictionary<string, string> errorDictionary)
+        {
+            if (errorDictionary == null) return;
+
+            foreach (var keyValuePair in errorDictionary)
+            {
+                ModelState.AddModelError(keyValuePair.Key, keyValuePair.Value);
+            }
         }
 
         private static string GetStatusMessage(ChangeStatusType? model)
