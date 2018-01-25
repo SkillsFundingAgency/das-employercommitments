@@ -13,6 +13,7 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.EmployerUsers.WebClientComponents;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
+using WebGrease.Css.Extensions;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
@@ -101,6 +102,28 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         }
 
         [HttpPost]
+        [Route("{hashedApprenticeshipId}/details/editstopdate", Name = "PostEditStopDate")]
+        public async Task<ActionResult> ApplyNewStopDate(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date")] EditStopDateViewModel model)
+        {
+            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+                return View("AccessDenied");
+
+            var validatorResult = ModelState.IsValid ? await _orchestrator.ValidateEditStopDate(hashedAccountId, hashedApprenticeshipId, model) : null;
+            var validationFailed = validatorResult != null && validatorResult.Count > 0;
+
+            if (ModelState.IsValid && !validationFailed)
+                return RedirectToRoute("OnProgrammeApprenticeshipDetails");
+
+            var viewmodel = await _orchestrator.GetApprenticeshipStopDateDetails(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
+
+            viewmodel.Data.AddErrorsFromModelState(ModelState);
+            viewmodel.Data.AddErrorsFromDictionary(validatorResult);
+            SetErrorMessage(viewmodel, viewmodel.Data.ErrorDictionary);
+
+            return View("editstopdate", new OrchestratorResponse<EditApprenticeshipStopDateViewModel> { Data = viewmodel.Data, FlashMessage = viewmodel.FlashMessage });
+        }
+
+        [HttpPost]
         [Route("{hashedApprenticeshipId}/details/statuschange", Name = "PostChangeStatusSelectOption")]
         public async Task<ActionResult> ChangeStatus(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusViewModel model)
         {
@@ -185,7 +208,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return View(response);
         }
 
-       
+
         [HttpPost]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/confirm", Name = "PostStatusChangeConfirmation")]
         public async Task<ActionResult> StatusChangeConfirmation(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date,Confirm")] ChangeStatusViewModel model)

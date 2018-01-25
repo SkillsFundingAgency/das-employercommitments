@@ -14,9 +14,8 @@
 }
 <div class="grid-row">
     <div class="column-two-thirds">
-        <form method="post" action="@Url.RouteUrl("PostWhenToApplyChange")" novalidate onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
+        <form method="post" action="@Url.RouteUrl("PostEditStopDate")" novalidate onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
-            @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
             <h1 class="heading-xlarge">@ViewBag.Title</h1>
             <table class="apprentice-to-stop">
                 <thead>
@@ -43,28 +42,28 @@
             </table>
 
             <fieldset>
-                <div class="form-error-group form-group @Html.AddClassIfPropertyInError("DateOfChange", "error")" id="edit-stopdate-effective">
+                <div class="form-error-group form-group @Html.AddClassIfPropertyInError("NewStopDate", "error")" id="edit-stopdate-effective">
                     <span class="form-label-bold">Enter new stop date</span>
                     <span class="form-hint">The earliest date you can enter is @Model.Data.EarliestDate.ToFullDateEntryFormat()</span>
                     <div class="form-date">
-                        @Html.ValidationMessage("DateOfChange", new {id = "error-message-DateOfChange", @class = "error-message"})
+                        @Html.ValidationMessage("NewStopDate", new {id = "error-message-NewStopDate", @class = "error-message"})
                         <div class="form-group form-group-day">
-                            <label for="DateOfChange.Day">
+                            <label for="NewStopDate.Day">
                                 Day
                             </label>
-                            @Html.TextBox("DateOfChange.Day", Model.Data.EditStopDate.NewStopDate.Day, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "31", aria_labelledby = "DateOfChange.Day"})
+                            @Html.TextBox("NewStopDate.Day", Model.Data.EditStopDate.NewStopDate.Day, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "31", aria_labelledby = "NewStopDate.Day" })
                         </div>
                         <div class="form-group form-group-month">
-                            <label for="DateOfChange.Month">
+                            <label for="NewStopDate.Month">
                                 Month
                             </label>
-                            @Html.TextBox("DateOfChange.Month", Model.Data.EditStopDate.NewStopDate.Month, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "DateOfChange.Month"})
+                            @Html.TextBox("NewStopDate.Month", Model.Data.EditStopDate.NewStopDate.Month, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "NewStopDate.Month" })
                         </div>
                         <div class="form-group form-group-year">
-                            <label for="DateOfChange.Year">
+                            <label for="NewStopDate.Year">
                                 Year
                             </label>
-                            @Html.TextBox("DateOfChange.Year", Model.Data.EditStopDate.NewStopDate.Year, new {@class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "DateOfChange.Year"})
+                            @Html.TextBox("NewStopDate.Year", Model.Data.EditStopDate.NewStopDate.Year, new {@class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "NewStopDate.Year" })
                         </div>
                     </div>
                 </div>

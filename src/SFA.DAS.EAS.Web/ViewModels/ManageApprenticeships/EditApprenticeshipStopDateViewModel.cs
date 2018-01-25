@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 {
-    public sealed class EditApprenticeshipStopDateViewModel
+    public sealed class EditApprenticeshipStopDateViewModel : ViewModelBase
     {
         public string ApprenticeshipULN { get; set; }
 
@@ -10,11 +10,12 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public string HashedAccountId { get; set; }
 
-        public DateTime EarliestDate { get; set; }
-
         public EditStopDateViewModel EditStopDate { get; set; }
 
         public string ApprenticeshipName { get; set; }
+
+        
+        public DateTime EarliestDate { get; set; }
 
         public DateTime CurrentStopDate { get; set; }
 

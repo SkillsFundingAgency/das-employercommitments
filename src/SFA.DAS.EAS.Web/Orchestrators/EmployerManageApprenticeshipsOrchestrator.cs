@@ -183,6 +183,29 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
+        public async Task<Dictionary<string, string>> ValidateEditStopDate(string hashedAccountId, string hashedApprenticeshipId, EditStopDateViewModel updatedModel)
+        {
+            var result = new Dictionary<string, string>();
+
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
+
+            var data = await _mediator.SendAsync(
+                new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
+
+            var earliestDate = _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod
+                               && data.Apprenticeship.StartDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate
+                ? _academicYearDateProvider.CurrentAcademicYearStartDate
+                : data.Apprenticeship.StartDate.Value;
+
+            foreach (var error in _approvedApprenticeshipValidator.ValidateNewStopDate(updatedModel, earliestDate))
+            {
+                result.Add(error.Key, error.Value);
+            }
+
+            return result;
+        }
+
         public async Task<OrchestratorResponse<ApprenticeshipDetailsViewModel>> GetApprenticeship(string hashedAccountId, string hashedApprenticeshipId, string externalUserId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
