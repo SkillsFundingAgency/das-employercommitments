@@ -361,6 +361,7 @@
     <Compile Include="Authentication\IdentityServerConfigurationFactory.cs" />
     <Compile Include="Authentication\IOwinWrapper.cs" />
     <Compile Include="Authentication\OwinWrapper.cs" />
+    <Compile Include="Authentication\UserInfo.cs" />
     <Compile Include="Controllers\AccessDeniedController.cs" />
     <Compile Include="Controllers\DataLockController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />

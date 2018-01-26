@@ -108,18 +108,26 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var validatorResult = ModelState.IsValid ? await _orchestrator.ValidateEditStopDate(hashedAccountId, hashedApprenticeshipId, model) : null;
+            var validatorResult = ModelState.IsValid ? await _orchestrator.ValidateApprenticeshipStopDate(hashedAccountId, hashedApprenticeshipId, model) : null;
             var validationFailed = validatorResult != null && validatorResult.Count > 0;
 
             if (ModelState.IsValid && !validationFailed)
+            {
+                var userInfo = GetExtractUserClaims();
+
+                await _orchestrator.UpdateApprenticeshipStopDate(hashedAccountId, hashedApprenticeshipId, userInfo.UserId, userInfo.Email, userInfo.DisplayName, model);
+
+                SetSuccessMessage("New Stopdate applied");
+
                 return RedirectToRoute("OnProgrammeApprenticeshipDetails");
+            }
 
             var viewmodel = await _orchestrator.GetApprenticeshipStopDateDetails(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
 
             if (validationFailed)
             {
                 viewmodel.Data.AddErrorsFromDictionary(validatorResult);
-                SetErrorMessageToModelState(viewmodel.Data.ErrorDictionary);
+                AddErrorMessageToModelState(viewmodel.Data.ErrorDictionary);
             }
 
             return View("editstopdate", new OrchestratorResponse<EditApprenticeshipStopDateViewModel> { Data = viewmodel.Data });
@@ -500,6 +508,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 .AuthorizeRole(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), roles);
         }
 
+        private UserInfo GetExtractUserClaims()
+        {
+            return new UserInfo
+            {
+                UserId = OwinWrapper.GetClaimValue("sub"),
+                Email = OwinWrapper.GetClaimValue(DasClaimTypes.Email),
+                DisplayName = OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName)
+            };
+        }
+
         private void SetOkayMessage(string message)
         {
             var flashmessage = new FlashMessageViewModel
@@ -533,7 +551,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             };
         }
 
-        private void SetErrorMessageToModelState(Dictionary<string, string> errorDictionary)
+        private void AddErrorMessageToModelState(Dictionary<string, string> errorDictionary)
         {
             if (errorDictionary == null) return;
 

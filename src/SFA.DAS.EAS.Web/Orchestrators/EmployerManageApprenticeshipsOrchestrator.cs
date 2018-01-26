@@ -12,6 +12,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeshipUpdat
 using SFA.DAS.EmployerCommitments.Application.Commands.ReviewApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UndoApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStatus;
+using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStopDate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateProviderPaymentPriority;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
@@ -183,7 +184,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<Dictionary<string, string>> ValidateEditStopDate(string hashedAccountId, string hashedApprenticeshipId, EditStopDateViewModel updatedModel)
+        public async Task<Dictionary<string, string>> ValidateApprenticeshipStopDate(string hashedAccountId, string hashedApprenticeshipId, EditStopDateViewModel updatedModel)
         {
             var result = new Dictionary<string, string>();
 
@@ -204,6 +205,34 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }
 
             return result;
+        }
+
+        public async Task UpdateApprenticeshipStopDate(
+            string hashedAccountId, 
+            string hashedApprenticeshipId, 
+            string externalUserId, 
+            string userName, 
+            string userEmail, 
+            EditStopDateViewModel updatedModel)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
+
+            _logger.Info(
+                $"Updating Apprenticeship stop date to {updatedModel.NewStopDate}. AccountId: {accountId}, ApprenticeshipId: {apprenticeshipId}");
+
+            await CheckUserAuthorization(async () =>
+            {
+                await _mediator.SendAsync(new UpdateApprenticeshipStopDateCommand
+                {
+                    UserId = externalUserId,
+                    ApprenticeshipId = apprenticeshipId,
+                    EmployerAccountId = accountId,
+                    UserEmail = userEmail,
+                    UserName = userName
+                });
+
+            }, hashedAccountId, externalUserId);
         }
 
         public async Task<OrchestratorResponse<ApprenticeshipDetailsViewModel>> GetApprenticeship(string hashedAccountId, string hashedApprenticeshipId, string externalUserId)
@@ -629,9 +658,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         {
             return apprenticeship.PaymentStatus != PaymentStatus.Withdrawn ||
                    apprenticeship.PaymentStatus != PaymentStatus.Completed;
-
         }
-
 
         private DateTimeViewModel DetermineChangeDate(ChangeStatusType changeType, Apprenticeship apprenticeship, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange)
         {

@@ -13,9 +13,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                 .Cascade(CascadeMode.StopOnFirstFailure)
                 .NotNull().WithMessage("Date is not valid")
                 .Must(ValidateStopDate).WithMessage("Date is not valid")
-                .Must(d => d.DateTime <= currentDateTime.Now.Date).WithMessage("Date must be a past date");
+                .Must(d => d.DateTime <= currentDateTime.Now.Date).WithMessage("New stop date must not be in future");
         }
-
+        
         private bool ValidateStopDate(DateTimeViewModel date)
         {
             // Check the day has value as the view model supports just month and year entry
