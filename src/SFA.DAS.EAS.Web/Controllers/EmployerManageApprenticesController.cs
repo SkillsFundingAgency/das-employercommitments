@@ -103,7 +103,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpPost]
         [Route("{hashedApprenticeshipId}/details/editstopdate", Name = "PostEditStopDate")]
-        public async Task<ActionResult> ApplyNewStopDate(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date")] EditStopDateViewModel model)
+        public async Task<ActionResult> UpdateApprenticeshipStopDate(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date")] EditStopDateViewModel model)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
@@ -115,7 +115,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             {
                 var userInfo = GetExtractUserClaims();
 
-                await _orchestrator.UpdateApprenticeshipStopDate(hashedAccountId, hashedApprenticeshipId, userInfo.UserId, userInfo.Email, userInfo.DisplayName, model);
+                var statusChangeModelWithNewStopDate = new ChangeStatusViewModel()
+                {
+                    ChangeType= ChangeStatusType.Stop,
+                    DateOfChange = model.NewStopDate,
+                    WhenToMakeChange = WhenToMakeChangeOptions.SpecificDate,
+                    ChangeConfirmed = true
+                };
+
+                await _orchestrator.UpdateStatus(
+                    hashedAccountId, 
+                    hashedApprenticeshipId,
+                    statusChangeModelWithNewStopDate,
+                    userInfo.UserId, userInfo.DisplayName, userInfo.Email);
 
                 SetSuccessMessage("New Stopdate applied");
 

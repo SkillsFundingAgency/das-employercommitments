@@ -155,9 +155,6 @@
     <Compile Include="Commands\CreateOrganisationAddress\CreateOrganisationAddressValidator.cs" />
     <Compile Include="Commands\ResolveRequestedChanges\ResolveRequestedChangesCommand.cs" />
     <Compile Include="Commands\ResolveRequestedChanges\ResolveRequestedChangesHandler.cs" />
-    <Compile Include="Commands\UpdateApprenticeshipStopDate\UpdateApprenticeshipStopDateCommand.cs" />
-    <Compile Include="Commands\UpdateApprenticeshipStopDate\UpdateApprenticeshipStopDateCommandHandler.cs" />
-    <Compile Include="Commands\UpdateApprenticeshipStopDate\UpdateApprenticeshipStopDateCommandValidator.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\UpdateProviderPaymentPriorityValidator.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\UpdateProviderPaymentPriorityCommand.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\UpdateProviderPaymentPriorityCommandHandler.cs" />
