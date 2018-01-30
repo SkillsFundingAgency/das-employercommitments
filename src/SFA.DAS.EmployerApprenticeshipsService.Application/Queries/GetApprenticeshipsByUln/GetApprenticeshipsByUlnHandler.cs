@@ -17,25 +17,17 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipsByUl
 
         public async Task<GetApprenticeshipsByUlnResponse> Handle(GetApprenticeshipsByUlnRequest message)
         {
-            var apprenticeship = await _commitmentsApi.GetEmployerApprenticeships(message.AccountId);
-            return new GetApprenticeshipsByUlnResponse
-            {
-                Apprenticeships =
-                    apprenticeship.Where(m =>
-                            m.ULN == message.Uln &&
-                            m.PaymentStatus != PaymentStatus.PendingApproval && m.PaymentStatus != PaymentStatus.Withdrawn)
-                        .ToList()
-            };
-
-            /*
             var apprenticeship = await _commitmentsApi.GetActiveApprenticeshipsForUln(message.AccountId, message.Uln);
             return new GetApprenticeshipsByUlnResponse
             {
                 Apprenticeships =
                                apprenticeship.Where(m => m
-                               .PaymentStatus != PaymentStatus.PendingApproval && m.PaymentStatus != PaymentStatus.Withdrawn)
+                               .PaymentStatus != PaymentStatus.PendingApproval
+                                                         && m.PaymentStatus != PaymentStatus.Withdrawn
+                                                         && m.PaymentStatus != PaymentStatus.Completed
+                                                         && m.PaymentStatus != PaymentStatus.Deleted)
                                .ToList()
-            };*/
+            };
         }
     }
 }
