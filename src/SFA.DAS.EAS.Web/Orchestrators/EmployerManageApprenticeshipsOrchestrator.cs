@@ -16,6 +16,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.UpdateProviderPaymentPrio
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipsByUln;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
@@ -201,6 +202,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             foreach (var error in _approvedApprenticeshipValidator.ValidateNewStopDate(updatedModel, earliestDate))
             {
                 result.Add(error.Key, error.Value);
+            }
+
+            var existingApprenticeships = await _mediator.SendAsync(
+                new GetApprenticeshipsByUlnRequest { AccountId = accountId, Uln = data.Apprenticeship.ULN });
+
+            var otherApprenticeships =
+                existingApprenticeships.Apprenticeships.Where(m => m.Id != apprenticeshipId);
+
+            if (otherApprenticeships.Any())
+            {
+                result.Add($"{nameof(EditStopDateViewModel.NewStopDate)}", $"Stop date could not be edited since there are other active apprenticeships found.");
             }
 
             return result;

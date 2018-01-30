@@ -218,6 +218,9 @@
     <Compile Include="Queries\GetApprenticeshipDataLockSummary\GetApprenticeshipDataLockSummaryQueryHandler.cs" />
     <Compile Include="Queries\GetApprenticeshipDataLockSummary\GetApprenticeshipDataLockSummaryQueryRequest.cs" />
     <Compile Include="Queries\GetApprenticeshipDataLockSummary\GetApprenticeshipDataLockSummaryQueryResponse.cs" />
+    <Compile Include="Queries\GetApprenticeshipsByUln\GetApprenticeshipsByUlnHandler.cs" />
+    <Compile Include="Queries\GetApprenticeshipsByUln\GetApprenticeshipsByUlnRequest.cs" />
+    <Compile Include="Queries\GetApprenticeshipsByUln\GetApprenticeshipsByUlnResponse.cs" />
     <Compile Include="Queries\GetPriceHistoryQueryRequest\GetPriceHistoryQueryHandler.cs" />
     <Compile Include="Queries\GetPriceHistoryQueryRequest\GetPriceHistoryQueryRequest.cs" />
     <Compile Include="Queries\GetPriceHistoryQueryRequest\GetPriceHistoryQueryResponse.cs" />
