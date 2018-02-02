@@ -6,6 +6,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
 {
     public class CloudConfigurationBooleanValueProvider: IBooleanToggleValueProvider
     {
+        private const string TogglePrefix = "FeatureToggle";
         private readonly ILog _logger;
 
         public CloudConfigurationBooleanValueProvider(ILog logger)
@@ -15,7 +16,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
 
         public bool EvaluateBooleanToggleValue(IFeatureToggle toggle)
         {
-            var toggleName = "FeatureToggle." + toggle.GetType().Name;
+            var toggleName = $"{TogglePrefix}.{toggle.GetType().Name}";
 
             var value = CloudConfigurationManager.GetSetting(toggleName);
 
