@@ -10,8 +10,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     [CommitmentsRoutePrefix("Service")]
     public class ServiceController : BaseController
     {
-        public ServiceController(IOwinWrapper owinWrapper, IFeatureToggle featureToggle,IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage) 
-            : base(owinWrapper, featureToggle, multiVariantTestingService, flashMessage)
+        public ServiceController(IOwinWrapper owinWrapper,IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage) 
+            : base(owinWrapper, multiVariantTestingService, flashMessage)
         {
             
         }

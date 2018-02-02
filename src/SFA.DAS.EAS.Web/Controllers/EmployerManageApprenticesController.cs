@@ -25,10 +25,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         public EmployerManageApprenticesController(
             EmployerManageApprenticeshipsOrchestrator orchestrator,
             IOwinWrapper owinWrapper,
-            IFeatureToggle featureToggle,
             IMultiVariantTestingService multiVariantTestingService,
             ICookieStorageService<FlashMessageViewModel> flashMessage)
-                : base(owinWrapper, featureToggle, multiVariantTestingService, flashMessage)
+                : base(owinWrapper, multiVariantTestingService, flashMessage)
         {
             if (orchestrator == null)
                 throw new ArgumentNullException(nameof(orchestrator));
