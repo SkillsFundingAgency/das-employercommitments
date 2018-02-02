@@ -23,6 +23,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Web;
 using AutoMapper;
+using FeatureToggle;
 using MediatR;
 using Microsoft.Azure;
 using SFA.DAS.Audit.Client;
@@ -94,6 +95,8 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
                 .Ctor<IEventsApiClientConfiguration>().Is(config.EventsApi)
                 .SelectConstructor(() => new EventsApi(null)); // The default one isn't the one we want to use.;
 
+            For<IBooleanToggleValueProvider>().Use<CloudConfigurationBooleanValueProvider>();
+            For<IFeatureToggleService>().Use<FeatureToggleService>();
           
             ConfigureNotificationsApi();
 

@@ -1,34 +1,33 @@
-﻿using System;
-using FeatureToggle;
+﻿using FeatureToggle;
 using Microsoft.Azure;
-using NLog;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
 {
     public class CloudConfigurationBooleanValueProvider: IBooleanToggleValueProvider
     {
-        private readonly ILogger _logger;
+        private readonly ILog _logger;
 
-        public CloudConfigurationBooleanValueProvider(ILogger logger)
+        public CloudConfigurationBooleanValueProvider(ILog logger)
         {
             _logger = logger;
         }
 
         public bool EvaluateBooleanToggleValue(IFeatureToggle toggle)
         {
-            var name = "FeatureToggle." + toggle.GetType().Name;
+            var toggleName = "FeatureToggle." + toggle.GetType().Name;
 
-            var value = CloudConfigurationManager.GetSetting(name);
+            var value = CloudConfigurationManager.GetSetting(toggleName);
 
             if (value == null)
             {
-                _logger.Log(LogLevel.Error, $"Unable to find entry for {0} in Cloud Configuration (defaulting to false)");
+                _logger.Warn($"Unable to find entry for {toggleName} in Cloud Configuration (defaulting to false)");
                 return false;
             }
 
             if (!bool.TryParse(value, out var result))
             {
-                _logger.Log(LogLevel.Error, $"Unable to find entry for {0} in Cloud Configuration (defaulting to false)");
+                _logger.Warn($"Unable to parse entry for {toggleName} in Cloud Configuration (defaulting to false)");
                 return false;
             }
 
