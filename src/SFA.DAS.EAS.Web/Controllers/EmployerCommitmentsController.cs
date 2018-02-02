@@ -31,8 +31,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         private readonly ICookieStorageService<string> _lastCohortCookieStorageService;
 
         public EmployerCommitmentsController(EmployerCommitmentsOrchestrator employerCommitmentsOrchestrator, IOwinWrapper owinWrapper,
-            IFeatureToggle featureToggle, IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage, ICookieStorageService<string> lastCohortCookieStorageService)
-            : base(owinWrapper, featureToggle, multiVariantTestingService, flashMessage)
+            IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage, ICookieStorageService<string> lastCohortCookieStorageService)
+            : base(owinWrapper, multiVariantTestingService, flashMessage)
         {
             if (employerCommitmentsOrchestrator == null)
                 throw new ArgumentNullException(nameof(employerCommitmentsOrchestrator));

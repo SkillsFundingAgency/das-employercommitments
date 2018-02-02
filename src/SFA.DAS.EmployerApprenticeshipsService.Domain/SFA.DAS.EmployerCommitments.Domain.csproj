@@ -193,7 +193,6 @@
     <Compile Include="Interfaces\IAuditService.cs" />
     <Compile Include="Interfaces\ICache.cs" />
     <Compile Include="Interfaces\IConfiguration.cs" />
-    <Compile Include="Interfaces\IFeatureToggle.cs" />
     <Compile Include="Http\IHttpClientWrapper.cs" />
     <Compile Include="Interfaces\IReferenceDataService.cs" />
     <Compile Include="Interfaces\IUserWhiteList.cs" />
@@ -207,8 +206,6 @@
     <Compile Include="Models\ReferenceData\PublicSectorOrganisation.cs" />
     <Compile Include="Models\AccountTeam\Membership.cs" />
     <Compile Include="Models\AccountTeam\MembershipView.cs" />
-    <Compile Include="Models\FeatureToggle\FeatureToggleItem.cs" />
-    <Compile Include="Models\FeatureToggle\FeatureToggleLookup.cs" />
     <Compile Include="Models\Notification\EmailContent.cs" />
     <Compile Include="Models\Notification\EmailMessage.cs" />
     <Compile Include="Models\Notification\MessageFormat.cs" />

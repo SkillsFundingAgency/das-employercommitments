@@ -18,11 +18,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         public DataLockController(
             IOwinWrapper owinWrapper, 
-            IFeatureToggle featureToggle, 
             IMultiVariantTestingService multiVariantTestingService, 
             ICookieStorageService<FlashMessageViewModel> flashMessage,
             DataLockOrchestrator orchestrator
-            ) : base(owinWrapper, featureToggle, multiVariantTestingService, flashMessage)
+            ) : base(owinWrapper, multiVariantTestingService, flashMessage)
         {
             _orchestrator = orchestrator;
         }
