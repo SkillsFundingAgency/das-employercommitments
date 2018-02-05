@@ -56,6 +56,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         private readonly IApprenticeshipViewModelValidator _apprenticeshipValidation;
 
+        private readonly IFeatureToggleService _featureToggleService;
+
         public EmployerCommitmentsOrchestrator(
             IMediator mediator,
             IHashingService hashingService,
@@ -63,21 +65,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IApprenticeshipMapper apprenticeshipMapper,
             ICommitmentMapper commitmentMapper,
             ILog logger,
-            IApprenticeshipViewModelValidator apprenticeshipValidation) : base(mediator, hashingService, logger)
+            IApprenticeshipViewModelValidator apprenticeshipValidation,
+            IFeatureToggleService featureToggleService) : base(mediator, hashingService, logger)
         {
-            if (mediator == null)
-                throw new ArgumentNullException(nameof(mediator));
-            if (hashingService == null)
-                throw new ArgumentNullException(nameof(hashingService));
-            if (statusCalculator == null)
-                throw new ArgumentNullException(nameof(statusCalculator));
-            if (apprenticeshipMapper == null)
-                throw new ArgumentNullException(nameof(apprenticeshipMapper));
-            if (commitmentMapper == null)
-                throw new ArgumentNullException(nameof(commitmentMapper));
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-
             _mediator = mediator;
             _hashingService = hashingService;
             _statusCalculator = statusCalculator;
@@ -85,6 +75,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _commitmentMapper = commitmentMapper;
             _logger = logger;
             _apprenticeshipValidation = apprenticeshipValidation;
+            _featureToggleService = featureToggleService;
         }
 
         public async Task<OrchestratorResponse<CommitmentsIndexViewModel>> GetIndexViewModel(string hashedAccountId, string externalUserId)
