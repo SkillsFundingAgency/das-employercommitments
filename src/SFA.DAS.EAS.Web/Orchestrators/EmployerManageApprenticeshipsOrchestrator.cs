@@ -36,7 +36,7 @@ using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
-    public sealed class EmployerManageApprenticeshipsOrchestrator : CommitmentsBaseOrchestrator
+    public sealed class EmployerManageApprenticeshipsOrchestrator : CommitmentsBaseOrchestrator, IEmployerManageApprenticeshipsOrchestrator
     {
         private readonly IMediator _mediator;
         private readonly IHashingService _hashingService;
@@ -212,7 +212,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             if (otherApprenticeships.Any())
             {
-                result.Add($"{nameof(EditStopDateViewModel.NewStopDate)}", $"Stop date could not be edited since there are other active apprenticeships found.");
+                result.Add($"{nameof(EditStopDateViewModel.NewStopDate)}", "Stop date could not be edited since there are other active apprenticeships found.");
             }
 
             return result;

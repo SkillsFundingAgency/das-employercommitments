@@ -13,7 +13,6 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.EmployerUsers.WebClientComponents;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
-using WebGrease.Css.Extensions;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
@@ -21,10 +20,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     [CommitmentsRoutePrefix("accounts/{hashedAccountId}/apprentices/manage")]
     public class EmployerManageApprenticesController : BaseController
     {
-        private readonly EmployerManageApprenticeshipsOrchestrator _orchestrator;
+        private readonly IEmployerManageApprenticeshipsOrchestrator _orchestrator;
 
         public EmployerManageApprenticesController(
-            EmployerManageApprenticeshipsOrchestrator orchestrator,
+            IEmployerManageApprenticeshipsOrchestrator orchestrator,
             IOwinWrapper owinWrapper,
             IFeatureToggle featureToggle,
             IMultiVariantTestingService multiVariantTestingService,
@@ -129,7 +128,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                     statusChangeModelWithNewStopDate,
                     userInfo.UserId, userInfo.DisplayName, userInfo.Email);
 
-                SetSuccessMessage("New Stopdate applied");
+                SetOkayMessage("New stop date confirmed.");
 
                 return RedirectToRoute("OnProgrammeApprenticeshipDetails");
             }
