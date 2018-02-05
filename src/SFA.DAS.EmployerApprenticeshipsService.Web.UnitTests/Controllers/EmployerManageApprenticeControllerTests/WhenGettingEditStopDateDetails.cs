@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
-using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -20,16 +19,16 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
 
         private EmployerManageApprenticesController _controller;
 
-        private const string accountId = "123";
+        private const string AccountId = "123";
 
-        private const string apprenticeshipId = "456";
+        private const string ApprenticeshipId = "456";
 
         [SetUp]
         public void Setup()
         {
             _orchestrator = new Mock<IEmployerManageApprenticeshipsOrchestrator>();
 
-            _controller = new EmployerManageApprenticesController(_orchestrator.Object, Mock.Of<IOwinWrapper>(), Mock.Of<IFeatureToggle>(), Mock.Of<IMultiVariantTestingService>(),
+            _controller = new EmployerManageApprenticesController(_orchestrator.Object, Mock.Of<IOwinWrapper>(), Mock.Of<IMultiVariantTestingService>(),
                 Mock.Of<ICookieStorageService<FlashMessageViewModel>>());
         }
 
@@ -38,7 +37,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
         {
             _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(false));
 
-            var result = await _controller.EditStopDate(accountId, apprenticeshipId);
+            var result = await _controller.EditStopDate(AccountId, ApprenticeshipId);
 
             Assert.AreEqual("AccessDenied", (result as ViewResult)?.ViewName);
         }
@@ -51,7 +50,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
             var response = new OrchestratorResponse<EditApprenticeshipStopDateViewModel>();
             _orchestrator.Setup(o => o.GetApprenticeshipStopDateDetails(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(response)).Verifiable();
 
-            var result = await _controller.EditStopDate(accountId, apprenticeshipId);
+            await _controller.EditStopDate(AccountId, ApprenticeshipId);
 
             _orchestrator.Verify(o => o.GetApprenticeshipStopDateDetails(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }

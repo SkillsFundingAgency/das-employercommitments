@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
             _owinWrapper = new Mock<IOwinWrapper>();
             _cookieStorage = new Mock<ICookieStorageService<FlashMessageViewModel>>();
 
-            _controller = new EmployerManageApprenticesController(_orchestrator.Object, _owinWrapper.Object, Mock.Of<IFeatureToggle>(), Mock.Of<IMultiVariantTestingService>(),
+            _controller = new EmployerManageApprenticesController(_orchestrator.Object, _owinWrapper.Object, Mock.Of<IMultiVariantTestingService>(),
                 _cookieStorage.Object);
         }
 
