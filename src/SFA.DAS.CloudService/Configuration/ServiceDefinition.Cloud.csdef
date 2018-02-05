@@ -31,6 +31,7 @@
       <Setting name="CurrentTime" />
       <Setting name="UseAccountApiTransfersStub" />
       <Setting name="AccountApiTransfersStubRecordCount" />
+      <Setting name="FeatureToggle.Transfers" />
     </ConfigurationSettings>
     <Endpoints>
       <InputEndpoint name="HttpsIn" protocol="https" port="443" certificate="WebSslCert" />

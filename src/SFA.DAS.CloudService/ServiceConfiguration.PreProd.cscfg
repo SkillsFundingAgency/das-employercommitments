@@ -18,6 +18,7 @@
       <Setting name="CurrentTime" value="" />
       <Setting name="UseAccountApiTransfersStub" value="__UseAccountApiTransfersStub__" />
       <Setting name="AccountApiTransfersStubRecordCount" value="__AccountApiTransfersStubRecordCount__" />
+      <Setting name="FeatureToggle.Transfers" value="__FeatureToggle.Transfers__" />
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="WebSslCert" thumbprint="EDCEF8D64D09C1D1FEDFD534CACB55E0437CFAD3" thumbprintAlgorithm="sha1" />
