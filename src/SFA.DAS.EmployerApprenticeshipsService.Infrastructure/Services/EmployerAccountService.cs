@@ -46,6 +46,22 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
             return list;
         }
 
+        public async Task<List<TransferringEntity>> GetTransferConnectionsForAccount(string accountId)
+        {
+            var listOfTransferConnections = await _client.GetTransferConnections(accountId);
+
+            if (listOfTransferConnections == null)
+            {
+                return new List<TransferringEntity>();
+            }
+
+            return listOfTransferConnections.Select(x => new TransferringEntity
+            {
+                AccountId = x.FundingEmployerAccountId,
+                AccountName = x.FundingEmployerAccountName
+            }).ToList();
+        }
+        
         public async Task<TeamMember> GetUserRoleOnAccount(string accountId, string userId)
         {
             var accounts = await _client.GetAccountUsers(accountId);

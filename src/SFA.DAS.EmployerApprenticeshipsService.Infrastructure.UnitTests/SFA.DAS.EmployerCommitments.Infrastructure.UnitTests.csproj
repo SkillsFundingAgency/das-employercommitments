@@ -240,6 +240,7 @@
     <Compile Include="Services\AuditServiceTests\WhenISendAnAuditMessage.cs" />
     <Compile Include="Services\CookieStorageTests\WhenIUseTheCookieStorageService.cs" />
     <Compile Include="Services\EmployerAccountServiceTests\WhenICheckAUserIsConnectedToAnAccount.cs" />
+    <Compile Include="Services\EmployerAccountServiceTests\WhenIGetTransferringEntitiesLinkedToAnAccount.cs" />
     <Compile Include="Services\EmployerAccountServiceTests\WhenIGetLegalEntitiesLinkedToAnAccount.cs" />
     <Compile Include="Services\FeatureToggleTests\DummyFeatureToggle.cs" />
     <Compile Include="Services\FeatureToggleTests\WhenIGetASimpleFeatureToggle.cs" />

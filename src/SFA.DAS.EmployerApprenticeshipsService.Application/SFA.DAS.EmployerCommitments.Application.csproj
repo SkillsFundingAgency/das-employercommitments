@@ -215,6 +215,10 @@
     <Compile Include="Queries\GetAccountLegalEntities\GetAccountLegalEntitiesRequest.cs" />
     <Compile Include="Queries\GetAccountLegalEntities\GetAccountLegalEntitiesResponse.cs" />
     <Compile Include="Queries\GetAccountLegalEntities\GetAccountLegalEntitiesValidator.cs" />
+    <Compile Include="Queries\GetAccountTransferringEntities\GetAccountTransferringEntitiesValidator.cs" />
+    <Compile Include="Queries\GetAccountTransferringEntities\GetAccountTransferringEntitiesRequest.cs" />
+    <Compile Include="Queries\GetAccountTransferringEntities\GetAccountTransferringEntitiesResponse.cs" />
+    <Compile Include="Queries\GetAccountTransferringEntities\GetAccountTransferringEntitiesHandler.cs" />
     <Compile Include="Queries\GetAllApprenticeships\GetAllApprenticeshipsRequest.cs" />
     <Compile Include="Queries\GetAllApprenticeships\GetAllApprenticeshipsHandler.cs" />
     <Compile Include="Queries\GetAllApprenticeships\GetAllApprenticeshipsResponse.cs" />
