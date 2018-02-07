@@ -2,19 +2,19 @@
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferringEntities;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
 
-namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetAccountTransferringEntitiesTests
+namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetAccountTransferConnectionsTests
 {
-    public class WhenIGetAccountTransferringEntities : QueryBaseTest<GetAccountTransferringEntitiesHandler, GetAccountTransferringEntitiesRequest, GetAccountTransferringEntitiesResponse>
+    public class WhenIGetAccountTransferringEntities : QueryBaseTest<GetAccountTransferConnectionsHandler, GetAccountTransferConnectionsRequest, GetAccountTransferConnectionsResponse>
     {
         private Mock<IEmployerAccountService> _employerAccountService;
-        public override GetAccountTransferringEntitiesRequest Query { get; set; }
-        public override GetAccountTransferringEntitiesHandler RequestHandler { get; set; }
-        public override Mock<IValidator<GetAccountTransferringEntitiesRequest>> RequestValidator { get; set; }
+        public override GetAccountTransferConnectionsRequest Query { get; set; }
+        public override GetAccountTransferConnectionsHandler RequestHandler { get; set; }
+        public override Mock<IValidator<GetAccountTransferConnectionsRequest>> RequestValidator { get; set; }
 
         private const string ExpectedAccountId = "AFV45TGB";
         private const string ExpectedUserId = "LKJ678UYT";
@@ -26,11 +26,11 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetAccountTr
 
             _employerAccountService = new Mock<IEmployerAccountService>();
             _employerAccountService.Setup(x => x.GetTransferConnectionsForAccount(It.IsAny<string>()))
-                .ReturnsAsync(new List<TransferringEntity> {new TransferringEntity()});
+                .ReturnsAsync(new List<TransferConnection> {new TransferConnection()});
 
-            Query = new GetAccountTransferringEntitiesRequest {HashedAccountId =  ExpectedAccountId, UserId = ExpectedUserId};
+            Query = new GetAccountTransferConnectionsRequest {HashedAccountId =  ExpectedAccountId, UserId = ExpectedUserId};
 
-            RequestHandler = new GetAccountTransferringEntitiesHandler(RequestValidator.Object, _employerAccountService.Object);
+            RequestHandler = new GetAccountTransferConnectionsHandler(RequestValidator.Object, _employerAccountService.Object);
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetAccountTr
         public void ThenIfTheValidationResultReturnsErrorsAnInvalidRequestExceptionIsThrown()
         {
             //Arrange
-            RequestValidator.Setup(x => x.Validate(It.IsAny<GetAccountTransferringEntitiesRequest>()))
+            RequestValidator.Setup(x => x.Validate(It.IsAny<GetAccountTransferConnectionsRequest>()))
                 .Returns(new ValidationResult
                 {
                     ValidationDictionary = new Dictionary<string, string>

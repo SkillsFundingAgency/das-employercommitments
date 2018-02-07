@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 
-namespace SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferringEntities
+namespace SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections
 {
-    public class GetAccountTransferringEntitiesValidator : IValidator<GetAccountTransferringEntitiesRequest>
+    public class GetAccountTransferConnectionsValidator : IValidator<GetAccountTransferConnectionsRequest>
     {
-        public ValidationResult Validate(GetAccountTransferringEntitiesRequest item)
+        public ValidationResult Validate(GetAccountTransferConnectionsRequest item)
         {
             var validationResult = new ValidationResult();
 
@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferring
             return validationResult;
         }
 
-        public Task<ValidationResult> ValidateAsync(GetAccountTransferringEntitiesRequest item)
+        public Task<ValidationResult> ValidateAsync(GetAccountTransferConnectionsRequest item)
         {
             return Task.Run(()=>Validate(item));
         }

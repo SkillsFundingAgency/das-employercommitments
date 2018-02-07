@@ -1,25 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferringEntities;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetAccountTransferringEntitiesTests
 {
     public class WhenIValidateTheRequest
     {
-        private GetAccountTransferringEntitiesValidator _validator;
+        private GetAccountTransferConnectionsValidator _validator;
 
         [SetUp]
         public void Arrange()
         {
-            _validator = new GetAccountTransferringEntitiesValidator();
+            _validator = new GetAccountTransferConnectionsValidator();
         }
 
         [Test]
         public async Task ThenTrueIsReturnedWhenAllFieldsArePopulated()
         {
             //Act
-            var actual = await _validator.ValidateAsync(new GetAccountTransferringEntitiesRequest { HashedAccountId = "123ABD", UserId = "123HGB", SignedOnly = false});
+            var actual = await _validator.ValidateAsync(new GetAccountTransferConnectionsRequest { HashedAccountId = "123ABD", UserId = "123HGB", SignedOnly = false});
 
             //Assert
             Assert.IsTrue(actual.IsValid());
@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetAccountTr
         public async Task ThenFalseIsReturnedAndTheErrorDictionaryPopulatedWhenTheRequestIsNotPopulated()
         {
             //Act
-            var actual = await _validator.ValidateAsync(new GetAccountTransferringEntitiesRequest());
+            var actual = await _validator.ValidateAsync(new GetAccountTransferConnectionsRequest());
 
             //Assert
             Assert.IsFalse(actual.IsValid());

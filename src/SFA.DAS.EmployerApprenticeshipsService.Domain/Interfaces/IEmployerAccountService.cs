@@ -9,6 +9,6 @@ namespace SFA.DAS.EmployerCommitments.Domain.Interfaces
     {
         Task<TeamMember> GetUserRoleOnAccount(string accountId, string userId);
         Task<List<LegalEntity>> GetLegalEntitiesForAccount(string accountId);
-        Task<List<TransferringEntity>> GetTransferConnectionsForAccount(string accountId);
+        Task<List<TransferConnection>> GetTransferConnectionsForAccount(string accountId);
     }
 }

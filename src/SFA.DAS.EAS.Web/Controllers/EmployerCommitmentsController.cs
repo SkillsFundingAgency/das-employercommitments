@@ -120,6 +120,23 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         }
 
         [HttpGet]
+        [Route("transferConnection/create")]
+        public async Task<ActionResult> SelectTransferConnection(string hashedAccountId)
+        {
+            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+                return View("AccessDenied");
+
+            var response = await _employerCommitmentsOrchestrator
+                .GetTransferringEntities(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+
+            if (response.Data.TransferringEntities.Any())
+            {
+                return View(response);
+            }
+            return RedirectToAction("SelectLegalEntity");
+        }
+
+        [HttpGet]
         [Route("legalEntity/create")]
         public async Task<ActionResult> SelectLegalEntity(string hashedAccountId, string cohortRef = "")
         {

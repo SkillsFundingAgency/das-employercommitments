@@ -1,0 +1,66 @@
+﻿@using SFA.DAS.EmployerCommitments.Web
+@using SFA.DAS.EmployerCommitments.Web.Extensions
+
+@{
+    ViewBag.Title = "Do you want to use transfer funds to pay for this training?";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageID = "choose-transfer-connection";
+}
+
+@model OrchestratorResponse<SFA.DAS.EmployerCommitments.Web.ViewModels.SelectTransferringEntityViewModel>
+
+<div class="grid-row">
+    <form method="POST" action="@Url.Action("SetLegalEntity")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
+        <div class="column-two-thirds">
+            @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
+            <h1 class="heading-xlarge">@ViewBag.Title</h1>
+            @Html.AntiForgeryToken()
+            <div class="form-group @Html.AddClassIfPropertyInError("LegalEntityCode", "error")">
+                <fieldset>
+                    <legend>
+                        @Html.ValidationMessage("LegalEntityCode", "Please choose an option", new { id = "error-message-LegalEntityCode" })
+                    </legend>
+
+                    @foreach (var entity in Model.Data.TransferringEntities)
+                    {
+                        <label class="block-label selection-button-radio" for="LegalEntityCode-@entity.HashedAccountId">
+                            @Html.RadioButton("LegalEntityCode", @entity.HashedAccountId, new { @id = "LegalEntityCode-" + entity.HashedAccountId, dataOptionName = $"{entity.AccountName}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{entity.AccountName}')" })
+                            Yes, I will use transfer funds from @entity.AccountName
+                        </label>
+                    }
+                    <label class="block-label selection-button-radio" for="None">
+                        @Html.RadioButton("LegalEntityCode", "None", new { @id = "LegalEntityCode-" + "None", dataOptionName = $"{entity.AccountName}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{entity.AccountName}')" })
+                        Yes, I will use transfer funds from @entity.AccountName
+                    </label>
+
+                </fieldset>
+                <details id="service-help">
+                    <summary><span class="summary">What is a contract for services?</span></summary>
+                    <div class="panel panel-border-narrow">
+                        <p>
+                            A contract for services is a formal agreement between a buyer and a supplier.
+                        </p>
+
+                        <p>
+                            In this case, the contract is between the organisation that's buying apprenticeship training for their apprentices and the training provider that's training the apprentices.
+                        </p>
+                        <p>If you're an employer-provider, for example, you won't need a contract for services as your organisation is both the buyer and the supplier.</p>
+                    </div>
+                </details>
+
+            </div>
+            <button type="submit" class="button" id="submit-legal-entity">Continue</button>
+        </div>
+    </form>
+</div>
+@section breadcrumb {
+    <div class="breadcrumbs">
+        <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to Apprentices" class="back-link">Back to Apprentices</a>
+    </div>
+}
+
+@section gaDataLayer {
+    <script>
+        sfa.dataLayer.vpv = '/accounts/apprentices/legalEntity/create/choose-organisation';
+    </script>
+}

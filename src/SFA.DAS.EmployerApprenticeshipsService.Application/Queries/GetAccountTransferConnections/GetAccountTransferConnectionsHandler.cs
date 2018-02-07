@@ -3,20 +3,20 @@ using MediatR;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 
-namespace SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferringEntities
+namespace SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections
 {
-    public class GetAccountTransferringEntitiesHandler : IAsyncRequestHandler<GetAccountTransferringEntitiesRequest, GetAccountTransferringEntitiesResponse>
+    public class GetAccountTransferConnectionsHandler : IAsyncRequestHandler<GetAccountTransferConnectionsRequest, GetAccountTransferConnectionsResponse>
     {
-        private readonly IValidator<GetAccountTransferringEntitiesRequest> _validator;
+        private readonly IValidator<GetAccountTransferConnectionsRequest> _validator;
         private readonly IEmployerAccountService _employerAccountService;
 
-        public GetAccountTransferringEntitiesHandler(IValidator<GetAccountTransferringEntitiesRequest> validator, IEmployerAccountService employerAccountService)
+        public GetAccountTransferConnectionsHandler(IValidator<GetAccountTransferConnectionsRequest> validator, IEmployerAccountService employerAccountService)
         {
             _validator = validator;
             _employerAccountService = employerAccountService;
         }
 
-        public async Task<GetAccountTransferringEntitiesResponse> Handle(GetAccountTransferringEntitiesRequest message)
+        public async Task<GetAccountTransferConnectionsResponse> Handle(GetAccountTransferConnectionsRequest message)
         {
             var validationResult = _validator.Validate(message);
 
@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferring
 
             var transferringEntities = await _employerAccountService.GetTransferConnectionsForAccount(message.HashedAccountId);
 
-            return new GetAccountTransferringEntitiesResponse { TransferringEntities = transferringEntities };
+            return new GetAccountTransferConnectionsResponse { TransferringEntities = transferringEntities };
         }
     }
 }

@@ -16,6 +16,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.DeleteCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountLegalEntities;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitments;
@@ -36,6 +37,7 @@ using SFA.DAS.NLog.Logger;
 
 using OrganisationType = SFA.DAS.Common.Domain.Types.OrganisationType;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
+using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.HashingService;
 
@@ -147,6 +149,41 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     {
                         CohortRef = string.IsNullOrWhiteSpace(cohortRef) ? CreateReference() : cohortRef,
                         LegalEntities = legalEntities.LegalEntities
+                    }
+                };
+            }, hashedAccountId, externalUserId);
+        }
+
+        public async Task<OrchestratorResponse<SelectTransferringEntityViewModel>> GetTransferringEntities(string hashedAccountId, string externalUserId)
+        {
+
+            if (!_featureToggleService.Get<Transfers>().FeatureEnabled)
+            {
+                return new OrchestratorResponse<SelectTransferringEntityViewModel>
+                {
+                    Data = new SelectTransferringEntityViewModel
+                    {
+                        TransferringEntities = new List<TransferConnection>()
+                    }
+                };
+            }
+
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            _logger.Info($"Getting list of Transferring Entities for Account: {accountId}");
+
+            return await CheckUserAuthorization(async () =>
+            {
+                var response = await _mediator.SendAsync(new GetAccountTransferConnectionsRequest
+                {
+                    HashedAccountId = hashedAccountId,
+                    UserId = externalUserId
+                });
+
+                return new OrchestratorResponse<SelectTransferringEntityViewModel>
+                {
+                    Data = new SelectTransferringEntityViewModel
+                    {
+                        TransferringEntities = response.TransferringEntities
                     }
                 };
             }, hashedAccountId, externalUserId);
