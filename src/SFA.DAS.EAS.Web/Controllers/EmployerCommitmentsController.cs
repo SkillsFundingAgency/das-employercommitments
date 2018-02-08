@@ -129,10 +129,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             var response = await _employerCommitmentsOrchestrator
                 .GetTransferringEntities(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
 
-            if (response.Data.TransferringEntities.Any())
+            if (response.Data.TransferConnections.Any())
             {
                 return View(response);
             }
+            return RedirectToAction("SelectLegalEntity");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("transferConnection/create")]
+        public async Task<ActionResult> SetTransferConnection(string hashedAccountId, SelectTransferConnectionViewModel selectedLegalEntity)
+        {
+            // Just move to next controller for now
             return RedirectToAction("SelectLegalEntity");
         }
 

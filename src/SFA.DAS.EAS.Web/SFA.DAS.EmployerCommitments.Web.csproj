@@ -1126,6 +1126,7 @@
     <Folder Include="Views\Service\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\EmployerCommitments\SelectTransferConnection.cshtml" />
     <None Include="Views\razorgenerator.directives" />
   </ItemGroup>
   <ItemGroup>
