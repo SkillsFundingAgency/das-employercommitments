@@ -20,7 +20,7 @@
                     @foreach (var entity in Model.Data.TransferConnections)
                     {
                         <label class="block-label selection-button-radio" for="TransferConnection-@entity.HashedAccountId">
-                            @Html.RadioButton("TransferConnection", @entity.HashedAccountId,
+                            @Html.RadioButton("TransferConnectionCode", @entity.HashedAccountId,
                                 new { @id = "TransferConnection-" + entity.HashedAccountId,
                                     dataOptionName = $"{entity.AccountName}",
                                     onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{entity.AccountName}')" })
@@ -28,7 +28,7 @@
                         </label>
                     }
                     <label class="block-label selection-button-radio" for="TransferConnection-None">
-                        @Html.RadioButton("TransferConnection", "None", new { @id = "TransferConnection-None", dataOptionName = "", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'None')" })
+                        @Html.RadioButton("TransferConnectionCode", "None", new { @id = "TransferConnection-None", dataOptionName = "", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'None')" })
                         No, I don't want to use transfer funds
                     </label>
 
