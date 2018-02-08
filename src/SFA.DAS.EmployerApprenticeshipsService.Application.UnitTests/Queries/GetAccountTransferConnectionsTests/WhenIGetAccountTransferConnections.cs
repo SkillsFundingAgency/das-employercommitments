@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetAccountTr
 
             //Assert
             Assert.IsNotNull(actual);
-            Assert.AreEqual(1, actual.TransferringEntities.Count);
+            Assert.AreEqual(1, actual.TransferConnections.Count);
         }
 
         [Test]

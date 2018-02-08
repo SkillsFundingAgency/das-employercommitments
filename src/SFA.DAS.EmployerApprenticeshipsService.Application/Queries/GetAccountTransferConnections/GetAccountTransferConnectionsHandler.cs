@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConn
 
             var transferringEntities = await _employerAccountService.GetTransferConnectionsForAccount(message.HashedAccountId);
 
-            return new GetAccountTransferConnectionsResponse { TransferringEntities = transferringEntities };
+            return new GetAccountTransferConnectionsResponse { TransferConnections = transferringEntities };
         }
     }
 }

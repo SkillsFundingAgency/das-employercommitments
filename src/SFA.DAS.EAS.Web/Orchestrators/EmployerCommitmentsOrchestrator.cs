@@ -154,16 +154,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<SelectTransferringEntityViewModel>> GetTransferringEntities(string hashedAccountId, string externalUserId)
+        public async Task<OrchestratorResponse<SelectTransferConnectionViewModel>> GetTransferringEntities(string hashedAccountId, string externalUserId)
         {
 
             if (!_featureToggleService.Get<Transfers>().FeatureEnabled)
             {
-                return new OrchestratorResponse<SelectTransferringEntityViewModel>
+                return new OrchestratorResponse<SelectTransferConnectionViewModel>
                 {
-                    Data = new SelectTransferringEntityViewModel
+                    Data = new SelectTransferConnectionViewModel
                     {
-                        TransferringEntities = new List<TransferConnection>()
+                        TransferConnections = new List<TransferConnection>()
                     }
                 };
             }
@@ -179,11 +179,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     UserId = externalUserId
                 });
 
-                return new OrchestratorResponse<SelectTransferringEntityViewModel>
+                return new OrchestratorResponse<SelectTransferConnectionViewModel>
                 {
-                    Data = new SelectTransferringEntityViewModel
+                    Data = new SelectTransferConnectionViewModel
                     {
-                        TransferringEntities = response.TransferringEntities
+                        TransferConnections = response.TransferConnections
                     }
                 };
             }, hashedAccountId, externalUserId);

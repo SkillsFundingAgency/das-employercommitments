@@ -5,6 +5,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConn
 {
     public class GetAccountTransferConnectionsResponse
     {
-        public List<TransferConnection> TransferringEntities { get; set; }
+        public List<TransferConnection> TransferConnections { get; set; }
     }
 }
