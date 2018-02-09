@@ -87,7 +87,11 @@
                             @Model.Data.StopDate.Value.ToGdsFormat()
                         }
                     </td>
-                    <td id="editStopDateLink">@Html.RouteLink("Edit stop date", "EditStopDateOption")</td>
+                    
+                    @if (Model.Data.CanEditStopDate)
+                    {
+                        <td id="editStopDateLink">@Html.RouteLink("Edit stop date", "EditStopDateOption")</td>
+                    }
                 </tr>
             }
             </tbody>

@@ -109,11 +109,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             var validatorResult = ModelState.IsValid ? await _orchestrator.ValidateApprenticeshipStopDate(hashedAccountId, hashedApprenticeshipId, model) : null;
             var validationFailed = validatorResult != null && validatorResult.Count > 0;
 
+            var userId = OwinWrapper.GetClaimValue(@"sub");
+
             if (ModelState.IsValid && !validationFailed)
             {
-                var userInfo = GetExtractUserClaims();
-
-                var statusChangeModelWithNewStopDate = new ChangeStatusViewModel()
+                var statusChangeModelWithNewStopDate = new ChangeStatusViewModel
                 {
                     ChangeType= ChangeStatusType.Stop,
                     DateOfChange = model.NewStopDate,
@@ -121,18 +121,18 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                     ChangeConfirmed = true
                 };
 
-                await _orchestrator.UpdateStatus(
-                    hashedAccountId, 
+                await _orchestrator.UpdateStopDate(
+                    hashedAccountId,
                     hashedApprenticeshipId,
                     statusChangeModelWithNewStopDate,
-                    userInfo.UserId, userInfo.DisplayName, userInfo.Email);
+                    userId, OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
 
                 SetOkayMessage("New stop date confirmed.");
 
                 return RedirectToRoute("OnProgrammeApprenticeshipDetails");
             }
 
-            var viewmodel = await _orchestrator.GetApprenticeshipStopDateDetails(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
+            var viewmodel = await _orchestrator.GetApprenticeshipStopDateDetails(hashedAccountId, hashedApprenticeshipId, userId);
 
             if (validationFailed)
             {
@@ -516,16 +516,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             return await _orchestrator
                 .AuthorizeRole(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), roles);
-        }
-
-        private UserInfo GetExtractUserClaims()
-        {
-            return new UserInfo
-            {
-                UserId = OwinWrapper.GetClaimValue("sub"),
-                Email = OwinWrapper.GetClaimValue(DasClaimTypes.Email),
-                DisplayName = OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName)
-            };
         }
 
         private void SetOkayMessage(string message)

@@ -21,12 +21,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipsByUl
             return new GetApprenticeshipsByUlnResponse
             {
                 Apprenticeships =
-                               apprenticeship.Where(m => m
-                               .PaymentStatus != PaymentStatus.PendingApproval
-                                                         && m.PaymentStatus != PaymentStatus.Withdrawn
-                                                         && m.PaymentStatus != PaymentStatus.Completed
-                                                         && m.PaymentStatus != PaymentStatus.Deleted)
-                               .ToList()
+                    apprenticeship.Where(m => m
+                                                  .PaymentStatus != PaymentStatus.PendingApproval
+                                              && m.PaymentStatus != PaymentStatus.Withdrawn
+                                              && m.PaymentStatus != PaymentStatus.Completed
+                                              && m.PaymentStatus != PaymentStatus.Deleted)
+                        .ToList()
             };
         }
     }

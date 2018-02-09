@@ -1,5 +1,4 @@
-﻿using System;
-using FluentValidation.Attributes;
+﻿using FluentValidation.Attributes;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships

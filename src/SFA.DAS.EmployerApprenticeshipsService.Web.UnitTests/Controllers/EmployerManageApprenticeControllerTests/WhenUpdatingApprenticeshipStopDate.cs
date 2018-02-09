@@ -24,9 +24,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
 
         private Mock<ICookieStorageService<FlashMessageViewModel>> _cookieStorage;
 
-        private const string accountId = "123";
+        private const string AccountId = "123";
 
-        private const string apprenticeshipId = "456";
+        private const string ApprenticeshipId = "456";
 
         [SetUp]
         public void Setup()
@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
         {
             _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(false));
 
-            var result = await _controller.UpdateApprenticeshipStopDate(accountId, apprenticeshipId, null);
+            var result = await _controller.UpdateApprenticeshipStopDate(AccountId, ApprenticeshipId, null);
 
             Assert.AreEqual("AccessDenied", (result as ViewResult)?.ViewName);
         }
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
             var response = new OrchestratorResponse<EditApprenticeshipStopDateViewModel> {Data = new EditApprenticeshipStopDateViewModel()};
             _orchestrator.Setup(o => o.GetApprenticeshipStopDateDetails(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(response)).Verifiable();
 
-            await _controller.UpdateApprenticeshipStopDate(accountId, apprenticeshipId, null);
+            await _controller.UpdateApprenticeshipStopDate(AccountId, ApprenticeshipId, null);
 
             _orchestrator.Verify(o => o.ValidateApprenticeshipStopDate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<EditStopDateViewModel>()));
         }
@@ -80,7 +80,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
             var response = new OrchestratorResponse<EditApprenticeshipStopDateViewModel> {Data = new EditApprenticeshipStopDateViewModel()};
             _orchestrator.Setup(o => o.GetApprenticeshipStopDateDetails(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(response)).Verifiable();
 
-           var result =  await _controller.UpdateApprenticeshipStopDate(accountId, apprenticeshipId, null);
+           var result =  await _controller.UpdateApprenticeshipStopDate(AccountId, ApprenticeshipId, null);
 
             var resultModel = result as ViewResult;
 
@@ -88,7 +88,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
         }
 
         [Test]
-        public async Task ThenOrchestratorWillUpdateStatus()
+        public async Task ThenOrchestratorWillUpdateStopDate()
         {
             _owinWrapper.Setup(x => x.GetClaimValue(It.IsAny<string>())).Returns(string.Empty);
             _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(true));
@@ -102,9 +102,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
 
             var model = new EditStopDateViewModel();
 
-            await _controller.UpdateApprenticeshipStopDate(accountId, apprenticeshipId, model);
+            await _controller.UpdateApprenticeshipStopDate(AccountId, ApprenticeshipId, model);
 
-            _orchestrator.Verify(x => x.UpdateStatus(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusViewModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
+            _orchestrator.Verify(x => x.UpdateStopDate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusViewModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
 
             var model = new EditStopDateViewModel();
 
-            await _controller.UpdateApprenticeshipStopDate(accountId, apprenticeshipId, model);
+            await _controller.UpdateApprenticeshipStopDate(AccountId, ApprenticeshipId, model);
 
             _cookieStorage.Verify(x => x.Delete(It.IsAny<string>()));
             _cookieStorage.Verify(x => x.Create(It.IsAny<FlashMessageViewModel>(), It.IsAny<string>(), It.IsAny<int>()));

@@ -170,10 +170,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 stopDateEditModel.HashedAccountId = hashedAccountId;
 
-                var earliestDate = _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod
-                               && data.Apprenticeship.StartDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate
-                    ? _academicYearDateProvider.CurrentAcademicYearStartDate
-                    : data.Apprenticeship.StartDate.Value;
+                var earliestDate = GetEarliestDateThatApprenticeshipStopDateCanBeSetTo(data);
 
                 stopDateEditModel.EarliestDate = earliestDate;
                 stopDateEditModel.EarliestDateIsStartDate = earliestDate.Equals(data.Apprenticeship.StartDate.Value);
@@ -194,10 +191,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             var data = await _mediator.SendAsync(
                 new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
 
-            var earliestDate = _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod
-                               && data.Apprenticeship.StartDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate
-                ? _academicYearDateProvider.CurrentAcademicYearStartDate
-                : data.Apprenticeship.StartDate.Value;
+            var earliestDate = GetEarliestDateThatApprenticeshipStopDateCanBeSetTo(data);
 
             foreach (var error in _approvedApprenticeshipValidator.ValidateNewStopDate(updatedModel, earliestDate))
             {
@@ -216,6 +210,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }
 
             return result;
+        }
+
+        private DateTime GetEarliestDateThatApprenticeshipStopDateCanBeSetTo(GetApprenticeshipQueryResponse data)
+        {
+            return _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod
+                   && data.Apprenticeship.StartDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate
+                ? _academicYearDateProvider.CurrentAcademicYearStartDate
+                : data.Apprenticeship.StartDate.Value;
         }
 
         public async Task<OrchestratorResponse<ApprenticeshipDetailsViewModel>> GetApprenticeship(string hashedAccountId, string hashedApprenticeshipId, string externalUserId)
@@ -598,6 +600,42 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             _logger.Info(
                 $"Updating Apprenticeship status to {model.ChangeType}. AccountId: {accountId}, ApprenticeshipId: {apprenticeshipId}");
+
+            await CheckUserAuthorization(async () =>
+            {
+                var data =
+                    await
+                        _mediator.SendAsync(new GetApprenticeshipQueryRequest
+                        {
+                            AccountId = accountId,
+                            ApprenticeshipId = apprenticeshipId
+                        });
+
+                CheckApprenticeshipStateValidForChange(data.Apprenticeship);
+
+                await _mediator.SendAsync(new UpdateApprenticeshipStatusCommand
+                {
+                    UserId = externalUserId,
+                    ApprenticeshipId = apprenticeshipId,
+                    EmployerAccountId = accountId,
+
+                    ChangeType = (Domain.Models.Apprenticeship.ChangeStatusType)model.ChangeType,
+
+                    DateOfChange = model.DateOfChange.DateTime.Value,
+                    UserEmailAddress = userEmail,
+                    UserDisplayName = userName
+                });
+
+            }, hashedAccountId, externalUserId);
+        }
+
+        public async Task UpdateStopDate(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusViewModel model, string externalUserId, string userName, string userEmail)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
+
+            _logger.Info(
+                $"Updating Apprenticeship stop date to {model.ChangeType}. AccountId: {accountId}, ApprenticeshipId: {apprenticeshipId}");
 
             await CheckUserAuthorization(async () =>
             {
