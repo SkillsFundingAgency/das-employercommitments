@@ -10,39 +10,45 @@
 @model OrchestratorResponse<SFA.DAS.EmployerCommitments.Web.ViewModels.SelectTransferConnectionViewModel>
 
 <div class="grid-row">
-    <form method="POST" action="@Url.Action("SetTransferConnection")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
-        <div class="column-two-thirds">
+    <div class="column-two-thirds">
+        <form method="POST" action="@Url.Action("SetTransferConnection")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
+
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
-            <h1 class="heading-xlarge">@ViewBag.Title</h1>
-            @Html.AntiForgeryToken()
             <div class="form-group">
-                <fieldset>
+                <legend>
+                    <h1 class="heading-xlarge">@ViewBag.Title</h1>
+                </legend>
+                @Html.AntiForgeryToken()
+
+                <fieldset id="radio-lines">
                     <legend>
                         @Html.ValidationMessage("TransferConnectionCode", "Please choose an option", new { id = "error-message-TransferConnectionCode" })
                     </legend>
                     @foreach (var entity in Model.Data.TransferConnections)
-    {
-                <label class="block-label selection-button-radio" for="TransferConnection-@entity.HashedAccountId">
-                    @Html.RadioButton("TransferConnectionCode", @entity.HashedAccountId,
-             new
-             {
-                 @id = "TransferConnection-" + entity.HashedAccountId,
-                 dataOptionName = $"{entity.AccountName}",
-                 onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{entity.AccountName}')"
-             })
-                    Yes, I will use transfer funds from @entity.AccountName
-                </label>
-}
+                    {
+                        <label class="block-label selection-button-radio" for="TransferConnection-@entity.HashedAccountId">
+                            @Html.RadioButton("TransferConnectionCode", @entity.HashedAccountId,
+                                new
+                                {
+                                    @id = "TransferConnection-" + entity.HashedAccountId,
+                                    dataOptionName = $"{entity.AccountName}",
+                                    onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{entity.AccountName}')"
+                                })
+                            Yes, I will use transfer funds from @entity.AccountName
+                        </label>
+                        <hr/>
+                    }
                     <label class="block-label selection-button-radio" for="TransferConnection-None">
-                        @Html.RadioButton("TransferConnectionCode", "None", new { @id = "TransferConnection-None", dataOptionName = "", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'None')" })
+                        @Html.RadioButton("TransferConnectionCode", "None", new {@id = "TransferConnection-None", dataOptionName = "", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'None')"})
                         No, I don't want to use transfer funds
                     </label>
 
                 </fieldset>
             </div>
             <button type="submit" class="button" id="submit-transfer-connection">Continue</button>
-        </div>
-    </form>
+
+        </form>
+    </div>
 </div>
 @section breadcrumb {
     <div class="breadcrumbs">

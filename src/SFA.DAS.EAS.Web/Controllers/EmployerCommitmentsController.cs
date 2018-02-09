@@ -133,7 +133,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             {
                 return View(response);
             }
-            return RedirectToAction("SelectLegalEntity", null, "");
+            return RedirectToAction("SelectLegalEntity");
         }
 
         [HttpPost]
@@ -153,7 +153,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                     ? null
                     : selectedTransferConnection.TransferConnectionCode;
 
-            return RedirectToAction("SelectLegalEntity", transferConnectionCode);
+            return RedirectToAction("SelectLegalEntity", new { transferConnectionCode });
         }
 
         [HttpGet]
