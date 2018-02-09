@@ -26,8 +26,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
                 return false;
             }
 
-            bool result;
-            if (!bool.TryParse(value, out result))
+            if (!bool.TryParse(value, out var result))
             {
                 _logger.Warn($"Unable to parse entry for {toggleName} in Cloud Configuration (defaulting to false)");
                 return false;
