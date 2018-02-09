@@ -133,27 +133,38 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             {
                 return View(response);
             }
-            return RedirectToAction("SelectLegalEntity");
+            return RedirectToAction("SelectLegalEntity", null, "");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("transferConnection/create")]
-        public async Task<ActionResult> SetTransferConnection(string hashedAccountId, SelectTransferConnectionViewModel selectedLegalEntity)
+        public async Task<ActionResult> SetTransferConnection(string hashedAccountId, SelectTransferConnectionViewModel selectedTransferConnection)
         {
-            // Just move to next controller for now
-            return RedirectToAction("SelectLegalEntity");
+            if (!ModelState.IsValid)
+            {
+                var response = await _employerCommitmentsOrchestrator.GetTransferringEntities(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+                return View("SelectTransferConnection", response);
+            }
+
+            var transferConnectionCode =
+                selectedTransferConnection.TransferConnectionCode.Equals("None",
+                    StringComparison.InvariantCultureIgnoreCase)
+                    ? null
+                    : selectedTransferConnection.TransferConnectionCode;
+
+            return RedirectToAction("SelectLegalEntity", transferConnectionCode);
         }
 
         [HttpGet]
         [Route("legalEntity/create")]
-        public async Task<ActionResult> SelectLegalEntity(string hashedAccountId, string cohortRef = "")
+        public async Task<ActionResult> SelectLegalEntity(string hashedAccountId, string transferConnectionCode, string cohortRef = "")
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
             var response = await _employerCommitmentsOrchestrator
-                .GetLegalEntities(hashedAccountId, cohortRef, OwinWrapper.GetClaimValue(@"sub"));
+                .GetLegalEntities(hashedAccountId, transferConnectionCode, cohortRef, OwinWrapper.GetClaimValue(@"sub"));
 
             return View(response);
         }
@@ -165,7 +176,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var response = await _employerCommitmentsOrchestrator.GetLegalEntities(hashedAccountId, selectedLegalEntity.CohortRef, OwinWrapper.GetClaimValue(@"sub"));
+                var response = await _employerCommitmentsOrchestrator.GetLegalEntities(hashedAccountId,
+                    selectedLegalEntity.TransferConnectionCode, selectedLegalEntity.CohortRef,
+                    OwinWrapper.GetClaimValue(@"sub"));
 
                 return View("SelectLegalEntity", response);
             }
@@ -181,12 +194,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             {
                 return RedirectToAction("AgreementNotSigned", agreement.Data);
             }
-            
         }
 
         [HttpGet]
         [Route("provider/create")]
-        public async Task<ActionResult> SearchProvider(string hashedAccountId, string legalEntityCode, string cohortRef)
+        public async Task<ActionResult> SearchProvider(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string cohortRef)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
@@ -196,7 +208,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return RedirectToAction("Inform", new {hashedAccountId});
             }
 
-            var response = await _employerCommitmentsOrchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), legalEntityCode, cohortRef);
+            var response = await _employerCommitmentsOrchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), transferConnectionCode, legalEntityCode, cohortRef);
 
             return View(response);
         }
@@ -208,7 +220,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var defaultViewModel = await _employerCommitmentsOrchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel.LegalEntityCode, viewModel.CohortRef);
+                var defaultViewModel = await _employerCommitmentsOrchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel.TransferConnectionCode, viewModel.LegalEntityCode, viewModel.CohortRef);
                 
                 return View("SearchProvider", defaultViewModel);
             }
@@ -217,7 +229,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             if (response.Data.Provider == null)
             {
-                var defaultViewModel = await _employerCommitmentsOrchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel.LegalEntityCode, viewModel.CohortRef);
+                var defaultViewModel = await _employerCommitmentsOrchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel.TransferConnectionCode, viewModel.LegalEntityCode, viewModel.CohortRef);
                 defaultViewModel.Data.NotFound = true;
 
                 RevalidateModel(defaultViewModel);
@@ -249,13 +261,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("confirmProvider/create")]
-        public async Task<ActionResult> ConfirmProvider(string hashedAccountId, [System.Web.Http.FromUri]ConfirmProviderViewModel viewModelModel)
+        public async Task<ActionResult> ConfirmProvider(string hashedAccountId,
+            [System.Web.Http.FromUri] ConfirmProviderViewModel viewModelModel)
         {
             if (!ModelState.IsValid)
             {
                 if (viewModelModel.Confirmation == null)
                 {
-                    var response = await _employerCommitmentsOrchestrator.GetProvider(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModelModel);
+                    var response = await _employerCommitmentsOrchestrator.GetProvider(hashedAccountId,
+                        OwinWrapper.GetClaimValue(@"sub"), viewModelModel);
 
                     return View("SelectProvider", response);
                 }
@@ -263,15 +277,29 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             if (!viewModelModel.Confirmation.Value)
             {
-                return RedirectToAction("SearchProvider", new SelectProviderViewModel { LegalEntityCode = viewModelModel.LegalEntityCode, CohortRef = viewModelModel.CohortRef });
+                return RedirectToAction("SearchProvider",
+                    new SelectProviderViewModel
+                    {
+                        TransferConnectionCode = viewModelModel.TransferConnectionCode,
+                        LegalEntityCode = viewModelModel.LegalEntityCode,
+                        CohortRef = viewModelModel.CohortRef
+                    });
             }
 
-            return RedirectToAction("ChoosePath", new { hashedAccountId = hashedAccountId, legalEntityCode = viewModelModel.LegalEntityCode, providerId = viewModelModel.ProviderId, cohortRef = viewModelModel.CohortRef });
+            return RedirectToAction("ChoosePath",
+                new
+                {
+                    hashedAccountId = hashedAccountId,
+                    transferConnectionCode = viewModelModel.TransferConnectionCode,
+                    legalEntityCode = viewModelModel.LegalEntityCode,
+                    providerId = viewModelModel.ProviderId,
+                    cohortRef = viewModelModel.CohortRef
+                });
         }
 
         [HttpGet]
         [Route("choosePath/create")]
-        public async Task<ActionResult> ChoosePath(string hashedAccountId, string legalEntityCode, string providerId, string cohortRef)
+        public async Task<ActionResult> ChoosePath(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string providerId, string cohortRef)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
@@ -283,7 +311,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return RedirectToAction("Inform", new { hashedAccountId });
             }
 
-            var model = await _employerCommitmentsOrchestrator.CreateSummary(hashedAccountId, legalEntityCode, providerId, cohortRef, OwinWrapper.GetClaimValue(@"sub"));
+            var model = await _employerCommitmentsOrchestrator.CreateSummary(hashedAccountId, transferConnectionCode, legalEntityCode, providerId, cohortRef, OwinWrapper.GetClaimValue(@"sub"));
 
             return View(model);
         }
@@ -295,7 +323,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var model = await _employerCommitmentsOrchestrator.CreateSummary(viewModel.HashedAccountId, viewModel.LegalEntityCode, viewModel.ProviderId.ToString(), viewModel.CohortRef,  OwinWrapper.GetClaimValue(@"sub"));
+                var model = await _employerCommitmentsOrchestrator.CreateSummary(viewModel.HashedAccountId, viewModel.TransferConnectionCode, viewModel.LegalEntityCode, viewModel.ProviderId.ToString(), viewModel.CohortRef,  OwinWrapper.GetClaimValue(@"sub"));
 
                 return View("ChoosePath", model);
             }

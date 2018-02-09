@@ -113,7 +113,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<SelectProviderViewModel>> GetProviderSearch(string hashedAccountId, string externalUserId, string legalEntityCode, string cohortRef)
+        public async Task<OrchestratorResponse<SelectProviderViewModel>> GetProviderSearch(string hashedAccountId,
+            string externalUserId, string transferConnectionCode, string legalEntityCode, string cohortRef)
         {
             return await CheckUserAuthorization(() =>
             {
@@ -122,6 +123,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Status = HttpStatusCode.OK,
                     Data = new SelectProviderViewModel
                     {
+                        TransferConnectionCode = transferConnectionCode,
                         LegalEntityCode = legalEntityCode,
                         CohortRef = cohortRef
                     }
@@ -129,7 +131,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<SelectLegalEntityViewModel>> GetLegalEntities(string hashedAccountId, string cohortRef, string externalUserId)
+        public async Task<OrchestratorResponse<SelectLegalEntityViewModel>> GetLegalEntities(string hashedAccountId, string transferConnectionCode, string cohortRef, string externalUserId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             _logger.Info($"Getting list of Legal Entities for Account: {accountId}");
@@ -147,6 +149,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     Data = new SelectLegalEntityViewModel
                     {
+                        TransferConnectionCode = transferConnectionCode,
                         CohortRef = string.IsNullOrWhiteSpace(cohortRef) ? CreateReference() : cohortRef,
                         LegalEntities = legalEntities.LegalEntities
                     }
@@ -192,16 +195,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         public async Task<OrchestratorResponse<ConfirmProviderViewModel>> GetProvider(string hashedAccountId, string externalUserId, SelectProviderViewModel model)
         {
             var providerId = int.Parse(model.ProviderId);
-
-            return await GetProvider(hashedAccountId, externalUserId, providerId, model.LegalEntityCode, model.CohortRef);
+            return await GetProvider(hashedAccountId, externalUserId, providerId, model.TransferConnectionCode,  model.LegalEntityCode, model.CohortRef);
         }
 
         public async Task<OrchestratorResponse<ConfirmProviderViewModel>> GetProvider(string hashedAccountId, string externalUserId, ConfirmProviderViewModel model)
         {
-            return await GetProvider(hashedAccountId, externalUserId, model.ProviderId, model.LegalEntityCode, model.CohortRef);
+            return await GetProvider(hashedAccountId, externalUserId, model.ProviderId, model.TransferConnectionCode, model.LegalEntityCode, model.CohortRef);
         }
 
-        private Task<OrchestratorResponse<ConfirmProviderViewModel>> GetProvider(string hashedAccountId, string externalUserId, int providerId, string legalEntityCode, string cohortRef)
+        private Task<OrchestratorResponse<ConfirmProviderViewModel>> GetProvider(string hashedAccountId,
+            string externalUserId, int providerId, string transferConnectionCode, string legalEntityCode,
+            string cohortRef)
         {
             _logger.Info($"Getting Provider Details, Provider: {providerId}");
 
@@ -214,6 +218,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ConfirmProviderViewModel
                     {
                         HashedAccountId = hashedAccountId,
+                        TransferConnectionCode = transferConnectionCode,
                         LegalEntityCode = legalEntityCode,
                         ProviderId = providerId,
                         Provider = provider,
@@ -233,7 +238,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             return response.ProvidersView?.Provider;
         }
 
-        public async Task<OrchestratorResponse<CreateCommitmentViewModel>> CreateSummary(string hashedAccountId, string legalEntityCode, string providerId, string cohortRef, string externalUserId)
+        public async Task<OrchestratorResponse<CreateCommitmentViewModel>> CreateSummary(string hashedAccountId,
+            string transferConnectionCode, string legalEntityCode, string providerId, string cohortRef,
+            string externalUserId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             _logger.Info($"Getting Commitment Summary Model for Account: {accountId}, LegalEntity: {legalEntityCode}, Provider: {providerId}");
@@ -243,13 +250,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var provider = await ProviderSearch(int.Parse(providerId));
 
                 var legalEntities = await GetActiveLegalEntities(hashedAccountId, externalUserId);
-                var legalEntity = legalEntities.LegalEntities.Single(x => x.Code.Equals(legalEntityCode, StringComparison.InvariantCultureIgnoreCase));
+                var legalEntity = legalEntities.LegalEntities.Single(x =>
+                    x.Code.Equals(legalEntityCode, StringComparison.InvariantCultureIgnoreCase));
 
                 return new OrchestratorResponse<CreateCommitmentViewModel>
                 {
                     Data = new CreateCommitmentViewModel
                     {
                         HashedAccountId = hashedAccountId,
+                        TransferConnectionCode = transferConnectionCode,
                         LegalEntityCode = legalEntityCode,
                         LegalEntityName = legalEntity.Name,
                         LegalEntityAddress = legalEntity.RegisteredAddress,
