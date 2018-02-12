@@ -6,6 +6,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
     {
         public string HashedAccountId { get; set; }
         public string HashedCommitmentId { get; set; }
+        public string TransferConnectionCode { get; set; }
         public string LegalEntityCode { get; set; }
         public string LegalEntityName { get; set; }
         public string LegalEntityAddress { get; set; }

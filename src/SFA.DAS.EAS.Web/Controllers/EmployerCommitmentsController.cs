@@ -127,7 +127,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return View("AccessDenied");
 
             var response = await _employerCommitmentsOrchestrator
-                .GetTransferringEntities(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+                .GetTransferConnections(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
 
             if (response.Data.TransferConnections.Any())
             {
@@ -143,7 +143,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var response = await _employerCommitmentsOrchestrator.GetTransferringEntities(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+                var response = await _employerCommitmentsOrchestrator.GetTransferConnections(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
                 return View("SelectTransferConnection", response);
             }
 
@@ -323,7 +323,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var model = await _employerCommitmentsOrchestrator.CreateSummary(viewModel.HashedAccountId, viewModel.TransferConnectionCode, viewModel.LegalEntityCode, viewModel.ProviderId.ToString(), viewModel.CohortRef,  OwinWrapper.GetClaimValue(@"sub"));
+                var model = await _employerCommitmentsOrchestrator.CreateSummary(viewModel.HashedAccountId,
+                    viewModel.TransferConnectionCode, viewModel.LegalEntityCode, viewModel.ProviderId.ToString(),
+                    viewModel.CohortRef, OwinWrapper.GetClaimValue(@"sub"));
 
                 return View("ChoosePath", model);
             }
@@ -334,13 +336,27 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 var userEmail = OwinWrapper.GetClaimValue(DasClaimTypes.Email);
                 var userId = OwinWrapper.GetClaimValue(@"sub");
 
-                var response = await _employerCommitmentsOrchestrator.CreateEmployerAssignedCommitment(viewModel, userId, userDisplayName, userEmail);
+                var response =
+                    await _employerCommitmentsOrchestrator.CreateEmployerAssignedCommitment(viewModel, userId,
+                        userDisplayName, userEmail);
 
-                return RedirectToAction("Details", new { hashedCommitmentId = response.Data });
+                return RedirectToAction("Details", new {hashedCommitmentId = response.Data});
             }
 
             return RedirectToAction("SubmitNewCommitment",
-                new { hashedAccountId = viewModel.HashedAccountId, legalEntityCode = viewModel.LegalEntityCode, legalEntityName = viewModel.LegalEntityName, legalEntityAddress = viewModel.LegalEntityAddress, legalEntitySource = viewModel.LegalEntitySource, providerId = viewModel.ProviderId, providerName = viewModel.ProviderName, cohortRef = viewModel.CohortRef, saveStatus = SaveStatus.Save });
+                new
+                {
+                    hashedAccountId = viewModel.HashedAccountId,
+                    transferConnectionCode = viewModel.TransferConnectionCode,
+                    legalEntityCode = viewModel.LegalEntityCode,
+                    legalEntityName = viewModel.LegalEntityName,
+                    legalEntityAddress = viewModel.LegalEntityAddress,
+                    legalEntitySource = viewModel.LegalEntitySource,
+                    providerId = viewModel.ProviderId,
+                    providerName = viewModel.ProviderName,
+                    cohortRef = viewModel.CohortRef,
+                    saveStatus = SaveStatus.Save
+                });
         }
 
         [HttpGet]
@@ -630,7 +646,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("Submit")]
-        public async Task<ActionResult> SubmitNewCommitment(string hashedAccountId, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string providerId, string providerName, string cohortRef, SaveStatus? saveStatus)
+        public async Task<ActionResult> SubmitNewCommitment(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string providerId, string providerName, string cohortRef, SaveStatus? saveStatus)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
@@ -647,7 +663,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
 
             var response = await _employerCommitmentsOrchestrator.GetSubmitNewCommitmentModel
-                (hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), legalEntityCode, legalEntityName, legalEntityAddress, legalEntitySource, providerId, providerName, cohortRef, saveStatus.Value);
+                (hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), transferConnectionCode, legalEntityCode, legalEntityName, legalEntityAddress, legalEntitySource, providerId, providerName, cohortRef, saveStatus.Value);
 
             return View("SubmitCommitmentEntry", response);
         }

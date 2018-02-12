@@ -157,7 +157,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<SelectTransferConnectionViewModel>> GetTransferringEntities(string hashedAccountId, string externalUserId)
+        public async Task<OrchestratorResponse<SelectTransferConnectionViewModel>> GetTransferConnections(string hashedAccountId, string externalUserId)
         {
 
             if (!_featureToggleService.Get<Transfers>().FeatureEnabled)
@@ -278,12 +278,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
+                (long? transferSenderId, string transferSenderName) = await GetTransferConnectionInfo(model.HashedAccountId, model.TransferConnectionCode, externalUserId);
+
                 var response = await _mediator.SendAsync(new CreateCommitmentCommand
                 {
                     Commitment = new Commitment
                     {
                         Reference = model.CohortRef,
                         EmployerAccountId = accountId,
+                        TransferSenderId = transferSenderId,
+                        TransferSenderName = transferSenderName,
                         LegalEntityId = model.LegalEntityCode,
                         LegalEntityName = model.LegalEntityName,
                         LegalEntityAddress = model.LegalEntityAddress,
@@ -312,6 +316,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
+                (long? transferSenderId, string transferSenderName) = await GetTransferConnectionInfo(model.HashedAccountId, model.TransferConnectionCode, externalUserId);
+
                 var response = await _mediator.SendAsync(new CreateCommitmentCommand
                 {
                     Message = model.Message,
@@ -319,6 +325,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     {
                         Reference = model.CohortRef,
                         EmployerAccountId = accountId,
+                        TransferSenderId = transferSenderId,
+                        TransferSenderName = transferSenderName,
                         LegalEntityId = model.LegalEntityCode,
                         LegalEntityName = model.LegalEntityName,
                         LegalEntityAddress = model.LegalEntityAddress,
@@ -570,7 +578,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitNewCommitmentModel(string hashedAccountId, string externalUserId, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string providerId, string providerName, string cohortRef, SaveStatus saveStatus)
+        public async Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitNewCommitmentModel(string hashedAccountId, string externalUserId, string transferConnectionCode, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string providerId, string providerName, string cohortRef, SaveStatus saveStatus)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             _logger.Info($"Getting Submit New Commitment ViewModel, Account: {accountId}");
@@ -582,6 +590,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new SubmitCommitmentViewModel
                     {
                         HashedAccountId = hashedAccountId,
+                        TransferConnectionCode = transferConnectionCode,
                         LegalEntityCode = legalEntityCode,
                         LegalEntityName = legalEntityName,
                         LegalEntityAddress = legalEntityAddress,
@@ -1084,6 +1093,22 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     }, model.HashedAccountId, externalUser);
         }
 
+        private async Task<(long?, string)> GetTransferConnectionInfo(string hashedAccountId, string transferConnectionCode, string externalUserId)
+        {
+            string transferSenderName = null;
+            long? transferSenderId = null;
+
+            if (!string.IsNullOrEmpty(transferConnectionCode))
+            {
+                var transferConnections = await GetTransferConnections(hashedAccountId, externalUserId);
+                var transferConnection = transferConnections.Data.TransferConnections.Single(x =>
+                    x.HashedAccountId.Equals(transferConnectionCode, StringComparison.InvariantCultureIgnoreCase));
+                transferSenderId = _hashingService.DecodeValue(transferConnectionCode);
+                transferSenderName = transferConnection.AccountName;
+            }
+
+            return (transferSenderId, transferSenderName);
+        }
         private static string CreateReference()
         {
             return Guid.NewGuid().ToString().ToUpper();
