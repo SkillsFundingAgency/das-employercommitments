@@ -157,7 +157,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<SelectTransferConnectionViewModel>> GetTransferConnections(string hashedAccountId, string externalUserId)
+        public async Task<OrchestratorResponse<SelectTransferConnectionViewModel>> GetTransferConnections(
+            string hashedAccountId, string externalUserId)
         {
 
             if (!_featureToggleService.Get<Transfers>().FeatureEnabled)
@@ -171,16 +172,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 };
             }
 
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            _logger.Info($"Getting list of Transferring Entities for Account: {accountId}");
-
             return await CheckUserAuthorization(async () =>
             {
-                var response = await _mediator.SendAsync(new GetAccountTransferConnectionsRequest
-                {
-                    HashedAccountId = hashedAccountId,
-                    UserId = externalUserId
-                });
+                var response = await GetTransferConnectionsNoAuthorizationCheck(hashedAccountId, externalUserId);
 
                 return new OrchestratorResponse<SelectTransferConnectionViewModel>
                 {
@@ -190,6 +184,18 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     }
                 };
             }, hashedAccountId, externalUserId);
+        }
+
+        private Task<GetAccountTransferConnectionsResponse> GetTransferConnectionsNoAuthorizationCheck(string hashedAccountId, string externalUserId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            _logger.Info($"Getting list of Transferring Entities for Account: {accountId}");
+
+            return _mediator.SendAsync(new GetAccountTransferConnectionsRequest
+            {
+                HashedAccountId = hashedAccountId,
+                UserId = externalUserId
+            });
         }
 
         public async Task<OrchestratorResponse<ConfirmProviderViewModel>> GetProvider(string hashedAccountId, string externalUserId, SelectProviderViewModel model)
@@ -1100,8 +1106,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             if (!string.IsNullOrEmpty(transferConnectionCode))
             {
-                var transferConnections = await GetTransferConnections(hashedAccountId, externalUserId);
-                var transferConnection = transferConnections.Data.TransferConnections.Single(x =>
+                var transferConnections = await GetTransferConnectionsNoAuthorizationCheck(hashedAccountId, externalUserId);
+                var transferConnection = transferConnections.TransferConnections.Single(x =>
                     x.HashedAccountId.Equals(transferConnectionCode, StringComparison.InvariantCultureIgnoreCase));
                 transferSenderId = _hashingService.DecodeValue(transferConnectionCode);
                 transferSenderName = transferConnection.AccountName;
