@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
     [TestFixture]
     public class WhenCreatingProviderAssignedCommitment : OrchestratorTestBase
     {
-        private SubmitCommitmenViewModel _viewModel;
+        private SubmitCommitmentViewModel _viewModel;
         private CreateCommitmentCommandResponse _sendAsyncResponse;
         private GetAccountTransferConnectionsResponse _getTransferConnectionsResponse;
         const long UnhashedAccountId = 123;
@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockMediator.Setup(x => x.SendAsync(It.IsAny<CreateCommitmentCommand>())).ReturnsAsync(_sendAsyncResponse);
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountTransferConnectionsRequest>())).ReturnsAsync(_getTransferConnectionsResponse);
 
-            _viewModel = new SubmitCommitmenViewModel
+            _viewModel = new SubmitCommitmentViewModel
             {
                 Message = "Message",
                 CohortRef = "CohortRef",

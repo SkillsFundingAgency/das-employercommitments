@@ -632,7 +632,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("{hashedCommitmentId}/submit")]
-        public async Task<ActionResult> SubmitExistingCommitmentEntry(SubmitCommitmenViewModel model)
+        public async Task<ActionResult> SubmitExistingCommitmentEntry(SubmitCommitmentViewModel model)
         {
             var userDisplayName = OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName);
             var userEmail = OwinWrapper.GetClaimValue(DasClaimTypes.Email);
@@ -671,7 +671,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("submit")]
-        public async Task<ActionResult> SubmitNewCommitmentEntry(SubmitCommitmenViewModel model)
+        public async Task<ActionResult> SubmitNewCommitmentEntry(SubmitCommitmentViewModel model)
         {
             var userDisplayName = OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName);
             var userEmail = OwinWrapper.GetClaimValue(DasClaimTypes.Email);

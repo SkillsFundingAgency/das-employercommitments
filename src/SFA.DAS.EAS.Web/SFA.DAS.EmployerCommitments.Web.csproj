@@ -540,7 +540,6 @@
     <Compile Include="ViewModels\ApproveApprenticeshipModel.cs" />
     <Compile Include="ViewModels\ApproveApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\SubmitCommitmentViewModel.cs" />
-    <Compile Include="ViewModels\SubmitCommitmenViewModel.cs" />
     <Compile Include="ViewModels\SystemDetailsViewModel.cs" />
     <Compile Include="ViewModels\DateTimeViewModel.cs" />
     <Compile Include="Extensions\SaveStatusExtension.cs" />

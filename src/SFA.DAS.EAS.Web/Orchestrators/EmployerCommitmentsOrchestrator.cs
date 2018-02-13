@@ -315,7 +315,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, model.HashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<string>> CreateProviderAssignedCommitment(SubmitCommitmenViewModel model, string externalUserId, string userDisplayName, string userEmail)
+        public async Task<OrchestratorResponse<string>> CreateProviderAssignedCommitment(SubmitCommitmentViewModel model, string externalUserId, string userDisplayName, string userEmail)
         {
             var accountId = _hashingService.DecodeValue(model.HashedAccountId);
             _logger.Info($"Creating Provider assigned Commitment. AccountId: {accountId}, Provider: {model.ProviderId}");
@@ -601,7 +601,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         LegalEntityName = legalEntityName,
                         LegalEntityAddress = legalEntityAddress,
                         LegalEntitySource = legalEntitySource,
-                        ProviderId = long.Parse(providerId),
+                        ProviderId = providerId,
                         ProviderName = providerName,
                         CohortRef = cohortRef,
                         SaveStatus = saveStatus
@@ -642,7 +642,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task SubmitCommitment(SubmitCommitmenViewModel model, string externalUserId, string userDisplayName, string userEmail)
+        public async Task SubmitCommitment(SubmitCommitmentViewModel model, string externalUserId, string userDisplayName, string userEmail)
         {
             await CheckUserAuthorization(async () =>
             {
