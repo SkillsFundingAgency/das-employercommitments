@@ -16,6 +16,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.DeleteCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountLegalEntities;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitments;
@@ -36,6 +37,7 @@ using SFA.DAS.NLog.Logger;
 
 using OrganisationType = SFA.DAS.Common.Domain.Types.OrganisationType;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
+using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.HashingService;
 
@@ -56,6 +58,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         private readonly IApprenticeshipViewModelValidator _apprenticeshipValidation;
 
+        private readonly IFeatureToggleService _featureToggleService;
+
         public EmployerCommitmentsOrchestrator(
             IMediator mediator,
             IHashingService hashingService,
@@ -63,21 +67,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IApprenticeshipMapper apprenticeshipMapper,
             ICommitmentMapper commitmentMapper,
             ILog logger,
-            IApprenticeshipViewModelValidator apprenticeshipValidation) : base(mediator, hashingService, logger)
+            IApprenticeshipViewModelValidator apprenticeshipValidation,
+            IFeatureToggleService featureToggleService) : base(mediator, hashingService, logger)
         {
-            if (mediator == null)
-                throw new ArgumentNullException(nameof(mediator));
-            if (hashingService == null)
-                throw new ArgumentNullException(nameof(hashingService));
-            if (statusCalculator == null)
-                throw new ArgumentNullException(nameof(statusCalculator));
-            if (apprenticeshipMapper == null)
-                throw new ArgumentNullException(nameof(apprenticeshipMapper));
-            if (commitmentMapper == null)
-                throw new ArgumentNullException(nameof(commitmentMapper));
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-
             _mediator = mediator;
             _hashingService = hashingService;
             _statusCalculator = statusCalculator;
@@ -85,6 +77,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _commitmentMapper = commitmentMapper;
             _logger = logger;
             _apprenticeshipValidation = apprenticeshipValidation;
+            _featureToggleService = featureToggleService;
         }
 
         public async Task<OrchestratorResponse<CommitmentsIndexViewModel>> GetIndexViewModel(string hashedAccountId, string externalUserId)
@@ -156,6 +149,41 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     {
                         CohortRef = string.IsNullOrWhiteSpace(cohortRef) ? CreateReference() : cohortRef,
                         LegalEntities = legalEntities.LegalEntities
+                    }
+                };
+            }, hashedAccountId, externalUserId);
+        }
+
+        public async Task<OrchestratorResponse<SelectTransferConnectionViewModel>> GetTransferringEntities(string hashedAccountId, string externalUserId)
+        {
+
+            if (!_featureToggleService.Get<Transfers>().FeatureEnabled)
+            {
+                return new OrchestratorResponse<SelectTransferConnectionViewModel>
+                {
+                    Data = new SelectTransferConnectionViewModel
+                    {
+                        TransferConnections = new List<TransferConnection>()
+                    }
+                };
+            }
+
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            _logger.Info($"Getting list of Transferring Entities for Account: {accountId}");
+
+            return await CheckUserAuthorization(async () =>
+            {
+                var response = await _mediator.SendAsync(new GetAccountTransferConnectionsRequest
+                {
+                    HashedAccountId = hashedAccountId,
+                    UserId = externalUserId
+                });
+
+                return new OrchestratorResponse<SelectTransferConnectionViewModel>
+                {
+                    Data = new SelectTransferConnectionViewModel
+                    {
+                        TransferConnections = response.TransferConnections
                     }
                 };
             }, hashedAccountId, externalUserId);
