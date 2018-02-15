@@ -77,11 +77,11 @@
     <Reference Include="SFA.DAS.Audit.Types, Version=1.0.0.20553, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Audit.Client.1.0.0.20553\lib\net45\SFA.DAS.Audit.Types.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=2.0.0.57659, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.2.0.0.57659\lib\net45\SFA.DAS.Commitments.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=2.0.0.58757, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.2.0.0.58757\lib\net45\SFA.DAS.Commitments.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=2.0.0.57659, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.2.0.0.57659\lib\net45\SFA.DAS.Commitments.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=2.0.0.58757, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.2.0.0.58757\lib\net45\SFA.DAS.Commitments.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Common.Domain, Version=1.3.0.44308, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.3.0.44308\lib\net45\SFA.DAS.Common.Domain.dll</HintPath>
@@ -158,6 +158,9 @@
     <Compile Include="Commands\CreateOrganisationAddress\CreateOrganisationAddressValidator.cs" />
     <Compile Include="Commands\ResolveRequestedChanges\ResolveRequestedChangesCommand.cs" />
     <Compile Include="Commands\ResolveRequestedChanges\ResolveRequestedChangesHandler.cs" />
+    <Compile Include="Commands\UpdateApprenticeshipStopDate\UpdateApprenticeshipStopDateCommand.cs" />
+    <Compile Include="Commands\UpdateApprenticeshipStopDate\UpdateApprenticeshipStopDateCommandHandler.cs" />
+    <Compile Include="Commands\UpdateApprenticeshipStopDate\UpdateApprenticeshipStopDateCommandValidator.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\UpdateProviderPaymentPriorityValidator.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\UpdateProviderPaymentPriorityCommand.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\UpdateProviderPaymentPriorityCommandHandler.cs" />

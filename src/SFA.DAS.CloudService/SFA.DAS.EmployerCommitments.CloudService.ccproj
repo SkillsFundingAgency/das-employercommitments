@@ -12,7 +12,7 @@
     <AssemblyName>SFA.DAS.EmployerCommitments.Web</AssemblyName>
     <StartDevelopmentStorage>True</StartDevelopmentStorage>
     <Name>SFA.DAS.EmployerCommitments.CloudService</Name>
-    <PackageEnableRemoteDebugger>False</PackageEnableRemoteDebugger>
+    <PackageEnableRemoteDebugger>True</PackageEnableRemoteDebugger>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,16 +50,17 @@
     <DiagnosticsConfiguration Include="SFA.DAS.EmployerCommitments.WebContent\diagnostics.wadcfgx" />
   </ItemGroup>
   <ItemGroup>
+    <PublishProfile Include="Profiles\das-at-employercommitments-cs (stage).azurePubxml" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.EAS.Web\SFA.DAS.EmployerCommitments.Web.csproj">
       <Name>SFA.DAS.EmployerCommitments.Web</Name>
       <Project>{65db60b1-80f0-432c-926e-7a6dd02a5645}</Project>
       <Private>True</Private>
       <RoleType>Web</RoleType>
       <RoleName>SFA.DAS.EmployerCommitments.Web</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PublishProfile Include="Profiles\das-at-employercommitments-cs (stage).azurePubxml" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>

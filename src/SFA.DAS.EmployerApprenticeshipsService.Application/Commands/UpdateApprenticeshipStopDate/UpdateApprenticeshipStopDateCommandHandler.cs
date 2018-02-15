@@ -12,18 +12,18 @@ using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
 
-namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStatus
+namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStopDate
 {
-    public sealed class UpdateApprenticeshipStatusCommandHandler : AsyncRequestHandler<UpdateApprenticeshipStatusCommand>
+    public sealed class UpdateApprenticeshipStopDateCommandHandler : AsyncRequestHandler<UpdateApprenticeshipStopDateCommand>
     {
         private readonly IEmployerCommitmentApi _commitmentsApi;
-        private readonly IValidator<UpdateApprenticeshipStatusCommand> _validator;
+        private readonly IValidator<UpdateApprenticeshipStopDateCommand> _validator;
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IMediator _mediator;
         private readonly IAcademicYearDateProvider _academicYearDateProvider;
         private readonly IAcademicYearValidator _academicYearValidator;
 
-        public UpdateApprenticeshipStatusCommandHandler(IEmployerCommitmentApi commitmentsApi, IMediator mediator, ICurrentDateTime currentDateTime, IValidator<UpdateApprenticeshipStatusCommand> validator, IAcademicYearDateProvider academicYearDateProvider, IAcademicYearValidator academicYearValidator)
+        public UpdateApprenticeshipStopDateCommandHandler(IEmployerCommitmentApi commitmentsApi, IMediator mediator, ICurrentDateTime currentDateTime, IValidator<UpdateApprenticeshipStopDateCommand> validator, IAcademicYearDateProvider academicYearDateProvider, IAcademicYearValidator academicYearValidator)
         {
             _commitmentsApi = commitmentsApi;
             _mediator = mediator;
@@ -33,27 +33,26 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
             _academicYearValidator = academicYearValidator;
         }
 
-        protected override async Task HandleCore(UpdateApprenticeshipStatusCommand command)
+        protected override async Task HandleCore(UpdateApprenticeshipStopDateCommand command)
         {
             var validationResult = _validator.Validate(command);
 
             if (!validationResult.IsValid())
                 throw new InvalidRequestException(validationResult.ValidationDictionary);
 
-            var apprenticeshipSubmission = new ApprenticeshipSubmission
+            var stopDate = new ApprenticeshipStopDate
             {
-                PaymentStatus = DeterminePaymentStatusForChange(command.ChangeType),
-                DateOfChange = command.DateOfChange,
                 UserId = command.UserId,
-                LastUpdatedByInfo = new LastUpdateInfo { EmailAddress = command.UserEmailAddress, Name = command.UserDisplayName }
+                LastUpdatedByInfo = new LastUpdateInfo { EmailAddress = command.UserEmailAddress, Name = command.UserDisplayName },
+                NewStopDate = command.DateOfChange
             };
 
             await ValidateDateOfChange(command, validationResult);
 
-            await _commitmentsApi.PatchEmployerApprenticeship(command.EmployerAccountId, command.ApprenticeshipId, apprenticeshipSubmission);
+            await _commitmentsApi.PutApprenticeshipStopDate(command.EmployerAccountId, command.CommitmentId, command.ApprenticeshipId, stopDate);
         }
 
-        private async Task ValidateDateOfChange(UpdateApprenticeshipStatusCommand command, Validation.ValidationResult validationResult)
+        private async Task ValidateDateOfChange(UpdateApprenticeshipStopDateCommand command, ValidationResult validationResult)
         {
             if (command.ChangeType == ChangeStatusType.Stop) // Only need to validate date for stop currently
             {

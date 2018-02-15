@@ -12,6 +12,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeshipUpdat
 using SFA.DAS.EmployerCommitments.Application.Commands.ReviewApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UndoApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStatus;
+using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStopDate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateProviderPaymentPriority;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
@@ -649,7 +650,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 CheckApprenticeshipStateValidForChange(data.Apprenticeship);
 
-                await _mediator.SendAsync(new UpdateApprenticeshipStatusCommand
+                await _mediator.SendAsync(new UpdateApprenticeshipStopDateCommand
                 {
                     UserId = externalUserId,
                     ApprenticeshipId = apprenticeshipId,
@@ -659,7 +660,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                     DateOfChange = model.DateOfChange.DateTime.Value,
                     UserEmailAddress = userEmail,
-                    UserDisplayName = userName
+                    UserDisplayName = userName,
+                    CommitmentId = data.Apprenticeship.CommitmentId
                 });
 
             }, hashedAccountId, externalUserId);
