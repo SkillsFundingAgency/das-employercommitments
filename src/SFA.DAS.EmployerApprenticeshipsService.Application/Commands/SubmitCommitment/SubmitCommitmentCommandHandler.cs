@@ -63,7 +63,14 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment
                 Message = message.Message
             };
 
-            await _commitmentApi.PatchEmployerCommitment(message.EmployerAccountId, message.CommitmentId, submission);
+            if (message.LastAction != LastAction.Approve)
+            {
+                await _commitmentApi.PatchEmployerCommitment(message.EmployerAccountId, message.CommitmentId, submission);
+            }
+            else
+            {
+                await _commitmentApi.ApproveCohort(message.EmployerAccountId, message.CommitmentId, submission);
+            }
 
             if (message.LastAction != LastAction.None)
             {
