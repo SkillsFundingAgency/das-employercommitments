@@ -67,7 +67,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
 
             await _handler.Handle(_validCommand);
 
-            _mockCommitmentApi.Verify(x => x.ApproveCohort(_validCommand.EmployerAccountId, _validCommand.EmployerAccountId,
+            _mockCommitmentApi.Verify(x => x.ApproveCohort(_validCommand.EmployerAccountId, _validCommand.CommitmentId,
                 It.Is<CommitmentSubmission>(y =>
                     y.UserId == _validCommand.UserId && y.Message == _validCommand.Message && y.LastUpdatedByInfo.EmailAddress == _validCommand.UserEmailAddress &&
                     y.LastUpdatedByInfo.Name == _validCommand.UserDisplayName)));
