@@ -127,6 +127,5 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
 
             result.IsValid.Should().BeTrue();
         }
-
     }
 }

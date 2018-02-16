@@ -17,6 +17,7 @@ using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
 using SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDate;
@@ -179,14 +180,20 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 await AssertApprenticeshipStatus(accountId, apprenticeshipId);
 
-                var data = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
+                var apprenticeshipData = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
                 {
                     AccountId = accountId,
                     ApprenticeshipId = apprenticeshipId
                 });
 
-                AssertApprenticeshipIsEditable(data.Apprenticeship);
-                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(data.Apprenticeship);
+                var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                {
+                    AccountId = accountId,
+                    CommitmentId = apprenticeshipData.Apprenticeship.CommitmentId
+                });
+
+                AssertApprenticeshipIsEditable(apprenticeshipData.Apprenticeship);
+                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(apprenticeshipData.Apprenticeship, commitmentData.Commitment);
 
                 apprenticeship.HashedAccountId = hashedAccountId;
 

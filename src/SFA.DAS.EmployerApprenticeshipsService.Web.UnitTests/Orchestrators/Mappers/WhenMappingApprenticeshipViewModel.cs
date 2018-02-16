@@ -5,7 +5,9 @@ using Moq;
 using NUnit.Framework;
 
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
+using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
+using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 {
@@ -30,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void ShouldNotHaveLockedStatusIfNoDataLocksSuccesFound()
         {
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1), HasHadDataLockSuccess = false };
-            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, new CommitmentView());
             var n = MockDateTime.Object.Now;
 
             n.Should().Be(_now);
@@ -44,8 +46,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void ShouldHaveLockedStatusIfAtLeastOneDataLocksSuccesFound()
         {
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1), HasHadDataLockSuccess = true };
-
-            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, new CommitmentView());
 
             viewModel.IsLockedForUpdate.Should().BeTrue();
             viewModel.HasStarted.Should().BeTrue();
@@ -58,11 +59,31 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             AcademicYearValidator.Setup(m => m.Validate(It.IsAny<DateTime>())).Returns(AcademicYearValidationResult.NotWithinFundingPeriod);
 
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-5), HasHadDataLockSuccess = false };
-            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, new CommitmentView());
 
             viewModel.IsLockedForUpdate.Should().BeTrue();
             viewModel.HasStarted.Should().BeTrue();
         }
+
+        [Test]
+        public void ShouldHaveTransferFlagSetIfCommitmentHasTransferSender()
+        {
+            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(+1), HasHadDataLockSuccess = false };
+            var commitment = new CommitmentView { TransferSenderId = 123 };
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
+
+            viewModel.IsPaidForByTransfer.Should().BeTrue();
+        }
+
+        [Test]
+        public void ShouldNotHaveITransferFlagSetIfCommitmentHasNoTransferSender()
+        {
+            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(+1), HasHadDataLockSuccess = false };
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, new CommitmentView());
+
+            viewModel.IsPaidForByTransfer.Should().BeFalse();
+        }
+
 
         [Test]
         public void ThenULNIsMapped()

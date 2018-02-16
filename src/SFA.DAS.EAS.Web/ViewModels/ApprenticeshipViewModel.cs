@@ -69,6 +69,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 
         public bool IsInFirstCalendarMonthOfTraining { get; set; }
 
+        public bool IsPaidForByTransfer { get; set; }
+
         public string FirstNameError => GetErrorMessage(nameof(FirstName));
         public string LastNameError => GetErrorMessage(nameof(LastName));
         public string DateOfBirthError => GetErrorMessage(nameof(DateOfBirth));
