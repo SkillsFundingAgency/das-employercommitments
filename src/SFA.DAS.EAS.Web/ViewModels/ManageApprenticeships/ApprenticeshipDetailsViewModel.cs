@@ -47,6 +47,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public bool PendingDataLockRestart { get; set; }
 
         public bool PendingDataLockChange { get; set; }
+
+        public string EndpointAssessorName { get; set; }
     }
 
     public enum PendingChanges
