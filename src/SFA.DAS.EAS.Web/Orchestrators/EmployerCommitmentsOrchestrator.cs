@@ -364,10 +364,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 await AssertCommitmentStatus(commitmentId, accountId);
 
+                var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                {
+                    AccountId = accountId,
+                    CommitmentId = commitmentId
+                });
+
                 var apprenticeship = new ApprenticeshipViewModel
                 {
                     HashedAccountId = hashedAccountId,
                     HashedCommitmentId = hashedCommitmentId,
+                    IsPaidForByTransfer = commitmentData.Commitment.TransferSenderId.HasValue
                 };
 
                 return new OrchestratorResponse<ExtendedApprenticeshipViewModel>
