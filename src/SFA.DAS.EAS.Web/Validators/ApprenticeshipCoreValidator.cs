@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -148,7 +149,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 
         private bool StartDateForTransferNotBeforeMay2018(ApprenticeshipViewModel viewModel, DateTimeViewModel date)
         {
-            return (!viewModel.IsPaidForByTransfer || date.DateTime >= new DateTime(2018, 5, 1)) ;
+            if (!viewModel.IsPaidForByTransfer || date.DateTime >= new DateTime(2018, 5, 1))
+            {
+                return true;
+            }
+
+            //Add alternative detail error message to fake property
+            viewModel.ErrorDictionary.Add("_StartDateTransfersMinDateAltDetailMessage", "The start date can't be earlier than May 2018");
+            return false;
         }
 
         private bool BeGreaterThenStartDate(ApprenticeshipViewModel viewModel, DateTimeViewModel date)

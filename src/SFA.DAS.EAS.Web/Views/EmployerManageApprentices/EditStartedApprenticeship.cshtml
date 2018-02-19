@@ -124,7 +124,9 @@
     else
     {
 
-        <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) || !string.IsNullOrEmpty(Model.Apprenticeship.StartDateOverlapError) ? "error" : "")">
+        <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError)
+                                                  || !string.IsNullOrEmpty(Model.Apprenticeship.StartDateOverlapError)
+                                                  || !string.IsNullOrEmpty(Model.Apprenticeship.StartDateTransfersMinDate) ? "error" : "")">
             <hr />
 
             <span class="form-label-bold">Planned training start date</span>
@@ -139,6 +141,10 @@
                 @if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateOverlapError))
                 {
                     <span class="error-message" id="error-message-StartDate">The date overlaps with existing training dates for the same apprentice. Please check the date - contact your training provider for help.</span>
+                }
+                @if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateTransfersMinDate))
+                {
+                    <span class="error-message" id="error-message-StartDate">This is an alternative message</span>
                 }
 
                 <div class="form-group form-group-month">
