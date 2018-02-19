@@ -87,5 +87,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             Assert.AreEqual(expectedStopDate, viewModel.StopDate);
         }
+
+        [Test]
+        public void ThenEndpointAssessorNameIsMapped()
+        {
+            const string endpointAssessorName = "Bad Assess";
+
+            var apprenticeship = new Apprenticeship { EndpointAssessorName = endpointAssessorName };
+
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+
+            Assert.AreEqual(endpointAssessorName, viewModel.EndpointAssessorName);
+        }
     }
 }
