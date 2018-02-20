@@ -169,19 +169,16 @@
                 </tr>
             </tbody>
         </table>
-        
-        @if (Model.Data.EndpointAssessorName != null)
-        {
-            <h2 class="heading-medium">End Point Assessor</h2>
-            <table class="details-list">
-                <tbody>
-                <tr>
-                    <th scope="row">End point assessor</th>
-                    <td>@Model.Data.EndpointAssessorName</td>
-                </tr>
-                </tbody>
-            </table>
-        }
+
+        <h2 class="heading-medium">End Point Assessor</h2>
+        <table class="details-list">
+            <tbody>
+            <tr>
+                <th scope="row">End point assessor</th>
+                <td>@(Model.Data.EndpointAssessorName ?? "The end point assessor has not been declared")</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
