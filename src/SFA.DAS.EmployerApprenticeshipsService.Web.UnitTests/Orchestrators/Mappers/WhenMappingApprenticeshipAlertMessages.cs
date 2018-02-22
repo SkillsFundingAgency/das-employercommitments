@@ -111,5 +111,15 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             viewModel.Alerts.Count().Should().Be(1);
             viewModel.Alerts.FirstOrDefault().Should().Be("Changes requested");
         }
+
+        [Test]
+        public void ShouldSetCanEditStopDateToTrueIfPaymentStatusIsWithdrawn()
+        {
+            var apprenticeship = new Apprenticeship { PaymentStatus = PaymentStatus.Withdrawn };
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            viewModel.CanEditStopDate.Should().BeTrue();
+        }
+
+
     }
 }
