@@ -120,6 +120,18 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             viewModel.CanEditStopDate.Should().BeTrue();
         }
 
+        [TestCase(PaymentStatus.Completed)]
+        [TestCase(PaymentStatus.Active)]
+        [TestCase(PaymentStatus.Deleted)]
+        [TestCase(PaymentStatus.Paused)]
+        [TestCase(PaymentStatus.PendingApproval)]
+        public void ShouldSetCanEditStopDateToFalseIfPaymentStatusIsNotWithdrawn(PaymentStatus status)
+        {
+            var apprenticeship = new Apprenticeship { PaymentStatus = status };
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            viewModel.CanEditStopDate.Should().BeFalse();
+        }
+
 
     }
 }
