@@ -630,13 +630,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task UpdateStopDate(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusViewModel model, string externalUserId, string userName, string userEmail)
+        public async Task UpdateStopDate(string hashedAccountId, string hashedApprenticeshipId, EditStopDateViewModel model, string externalUserId, string userName, string userEmail)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
 
-            _logger.Info(
-                $"Updating Apprenticeship stop date to {model.ChangeType}. AccountId: {accountId}, ApprenticeshipId: {apprenticeshipId}");
+            _logger.Info($"Updating Apprenticeship stop date. AccountId: {accountId}, ApprenticeshipId: {apprenticeshipId}");
 
             await CheckUserAuthorization(async () =>
             {
@@ -655,10 +654,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     UserId = externalUserId,
                     ApprenticeshipId = apprenticeshipId,
                     EmployerAccountId = accountId,
-
-                    ChangeType = (Domain.Models.Apprenticeship.ChangeStatusType)model.ChangeType,
-
-                    DateOfChange = model.DateOfChange.DateTime.Value,
+                    NewStopDate = model.NewStopDate.DateTime.Value,
                     UserEmailAddress = userEmail,
                     UserDisplayName = userName,
                     CommitmentId = data.Apprenticeship.CommitmentId

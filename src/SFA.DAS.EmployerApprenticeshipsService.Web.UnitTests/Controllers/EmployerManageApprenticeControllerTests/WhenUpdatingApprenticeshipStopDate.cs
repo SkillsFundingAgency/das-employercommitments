@@ -104,7 +104,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
 
             await _controller.UpdateApprenticeshipStopDate(AccountId, ApprenticeshipId, model);
 
-            _orchestrator.Verify(x => x.UpdateStopDate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusViewModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
+            _orchestrator.Verify(x => x.UpdateStopDate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<EditStopDateViewModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
 
         [Test]

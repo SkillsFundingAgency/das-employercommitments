@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
             {
                 UserId = command.UserId,
                 LastUpdatedByInfo = new LastUpdateInfo { EmailAddress = command.UserEmailAddress, Name = command.UserDisplayName },
-                NewStopDate = command.DateOfChange
+                NewStopDate = command.NewStopDate
             };
 
             await ValidateDateOfChange(command, validationResult);
@@ -52,41 +52,47 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
             await _commitmentsApi.PutApprenticeshipStopDate(command.EmployerAccountId, command.CommitmentId, command.ApprenticeshipId, stopDate);
         }
 
-        private async Task ValidateDateOfChange(UpdateApprenticeshipStopDateCommand command, ValidationResult validationResult)
+        private async Task ValidateDateOfChange(UpdateApprenticeshipStopDateCommand command,
+            ValidationResult validationResult)
         {
-            if (command.ChangeType == ChangeStatusType.Stop) // Only need to validate date for stop currently
+            var response = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
             {
-                var response = await _mediator.SendAsync(new GetApprenticeshipQueryRequest { AccountId = command.EmployerAccountId, ApprenticeshipId = command.ApprenticeshipId });
+                AccountId = command.EmployerAccountId,
+                ApprenticeshipId = command.ApprenticeshipId
+            });
 
-                if (response.Apprenticeship.IsWaitingToStart(_currentDateTime))
+            if (response.Apprenticeship.IsWaitingToStart(_currentDateTime))
+            {
+                if (!command.NewStopDate.Equals(response.Apprenticeship.StartDate))
                 {
-                    if (!command.DateOfChange.Equals(response.Apprenticeship.StartDate))
-                    {
-                        validationResult.AddError(nameof(command.DateOfChange), "Date must the same as start date if training hasn't started");
-                        throw new InvalidRequestException(validationResult.ValidationDictionary);
-                    }
+                    validationResult.AddError(nameof(command.NewStopDate),
+                        "Date must the same as start date if training hasn't started");
+                    throw new InvalidRequestException(validationResult.ValidationDictionary);
                 }
-                else
+            }
+            else
+            {
+                if (command.NewStopDate > _currentDateTime.Now.Date)
                 {
-                    if (command.DateOfChange > _currentDateTime.Now.Date)
-                    {
-                        validationResult.AddError(nameof(command.DateOfChange), "Date must be a date in the past");
-                        throw new InvalidRequestException(validationResult.ValidationDictionary);
-                    }
+                    validationResult.AddError(nameof(command.NewStopDate), "Date must be a date in the past");
+                    throw new InvalidRequestException(validationResult.ValidationDictionary);
+                }
 
-                    if (response.Apprenticeship.StartDate > command.DateOfChange)
-                    {
-                        validationResult.AddError(nameof(command.DateOfChange), "Date cannot be earlier than training start date");
-                        throw new InvalidRequestException(validationResult.ValidationDictionary);
-                    }
+                if (response.Apprenticeship.StartDate > command.NewStopDate)
+                {
+                    validationResult.AddError(nameof(command.NewStopDate),
+                        "Date cannot be earlier than training start date");
+                    throw new InvalidRequestException(validationResult.ValidationDictionary);
+                }
 
-                    if (_academicYearValidator.Validate(command.DateOfChange) == AcademicYearValidationResult.NotWithinFundingPeriod)
-                    {
-                        var earliestDate = _academicYearDateProvider.CurrentAcademicYearStartDate.ToString("dd MM yyyy");
+                if (_academicYearValidator.Validate(command.NewStopDate) ==
+                    AcademicYearValidationResult.NotWithinFundingPeriod)
+                {
+                    var earliestDate = _academicYearDateProvider.CurrentAcademicYearStartDate.ToString("dd MM yyyy");
 
-                        validationResult.AddError(nameof(command.DateOfChange), $"The earliest date you can stop this apprentice is {earliestDate}");
-                        throw new InvalidRequestException(validationResult.ValidationDictionary);
-                    }
+                    validationResult.AddError(nameof(command.NewStopDate),
+                        $"The earliest date you can stop this apprentice is {earliestDate}");
+                    throw new InvalidRequestException(validationResult.ValidationDictionary);
                 }
             }
         }
