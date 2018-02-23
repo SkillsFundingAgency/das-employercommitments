@@ -159,6 +159,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var detailsViewModel =
                     _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(data.Apprenticeship);
 
+                //todo: 1 consumer of GetApprenticeship requires these, 1 doesn't
+                // have GetApprenticeship & GetApprenticeshipWithPendingDataLockFlags?
+                // initially, just have GetApprenticeship and get datalock statuses and calculate flags in c#
                 detailsViewModel.PendingDataLockRestart = data.Apprenticeship.DataLockCourseTriaged;
                 detailsViewModel.PendingDataLockChange = data.Apprenticeship.DataLockPriceTriaged || data.Apprenticeship.DataLockCourseChangeTriaged;
 
