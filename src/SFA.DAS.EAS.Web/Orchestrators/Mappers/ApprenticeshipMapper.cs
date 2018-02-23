@@ -87,7 +87,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                             && !apprenticeship.DataLockPriceTriaged
                             && new []{ PaymentStatus.Active, PaymentStatus.Paused  }.Contains(apprenticeship.PaymentStatus),
                 CanEditStatus = !(new List<PaymentStatus> { PaymentStatus.Completed, PaymentStatus.Withdrawn }).Contains(apprenticeship.PaymentStatus),
-                CanEditStopDate = (apprenticeship.PaymentStatus == PaymentStatus.Withdrawn)
+                CanEditStopDate = (apprenticeship.PaymentStatus == PaymentStatus.Withdrawn && apprenticeship.StartDate != apprenticeship.StopDate)
             };
         }
 

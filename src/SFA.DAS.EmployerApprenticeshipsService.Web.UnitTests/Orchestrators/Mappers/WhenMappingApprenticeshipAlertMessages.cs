@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using FluentAssertions;
 using NUnit.Framework;
@@ -113,11 +114,25 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         }
 
         [Test]
-        public void ShouldSetCanEditStopDateToTrueIfPaymentStatusIsWithdrawn()
+        public void ShouldSetCanEditStopDateToTrueIfPaymentStatusIsWithdrawnAndStartDateIsNotEqualToStopDate()
         {
-            var apprenticeship = new Apprenticeship { PaymentStatus = PaymentStatus.Withdrawn };
+            var apprenticeship = new Apprenticeship { PaymentStatus = PaymentStatus.Withdrawn,
+                StartDate = new DateTime(2018, 01, 01), StopDate = new DateTime(2018, 02, 01) };
             var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
             viewModel.CanEditStopDate.Should().BeTrue();
+        }
+
+        [Test]
+        public void ShouldSetCanEditStopDateToFalseIfPaymentStatusIsWithdrawnAndStartDateIsEqualToStopDate()
+        {
+            var apprenticeship = new Apprenticeship
+            {
+                PaymentStatus = PaymentStatus.Withdrawn,
+                StartDate = new DateTime(2018, 01, 01),
+                StopDate = new DateTime(2018, 01, 01)
+            };
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            viewModel.CanEditStopDate.Should().BeFalse();
         }
 
         [TestCase(PaymentStatus.Completed)]
