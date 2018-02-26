@@ -123,11 +123,11 @@
     <Reference Include="Microsoft.Data.Services.Client, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Data.Services.Client.5.7.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=3.13.8.999, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.13.8\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=3.19.1.3001, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.1\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.Platform, Version=3.13.8.999, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.13.8\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll</HintPath>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.Platform, Version=3.19.1.3001, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.3.19.1\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.Platform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -212,13 +212,11 @@
     <Reference Include="SFA.DAS.CookieService, Version=1.0.0.27423, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.CookieService.1.0.0.27423\lib\net45\SFA.DAS.CookieService.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.EAS.Account.Api.Client, Version=1.0.0.35577, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.0.0.35577\lib\net45\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SFA.DAS.EAS.Account.Api.Client, Version=1.1.0.54309, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.1.0.54309\lib\net45\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.EAS.Account.Api.Types, Version=1.0.0.35577, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.0.0.35577\lib\net45\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SFA.DAS.EAS.Account.Api.Types, Version=1.1.0.54309, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.1.0.54309\lib\net45\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.EmployerUsers.WebClientComponents, Version=1.0.0.29302, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.EmployerUsers.WebClientComponents.1.0.0.29302\lib\net45\SFA.DAS.EmployerUsers.WebClientComponents.dll</HintPath>
@@ -439,6 +437,7 @@
     <Compile Include="Controllers\AccessDeniedController.cs" />
     <Compile Include="Controllers\DataLockController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
+    <Compile Include="Decorators\AccountApiClientDecorator.cs" />
     <Compile Include="DependencyResolution\StructureMapValidatorFactory.cs" />
     <Compile Include="DependencyResolution\ValidationRegistry.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
@@ -1144,6 +1143,7 @@
     <Folder Include="Views\Service\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\EmployerCommitments\SelectTransferConnection.cshtml" />
     <Content Include="Views\EmployerManageApprentices\EditStopDate.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>EditStopDate.generated.cs</LastGenOutput>

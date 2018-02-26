@@ -16,6 +16,13 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public IEnumerable<LegalEntity> LegalEntities { get; set; }
     }
 
+    public sealed class SelectTransferConnectionViewModel
+    {
+        public string TransferConnectionCode { get; set; }
+
+        public IEnumerable<TransferConnection> TransferConnections { get; set; }
+    }
+
     [Validator(typeof(SelectProviderViewModelValidator))]
     public sealed class SelectProviderViewModel
     {

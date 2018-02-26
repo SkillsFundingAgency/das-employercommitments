@@ -34,6 +34,7 @@ using SFA.DAS.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Configuration.FileStorage;
 using SFA.DAS.CookieService;
+using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -109,6 +110,23 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             RegisterExecutionPolicies();
 
             RegisterLogger();
+
+            RegisterAccountApi();
+        }
+
+        private void RegisterAccountApi()
+        {
+            For<IAccountApiClient>().Use<AccountApiClient>();
+
+            var useStubSetting = CloudConfigurationManager.GetSetting("UseAccountApiTransfersStub") ?? "False";
+
+            if (Boolean.TryParse(useStubSetting, out bool useStub))
+            {
+                if (useStub)
+                {
+                    For<IAccountApiClient>().DecorateAllWith<Decorators.AccountApiClientDecorator>();  
+                }
+            }
         }
 
         private void SetUpCommitmentApi(EmployerCommitmentsServiceConfiguration config)
