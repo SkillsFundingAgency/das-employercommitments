@@ -12,7 +12,7 @@
     <AssemblyName>SFA.DAS.EmployerCommitments.Web</AssemblyName>
     <StartDevelopmentStorage>True</StartDevelopmentStorage>
     <Name>SFA.DAS.EmployerCommitments.CloudService</Name>
-    <PackageEnableRemoteDebugger>True</PackageEnableRemoteDebugger>
+    <PackageEnableRemoteDebugger>False</PackageEnableRemoteDebugger>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,7 +59,6 @@
       <Private>True</Private>
       <RoleType>Web</RoleType>
       <RoleName>SFA.DAS.EmployerCommitments.Web</RoleName>
-      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
   </ItemGroup>
   <!-- Import the target files for this project template -->
