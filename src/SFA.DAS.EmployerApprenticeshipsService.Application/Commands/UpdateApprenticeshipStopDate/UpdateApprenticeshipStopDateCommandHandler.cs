@@ -1,16 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
-using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
-using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStopDate
 {
@@ -47,12 +44,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
                 NewStopDate = command.NewStopDate
             };
 
-            await ValidateDateOfChange(command, validationResult);
+            await ValidateNewStopDate(command, validationResult);
 
             await _commitmentsApi.PutApprenticeshipStopDate(command.EmployerAccountId, command.CommitmentId, command.ApprenticeshipId, stopDate);
         }
 
-        private async Task ValidateDateOfChange(UpdateApprenticeshipStopDateCommand command,
+        private async Task ValidateNewStopDate(UpdateApprenticeshipStopDateCommand command,
             ValidationResult validationResult)
         {
             var response = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
@@ -94,21 +91,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
                         $"The earliest date you can stop this apprentice is {earliestDate}");
                     throw new InvalidRequestException(validationResult.ValidationDictionary);
                 }
-            }
-        }
-
-        private static PaymentStatus DeterminePaymentStatusForChange(ChangeStatusType changeType)
-        {
-            switch (changeType)
-            {
-                case ChangeStatusType.Pause:
-                    return PaymentStatus.Paused;
-                case ChangeStatusType.Resume:
-                    return PaymentStatus.Active;
-                case ChangeStatusType.Stop:
-                    return PaymentStatus.Withdrawn;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(changeType), "Not a valid change type");
             }
         }
     }

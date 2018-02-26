@@ -167,6 +167,7 @@
     <Compile Include="Commands\SubmitCommitmentTests\WhenValidatingTheSubmitCommitmentRequest.cs" />
     <Compile Include="Commands\UndoApprenticeshipUpdate\WhenValidatingCommand.cs" />
     <Compile Include="Commands\UndoApprenticeshipUpdate\WhenUndoingApprenticeshipUpdate.cs" />
+    <Compile Include="Commands\UpdateApprenticeshipStopDate\WhenUpdatingApprenticeshipStopDate.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\WhenValidationUpdateProviderPaymentPriority.cs" />
     <Compile Include="FakeTimeProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

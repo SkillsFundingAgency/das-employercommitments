@@ -1,6 +1,5 @@
 ﻿using System;
 using MediatR;
-using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStopDate
 {
