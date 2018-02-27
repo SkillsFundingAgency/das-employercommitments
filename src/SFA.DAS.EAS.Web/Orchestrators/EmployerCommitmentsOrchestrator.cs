@@ -1044,7 +1044,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             return data.Any();
         }
 
-        public async Task<OrchestratorResponse<LegalEntitySignedAgreementViewModel>> GetLegalEntitySignedAgreementViewModel(string hashedAccountId, string legalEntityCode, string cohortRef, string userId)
+        public async Task<OrchestratorResponse<LegalEntitySignedAgreementViewModel>> GetLegalEntitySignedAgreementViewModel(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string cohortRef, string userId)
         {
             var response = new OrchestratorResponse<LegalEntitySignedAgreementViewModel>();
             try
@@ -1057,6 +1057,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     HashedAccountId = hashedAccountId,
                     LegalEntityCode = legalEntityCode,
+                    TransferConnectionCode = transferConnectionCode,
                     CohortRef = cohortRef,
                     HasSignedAgreement = hasSigned,
                     LegalEntityName = legalEntity.Name ?? string.Empty
