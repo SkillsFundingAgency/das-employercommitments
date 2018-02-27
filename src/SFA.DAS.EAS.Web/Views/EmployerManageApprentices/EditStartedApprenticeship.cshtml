@@ -144,7 +144,7 @@
                 }
                 @if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateTransfersMinDate))
                 {
-                    <span class="error-message" id="error-message-StartDate">This is an alternative message</span>
+                    <span class="error-message" id="error-message-StartDate">@Model.Apprenticeship.StartDateTransfersMinDate</span>
                 }
 
                 <div class="form-group form-group-month">
