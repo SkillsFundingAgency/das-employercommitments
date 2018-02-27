@@ -113,14 +113,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             if (ModelState.IsValid && !validationFailed)
             {
-                //var statusChangeModelWithNewStopDate = new ChangeStatusViewModel
-                //{
-                //    ChangeType= ChangeStatusType.Stop,
-                //    DateOfChange = model.NewStopDate,
-                //    WhenToMakeChange = WhenToMakeChangeOptions.SpecificDate,
-                //    ChangeConfirmed = true
-                //};
-
                 await _orchestrator.UpdateStopDate(
                     hashedAccountId,
                     hashedApprenticeshipId,
