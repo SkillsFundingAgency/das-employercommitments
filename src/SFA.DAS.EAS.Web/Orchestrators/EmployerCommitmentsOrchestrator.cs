@@ -382,7 +382,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ExtendedApprenticeshipViewModel
                     {
                         Apprenticeship = apprenticeship,
-                        ApprenticeshipProgrammes = await GetTrainingProgrammes()
+                        ApprenticeshipProgrammes = await GetTrainingProgrammes(!commitmentData.Commitment.TransferSenderId.HasValue)
                     }
                 };
             }, hashedAccountId, externalUserId);
@@ -447,7 +447,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ExtendedApprenticeshipViewModel
                     {
                         Apprenticeship = apprenticeship,
-                        ApprenticeshipProgrammes = await GetTrainingProgrammes(),
+                        ApprenticeshipProgrammes = await GetTrainingProgrammes(!commitmentData.Commitment.TransferSenderId.HasValue),
                         ValidationErrors = _apprenticeshipMapper.MapOverlappingErrors(overlaps)
                     }
                 };
@@ -883,7 +883,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var apprenticships = data.Commitment.Apprenticeships?.Select(
                     a => MapToApprenticeshipListItem(a, overlappingApprenticeships)).ToList() ?? new List<ApprenticeshipListItemViewModel>(0);
 
-                var trainingProgrammes = await GetTrainingProgrammes();
+                var trainingProgrammes = await GetTrainingProgrammes(!data.Commitment.TransferSenderId.HasValue);
                 var apprenticeshipGroups = new List<ApprenticeshipListItemGroupViewModel>();
 
                 var errors = new Dictionary<string, string>();
@@ -1045,7 +1045,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             return data.Any();
         }
 
-        public async Task<OrchestratorResponse<LegalEntitySignedAgreementViewModel>> GetLegalEntitySignedAgreementViewModel(string hashedAccountId, string legalEntityCode, string cohortRef, string userId)
+        public async Task<OrchestratorResponse<LegalEntitySignedAgreementViewModel>> GetLegalEntitySignedAgreementViewModel(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string cohortRef, string userId)
         {
             var response = new OrchestratorResponse<LegalEntitySignedAgreementViewModel>();
             try
@@ -1058,6 +1058,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     HashedAccountId = hashedAccountId,
                     LegalEntityCode = legalEntityCode,
+                    TransferConnectionCode = transferConnectionCode,
                     CohortRef = cohortRef,
                     HasSignedAgreement = hasSigned,
                     LegalEntityName = legalEntity.Name ?? string.Empty
@@ -1226,13 +1227,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 CanBeApproved = apprenticeship.CanBeApproved,
                 OverlappingApprenticeships = overlappingApprenticeships.GetOverlappingApprenticeships(apprenticeship.Id)
             };
-        }
-
-        private async Task<List<ITrainingProgramme>> GetTrainingProgrammes()
-        {
-            var programmes = await _mediator.SendAsync(new GetTrainingProgrammesQueryRequest());
-
-            return programmes.TrainingProgrammes;
         }
 
         private static void AssertCommitmentStatus(

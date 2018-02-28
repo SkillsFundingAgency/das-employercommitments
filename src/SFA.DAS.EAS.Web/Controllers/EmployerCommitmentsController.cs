@@ -184,7 +184,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
 
             var agreement = await _employerCommitmentsOrchestrator.GetLegalEntitySignedAgreementViewModel(hashedAccountId,
-                selectedLegalEntity.LegalEntityCode, selectedLegalEntity.CohortRef, OwinWrapper.GetClaimValue(@"sub"));
+                selectedLegalEntity.TransferConnectionCode, selectedLegalEntity.LegalEntityCode, selectedLegalEntity.CohortRef, OwinWrapper.GetClaimValue(@"sub"));
 
             if (agreement.Data.HasSignedAgreement)
             {

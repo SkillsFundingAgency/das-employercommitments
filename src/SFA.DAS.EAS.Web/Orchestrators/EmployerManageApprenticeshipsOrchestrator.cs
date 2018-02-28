@@ -202,7 +202,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ExtendedApprenticeshipViewModel
                     {
                         Apprenticeship = apprenticeship,
-                        ApprenticeshipProgrammes = await GetTrainingProgrammes()
+                        ApprenticeshipProgrammes = await GetTrainingProgrammes(true)
                     }
                 };
             }, hashedAccountId, externalUserId);

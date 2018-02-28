@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitments.Application;
@@ -23,7 +24,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 });
 
             //Act
-            await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", "123", "C789","123EDC");
+            await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", null, "123", "C789","123EDC");
 
             //Assert
             MockMediator.Verify(x => x.SendAsync(It.Is<GetAccountLegalEntitiesRequest>(c => c.HashedAccountId == "ABC123" && c.UserId == "123EDC")), Times.Once);
@@ -45,7 +46,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 });
 
             //Act
-            var result = await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", "XYZ123", "C789", "123EDC");
+            var result = await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", null, "XYZ123", "C789", "123EDC");
 
             //Assert
             Assert.AreEqual(isSigned, result.Data.HasSignedAgreement);
@@ -59,7 +60,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 .ThrowsAsync(new InvalidRequestException (new Dictionary<string, string> {{"", ""}}));
 
             //Act
-            var actual = await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", "XYZ123", "C789", "123EDC");
+            var actual = await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", null, "XYZ123", "C789", "123EDC");
 
             //Assert
             Assert.AreEqual(HttpStatusCode.BadRequest,actual.Status);
@@ -81,10 +82,28 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 });
 
             //Act
-            var actual = await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", "XYZ123", "C789", "123EDC");
+            var actual = await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", null, "XYZ123", "C789", "123EDC");
 
             //Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, actual.Status);
         }
+
+        [Test]
+        public async Task ShouldMapTransferConnectionCodeToResponse()
+        {
+            //Arrange
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
+                .ReturnsAsync(new GetAccountLegalEntitiesResponse
+                {
+                    LegalEntities = new List<LegalEntity> { new LegalEntity { Code = "123" } }
+                });
+
+            //Act
+            var result = await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", "T1234", "123", "C789", "123EDC");
+
+            //Assert
+            result.Data.TransferConnectionCode.Should().Be("T1234");
+        }
+
     }
 }
