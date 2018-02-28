@@ -44,6 +44,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators.Messages
             new ValidationMessage("The start date is not valid", "LearnStartDate_01");
         public ValidationMessage LearnStartDate02 =>
             new ValidationMessage("The start date must not be earlier than May 2017", "LearnStartDate_02");
+        public ValidationMessage LearnStartDate06 =>
+            new ValidationMessage("Apprentices funded through a transfer can't start earlier than May 2018", "LearnStartDate_06");
 
         public ValidationMessage LearnPlanEndDate01 =>
             new ValidationMessage("The end date is not valid", "LearnPlanEndDate_01");
