@@ -37,7 +37,7 @@
                 @if (viewModel.FlashMessage.ErrorMessages.Any())
                 {
                     <ul class="error-summary-list">
-                        @foreach (var errorMessage in viewModel.FlashMessage.ErrorMessages)
+                        @foreach (var errorMessage in viewModel.FlashMessage.ErrorMessages.Where(e=>!e.Key.StartsWith("_")))
                         {
                             <li>
                                 <a class="danger" href="#@errorMessage.Key">@errorMessage.Value</a>
