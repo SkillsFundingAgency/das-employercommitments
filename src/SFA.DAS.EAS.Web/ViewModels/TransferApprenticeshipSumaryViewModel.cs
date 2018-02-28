@@ -4,6 +4,6 @@
     {
         public string CourseTitle { get; set; }
         public int ApprenticeshipCount { get; set; }
-        public string SummaryDescription { get; set; }
+        public string SummaryDescription => $"{CourseTitle} ({ApprenticeshipCount} Apprentices)";
     }
 }

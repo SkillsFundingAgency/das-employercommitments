@@ -1,20 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Commitment;
-using SFA.DAS.Commitments.Api.Types.Commitment.Types;
-using SFA.DAS.Commitments.Api.Types.Validation;
-using SFA.DAS.EmployerCommitments.Application;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountLegalEntities;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
-using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
-using System;
-using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
 {
@@ -89,8 +79,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             Assert.AreEqual(2, actual.Data.TrainingList.Count);
             Assert.AreEqual("Name", actual.Data.TrainingList[0].CourseTitle);
             Assert.AreEqual(2, actual.Data.TrainingList[0].ApprenticeshipCount);
+            Assert.AreEqual("Name (2 Apprentices)", actual.Data.TrainingList[0].SummaryDescription);
             Assert.AreEqual("Name2", actual.Data.TrainingList[1].CourseTitle);
             Assert.AreEqual(1, actual.Data.TrainingList[1].ApprenticeshipCount);
+            Assert.AreEqual("Name2 (1 Apprentices)", actual.Data.TrainingList[1].SummaryDescription);
         }
 
     }
