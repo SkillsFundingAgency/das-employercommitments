@@ -155,7 +155,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
             }
 
             //Add alternative detail error message to fake property
-            viewModel.ErrorDictionary.Add("_StartDateTransfersMinDateAltDetailMessage", "The start date can't be earlier than May 2018");
+            if (!viewModel.ErrorDictionary.ContainsKey("_StartDateTransfersMinDateAltDetailMessage"))
+            {
+                viewModel.ErrorDictionary.Add("_StartDateTransfersMinDateAltDetailMessage",
+                    "The start date can't be earlier than May 2018");
+            }
+
             return false;
         }
 

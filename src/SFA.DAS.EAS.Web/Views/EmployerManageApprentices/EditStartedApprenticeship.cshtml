@@ -134,7 +134,7 @@
 
             <div id="StartDate" class="form-date">
 
-                @if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError))
+                @if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) && string.IsNullOrEmpty(Model.Apprenticeship.StartDateTransfersMinDate))
                 {
                     <span class="error-message" id="error-message-StartDate">@Model.Apprenticeship.StartDateError</span>
                 }
