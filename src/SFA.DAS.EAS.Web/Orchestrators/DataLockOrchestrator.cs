@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     var apprenticeship = await _mediator.SendAsync(
                         new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
 
-                    var programms = await GetTrainingProgrammes();
+                    var programms = await GetTrainingProgrammes(true);
                     var currentProgram = programms.Single(m => m.Id == apprenticeship.Apprenticeship.TrainingCode);
                     var newProgram = programms.Single(m => m.Id == dataLock.IlrTrainingCourseCode);
 
