@@ -1059,8 +1059,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         }
 
-
-
         public async Task<Dictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship)
         {
             var overlappingErrors = await _mediator.SendAsync(
@@ -1098,6 +1096,47 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         });
 
                     }, model.HashedAccountId, externalUser);
+        }
+
+        public async Task<OrchestratorResponse<TransferCommitmentViewModel>> GetCommitmentDetailsForTransfer(
+            string hashedTransferAccountId, string hashedCommitmentId, string externalUserId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedTransferAccountId);
+            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
+            _logger.Info($"Getting Commitment Details, Transfer Account: {accountId}, CommitmentId: {commitmentId}");
+
+            return await CheckUserAuthorization(async () =>
+            {
+                var data = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                {
+                    AccountId = accountId,
+                    CommitmentId = commitmentId,
+                    CallType = CallType.TransferSender
+                });
+
+                var apprenticeships = data.Commitment.Apprenticeships ?? new List<Apprenticeship>();
+
+                var grouped = apprenticeships.GroupBy(l => l.TrainingCode).Select(cl =>
+                    new TransferApprenticeshipSumaryViewModel
+                    {
+                        CourseTitle = cl.First().TrainingName,
+                        ApprenticeshipCount = cl.Count()
+                    });
+
+                var viewModel = new TransferCommitmentViewModel()
+                {
+                    HashedAccountId = _hashingService.HashValue(data.Commitment.EmployerAccountId),
+                    LegalEntityName = data.Commitment.LegalEntityName,
+                    HashedCohortReference = _hashingService.HashValue(data.Commitment.Id),
+                    TrainingList = grouped.ToList(),
+                    TotalCost = apprenticeships.Sum(x => x.Cost) ?? 0
+                };
+
+                return new OrchestratorResponse<TransferCommitmentViewModel>
+                {
+                    Data = viewModel
+                };
+            }, hashedTransferAccountId, externalUserId);
         }
 
         private async Task<(long?, string)> GetTransferConnectionInfo(string hashedAccountId, string transferConnectionCode, string externalUserId)

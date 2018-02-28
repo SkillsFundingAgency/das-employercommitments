@@ -1,8 +1,38 @@
-﻿@model dynamic
+﻿@using SFA.DAS.EmployerCommitments.Web
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewBag.Title = "Transfer Request Details";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageID = "approve-transfer-cohort";
 }
 
-<h2>title</h2>
+@model OrchestratorResponse<SFA.DAS.EmployerCommitments.Web.ViewModels.TransferCommitmentViewModel>
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <form method="POST" action="@Url.Action("SetTransferConnection")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
+
+            @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
+            <div class="form-group">
+                <legend>
+                    <h1 class="heading-xlarge">@ViewBag.Title</h1>
+                </legend>
+                @Html.AntiForgeryToken()
+
+            </div>
+            <button type="submit" class="button" id="submit-transfer-connection">Continue</button>
+
+        </form>
+    </div>
+</div>
+@section breadcrumb {
+    <div class="breadcrumbs">
+        <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to Apprentices" class="back-link">Back to Apprentices</a>
+    </div>
+}
+
+@section gaDataLayer {
+    <script>
+        sfa.dataLayer.vpv = '/accounts/apprentices/legalEntity/create/choose-organisation';
+    </script>
+}
