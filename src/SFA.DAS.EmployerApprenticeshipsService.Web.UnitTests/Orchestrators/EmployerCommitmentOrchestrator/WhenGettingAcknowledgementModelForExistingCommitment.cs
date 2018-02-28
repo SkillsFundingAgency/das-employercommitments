@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-//using AutoFixture.NUnit3;
 using NUnit.Framework;
 using Moq;
 using SFA.DAS.Commitments.Api.Types.Commitment;
@@ -11,12 +10,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
     [TestFixture]
     public class WhenGettingAcknowledgementModelForExistingCommitment : OrchestratorTestBase
     {
-        // test won't run like this, may be an issue with having a base class
-        //[Test, AutoData]
-        //public async Task ThenIsTransferShouldBeSetWhenTransferSenderIdHasValue(GetCommitmentQueryResponse getCommitmentQueryResponse)
-        //{
-        //    getCommitmentQueryResponse.Commitment.TransferSenderId = 1;
-
         [Test]
         public async Task ThenIsTransferShouldBeSetWhenTransferSenderIdHasValue()
         {
