@@ -712,7 +712,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         HashedCommitmentId = hashedCommitmentId,
                         ProviderName = data.Commitment.ProviderName,
                         LegalEntityName = data.Commitment.LegalEntityName,
-                        Message = GetLatestMessage(data.Commitment.Messages, false)?.Message
+                        Message = GetLatestMessage(data.Commitment.Messages, false)?.Message,
+                        IsTransfer = data.Commitment.TransferSenderId.HasValue
                     }
                 };
             }, hashedAccountId, externalUserId);
