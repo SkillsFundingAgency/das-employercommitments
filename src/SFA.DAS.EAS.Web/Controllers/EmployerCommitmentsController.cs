@@ -800,6 +800,21 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return RedirectToAction("EditApprenticeship", new { viewModel.HashedAccountId, viewModel.HashedCommitmentId, viewModel.HashedApprenticeshipId });
         }
 
+        [HttpGet]
+        [OutputCache(CacheProfile = "NoCache")]
+        [Route("{hashedCommitmentId}/transfer")]
+        public async Task<ActionResult> TransferDetails(string hashedAccountId, string hashedCommitmentId)
+        {
+            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+                return View("AccessDenied");
+
+            var model = await _employerCommitmentsOrchestrator.GetCommitmentDetailsForTransfer(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
+
+            //SetFlashMessageOnModel(model);
+            return View(model);
+        }
+
+
         private RequestStatus GetRequestStatusFromCookie()
         {
             var status = _lastCohortCookieStorageService.Get(LastCohortPageCookieKey);
