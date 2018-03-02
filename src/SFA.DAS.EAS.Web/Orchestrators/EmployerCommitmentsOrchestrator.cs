@@ -1145,7 +1145,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 var viewModel = new TransferCommitmentViewModel()
                 {
-                    HashedAccountId = _hashingService.HashValue(data.Commitment.EmployerAccountId),
+                    HashedTransferReceiverAccountId = _hashingService.HashValue(data.Commitment.EmployerAccountId),
+                    HashedTransferSenderAccountId = _hashingService.HashValue(data.Commitment.TransferSenderId.Value),
                     LegalEntityName = data.Commitment.LegalEntityName,
                     HashedCohortReference = _hashingService.HashValue(data.Commitment.Id),
                     TrainingList = grouped.ToList(),

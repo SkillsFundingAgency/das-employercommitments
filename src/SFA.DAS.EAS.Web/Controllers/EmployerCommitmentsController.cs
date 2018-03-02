@@ -804,17 +804,46 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
-        [Route("{hashedCommitmentId}/transfer")]
-        public async Task<ActionResult> TransferDetails(string hashedAccountId, string hashedCommitmentId)
+        [Route("{hashedCommitmentId}/transfer/approve")]
+        public async Task<ActionResult> TransferApproval(string hashedAccountId, string hashedCommitmentId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
             var model = await _employerCommitmentsOrchestrator.GetCommitmentDetailsForTransfer(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
 
-            //SetFlashMessageOnModel(model);
             return View(model);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("{hashedCommitmentId}/transfer/approve")]
+        public async Task<ActionResult> TransferApproval(TransferApprovalConfirmationViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                var model = await _employerCommitmentsOrchestrator.GetCommitmentDetailsForTransfer(viewModel.HashedTransferSenderAccountId, viewModel.HashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
+
+                return View(model);
+            }
+
+            var approvalResult = viewModel.ApprovalConfirmed == true ? "Approved" : "Rejected";
+            var flashMessage = new FlashMessageViewModel { Severity = FlashMessageSeverityLevel.Okay, Message = string.Format($"This Transfer has been {approvalResult}") };
+            AddFlashMessageToCookie(flashMessage);
+
+            //if (viewModel.DeleteConfirmed.HasValue && viewModel.DeleteConfirmed.Value)
+            //{
+            //    await _employerCommitmentsOrchestrator.DeleteApprenticeship(viewModel, OwinWrapper.GetClaimValue(@"sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
+
+            //    var flashMessage = new FlashMessageViewModel { Severity = FlashMessageSeverityLevel.Okay, Message = string.Format($"Apprentice record for {viewModel.ApprenticeshipName} deleted") };
+            //    AddFlashMessageToCookie(flashMessage);
+
+            //    return RedirectToAction("Details", new { viewModel.HashedAccountId, viewModel.HashedCommitmentId });
+            //}
+
+            return RedirectToAction("Index");
+        }
+
 
 
         private RequestStatus GetRequestStatusFromCookie()

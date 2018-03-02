@@ -9,7 +9,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
             TrainingList = new List<TransferApprenticeshipSumaryViewModel>();
         }
 
-        public string HashedAccountId { get; set; }
+        public string HashedTransferSenderAccountId { get; set; }
+        public string HashedTransferReceiverAccountId { get; set; }
         public string LegalEntityName { get; set; }
         public string HashedCohortReference { get; set; }
         public decimal TotalCost { get; set; }
