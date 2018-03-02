@@ -119,7 +119,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var apprenticeships =
                 searchResponse.Apprenticeships
                     .OrderBy(m => m.ApprenticeshipName)
-                    .Select(m => _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(m))
+                    .Select(async m => await _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(m, true))
                     .ToList();
 
                 var filterOptions = _apprenticeshipFiltersMapper.Map(searchResponse.Facets);
@@ -128,7 +128,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var model = new ManageApprenticeshipsViewModel
                 {
                     HashedAccountId = hashedAccountId,
-                    Apprenticeships = apprenticeships,
+                    Apprenticeships = await Task.WhenAll(apprenticeships),
                     Filters = filterOptions,
                     TotalResults = searchResponse.TotalApprenticeships,
                     PageNumber = searchResponse.PageNumber,
@@ -180,7 +180,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
 
                 var detailsViewModel =
-                    _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(data.Apprenticeship);
+                    await _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(data.Apprenticeship);
 
                 detailsViewModel.PendingDataLockRestart = data.Apprenticeship.DataLockCourseTriaged;
                 detailsViewModel.PendingDataLockChange = data.Apprenticeship.DataLockPriceTriaged || data.Apprenticeship.DataLockCourseChangeTriaged;
@@ -291,7 +291,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         throw new InvalidStateException("Attempting to update an already updated Apprenticeship");
                     }
 
-                    var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(apprenticeshipResult.Apprenticeship);
+                    var apprenticeship = await _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(apprenticeshipResult.Apprenticeship);
                     viewModel.OriginalApprenticeship = apprenticeship;
                     viewModel.HashedAccountId = hashedAccountId;
                     viewModel.HashedApprenticeshipId = hashedApprenticeshipId;
@@ -689,7 +689,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     AccountId = accountId,
                     ApprenticeshipId = apprenticeshipId
                 });
-            var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(apprenticeshipResult.Apprenticeship);
+            var apprenticeship = await _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(apprenticeshipResult.Apprenticeship);
             mappedModel.OriginalApprenticeship = apprenticeship;
             mappedModel.HashedAccountId = hashedAccountId;
             mappedModel.HashedApprenticeshipId = hashedApprenticeshipId;

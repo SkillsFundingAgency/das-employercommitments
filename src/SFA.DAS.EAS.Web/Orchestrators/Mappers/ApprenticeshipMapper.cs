@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             _academicYearDateProvider = academicYearDateProvider;
         }
 
-        public ApprenticeshipDetailsViewModel MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship)
+        public async Task<ApprenticeshipDetailsViewModel> MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship, bool disableUlnReuseCheck=false)
         {
             var pendingChange = PendingChanges.None;
             if (apprenticeship.PendingUpdateOriginator == Originator.Employer)
@@ -91,14 +91,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 CanEditStopDate = (apprenticeship.PaymentStatus == PaymentStatus.Withdrawn && apprenticeship.StartDate != apprenticeship.StopDate)
             };
 
-            //if not already disabled, check if uln has been reused
-            if (result.CanEditStopDate)
+            //if not already disabled, check if uln has been reused. disable param is a short term workaround due to mapper reuse in search result page
+            if (result.CanEditStopDate && !disableUlnReuseCheck)
             {
-                var apprenticeshipsResponse = _mediator.SendAsync(new GetApprenticeshipsByUlnRequest
+                var apprenticeshipsResponse = await _mediator.SendAsync(new GetApprenticeshipsByUlnRequest
                 {
                     AccountId = apprenticeship.EmployerAccountId,
                     Uln = apprenticeship.ULN
-                }).Result; //todo: make this await
+                });
 
                 if (apprenticeshipsResponse.Apprenticeships.Count > 1)
                 {
@@ -285,7 +285,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                             || (string.IsNullOrEmpty(original.EmployerRef)  && string.IsNullOrEmpty(edited.EmployerRef))
                     ? null 
                     : edited.EmployerRef ?? "",
-                OriginalApprenticeship = apprenticeshipDetailsViewModel
+                OriginalApprenticeship = await apprenticeshipDetailsViewModel
             };
 
             if (!string.IsNullOrWhiteSpace(edited.TrainingCode) && original.TrainingCode != edited.TrainingCode)
@@ -395,21 +395,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             return result;
         }
 
-        //private DateTime GetEarliestDateThatApprenticeshipStopDateCanBeSetTo(Apprenticeship apprenticeship)
-        //{
-        //    return _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod //if r14 grace period has past for last a.y.
-        //           && apprenticeship.StartDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate // and start date was in last a.y.
-        //        ? _academicYearDateProvider.CurrentAcademicYearStartDate
-        //        : apprenticeship.StartDate.Value;
-        //}
-
-        private bool CalculateIfInFirstCalendarMonthOfTraining(DateTime? startDate)
-        {
-            if (!startDate.HasValue)
-                return false;
-
-            return _currentDateTime.Now.Year == startDate.Value.Year && _currentDateTime.Now.Month == startDate.Value.Month;
-        }
 
         private async Task<ITrainingProgramme> GetTrainingProgramme(string trainingCode)
         {
