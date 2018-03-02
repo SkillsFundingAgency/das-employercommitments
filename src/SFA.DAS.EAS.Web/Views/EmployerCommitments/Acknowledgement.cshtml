@@ -26,22 +26,34 @@
                 </tr>
                 <tr>
                     <td>Sent to </td>
-                    <td  class="strong">@Model.Data.ProviderName</td>       
-                </tr>   
+                    <td class="strong">@Model.Data.ProviderName</td>
+                </tr>
                 <tr>
                     <td>On behalf of</td>
-                    <td  class="strong">@Model.Data.LegalEntityName</td>
+                    <td class="strong">@Model.Data.LegalEntityName</td>
                 </tr>
                 <tr>
                     <td>Message</td>
-                    <td  class="strong">@Model.Data.Message</td>
+                    <td class="strong">@Model.Data.Message</td>
                 </tr>
             </tbody>
         </table>
         <h2 class="heading-medium">What happens next?</h2>
-        <p id="changeMainCopy">
-            @Model.Data.Content.Text
-        </p>
+        @if (Model.Data.Content.WhatHappensNext.Count == 1)
+        {
+            <p id="changeMainCopy">
+                @Model.Data.Content.WhatHappensNext.First()
+            </p>
+        }
+        else if (Model.Data.Content.WhatHappensNext.Count > 1)
+        {
+            <ul class="list list-bullet text">
+                @foreach (var whatHappensNext in Model.Data.Content.WhatHappensNext)
+                {
+                    <li>@whatHappensNext</li>
+                }
+            </ul>
+        }
         @if (!string.IsNullOrEmpty(Model.Data.BackLink?.Url))
         {
             <p>

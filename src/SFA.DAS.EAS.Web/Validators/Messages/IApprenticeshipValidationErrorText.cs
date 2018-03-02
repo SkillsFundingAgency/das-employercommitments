@@ -23,6 +23,7 @@
         ValidationMessage LearnStartDate01 { get; }
         ValidationMessage LearnStartDate02 { get; }
         ValidationMessage LearnStartDate05 { get; }
+        ValidationMessage LearnStartDate06 { get; }
         ValidationMessage ProgType01 { get; }
         ValidationMessage ProgType02 { get; }
         ValidationMessage EmployerRef01 { get; }
