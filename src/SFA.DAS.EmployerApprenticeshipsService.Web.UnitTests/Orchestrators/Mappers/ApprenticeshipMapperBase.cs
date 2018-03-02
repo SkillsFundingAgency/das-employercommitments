@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System;
+using MediatR;
 
 using Moq;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -14,6 +15,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         protected ApprenticeshipMapper Sut;
         protected Mock<ICurrentDateTime> MockDateTime;
         protected Mock<IAcademicYearValidator> AcademicYearValidator;
+        protected Mock<IAcademicYearDateProvider> AcademicYearDateProvider;
 
         public ApprenticeshipMapperBase()
         {
@@ -24,11 +26,19 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         {
             var mockHashingService = new Mock<IHashingService>();
 
-            AcademicYearValidator = new Mock<IAcademicYearValidator>();
-            MockDateTime = new Mock<ICurrentDateTime>();
-            MockMediator = new Mock<IMediator>();
+            AcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
+            AcademicYearDateProvider.Setup(x => x.LastAcademicYearFundingPeriod)
+                .Returns(new DateTime(2017, 9, 30));
 
-            Sut = new ApprenticeshipMapper(mockHashingService.Object, MockDateTime.Object, MockMediator.Object, Mock.Of<ILog>(), AcademicYearValidator.Object, Mock.Of<IAcademicYearDateProvider>());
+            AcademicYearValidator = new Mock<IAcademicYearValidator>();
+
+            MockDateTime = new Mock<ICurrentDateTime>();
+            MockDateTime.Setup(x => x.Now).Returns(new DateTime(2018, 3, 1));
+
+            MockMediator = new Mock<IMediator>();
+            
+            Sut = new ApprenticeshipMapper(mockHashingService.Object, MockDateTime.Object, MockMediator.Object,
+                Mock.Of<ILog>(), AcademicYearValidator.Object, AcademicYearDateProvider.Object);
         }
 
     }

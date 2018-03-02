@@ -366,7 +366,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 AcademicYearRestriction = _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod ? //if r14 grace period has past for last a.y.
                     _academicYearDateProvider.CurrentAcademicYearStartDate : default(DateTime?),
                 CurrentStopDate = apprenticeship.StopDate.Value,
-                //EarliestDate = GetEarliestDateThatApprenticeshipStopDateCanBeSetTo(apprenticeship),
                 NewStopDate = new DateTimeViewModel()
             };
 
