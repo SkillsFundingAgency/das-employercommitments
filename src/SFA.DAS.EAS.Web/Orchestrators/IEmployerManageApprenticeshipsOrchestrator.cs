@@ -12,8 +12,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         Task<OrchestratorResponse<ManageApprenticeshipsViewModel>> GetApprenticeships(
             string hashedAccountId, ApprenticeshipFiltersViewModel filters, string externalUserId);
 
-        Task<OrchestratorResponse<EditApprenticeshipStopDateViewModel>> GetApprenticeshipStopDateDetails(string hashedAccountId, string hashedApprenticeshipId, string externalUserId);
-        Task<Dictionary<string, string>> ValidateApprenticeshipStopDate(string hashedAccountId, string hashedApprenticeshipId, EditStopDateViewModel updatedModel);
+        Task<OrchestratorResponse<EditApprenticeshipStopDateViewModel>> GetEditApprenticeshipStopDateViewModel(string hashedAccountId, string hashedApprenticeshipId, string externalUserId);
         Task<OrchestratorResponse<ApprenticeshipDetailsViewModel>> GetApprenticeship(string hashedAccountId, string hashedApprenticeshipId, string externalUserId);
 
         Task<OrchestratorResponse<ExtendedApprenticeshipViewModel>> GetApprenticeshipForEdit(
@@ -39,7 +38,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         Task<OrchestratorResponse<ConfirmationStateChangeViewModel>> GetChangeStatusConfirmationViewModel(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange, string externalUserId);
         Task UpdateStatus(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusViewModel model, string externalUserId, string userName, string userEmail);
-        Task UpdateStopDate(string hashedAccountId, string hashedApprenticeshipId, EditStopDateViewModel model, string externalUserId, string userName, string userEmail);
+        Task UpdateStopDate(string hashedAccountId, string hashedApprenticeshipId, EditApprenticeshipStopDateViewModel model, string externalUserId, string userName, string userEmail);
         Task CreateApprenticeshipUpdate(UpdateApprenticeshipViewModel apprenticeship, string hashedAccountId, string userId, string userName, string userEmail);
 
         Task<OrchestratorResponse<UpdateApprenticeshipViewModel>>

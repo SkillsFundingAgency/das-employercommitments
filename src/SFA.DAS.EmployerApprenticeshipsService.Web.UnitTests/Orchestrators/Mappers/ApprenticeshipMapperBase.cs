@@ -28,7 +28,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             MockDateTime = new Mock<ICurrentDateTime>();
             MockMediator = new Mock<IMediator>();
 
-            Sut = new ApprenticeshipMapper(mockHashingService.Object, MockDateTime.Object, MockMediator.Object, Mock.Of<ILog>(), AcademicYearValidator.Object);
+            Sut = new ApprenticeshipMapper(mockHashingService.Object, MockDateTime.Object, MockMediator.Object, Mock.Of<ILog>(), AcademicYearValidator.Object, Mock.Of<IAcademicYearDateProvider>());
         }
 
     }

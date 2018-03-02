@@ -195,7 +195,7 @@ WriteLiteral(">\r\n                                Day\r\n                      
 
 WriteLiteral("                            ");
 
-                       Write(Html.TextBox("NewStopDate.Day", Model.Data.EditStopDate.NewStopDate.Day, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "31", aria_labelledby = "NewStopDate.Day" }));
+                       Write(Html.TextBox("NewStopDate.Day", Model.Data.NewStopDate.Day, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "31", aria_labelledby = "NewStopDate.Day" }));
 
 WriteLiteral("\r\n                        </div>\r\n                        <div");
 
@@ -209,7 +209,7 @@ WriteLiteral(">\r\n                                Month\r\n                    
 
 WriteLiteral("                            ");
 
-                       Write(Html.TextBox("NewStopDate.Month", Model.Data.EditStopDate.NewStopDate.Month, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "NewStopDate.Month" }));
+                       Write(Html.TextBox("NewStopDate.Month", Model.Data.NewStopDate.Month, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "NewStopDate.Month" }));
 
 WriteLiteral("\r\n                        </div>\r\n                        <div");
 
@@ -223,7 +223,7 @@ WriteLiteral(">\r\n                                Year\r\n                     
 
 WriteLiteral("                            ");
 
-                       Write(Html.TextBox("NewStopDate.Year", Model.Data.EditStopDate.NewStopDate.Year, new {@class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "NewStopDate.Year" }));
+                       Write(Html.TextBox("NewStopDate.Year", Model.Data.NewStopDate.Year, new {@class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "NewStopDate.Year" }));
 
 WriteLiteral("\r\n                        </div>\r\n                    </div>\r\n                </d" +
 "iv>\r\n                <div");

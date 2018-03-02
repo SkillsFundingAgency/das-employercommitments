@@ -48,11 +48,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
             _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(true));
 
             var response = new OrchestratorResponse<EditApprenticeshipStopDateViewModel>();
-            _orchestrator.Setup(o => o.GetApprenticeshipStopDateDetails(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(response)).Verifiable();
+            _orchestrator.Setup(o => o.GetEditApprenticeshipStopDateViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(response)).Verifiable();
 
             await _controller.EditStopDate(AccountId, ApprenticeshipId);
 
-            _orchestrator.Verify(o => o.GetApprenticeshipStopDateDetails(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
+            _orchestrator.Verify(o => o.GetEditApprenticeshipStopDateViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
     }
 }

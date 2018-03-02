@@ -15,8 +15,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
         ApprenticeshipDetailsViewModel MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship);
 
-        EditApprenticeshipStopDateViewModel MapToEditApprenticeshipStopDateViewModel(Apprenticeship apprenticeship);
-
         ApprenticeshipViewModel MapToApprenticeshipViewModel(Apprenticeship apprenticeship);
 
         Task<UpdateApprenticeshipViewModel> CompareAndMapToApprenticeshipViewModel(Apprenticeship original, ApprenticeshipViewModel edited);
@@ -32,5 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         IList<PriceChange> MapPriceChanges(IEnumerable<DataLockStatus> dataLockWithOnlyPriceMismatch, List<PriceHistory> history);
 
         Task<IEnumerable<CourseChange>> MapCourseChanges(IEnumerable<DataLockStatus> dataLocks, Apprenticeship apprenticeship);
+
+        EditApprenticeshipStopDateViewModel MapToEditApprenticeshipStopDateViewModel(Apprenticeship apprenticeship);
     }
 }

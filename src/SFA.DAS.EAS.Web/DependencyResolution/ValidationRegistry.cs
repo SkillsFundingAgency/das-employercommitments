@@ -12,7 +12,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
         {
             For<IValidator<ApprenticeshipViewModel>>().Use<ApprenticeshipViewModelValidator>();
             For<IValidator<ChangeStatusViewModel>>().Use<ChangeStatusViewModelValidator>();
-            For<IValidator<EditStopDateViewModel>>().Use<EditStopDateViewModelValidator>();
+            For<IValidator<EditApprenticeshipStopDateViewModel>>().Use<EditApprenticeshipStopDateViewModelValidator>();
         }
     }
 }

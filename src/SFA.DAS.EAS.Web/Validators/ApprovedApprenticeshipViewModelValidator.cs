@@ -48,14 +48,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
             return dict;
         }
 
-        public Dictionary<string, string> ValidateNewStopDate(EditStopDateViewModel model, DateTime earliestDate)
+        public Dictionary<string, string> ValidateNewStopDate(EditApprenticeshipStopDateViewModel model, DateTime earliestDate)
         {
             var dict = new Dictionary<string, string>();
 
-            if (model.NewStopDate?.DateTime != null && model.NewStopDate.DateTime < earliestDate)
-            {
-                dict.Add($"{nameof(EditStopDateViewModel.NewStopDate)}",$"Stop date must be on or after {earliestDate.ToGdsFormat()}");
-            }
+            //if (model.NewStopDate?.DateTime != null && model.NewStopDate.DateTime < earliestDate)
+            //{
+            //    dict.Add($"{nameof(EditStopDateViewModel.NewStopDate)}",$"Stop date must be on or after {earliestDate.ToGdsFormat()}");
+            //}
 
             return dict;
         }
@@ -67,6 +67,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 
         Dictionary<string, string> ValidateAcademicYear(UpdateApprenticeshipViewModel model);
 
-        Dictionary<string, string> ValidateNewStopDate(EditStopDateViewModel model, DateTime earliestDate);
+        Dictionary<string, string> ValidateNewStopDate(EditApprenticeshipStopDateViewModel model, DateTime earliestDate);
     }
 }

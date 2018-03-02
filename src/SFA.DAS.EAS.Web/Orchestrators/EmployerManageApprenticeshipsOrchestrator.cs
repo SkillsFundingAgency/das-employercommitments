@@ -145,7 +145,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<EditApprenticeshipStopDateViewModel>> GetApprenticeshipStopDateDetails(string hashedAccountId, string hashedApprenticeshipId, string externalUserId)
+        public async Task<OrchestratorResponse<EditApprenticeshipStopDateViewModel>> GetEditApprenticeshipStopDateViewModel(string hashedAccountId, string hashedApprenticeshipId, string externalUserId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
@@ -161,64 +161,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var stopDateEditModel =
                     _apprenticeshipMapper.MapToEditApprenticeshipStopDateViewModel(data.Apprenticeship);
 
-                if (data.Apprenticeship.StopDate != null)
-                    stopDateEditModel.CurrentStopDate = (DateTime)data.Apprenticeship.StopDate;
-
-                stopDateEditModel.EditStopDate = new EditStopDateViewModel
-                {
-                    NewStopDate = new DateTimeViewModel()
-                };
-
-                stopDateEditModel.HashedAccountId = hashedAccountId;
-
-                var earliestDate = GetEarliestDateThatApprenticeshipStopDateCanBeSetTo(data);
-
-                stopDateEditModel.EarliestDate = earliestDate;
-                stopDateEditModel.EarliestDateIsStartDate = earliestDate.Equals(data.Apprenticeship.StartDate.Value);
-                stopDateEditModel.ApprenticeshipULN = data.Apprenticeship.ULN;
-                stopDateEditModel.ApprenticeshipName = data.Apprenticeship.ApprenticeshipName;
-
                 return new OrchestratorResponse<EditApprenticeshipStopDateViewModel> { Data = stopDateEditModel };
             }, hashedAccountId, externalUserId);
-        }
-
-        public async Task<Dictionary<string, string>> ValidateApprenticeshipStopDate(string hashedAccountId, string hashedApprenticeshipId, EditStopDateViewModel updatedModel)
-        {
-            var result = new Dictionary<string, string>();
-
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
-
-            var data = await _mediator.SendAsync(
-                new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
-
-            var earliestDate = GetEarliestDateThatApprenticeshipStopDateCanBeSetTo(data);
-
-            foreach (var error in _approvedApprenticeshipValidator.ValidateNewStopDate(updatedModel, earliestDate))
-            {
-                result.Add(error.Key, error.Value);
-            }
-
-            var existingApprenticeships = await _mediator.SendAsync(
-                new GetApprenticeshipsByUlnRequest { AccountId = accountId, Uln = data.Apprenticeship.ULN });
-
-            var otherApprenticeships =
-                existingApprenticeships.Apprenticeships.Where(m => m.Id != apprenticeshipId);
-
-            if (otherApprenticeships.Any())
-            {
-                result.Add($"{nameof(EditStopDateViewModel.NewStopDate)}", "Stop date could not be edited since there are other active apprenticeships found.");
-            }
-
-            return result;
-        }
-
-        private DateTime GetEarliestDateThatApprenticeshipStopDateCanBeSetTo(GetApprenticeshipQueryResponse data)
-        {
-            return _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod
-                   && data.Apprenticeship.StartDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate
-                ? _academicYearDateProvider.CurrentAcademicYearStartDate
-                : data.Apprenticeship.StartDate.Value;
         }
 
         public async Task<OrchestratorResponse<ApprenticeshipDetailsViewModel>> GetApprenticeship(string hashedAccountId, string hashedApprenticeshipId, string externalUserId)
@@ -630,7 +574,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task UpdateStopDate(string hashedAccountId, string hashedApprenticeshipId, EditStopDateViewModel model, string externalUserId, string userName, string userEmail)
+        public async Task UpdateStopDate(string hashedAccountId, string hashedApprenticeshipId, EditApprenticeshipStopDateViewModel model, string externalUserId, string userName, string userEmail)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
@@ -647,7 +591,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             ApprenticeshipId = apprenticeshipId
                         });
 
-                CheckApprenticeshipStateValidForChange(data.Apprenticeship);
+                //CheckApprenticeshipStateValidForChange(data.Apprenticeship);
 
                 await _mediator.SendAsync(new UpdateApprenticeshipStopDateCommand
                 {

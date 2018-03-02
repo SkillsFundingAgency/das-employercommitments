@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         [Test]
         public async Task ThenShouldMapResultsToViewModel()
         {
-            await Orchestrator.GetApprenticeshipStopDateDetails(HashedAccountId, HashedApprenticeshipId, ExternalUserId);
+            await Orchestrator.GetEditApprenticeshipStopDateViewModel(HashedAccountId, HashedApprenticeshipId, ExternalUserId);
 
             _apprenticeshipMapper.Verify(
                 x => x.MapToEditApprenticeshipStopDateViewModel(It.IsAny<Apprenticeship>())
@@ -66,7 +66,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         [Test]
         public async Task ThenShouldCallMediatorToCheckAuthorisation()
         {
-            await Orchestrator.GetApprenticeshipStopDateDetails(HashedAccountId, HashedApprenticeshipId, ExternalUserId);
+            await Orchestrator.GetEditApprenticeshipStopDateViewModel(HashedAccountId, HashedApprenticeshipId, ExternalUserId);
 
             MockMediator.Verify(x => x.SendAsync(It.Is<GetUserAccountRoleQuery>(c =>
                             c.HashedAccountId.Equals(HashedAccountId) &&
@@ -77,7 +77,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         [Test]
         public async Task ThenShouldCallMediatorToGetApprenticeshipDetails()
         {
-            await Orchestrator.GetApprenticeshipStopDateDetails(HashedAccountId, HashedApprenticeshipId, ExternalUserId);
+            await Orchestrator.GetEditApprenticeshipStopDateViewModel(HashedAccountId, HashedApprenticeshipId, ExternalUserId);
 
             MockMediator.Verify(x => x.SendAsync(It.Is<GetApprenticeshipQueryRequest>(c =>
                 c.AccountId.Equals(AccountId) &&

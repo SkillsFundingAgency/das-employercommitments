@@ -94,24 +94,24 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var response = await _orchestrator.GetApprenticeshipStopDateDetails(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
+            var response = await _orchestrator.GetEditApprenticeshipStopDateViewModel(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
 
             return View(response);
         }
 
         [HttpPost]
         [Route("{hashedApprenticeshipId}/details/editstopdate", Name = "PostEditStopDate")]
-        public async Task<ActionResult> UpdateApprenticeshipStopDate(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date")] EditStopDateViewModel model)
+        public async Task<ActionResult> UpdateApprenticeshipStopDate(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date")] EditApprenticeshipStopDateViewModel model)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var validatorResult = ModelState.IsValid ? await _orchestrator.ValidateApprenticeshipStopDate(hashedAccountId, hashedApprenticeshipId, model) : null;
-            var validationFailed = validatorResult != null && validatorResult.Count > 0;
+            //var validatorResult = ModelState.IsValid ? await _orchestrator.ValidateApprenticeshipStopDate(hashedAccountId, hashedApprenticeshipId, model) : null;
+            //var validationFailed = validatorResult != null && validatorResult.Count > 0;
 
             var userId = OwinWrapper.GetClaimValue(@"sub");
 
-            if (ModelState.IsValid && !validationFailed)
+            if (ModelState.IsValid) //&& !validationFailed)
             {
                 await _orchestrator.UpdateStopDate(
                     hashedAccountId,
@@ -124,13 +124,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return RedirectToRoute("OnProgrammeApprenticeshipDetails");
             }
 
-            var viewmodel = await _orchestrator.GetApprenticeshipStopDateDetails(hashedAccountId, hashedApprenticeshipId, userId);
+            var viewmodel = await _orchestrator.GetEditApprenticeshipStopDateViewModel(hashedAccountId, hashedApprenticeshipId, userId);
 
-            if (validationFailed)
-            {
-                viewmodel.Data.AddErrorsFromDictionary(validatorResult);
-                AddErrorMessageToModelState(viewmodel.Data.ErrorDictionary);
-            }
+            //if (validationFailed)
+            //{
+            //    viewmodel.Data.AddErrorsFromDictionary(validatorResult);
+            //    AddErrorMessageToModelState(viewmodel.Data.ErrorDictionary);
+            //}
 
             return View("editstopdate", new OrchestratorResponse<EditApprenticeshipStopDateViewModel> { Data = viewmodel.Data });
         }

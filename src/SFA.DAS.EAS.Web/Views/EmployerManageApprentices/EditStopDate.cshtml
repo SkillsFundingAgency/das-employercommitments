@@ -20,25 +20,25 @@
             <h1 class="heading-xlarge">@ViewBag.Title</h1>
             <table class="apprentice-to-stop">
                 <thead>
-                    <tr>
-                        <th colspan="2" class="visually-hidden">Stop apprentice</th>
-                    </tr>
+                <tr>
+                    <th colspan="2" class="visually-hidden">Stop apprentice</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Name</td>
-                        <td class="bold">@Model.Data.ApprenticeshipName</td>
-                    </tr>
-                    <tr>
-                        <td>Unique learner number</td>
-                        <td class="bold">@Model.Data.ApprenticeshipULN</td>
-                    </tr>
-                    <tr>
-                        <td>Current stop date</td>
-                        <td class="bold">
-                            @Model.Data.CurrentStopDate.ToGdsFormat()
-                        </td>
-                    </tr>
+                <tr>
+                    <td>Name</td>
+                    <td class="bold">@Model.Data.ApprenticeshipName</td>
+                </tr>
+                <tr>
+                    <td>Unique learner number</td>
+                    <td class="bold">@Model.Data.ApprenticeshipULN</td>
+                </tr>
+                <tr>
+                    <td>Current stop date</td>
+                    <td class="bold">
+                        @Model.Data.CurrentStopDate.ToGdsFormat()
+                    </td>
+                </tr>
                 </tbody>
             </table>
 
@@ -52,19 +52,19 @@
                             <label for="NewStopDate.Day">
                                 Day
                             </label>
-                            @Html.TextBox("NewStopDate.Day", Model.Data.EditStopDate.NewStopDate.Day, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "31", aria_labelledby = "NewStopDate.Day" })
+                            @Html.TextBox("NewStopDate.Day", Model.Data.NewStopDate.Day, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "31", aria_labelledby = "NewStopDate.Day"})
                         </div>
                         <div class="form-group form-group-month">
                             <label for="NewStopDate.Month">
                                 Month
                             </label>
-                            @Html.TextBox("NewStopDate.Month", Model.Data.EditStopDate.NewStopDate.Month, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "NewStopDate.Month" })
+                            @Html.TextBox("NewStopDate.Month", Model.Data.NewStopDate.Month, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "NewStopDate.Month"})
                         </div>
                         <div class="form-group form-group-year">
                             <label for="NewStopDate.Year">
                                 Year
                             </label>
-                            @Html.TextBox("NewStopDate.Year", Model.Data.EditStopDate.NewStopDate.Year, new {@class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "NewStopDate.Year" })
+                            @Html.TextBox("NewStopDate.Year", Model.Data.NewStopDate.Year, new {@class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "NewStopDate.Year"})
                         </div>
                     </div>
                 </div>
@@ -73,6 +73,13 @@
                     <a class="text-link cancel-link" href=@Url.RouteUrl("OnProgrammeApprenticeshipDetails") aria-label="Cancel">Cancel</a>
                 </div>
             </fieldset>
+            
+            @Html.Hidden("ApprenticeshipName", Model.Data.ApprenticeshipName)
+            @Html.Hidden("ApprenticeshipULN", Model.Data.ApprenticeshipULN)
+            @Html.Hidden("CurrentStopDate",Model.Data.CurrentStopDate.ToShortDateString())
+            @Html.Hidden("EarliestDate", Model.Data.EarliestDate.ToShortDateString())            
+            @Html.Hidden("CurrentAcademicYearStartDate", Model.Data.AcademicYearRestriction)
+            @Html.Hidden("ApprenticeshipStartDate", Model.Data.ApprenticeshipStartDate.ToShortDateString())
         </form>
     </div>
 </div>
@@ -84,6 +91,6 @@
 }
 @section gaDataLayer {
     <script>
-        sfa.dataLayer.vpv = '/accounts/apprentices/manage/when-to-apply-stop'
+        sfa.dataLayer.vpv = '/accounts/apprentices/manage/edit-stop-date'
     </script>
 }

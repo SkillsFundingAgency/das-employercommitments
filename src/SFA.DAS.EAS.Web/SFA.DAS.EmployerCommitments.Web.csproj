@@ -468,7 +468,6 @@
     <Compile Include="ViewModels\ManageApprenticeships\CourseChange.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\DataLockStatusViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\EditApprenticeshipStopDateViewModel.cs" />
-    <Compile Include="ViewModels\ManageApprenticeships\EditStopDateViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PaymentOrderViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PriceChange.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PriceHistoryViewModel.cs" />

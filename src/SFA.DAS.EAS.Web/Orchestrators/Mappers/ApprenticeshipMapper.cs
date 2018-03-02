@@ -9,6 +9,7 @@ using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.Commitments.Api.Types.ProviderPayment;
 using SFA.DAS.Commitments.Api.Types.Validation.Types;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -30,24 +31,22 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         private readonly ILog _logger;
 
         private readonly IAcademicYearValidator _academicYearValidator;
+        private readonly IAcademicYearDateProvider _academicYearDateProvider;
 
         public ApprenticeshipMapper(
             IHashingService hashingService,
             ICurrentDateTime currentDateTime,
             IMediator mediator,
             ILog logger,
-            IAcademicYearValidator academicYearValidator)
+            IAcademicYearValidator academicYearValidator,
+            IAcademicYearDateProvider academicYearDateProvider)
         {
-            if (hashingService == null) throw new ArgumentNullException(nameof(hashingService));
-            if (currentDateTime == null) throw new ArgumentNullException(nameof(currentDateTime));
-            if (mediator == null) throw new ArgumentNullException(nameof(mediator));
-            if (academicYearValidator== null) throw new ArgumentNullException(nameof(academicYearValidator));
-
             _hashingService = hashingService;
             _currentDateTime = currentDateTime;
             _mediator = mediator;
             _logger = logger;
             _academicYearValidator = academicYearValidator;
+            _academicYearDateProvider = academicYearDateProvider;
         }
 
         public ApprenticeshipDetailsViewModel MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship)
@@ -88,15 +87,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                             && new []{ PaymentStatus.Active, PaymentStatus.Paused  }.Contains(apprenticeship.PaymentStatus),
                 CanEditStatus = !(new List<PaymentStatus> { PaymentStatus.Completed, PaymentStatus.Withdrawn }).Contains(apprenticeship.PaymentStatus),
                 CanEditStopDate = (apprenticeship.PaymentStatus == PaymentStatus.Withdrawn && apprenticeship.StartDate != apprenticeship.StopDate)
-            };
-        }
-
-        public EditApprenticeshipStopDateViewModel MapToEditApprenticeshipStopDateViewModel(Apprenticeship apprenticeship)
-        {
-            return new EditApprenticeshipStopDateViewModel
-            {
-                HashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id),
-                ApprenticeshipULN = apprenticeship.ULN
             };
         }
 
@@ -364,6 +354,36 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             return l;
         }
 
+        public EditApprenticeshipStopDateViewModel MapToEditApprenticeshipStopDateViewModel(Apprenticeship apprenticeship)
+        {
+            var result = new EditApprenticeshipStopDateViewModel
+            {
+                ApprenticeshipULN = apprenticeship.ULN,
+                ApprenticeshipName = apprenticeship.ApprenticeshipName,
+                ApprenticeshipStartDate = apprenticeship.StartDate.Value,
+                AcademicYearRestriction = _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod ? //if r14 grace period has past for last a.y.
+                    _academicYearDateProvider.CurrentAcademicYearStartDate : default(DateTime?),
+                CurrentStopDate = apprenticeship.StopDate.Value,
+                //EarliestDate = GetEarliestDateThatApprenticeshipStopDateCanBeSetTo(apprenticeship),
+                NewStopDate = new DateTimeViewModel()
+            };
+
+            result.EarliestDate = result.AcademicYearRestriction.HasValue &&
+                                  result.AcademicYearRestriction.Value > result.ApprenticeshipStartDate
+                ? result.AcademicYearRestriction.Value
+                : result.ApprenticeshipStartDate;
+
+            return result;
+        }
+
+        //private DateTime GetEarliestDateThatApprenticeshipStopDateCanBeSetTo(Apprenticeship apprenticeship)
+        //{
+        //    return _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod //if r14 grace period has past for last a.y.
+        //           && apprenticeship.StartDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate // and start date was in last a.y.
+        //        ? _academicYearDateProvider.CurrentAcademicYearStartDate
+        //        : apprenticeship.StartDate.Value;
+        //}
+
         private bool CalculateIfInFirstCalendarMonthOfTraining(DateTime? startDate)
         {
             if (!startDate.HasValue)
@@ -432,5 +452,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
             return statuses.Distinct();
         }
+
     }
 }
