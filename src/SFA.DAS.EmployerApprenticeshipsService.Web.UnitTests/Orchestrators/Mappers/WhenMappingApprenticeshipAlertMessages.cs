@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipsByUln;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
@@ -147,6 +150,40 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             viewModel.CanEditStopDate.Should().BeFalse();
         }
 
+        [Test]
+        public void ShouldSetCanEditStopDateToFalseIfTheUlnHasBeenReusedInAnActiveApprenticeship()
+        {
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetApprenticeshipsByUlnRequest>()))
+                .ReturnsAsync(new GetApprenticeshipsByUlnResponse
+                {
+                    Apprenticeships = new List<Apprenticeship>
+                    {
+                        { new Apprenticeship {} },
+                        { new Apprenticeship {} }
+                    }
+                });
 
+            var apprenticeship = new Apprenticeship
+            {
+                PaymentStatus = PaymentStatus.Withdrawn,
+                StartDate = new DateTime(2018, 01, 01),
+                StopDate = new DateTime(2018, 6, 01)
+            };
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            viewModel.CanEditStopDate.Should().BeFalse();
+        }
+
+        [Test]
+        public void ShouldSetCanEditStopDateToTrueIfTheUlnHasNotBeenReusedInAnActiveApprenticeship()
+        {
+            var apprenticeship = new Apprenticeship
+            {
+                PaymentStatus = PaymentStatus.Withdrawn,
+                StartDate = new DateTime(2018, 01, 01),
+                StopDate = new DateTime(2018, 6, 01)
+            };
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            viewModel.CanEditStopDate.Should().BeTrue();
+        }
     }
 }

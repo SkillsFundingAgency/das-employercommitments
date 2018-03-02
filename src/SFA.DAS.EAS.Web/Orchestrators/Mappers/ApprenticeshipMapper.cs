@@ -11,6 +11,7 @@ using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.Commitments.Api.Types.ProviderPayment;
 using SFA.DAS.Commitments.Api.Types.Validation.Types;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipsByUln;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -60,7 +61,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             
             var statusText = MapPaymentStatus(apprenticeship.PaymentStatus, apprenticeship.StartDate);
 
-            return new ApprenticeshipDetailsViewModel
+            var result = new ApprenticeshipDetailsViewModel
             {
                 HashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id),
                 FirstName = apprenticeship.FirstName,
@@ -89,6 +90,23 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 CanEditStatus = !(new List<PaymentStatus> { PaymentStatus.Completed, PaymentStatus.Withdrawn }).Contains(apprenticeship.PaymentStatus),
                 CanEditStopDate = (apprenticeship.PaymentStatus == PaymentStatus.Withdrawn && apprenticeship.StartDate != apprenticeship.StopDate)
             };
+
+            //if not already disabled, check if uln has been reused
+            if (result.CanEditStopDate)
+            {
+                var apprenticeshipsResponse = _mediator.SendAsync(new GetApprenticeshipsByUlnRequest
+                {
+                    AccountId = apprenticeship.EmployerAccountId,
+                    Uln = apprenticeship.ULN
+                }).Result; //todo: make this await
+
+                if (apprenticeshipsResponse.Apprenticeships.Count > 1)
+                {
+                    result.CanEditStopDate = false;
+                }
+            }
+
+            return result;
         }
 
         public ApprenticeshipViewModel MapToApprenticeshipViewModel(Apprenticeship apprenticeship, CommitmentView commitment)
