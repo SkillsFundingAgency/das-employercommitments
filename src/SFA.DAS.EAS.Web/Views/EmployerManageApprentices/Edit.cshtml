@@ -51,6 +51,10 @@
             @Html.Hidden("hashedCommitmentId", Model.Data.Apprenticeship.HashedCommitmentId)
             @Html.Hidden("uln", Model.Data.Apprenticeship.ULN)
             @Html.Hidden("HasStarted", Model.Data.Apprenticeship.HasStarted)
+            
+            @* next line deliberately left commented. uncomment to take account of editing transfers in manage your apprenticeships *@
+            @*@Html.Hidden("IsPaidForByTransfer", Model.Data.Apprenticeship.IsPaidForByTransfer)*@
+
             <button type="submit" class="button" aria-label="Add" id="submit-edit-app">Update details</button>
             <a class="button text-link" href="@Url.Action("Details", new { hashedAccountId = Model.Data.Apprenticeship.HashedAccountId, hashedCommitmentId = Model.Data.Apprenticeship.HashedCommitmentId })" aria-label="Cancel">
                 Cancel and return

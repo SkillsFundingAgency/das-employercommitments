@@ -692,7 +692,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             var response = await _employerCommitmentsOrchestrator
                 .GetAcknowledgementModelForExistingCommitment(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
 
-            response.Data.Content = GetAcknowledgementContent(SaveStatus.Save);
+            response.Data.Content = GetAcknowledgementContent(SaveStatus.Save, response.Data.IsTransfer);
 
             return View("Acknowledgement", response);
         }
@@ -726,41 +726,43 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 ? new LinkViewModel { Url = Url.Action("YourCohorts", new { hashedAccountId }), Text = "Return to Your cohorts" }
                 : new LinkViewModel { Url = returnUrl, Text = "Go back to view cohorts" };
 
-            response.Data.Content = GetAcknowledgementContent(saveStatus);
-            
-            
+            response.Data.Content = GetAcknowledgementContent(saveStatus, response.Data.IsTransfer);
 
             return View("Acknowledgement", response);
         }
 
-        private AcknowledgementContent GetAcknowledgementContent(SaveStatus saveStatus)
+        private AcknowledgementContent GetAcknowledgementContent(SaveStatus saveStatus, bool isTransfer)
         {
+            var acknowledgementContent = new AcknowledgementContent {WhatHappensNext = new List<string>()};
+
             switch (saveStatus)
             {
                 case SaveStatus.AmendAndSend:
-                    return new AcknowledgementContent
-                               {
-                                   Title = "Cohort sent for review",
-                                   Text = "Your training provider will review your cohort and contact you as soon as possible."
-                               };
+                    acknowledgementContent.Title = "Cohort sent for review";
+                    acknowledgementContent.WhatHappensNext.Add("Your training provider will review your cohort and contact you as soon as possible.");
+                    break;
                 case SaveStatus.ApproveAndSend:
-                    return new AcknowledgementContent
-                               {
-                                   Title = "Cohort approved and sent to training provider",
-                                   Text = "Your training provider will review your cohort and either confirm the information is correct or contact you to suggest changes."
-                               };
+                {
+                    acknowledgementContent.Title = "Cohort approved and sent to training provider";
+                    acknowledgementContent.WhatHappensNext.Add(
+                        "Your training provider will review your cohort and either confirm the information is correct or contact you to suggest changes.");
+                    if (isTransfer)
+                    {
+                        acknowledgementContent.WhatHappensNext.Add(
+                            "Once the training provider approves the cohort a transfer request will be sent to the funding employer to review.");
+                    }
+                    break;
+                }
                 case SaveStatus.Save:
-                    return new AcknowledgementContent
-                               {
-                                   Title = "Cohort sent to your training provider",
-                                   Text =
-                                   "Your training provider will review your request and contact you as soon as possible - either with questions or to ask you to review the apprentice details they've added."
-                               };
+                    acknowledgementContent.Title = "Cohort sent to your training provider";
+                    acknowledgementContent.WhatHappensNext.Add(
+                        "Your training provider will review your request and contact you as soon as possible - either with questions or to ask you to review the apprentice details they've added.");
+                    break;
             }
-            return new AcknowledgementContent();
+            return acknowledgementContent;
         }
 
-        [HttpGet]
+    [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/Apprenticeships/{hashedApprenticeshipId}/Delete")]
         public async Task<ActionResult> DeleteApprenticeshipConfirmation(string hashedAccountId, string hashedCommitmentId, string hashedApprenticeshipId)

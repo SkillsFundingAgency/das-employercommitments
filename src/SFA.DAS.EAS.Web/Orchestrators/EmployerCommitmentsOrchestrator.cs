@@ -364,10 +364,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 await AssertCommitmentStatus(commitmentId, accountId);
 
+                var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                {
+                    AccountId = accountId,
+                    CommitmentId = commitmentId
+                });
+
                 var apprenticeship = new ApprenticeshipViewModel
                 {
                     HashedAccountId = hashedAccountId,
                     HashedCommitmentId = hashedCommitmentId,
+                    IsPaidForByTransfer = commitmentData.Commitment.TransferSenderId.HasValue
                 };
 
                 return new OrchestratorResponse<ExtendedApprenticeshipViewModel>
@@ -375,7 +382,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ExtendedApprenticeshipViewModel
                     {
                         Apprenticeship = apprenticeship,
-                        ApprenticeshipProgrammes = await GetTrainingProgrammes()
+                        ApprenticeshipProgrammes = await GetTrainingProgrammes(!commitmentData.Commitment.TransferSenderId.HasValue)
                     }
                 };
             }, hashedAccountId, externalUserId);
@@ -413,20 +420,26 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 await AssertCommitmentStatus(commitmentId, accountId);
 
-                var data = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
+                var apprenticeshipData = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
                 {
                     AccountId = accountId,
                     ApprenticeshipId = apprenticeshipId
                 });
 
-                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(data.Apprenticeship);
+                var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                {
+                    AccountId = accountId,
+                    CommitmentId = apprenticeshipData.Apprenticeship.CommitmentId
+                });
+
+                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(apprenticeshipData.Apprenticeship, commitmentData.Commitment);
 
                 apprenticeship.HashedAccountId = hashedAccountId;
 
                 var overlaps = await _mediator.SendAsync(
                     new GetOverlappingApprenticeshipsQueryRequest
                     {
-                        Apprenticeship = new[] { data.Apprenticeship }
+                        Apprenticeship = new[] { apprenticeshipData.Apprenticeship }
                     });
 
                 return new OrchestratorResponse<ExtendedApprenticeshipViewModel>
@@ -434,7 +447,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ExtendedApprenticeshipViewModel
                     {
                         Apprenticeship = apprenticeship,
-                        ApprenticeshipProgrammes = await GetTrainingProgrammes(),
+                        ApprenticeshipProgrammes = await GetTrainingProgrammes(!commitmentData.Commitment.TransferSenderId.HasValue),
                         ValidationErrors = _apprenticeshipMapper.MapOverlappingErrors(overlaps)
                     }
                 };
@@ -451,13 +464,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                var data = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
+                var apprenticeshipData = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
                 {
                     AccountId = accountId,
                     ApprenticeshipId = apprenticeshipId
                 });
 
-                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(data.Apprenticeship);
+                var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                {
+                    AccountId = accountId,
+                    CommitmentId = apprenticeshipData.Apprenticeship.CommitmentId
+                });
+
+                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(apprenticeshipData.Apprenticeship, commitmentData.Commitment);
 
                 apprenticeship.HashedAccountId = hashedAccountId;
 
@@ -693,7 +712,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         HashedCommitmentId = hashedCommitmentId,
                         ProviderName = data.Commitment.ProviderName,
                         LegalEntityName = data.Commitment.LegalEntityName,
-                        Message = GetLatestMessage(data.Commitment.Messages, false)?.Message
+                        Message = GetLatestMessage(data.Commitment.Messages, false)?.Message,
+                        IsTransfer = data.Commitment.TransferSenderId.HasValue
                     }
                 };
             }, hashedAccountId, externalUserId);
@@ -863,7 +883,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var apprenticships = data.Commitment.Apprenticeships?.Select(
                     a => MapToApprenticeshipListItem(a, overlappingApprenticeships)).ToList() ?? new List<ApprenticeshipListItemViewModel>(0);
 
-                var trainingProgrammes = await GetTrainingProgrammes();
+                var trainingProgrammes = await GetTrainingProgrammes(!data.Commitment.TransferSenderId.HasValue);
                 var apprenticeshipGroups = new List<ApprenticeshipListItemGroupViewModel>();
 
                 var errors = new Dictionary<string, string>();
@@ -1246,13 +1266,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 CanBeApproved = apprenticeship.CanBeApproved,
                 OverlappingApprenticeships = overlappingApprenticeships.GetOverlappingApprenticeships(apprenticeship.Id)
             };
-        }
-
-        private async Task<List<ITrainingProgramme>> GetTrainingProgrammes()
-        {
-            var programmes = await _mediator.SendAsync(new GetTrainingProgrammesQueryRequest());
-
-            return programmes.TrainingProgrammes;
         }
 
         private static void AssertCommitmentStatus(

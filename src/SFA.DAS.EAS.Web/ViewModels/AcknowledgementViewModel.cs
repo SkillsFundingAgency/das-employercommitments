@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitments.Web.ViewModels
+﻿using System.Collections.Generic;
+
+namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 {
     public class AcknowledgementViewModel
     {
@@ -15,6 +17,8 @@
         public LinkViewModel BackLink { get; set; }
 
         public AcknowledgementContent Content { get; set; }
+
+        public bool IsTransfer { get; set; }
     }
 
     public class LinkViewModel
@@ -28,6 +32,6 @@
     {
         public string Title { get; set; }
 
-        public string Text { get; set; }
+        public List<string> WhatHappensNext { get; set; }
     }
 }
