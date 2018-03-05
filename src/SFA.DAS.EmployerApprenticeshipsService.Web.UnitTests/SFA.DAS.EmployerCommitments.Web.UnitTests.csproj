@@ -268,7 +268,6 @@
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenDeletingApprenticeship.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingIndexView.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenUpdatingAnEmployeeStopDate.cs" />
-    <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenValidateApprenticeshipStopDate.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingEditApprenticeshipStopDateViewModel.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingProviderPriorityList.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingtLegalEntitySignedAgreement.cs" />
