@@ -106,12 +106,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            //var validatorResult = ModelState.IsValid ? await _orchestrator.ValidateApprenticeshipStopDate(hashedAccountId, hashedApprenticeshipId, model) : null;
-            //var validationFailed = validatorResult != null && validatorResult.Count > 0;
-
             var userId = OwinWrapper.GetClaimValue(@"sub");
 
-            if (ModelState.IsValid) //&& !validationFailed)
+            if (ModelState.IsValid)
             {
                 await _orchestrator.UpdateStopDate(
                     hashedAccountId,
@@ -125,12 +122,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
 
             var viewmodel = await _orchestrator.GetEditApprenticeshipStopDateViewModel(hashedAccountId, hashedApprenticeshipId, userId);
-
-            //if (validationFailed)
-            //{
-            //    viewmodel.Data.AddErrorsFromDictionary(validatorResult);
-            //    AddErrorMessageToModelState(viewmodel.Data.ErrorDictionary);
-            //}
 
             return View("editstopdate", new OrchestratorResponse<EditApprenticeshipStopDateViewModel> { Data = viewmodel.Data });
         }

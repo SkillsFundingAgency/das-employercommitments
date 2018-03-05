@@ -17,7 +17,6 @@ using SFA.DAS.EmployerCommitments.Application.Commands.UpdateProviderPaymentPrio
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipsByUln;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
@@ -597,8 +596,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             AccountId = accountId,
                             ApprenticeshipId = apprenticeshipId
                         });
-
-                //CheckApprenticeshipStateValidForChange(data.Apprenticeship);
 
                 await _mediator.SendAsync(new UpdateApprenticeshipStopDateCommand
                 {
