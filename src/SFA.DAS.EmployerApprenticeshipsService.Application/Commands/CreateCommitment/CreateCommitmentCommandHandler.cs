@@ -91,14 +91,15 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
                 Email = new Email
                 {
                     RecipientsAddress = emailAddress,
-                    TemplateId = "CreateCommitmentNotification",
+                    TemplateId = commitment.TransferSenderId.HasValue ? "ProviderTransferCommitmentNotification" : "CreateCommitmentNotification",
                     ReplyToAddress = "noreply@sfa.gov.uk",
                     Subject = $"<new Cohort created> {commitment.Reference}",
                     SystemId = "x",
                     Tokens = new Dictionary<string, string> {
                         { "cohort_reference", commitment.Reference },
                         { "employer_name", commitment.LegalEntityName },
-                        { "ukprn", commitment.ProviderId.ToString() }
+                        { "ukprn", commitment.ProviderId.ToString() },
+                        { "type", "review" }
                     }
                 }
             };
