@@ -23,6 +23,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                         Id = 789,
                         EmployerAccountId = 123,
                         LegalEntityName = "LegalEntityName",
+                        TransferSenderId = 1000,
+                        TransferSenderName = "Sender 1000",
                         Apprenticeships = new List<Apprenticeship> {
                             new Apprenticeship
                             {
@@ -65,14 +67,14 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         public async Task ThenItShouldGroupTheApprenticeshipsAndMapProperties()
         {
             //Arrange 
-            MockHashingService.Setup(x => x.HashValue(123)).Returns("ABC123");
             MockHashingService.Setup(x => x.HashValue(789)).Returns("XYZ789");
+            MockHashingService.Setup(x => x.HashValue(1000)).Returns("DEF1000");
 
             //Act
             var actual = await EmployerCommitmentOrchestrator.GetCommitmentDetailsForTransfer("ABC123", "XYZ789", "UserA");
 
             //Assert
-            Assert.AreEqual("ABC123", actual.Data.HashedAccountId);
+            Assert.AreEqual("DEF1000", actual.Data.HashedTransferSenderAccountId);
             Assert.AreEqual("XYZ789", actual.Data.HashedCohortReference);
             Assert.AreEqual("LegalEntityName", actual.Data.LegalEntityName);
             Assert.AreEqual(1300m, actual.Data.TotalCost);

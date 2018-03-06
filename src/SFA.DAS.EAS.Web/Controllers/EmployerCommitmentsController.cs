@@ -827,20 +827,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return View(model);
             }
 
+            await _employerCommitmentsOrchestrator.SetTransferApprovalStatus(viewModel, OwinWrapper.GetClaimValue(@"sub"),
+                OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
+                OwinWrapper.GetClaimValue(DasClaimTypes.Email));
+
             var approvalResult = viewModel.ApprovalConfirmed == true ? "Approved" : "Rejected";
             var flashMessage = new FlashMessageViewModel { Severity = FlashMessageSeverityLevel.Okay, Message = string.Format($"This Transfer has been {approvalResult}") };
             AddFlashMessageToCookie(flashMessage);
 
-            //if (viewModel.DeleteConfirmed.HasValue && viewModel.DeleteConfirmed.Value)
-            //{
-            //    await _employerCommitmentsOrchestrator.DeleteApprenticeship(viewModel, OwinWrapper.GetClaimValue(@"sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
-
-            //    var flashMessage = new FlashMessageViewModel { Severity = FlashMessageSeverityLevel.Okay, Message = string.Format($"Apprentice record for {viewModel.ApprenticeshipName} deleted") };
-            //    AddFlashMessageToCookie(flashMessage);
-
-            //    return RedirectToAction("Details", new { viewModel.HashedAccountId, viewModel.HashedCommitmentId });
-            //}
-
+            // TODO Needs to be changed to new Bingo box (when ready)
             return RedirectToAction("Index");
         }
 
