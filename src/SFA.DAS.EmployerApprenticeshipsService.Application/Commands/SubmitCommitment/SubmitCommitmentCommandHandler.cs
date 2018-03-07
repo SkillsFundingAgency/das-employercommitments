@@ -122,7 +122,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment
                     Tokens = new Dictionary<string, string> {
                         { "type", action == LastAction.Approve ? "approval" : "review" },
                         { "cohort_reference", commitment.Reference },
-                        { "first_name",  userDisplayName},
                         { "employer_name",  commitment.LegalEntityName}
                     }
                 }

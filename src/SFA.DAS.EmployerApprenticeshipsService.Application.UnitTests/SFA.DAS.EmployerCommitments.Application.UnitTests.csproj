@@ -151,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CreateApprenticeshipTests\WhenCreatingAnApprenticeship.cs" />
+    <Compile Include="Commands\CreateCommitmentTests\WhenCreatingCommitment.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStatusTests\WhenUpdatingApprenticeshipStatusToStopped.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStatusTests\WhenValidatingTheUpdateApprenticeshipStatusCommand.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStatusTests\WhenUpdatingApprenticeshipStatus.cs" />
