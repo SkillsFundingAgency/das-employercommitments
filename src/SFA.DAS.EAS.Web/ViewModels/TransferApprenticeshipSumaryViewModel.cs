@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 {
-    public sealed class TransferApprenticeshipSumaryViewModel
+    public sealed class TransferCourseSummaryViewModel
     {
         public string CourseTitle { get; set; }
         public int ApprenticeshipCount { get; set; }

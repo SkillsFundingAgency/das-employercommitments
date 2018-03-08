@@ -1137,7 +1137,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var apprenticeships = data.Commitment.Apprenticeships ?? new List<Apprenticeship>();
 
                 var grouped = apprenticeships.GroupBy(l => l.TrainingCode).Select(cl =>
-                    new TransferApprenticeshipSumaryViewModel
+                    new TransferCourseSummaryViewModel
                     {
                         CourseTitle = cl.First().TrainingName,
                         ApprenticeshipCount = cl.Count()

@@ -6,13 +6,13 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
     {
         public TransferCommitmentViewModel()
         {
-            TrainingList = new List<TransferApprenticeshipSumaryViewModel>();
+            TrainingList = new List<TransferCourseSummaryViewModel>();
         }
 
         public string HashedAccountId { get; set; }
         public string LegalEntityName { get; set; }
         public string HashedCohortReference { get; set; }
         public decimal TotalCost { get; set; }
-        public List<TransferApprenticeshipSumaryViewModel> TrainingList { get; set; }
+        public List<TransferCourseSummaryViewModel> TrainingList { get; set; }
     }
 }
