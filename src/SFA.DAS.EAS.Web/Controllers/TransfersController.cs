@@ -48,6 +48,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 TotalCost = 15000
             };
 
+            model.Data.TrainingList.Add(new TransferCourseSummaryViewModel { CourseTitle = "Course AAAA", ApprenticeshipCount = 12 });
+            model.Data.TrainingList.Add(new TransferCourseSummaryViewModel { CourseTitle = "Course BBBB", ApprenticeshipCount = 36 });
+
             return View("TransferDetails", model);
         }
 
