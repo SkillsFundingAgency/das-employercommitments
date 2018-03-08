@@ -260,6 +260,7 @@
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingSkeletonApprenticeshipDetails.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingAcknowledgementModelForExistingCommitment.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingCommitmentViewModelForTransferSender.cs" />
+    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenSettingATransferApproval.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingTransferConnections.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\ManageApprenticeshipsOrchestratorTestBase.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\OrchestratorTestBase.cs" />
