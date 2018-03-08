@@ -14,6 +14,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteApprentice;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment;
+using SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountLegalEntities;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections;
@@ -603,28 +604,25 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task SetTransferApprovalStatus(TransferApprovalConfirmationViewModel model, string externalUserId, string userDisplayName, string userEmail)
+        public async Task SetTransferApprovalStatus(string hashedAccountId, string hashedCommitmentId, TransferApprovalConfirmationViewModel model, string externalUserId, string userDisplayName, string userEmail)
         {
-            var transferSenderId = _hashingService.DecodeValue(model.HashedTransferSenderAccountId);
-            var commitmentId = _hashingService.DecodeValue(model.HashedCommitmentId);
+            var transferSenderId = _hashingService.DecodeValue(hashedAccountId);
+            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
             _logger.Info($"Transfer Approval Confirmation: Sender Account: {transferSenderId}, CommitmentId: {commitmentId}, Approving {model.ApprovalConfirmed}");
 
             await CheckUserAuthorization(async () =>
             {
-                //await _mediator.SendAsync(new SubmitCommitmentCommand
-                //{
-                //    EmployerAccountId = accountId,
-                //    CommitmentId = commitmentId,
-                //    HashedCommitmentId = hashedAccountId,
-                //    Message = string.Empty,
-                //    LastAction = lastAction,
-                //    UserDisplayName = userDisplayName,
-                //    UserEmailAddress = userEmail,
-                //    UserId = externalUserId
-                //});
-            }, model.HashedTransferSenderAccountId, externalUserId);
+                await _mediator.SendAsync(new TransferApprovalCommand
+                {
+                    CommitmentId = commitmentId,
+                    TransferSenderId = transferSenderId,
+                    TransferReceiverId = _hashingService.DecodeValue(model.HashedTransferReceiverAccountId),
+                    TransferStatus = model.ApprovalConfirmed == true ? TransferApprovalStatus.Approved : TransferApprovalStatus.Rejected,
+                    UserEmail = userEmail,
+                    UserName = userDisplayName
+                });
+            }, hashedAccountId, externalUserId);
         }
-
 
         public async Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitNewCommitmentModel(string hashedAccountId, string externalUserId, string transferConnectionCode, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string providerId, string providerName, string cohortRef, SaveStatus saveStatus)
         {

@@ -818,16 +818,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("{hashedCommitmentId}/transfer/approve")]
-        public async Task<ActionResult> TransferApproval(TransferApprovalConfirmationViewModel viewModel)
+        public async Task<ActionResult> TransferApproval(string hashedAccountId, string hashedCommitmentId, TransferApprovalConfirmationViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                var model = await _employerCommitmentsOrchestrator.GetCommitmentDetailsForTransfer(viewModel.HashedTransferSenderAccountId, viewModel.HashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
+                var model = await _employerCommitmentsOrchestrator.GetCommitmentDetailsForTransfer(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
 
                 return View(model);
             }
 
-            await _employerCommitmentsOrchestrator.SetTransferApprovalStatus(viewModel, OwinWrapper.GetClaimValue(@"sub"),
+            await _employerCommitmentsOrchestrator.SetTransferApprovalStatus(hashedAccountId, hashedCommitmentId, viewModel, OwinWrapper.GetClaimValue(@"sub"),
                 OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
                 OwinWrapper.GetClaimValue(DasClaimTypes.Email));
 
