@@ -441,6 +441,8 @@
     <Compile Include="Authentication\OwinWrapper.cs" />
     <Compile Include="Controllers\AccessDeniedController.cs" />
     <Compile Include="Controllers\DataLockController.cs" />
+    <Compile Include="Controllers\BaseEmployerController.cs" />
+    <Compile Include="Controllers\TransfersController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Decorators\AccountApiClientDecorator.cs" />
     <Compile Include="DependencyResolution\StructureMapValidatorFactory.cs" />
@@ -661,6 +663,7 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>_CoreDetail.generated.cs</LastGenOutput>
     </Content>
+    <Content Include="Views\Transfers\TransferDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="comt-assets\css\external-links\external-link-24x24.png" />
