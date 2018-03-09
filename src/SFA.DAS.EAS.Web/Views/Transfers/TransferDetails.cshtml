@@ -10,12 +10,11 @@
 
 @model OrchestratorResponse<TransferCommitmentViewModel>
 
-<div class="form-group">
-    <legend>
+
         <h1 class="heading-xlarge">@ViewBag.Title</h1>
-    </legend>
+   
     @Html.AntiForgeryToken()
-</div>
+
 
 <div class="grid-row">
     <div class="column-full">
@@ -86,7 +85,7 @@
 
             <fieldset role="radiogroup" aria-required="true">
                 <div class="form-error-group form-group @Html.AddClassIfPropertyInError("Confirmation", "error")">
-                    <h1 class="heading-medium" for="">Do you want to approve this transfer request?</h1>
+                    <h2 class="heading-medium" for="">Do you want to approve this transfer request?</h2>
                     <div>
                         @Html.ValidationMessage("Confirmation", "Please choose an option", new { id = "error-message-Confirmation" })
                     </div>
@@ -102,7 +101,7 @@
             </fieldset>
             
             <button type="submit" class="button" id="submit-transfer-connection">Continue</button>
-            <a class="links" href="@Url.Action("Index", "EmployerCommitments")" aria-label="Cancel">Cancel</a>
+            <a class="button-link" href="@Url.Action("Index", "EmployerCommitments")" aria-label="Cancel">Cancel</a>
 
         </form>
     </div>
