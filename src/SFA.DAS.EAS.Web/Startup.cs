@@ -35,11 +35,10 @@ namespace SFA.DAS.EmployerCommitments.Web
         public void Configuration(IAppBuilder app)
         {
             var config = GetConfigurationObject();
-
             
             //var authenticationOrchestrator = StructuremapMvc.StructureMapDependencyScope.Container.GetInstance<AuthenticationOrchestraor>();
             var logger = LogManager.GetLogger("Startup");
-            
+            logger.Info("EmployerCommitments Web Application Started");
 
             JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
 
