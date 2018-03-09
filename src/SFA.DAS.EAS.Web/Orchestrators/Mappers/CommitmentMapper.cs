@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.ServiceBus.Messaging;
+using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
@@ -72,8 +74,24 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 LegalEntityName = commitment.LegalEntityName,
                 HashedCohortReference = _hashingService.HashValue(commitment.Id),
                 TrainingList = grouped.ToList(),
+                TransferApprovalStatus = ToApprovalStatusDescription(commitment.TransferApprovalStatus),
                 TotalCost = apprenticeships.Sum(x => x.Cost) ?? 0
             };
+        }
+
+        private string ToApprovalStatusDescription(TransferApprovalStatus commitmentTransferApprovalStatus)
+        {
+            switch (commitmentTransferApprovalStatus)
+            {
+                case TransferApprovalStatus.Approved:
+                    return "Approved";
+                case TransferApprovalStatus.Rejected:
+                    return "Rejected";
+                case TransferApprovalStatus.Pending:
+                    return "Pending";
+                default:
+                    return "Unknown";
+            }
         }
     }
 }

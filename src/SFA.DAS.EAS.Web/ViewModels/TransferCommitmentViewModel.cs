@@ -15,5 +15,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string HashedCohortReference { get; set; }
         public decimal TotalCost { get; set; }
         public List<TransferCourseSummaryViewModel> TrainingList { get; set; }
+        public string TransferApprovalStatus { get; set; }
     }
 }

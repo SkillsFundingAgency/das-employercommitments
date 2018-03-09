@@ -6,10 +6,10 @@ using SFA.DAS.EmployerCommitments.Web.Authentication;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
+using SFA.DAS.EmployerUsers.WebClientComponents;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
-
     [Authorize]
     [CommitmentsRoutePrefix("accounts/{hashedaccountId}/transfers")]
     public class TransfersController : BaseEmployerController
@@ -23,8 +23,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
-        [Route("{hashedCommitmentId}/transfer")]
-        public async Task<ActionResult> TransferDetails(string hashedAccountId, string hashedCommitmentId)
+        [Route("{hashedCommitmentId}/approve")]
+        public async Task<ActionResult> TransferApproval(string hashedAccountId, string hashedCommitmentId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
@@ -34,27 +34,28 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        [OutputCache(CacheProfile = "NoCache")]
-        [Route("{hashedCommitmentId}/transfer/demo")]
-        public async Task<ActionResult> TransferDetailsDemo(string hashedAccountId, string hashedCommitmentId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("{hashedCommitmentId}/approve")]
+        public async Task<ActionResult> TransferApproval(string hashedAccountId, string hashedCommitmentId, TransferApprovalConfirmationViewModel viewModel)
         {
-            var model = new OrchestratorResponse<TransferCommitmentViewModel>();
-            model.Data = new TransferCommitmentViewModel
+            if (!ModelState.IsValid)
             {
-                HashedTransferSenderAccountId = "ABC123",
-                HashedTransferReceiverAccountId = "XYZ123",
-                HashedCohortReference = "COH1234",
-                LegalEntityName = "Receiving Company Name",
-                TotalCost = 15000
-            };
+                var model = await EmployerCommitmentsOrchestrator.GetCommitmentDetailsForTransfer(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
 
-            model.Data.TrainingList.Add(new TransferCourseSummaryViewModel { CourseTitle = "Course AAAA", ApprenticeshipCount = 12 });
-            model.Data.TrainingList.Add(new TransferCourseSummaryViewModel { CourseTitle = "Course BBBB", ApprenticeshipCount = 36 });
+                return View(model);
+            }
 
-            return View("TransferDetails", model);
+            await EmployerCommitmentsOrchestrator.SetTransferApprovalStatus(hashedAccountId, hashedCommitmentId, viewModel, OwinWrapper.GetClaimValue(@"sub"),
+                OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
+                OwinWrapper.GetClaimValue(DasClaimTypes.Email));
+
+            var approvalResult = viewModel.ApprovalConfirmed == true ? "Approved" : "Rejected";
+            var flashMessage = new FlashMessageViewModel { Severity = FlashMessageSeverityLevel.Okay, Message = string.Format($"This Transfer has been {approvalResult}") };
+            AddFlashMessageToCookie(flashMessage);
+
+            // TODO Needs to be changed to new Bingo box (when ready)
+            return RedirectToAction("Index", "EmployerCommitments");
         }
-
-
     }
 }

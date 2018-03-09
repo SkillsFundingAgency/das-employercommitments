@@ -2,6 +2,7 @@
 using MediatR;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -63,9 +64,12 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             _sut = new CommitmentMapper(_hashingService.Object, _commitmentStatusCalculator.Object);
         }
 
-        [Test]
-        public void ThenMappingACommitmentWithAppenticesMapsFieldsCorrectly()
+        [TestCase(TransferApprovalStatus.Approved, "Approved")]
+        [TestCase(TransferApprovalStatus.Rejected, "Rejected")]
+        [TestCase(TransferApprovalStatus.Pending, "Pending")]
+        public void ThenMappingACommitmentWithAppenticesMapsFieldsCorrectly(TransferApprovalStatus status, string statusDescription)
         {
+            _commitmentView.TransferApprovalStatus = status;
             var result = _sut.MapToTransferCommitmentViewModel(_commitmentView);
             Assert.AreEqual("DEF1000", result.HashedTransferSenderAccountId);
             Assert.AreEqual("XYZ789", result.HashedCohortReference);
@@ -78,6 +82,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             Assert.AreEqual("Name2", result.TrainingList[1].CourseTitle);
             Assert.AreEqual(1, result.TrainingList[1].ApprenticeshipCount);
             Assert.AreEqual("Name2 (1 Apprentices)", result.TrainingList[1].SummaryDescription);
+            Assert.AreEqual(statusDescription, result.TransferApprovalStatus);
 
         }
         [Test]

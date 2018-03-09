@@ -663,7 +663,7 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>_CoreDetail.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Views\Transfers\TransferDetails.cshtml" />
+    <Content Include="Views\Transfers\TransferApproval.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="comt-assets\css\external-links\external-link-24x24.png" />
@@ -1138,7 +1138,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EmployerCommitments\SelectTransferConnection.cshtml" />
-    <Content Include="Views\EmployerCommitments\TransferApproval.cshtml" />
     <None Include="Views\razorgenerator.directives" />
   </ItemGroup>
   <ItemGroup>

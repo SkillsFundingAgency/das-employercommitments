@@ -790,43 +790,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return RedirectToAction("EditApprenticeship", new { viewModel.HashedAccountId, viewModel.HashedCommitmentId, viewModel.HashedApprenticeshipId });
         }
 
-        [HttpGet]
-        [OutputCache(CacheProfile = "NoCache")]
-        [Route("{hashedCommitmentId}/transfer/approve")]
-        public async Task<ActionResult> TransferApproval(string hashedAccountId, string hashedCommitmentId)
-        {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            var model = await EmployerCommitmentsOrchestrator.GetCommitmentDetailsForTransfer(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("{hashedCommitmentId}/transfer/approve")]
-        public async Task<ActionResult> TransferApproval(string hashedAccountId, string hashedCommitmentId, TransferApprovalConfirmationViewModel viewModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                var model = await EmployerCommitmentsOrchestrator.GetCommitmentDetailsForTransfer(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
-
-                return View(model);
-            }
-
-            await EmployerCommitmentsOrchestrator.SetTransferApprovalStatus(hashedAccountId, hashedCommitmentId, viewModel, OwinWrapper.GetClaimValue(@"sub"),
-                OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
-                OwinWrapper.GetClaimValue(DasClaimTypes.Email));
-
-            var approvalResult = viewModel.ApprovalConfirmed == true ? "Approved" : "Rejected";
-            var flashMessage = new FlashMessageViewModel { Severity = FlashMessageSeverityLevel.Okay, Message = string.Format($"This Transfer has been {approvalResult}") };
-            AddFlashMessageToCookie(flashMessage);
-
-            // TODO Needs to be changed to new Bingo box (when ready)
-            return RedirectToAction("Index");
-        }
-
         private async Task<ActionResult> RedisplayCreateApprenticeshipView(ApprenticeshipViewModel apprenticeship)
         {
             var response = await EmployerCommitmentsOrchestrator.GetSkeletonApprenticeshipDetails(apprenticeship.HashedAccountId, OwinWrapper.GetClaimValue(@"sub"), apprenticeship.HashedCommitmentId);
