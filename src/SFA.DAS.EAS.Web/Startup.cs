@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitments.Web
             
             //var authenticationOrchestrator = StructuremapMvc.StructureMapDependencyScope.Container.GetInstance<AuthenticationOrchestraor>();
             var logger = LogManager.GetLogger("Startup");
-            logger.Info("EmployerCommitments Web Application Started");
+            logger.Info("Starting EmployerCommitments Web Application");
 
             JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
 
