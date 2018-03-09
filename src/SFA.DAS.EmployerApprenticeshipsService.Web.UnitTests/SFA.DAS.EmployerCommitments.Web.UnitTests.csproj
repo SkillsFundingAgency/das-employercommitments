@@ -273,6 +273,7 @@
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingFinishEditing.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenApprenticeshipsAreStoredInTheCookie.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingViewChanges.cs" />
+    <Compile Include="Orchestrators\Mappers\CommitmentMapperTests\WhenMappingToTransferCommitmentViewModel.cs" />
     <Compile Include="Orchestrators\Mappers\WhenMappingApprenticeships.cs" />
     <Compile Include="Orchestrators\Mappers\WhenMappingApprenticeshipAlertMessages.cs" />
     <Compile Include="Orchestrators\Mappers\WhenMappingApprenticeshipViewModel.cs" />

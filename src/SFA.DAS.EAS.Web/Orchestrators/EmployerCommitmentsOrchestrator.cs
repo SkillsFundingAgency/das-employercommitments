@@ -1155,24 +1155,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     CallType = CallType.TransferSender
                 });
 
-                var apprenticeships = data.Commitment.Apprenticeships ?? new List<Apprenticeship>();
-
-                var grouped = apprenticeships.GroupBy(l => l.TrainingCode).Select(cl =>
-                    new TransferCourseSummaryViewModel
-                    {
-                        CourseTitle = cl.First().TrainingName,
-                        ApprenticeshipCount = cl.Count()
-                    });
-
-                var viewModel = new TransferCommitmentViewModel()
-                {
-                    HashedTransferReceiverAccountId = _hashingService.HashValue(data.Commitment.EmployerAccountId),
-                    HashedTransferSenderAccountId = _hashingService.HashValue(data.Commitment.TransferSenderId.Value),
-                    LegalEntityName = data.Commitment.LegalEntityName,
-                    HashedCohortReference = _hashingService.HashValue(data.Commitment.Id),
-                    TrainingList = grouped.ToList(),
-                    TotalCost = apprenticeships.Sum(x => x.Cost) ?? 0
-                };
+                var viewModel = _commitmentMapper.MapToTransferCommitmentViewModel(data.Commitment);
 
                 return new OrchestratorResponse<TransferCommitmentViewModel>
                 {

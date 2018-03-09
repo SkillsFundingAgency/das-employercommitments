@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -47,6 +50,29 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 Name = commitment.Reference,
                 LegalEntityName = commitment.LegalEntityName,
                 ProviderName = commitment.ProviderName
+            };
+        }
+
+        public TransferCommitmentViewModel MapToTransferCommitmentViewModel(CommitmentView commitment)
+        {
+
+            var apprenticeships = commitment.Apprenticeships ?? new List<Apprenticeship>();
+
+            var grouped = apprenticeships.GroupBy(l => l.TrainingCode).Select(cl =>
+                new TransferCourseSummaryViewModel
+                {
+                    CourseTitle = cl.First().TrainingName,
+                    ApprenticeshipCount = cl.Count()
+                });
+
+            return new TransferCommitmentViewModel()
+            {
+                HashedTransferReceiverAccountId = _hashingService.HashValue(commitment.EmployerAccountId),
+                HashedTransferSenderAccountId = _hashingService.HashValue(commitment.TransferSenderId.Value),
+                LegalEntityName = commitment.LegalEntityName,
+                HashedCohortReference = _hashingService.HashValue(commitment.Id),
+                TrainingList = grouped.ToList(),
+                TotalCost = apprenticeships.Sum(x => x.Cost) ?? 0
             };
         }
     }
