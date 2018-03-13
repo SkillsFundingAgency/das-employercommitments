@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetFrameworks;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetStandards;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
@@ -17,9 +14,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         [Test]
         public async Task ThenFrameworksAreNotRetrievedForCohortsFundedByTransfer()
         {
-            CommitmentView.TransferSenderId = 123;
+            CommitmentView.TransferSenderInfo = new TransferSenderInfo {TransferSenderId = 123};
 
-            await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
+        await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
 
             MockMediator.Verify(x => x.SendAsync(It.IsAny<GetStandardsQueryRequest>()), Times.Once);
             MockMediator.Verify(x => x.SendAsync(It.IsAny<GetFrameworksQueryRequest>()), Times.Never);
@@ -29,7 +26,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         [Test]
         public async Task ThenFrameworksAreRetrievedForCohortsNotFundedByTransfer()
         {
-            CommitmentView.TransferSenderId = default(long?);
+            CommitmentView.TransferSenderInfo = null;
 
             await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
 

@@ -35,8 +35,12 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
                 Id = 789,
                 EmployerAccountId = 123,
                 LegalEntityName = "LegalEntityName",
-                TransferSenderId = 1000,
-                TransferSenderName = "Sender 1000",
+                TransferSenderInfo = new TransferSenderInfo
+                {
+                    TransferSenderId = 1000,
+                    TransferSenderName = "Sender 1000"
+
+                },
                 Apprenticeships = new List<Apprenticeship>
                 {
                     new Apprenticeship
@@ -69,7 +73,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         [TestCase(TransferApprovalStatus.Pending, "Pending")]
         public void ThenMappingACommitmentWithAppenticesMapsFieldsCorrectly(TransferApprovalStatus status, string statusDescription)
         {
-            _commitmentView.TransferApprovalStatus = status;
+            _commitmentView.TransferSenderInfo.TransferApprovalStatus = status;
             var result = _sut.MapToTransferCommitmentViewModel(_commitmentView);
             Assert.AreEqual("DEF1000", result.HashedTransferSenderAccountId);
             Assert.AreEqual("XYZ789", result.HashedCohortReference);

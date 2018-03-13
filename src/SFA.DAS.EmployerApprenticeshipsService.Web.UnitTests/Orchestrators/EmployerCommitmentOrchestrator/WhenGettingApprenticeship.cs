@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetFrameworks;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetStandards;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
@@ -13,7 +14,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         [Test]
         public async Task ThenFrameworksAreNotRetrievedForCohortsFundedByTransfer()
         {
-            CommitmentView.TransferSenderId = 123;
+            CommitmentView.TransferSenderInfo = new TransferSenderInfo { TransferSenderId = 123 };
 
             await EmployerCommitmentOrchestrator.GetApprenticeship("HashedAccId", "ExtUserId", "HashedCmtId", "AppId");
 
@@ -25,7 +26,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         [Test]
         public async Task ThenFrameworksAreRetrievedForCohortsNotFundedByTransfer()
         {
-            CommitmentView.TransferSenderId = default(long?);
+            CommitmentView.TransferSenderInfo = null;
 
             await EmployerCommitmentOrchestrator.GetApprenticeship("HashedAccId", "ExtUserId", "HashedCmtId", "AppId");
 

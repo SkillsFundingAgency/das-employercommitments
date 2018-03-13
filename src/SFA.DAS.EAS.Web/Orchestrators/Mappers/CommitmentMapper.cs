@@ -70,11 +70,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             return new TransferCommitmentViewModel()
             {
                 HashedTransferReceiverAccountId = _hashingService.HashValue(commitment.EmployerAccountId),
-                HashedTransferSenderAccountId = _hashingService.HashValue(commitment.TransferSenderId.Value),
+                HashedTransferSenderAccountId = _hashingService.HashValue(commitment.TransferSenderInfo.TransferSenderId.Value),
                 LegalEntityName = commitment.LegalEntityName,
                 HashedCohortReference = _hashingService.HashValue(commitment.Id),
                 TrainingList = grouped.ToList(),
-                TransferApprovalStatus = ToApprovalStatusDescription(commitment.TransferApprovalStatus),
+                TransferApprovalStatus = ToApprovalStatusDescription(commitment.TransferSenderInfo.TransferApprovalStatus),
                 TotalCost = apprenticeships.Sum(x => x.Cost) ?? 0
             };
         }

@@ -15,7 +15,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         [Test]
         public async Task ThenFrameworksAreNotRetrievedForCohortsFundedByTransfer()
         {
-            CommitmentView.TransferSenderId = 123;
+            CommitmentView.TransferSenderInfo = new TransferSenderInfo { TransferSenderId = 123 };
 
             await EmployerCommitmentOrchestrator.GetSkeletonApprenticeshipDetails("HashedAccId", "ExtUserId", "HashedCmtId");
 
@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         [Test]
         public async Task ThenFrameworksAreRetrievedForCohortsNotFundedByTransfer()
         {
-            CommitmentView.TransferSenderId = default(long?);
+            CommitmentView.TransferSenderInfo = null;
 
             await EmployerCommitmentOrchestrator.GetSkeletonApprenticeshipDetails("HashedAccId", "ExtUserId", "HashedCmtId");
 

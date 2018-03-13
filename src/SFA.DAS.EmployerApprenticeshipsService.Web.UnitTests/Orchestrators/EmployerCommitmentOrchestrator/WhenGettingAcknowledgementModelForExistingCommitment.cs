@@ -18,7 +18,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 {
                     Commitment = new CommitmentView
                     {
-                        TransferSenderId = 1,
+                        TransferSenderInfo = new TransferSenderInfo
+                        {
+                            TransferSenderId = 1
+                        },
                         Messages = new List<MessageView>()
                     }
                 });
@@ -38,7 +41,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 {
                     Commitment = new CommitmentView
                     {
-                        TransferSenderId = null,
+                        TransferSenderInfo = null,
                         Messages = new List<MessageView>()
                     }
                 });
