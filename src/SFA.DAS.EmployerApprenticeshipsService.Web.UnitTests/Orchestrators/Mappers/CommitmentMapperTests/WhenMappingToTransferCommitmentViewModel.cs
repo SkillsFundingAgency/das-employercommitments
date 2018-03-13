@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MediatR;
 using Moq;
 using NUnit.Framework;
@@ -38,8 +39,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
                 TransferSenderInfo = new TransferSenderInfo
                 {
                     TransferSenderId = 1000,
-                    TransferSenderName = "Sender 1000"
-
+                    TransferSenderName = "Sender 1000",
+                    TransferApprovalStatus = TransferApprovalStatus.Approved,
+                    TransferApprovalSetBy = "tester",
+                    TransferApprovalSetOn = new DateTime(2018, 3, 1)
                 },
                 Apprenticeships = new List<Apprenticeship>
                 {
@@ -61,7 +64,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
                         TrainingName = "Name2",
                         Cost = 1000
                     },
-
                 }
             };
 
@@ -87,6 +89,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             Assert.AreEqual(1, result.TrainingList[1].ApprenticeshipCount);
             Assert.AreEqual("Name2 (1 Apprentices)", result.TrainingList[1].SummaryDescription);
             Assert.AreEqual(statusDescription, result.TransferApprovalStatus);
+            Assert.AreEqual("tester", result.TransferApprovalSetBy);
+            Assert.AreEqual(_commitmentView.TransferSenderInfo.TransferApprovalSetOn, result.TransferApprovalSetOn);
 
         }
         [Test]

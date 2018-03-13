@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 {
@@ -16,5 +18,9 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public decimal TotalCost { get; set; }
         public List<TransferCourseSummaryViewModel> TrainingList { get; set; }
         public string TransferApprovalStatus { get; set; }
+        public string TransferApprovalSetBy { get; set; }
+        public DateTime? TransferApprovalSetOn { get; set; }
+        public bool PendingApproval => TransferApprovalStatus == "Pending";
+
     }
 }

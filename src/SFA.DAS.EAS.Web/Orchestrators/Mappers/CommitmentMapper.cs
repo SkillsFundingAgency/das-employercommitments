@@ -75,6 +75,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 HashedCohortReference = _hashingService.HashValue(commitment.Id),
                 TrainingList = grouped.ToList(),
                 TransferApprovalStatus = ToApprovalStatusDescription(commitment.TransferSenderInfo.TransferApprovalStatus),
+                TransferApprovalSetBy = commitment.TransferSenderInfo.TransferApprovalSetBy,
+                TransferApprovalSetOn = commitment.TransferSenderInfo.TransferApprovalSetOn,
                 TotalCost = apprenticeships.Sum(x => x.Cost) ?? 0
             };
         }
