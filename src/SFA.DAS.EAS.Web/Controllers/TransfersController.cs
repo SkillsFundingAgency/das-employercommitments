@@ -23,8 +23,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
-        [Route("{hashedCommitmentId}/approve")]
-        public async Task<ActionResult> TransferApproval(string hashedAccountId, string hashedCommitmentId)
+        [Route("{hashedCommitmentId}")]
+        public async Task<ActionResult> TransferDetails(string hashedAccountId, string hashedCommitmentId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             {
                 var model = await EmployerCommitmentsOrchestrator.GetCommitmentDetailsForTransfer(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
 
-                return View(model);
+                return View("TransferDetails", model);
             }
 
             await EmployerCommitmentsOrchestrator.SetTransferApprovalStatus(hashedAccountId, hashedCommitmentId, viewModel, OwinWrapper.GetClaimValue(@"sub"),
@@ -57,5 +57,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             // TODO Needs to be changed to new Bingo box (when ready)
             return RedirectToAction("Index", "EmployerCommitments");
         }
+
+
+        [HttpGet]
+        [Route("Confirmation")]
+        public async Task<ActionResult> TransferConfirmation(string approvalAction)
+        {
+            return View();
+        }
+
     }
 }
