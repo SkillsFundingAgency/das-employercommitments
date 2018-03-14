@@ -6,11 +6,11 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment
     {
         public GetCommitmentQueryRequest()
         {
-            CallType = CallType.Employer;
+            CallType = CallerType.Employer;
         }
         public long AccountId { get; set; }
         public long CommitmentId { get; set; }
-        public CallType CallType { get; set; }
+        public CallerType CallType { get; set; }
     }
 }
 

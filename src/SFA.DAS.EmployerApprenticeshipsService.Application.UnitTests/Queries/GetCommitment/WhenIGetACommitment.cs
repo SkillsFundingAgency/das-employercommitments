@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetCommitmen
         public async Task ThenTheApiIsCalledForEmployerExplicitly()
         {
             // Arrange
-            _query.CallType = CallType.Employer;
+            _query.CallType = CallerType.Employer;
 
             //Act
             var result = await _requestHandler.Handle(_query);
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetCommitmen
         public async Task ThenTheApiIsCalledForTransferSenderExplicitly()
         {
             // Arrange
-            _query.CallType = CallType.TransferSender;
+            _query.CallType = CallerType.TransferSender;
 
             //Act
             var result = await _requestHandler.Handle(_query);

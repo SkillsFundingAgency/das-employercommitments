@@ -663,8 +663,8 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>_CoreDetail.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Views\Transfers\TransferDetails.cshtml" />
     <Content Include="Views\Transfers\TransferConfirmation.cshtml" />
+    <Content Include="Views\Transfers\TransferDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="comt-assets\css\external-links\external-link-24x24.png" />
