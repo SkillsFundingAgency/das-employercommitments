@@ -50,14 +50,27 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
                 OwinWrapper.GetClaimValue(DasClaimTypes.Email));
 
-            var approvalResult = viewModel.ApprovalConfirmed == true ? "Approved" : "Rejected";
-            var flashMessage = new FlashMessageViewModel { Severity = FlashMessageSeverityLevel.Okay, Message = string.Format($"This Transfer has been {approvalResult}") };
-            AddFlashMessageToCookie(flashMessage);
+            if (viewModel.ApprovalConfirmed == true)
+            {
+                return RedirectToAction("TransferApprovedConfirmation");
+            }
 
-            // TODO Needs to be changed to new Bingo box (when ready)
-            return RedirectToAction("Index", "EmployerCommitments");
+            return RedirectToAction("TransferRejectedConfirmation");
         }
 
+        [HttpGet]
+        [Route("{hashedCommitmentId}/approved")]
+        public async Task<ActionResult> TransferApprovedConfirmation()
+        {
+            return View("TransferConfirmation", (object)"Approved");
+        }
+
+        [HttpGet]
+        [Route("{hashedCommitmentId}/rejected")]
+        public async Task<ActionResult> TransferRejectedConfirmation()
+        {
+            return View("TransferConfirmation", (object)"Rejected");
+        }
 
         [HttpGet]
         [Route("Confirmation")]
