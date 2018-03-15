@@ -50,33 +50,21 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
                 OwinWrapper.GetClaimValue(DasClaimTypes.Email));
 
-            if (viewModel.ApprovalConfirmed == true)
+            var status = (bool)viewModel.ApprovalConfirmed ? "Approved" : "Rejected";
+
+            return View("TransferConfirmation", new TransferConfirmationViewModel { TransferApprovalStatus = status });
+        }
+
+
+        [HttpPost]
+        [Route("{hashedCommitmentId}/confirmation")]
+        public async Task<ActionResult> TransferConfirmation(TransferConfirmationViewModel request)
+        {
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction("TransferApprovedConfirmation");
+                return View("TransferConfirmation", request);
             }
-
-            return RedirectToAction("TransferRejectedConfirmation");
-        }
-
-        [HttpGet]
-        [Route("{hashedCommitmentId}/approved")]
-        public async Task<ActionResult> TransferApprovedConfirmation()
-        {
-            return View("TransferConfirmation", (object)"Approved");
-        }
-
-        [HttpGet]
-        [Route("{hashedCommitmentId}/rejected")]
-        public async Task<ActionResult> TransferRejectedConfirmation()
-        {
-            return View("TransferConfirmation", (object)"Rejected");
-        }
-
-        [HttpGet]
-        [Route("Confirmation")]
-        public async Task<ActionResult> TransferConfirmation(string approvalAction)
-        {
-            return View();
+            return Redirect(request.UrlAddress);
         }
 
     }
