@@ -23,8 +23,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
-        [Route("{hashedCommitmentId}/approve")]
-        public async Task<ActionResult> TransferApproval(string hashedAccountId, string hashedCommitmentId)
+        [Route("{hashedCommitmentId}")]
+        public async Task<ActionResult> TransferDetails(string hashedAccountId, string hashedCommitmentId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
@@ -43,19 +43,30 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             {
                 var model = await EmployerCommitmentsOrchestrator.GetCommitmentDetailsForTransfer(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
 
-                return View(model);
+                return View("TransferDetails", model);
             }
 
             await EmployerCommitmentsOrchestrator.SetTransferApprovalStatus(hashedAccountId, hashedCommitmentId, viewModel, OwinWrapper.GetClaimValue(@"sub"),
                 OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
                 OwinWrapper.GetClaimValue(DasClaimTypes.Email));
 
-            var approvalResult = viewModel.ApprovalConfirmed == true ? "Approved" : "Rejected";
-            var flashMessage = new FlashMessageViewModel { Severity = FlashMessageSeverityLevel.Okay, Message = string.Format($"This Transfer has been {approvalResult}") };
-            AddFlashMessageToCookie(flashMessage);
+            var status = (bool)viewModel.ApprovalConfirmed ? "approved" : "rejected";
 
-            // TODO Needs to be changed to new Bingo box (when ready)
-            return RedirectToAction("Index", "EmployerCommitments");
+            return View("TransferConfirmation", new TransferConfirmationViewModel { TransferApprovalStatus = status, TransferReceiverName = viewModel.TransferReceiverName});
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("{hashedCommitmentId}/confirmation")]
+        public async Task<ActionResult> TransferConfirmation(TransferConfirmationViewModel request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("TransferConfirmation", request);
+            }
+            return Redirect(request.UrlAddress);
+        }
+
     }
 }

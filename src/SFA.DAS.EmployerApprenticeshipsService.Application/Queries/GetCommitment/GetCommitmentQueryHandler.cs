@@ -19,12 +19,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment
         {
             CommitmentView commitment = null;
 
-            switch (message.CallType)
+            switch (message.CallerType)
             {
-                case CallType.Employer:
+                case CallerType.Employer:
                     commitment = await _commitmentsApi.GetEmployerCommitment(message.AccountId, message.CommitmentId);
                     break;
-                case CallType.TransferSender:
+                case CallerType.TransferSender:
                     commitment = await _commitmentsApi.GetTransferSenderCommitment(message.AccountId, message.CommitmentId);
                     break;
             }

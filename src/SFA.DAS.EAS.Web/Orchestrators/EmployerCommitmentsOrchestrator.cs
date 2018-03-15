@@ -616,7 +616,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     CommitmentId = commitmentId,
                     TransferSenderId = transferSenderId,
-                    TransferReceiverId = _hashingService.DecodeValue(model.HashedTransferReceiverAccountId),
                     TransferStatus = model.ApprovalConfirmed == true ? TransferApprovalStatus.Approved : TransferApprovalStatus.Rejected,
                     UserEmail = userEmail,
                     UserName = userDisplayName
@@ -1152,7 +1151,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     AccountId = accountId,
                     CommitmentId = commitmentId,
-                    CallType = CallType.TransferSender
+                    CallerType = CallerType.TransferSender
                 });
 
                 var viewModel = _commitmentMapper.MapToTransferCommitmentViewModel(data.Commitment);

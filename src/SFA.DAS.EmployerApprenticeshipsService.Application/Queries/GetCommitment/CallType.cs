@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment
 {
-    public enum CallType
+    public enum CallerType
     {
         Employer,
         TransferSender

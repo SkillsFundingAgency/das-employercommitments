@@ -120,18 +120,16 @@
                     </div>
                 </fieldset>
                 <button type="submit" class="button" id="submit-transfer-connection">Continue</button>
-                <a class="button-link" href="@Url.Action("Index", "EmployerCommitments")" aria-label="Cancel">Cancel</a>
                 @Html.AntiForgeryToken()
-                @Html.Hidden("HashedTransferReceiverAccountId", Model.Data.HashedTransferReceiverAccountId)
+                @Html.Hidden("TransferReceiverName", Model.Data.LegalEntityName)
             </form>
         </div>
     </div>
 }
-
 @section breadcrumb {
-    <div class="breadcrumbs">
-        <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to Apprentices" class="back-link">Back to Apprentices</a>
-    </div>
+<div class="breadcrumbs">
+    <a href="@Url.ExternalUrlAction("teams", "transfers")">Back to Transfers</a>
+</div>
 }
 
 @section gaDataLayer {

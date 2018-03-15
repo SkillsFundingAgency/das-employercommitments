@@ -458,9 +458,11 @@
     <Compile Include="Plumbing\Mvc\GoogleTagManagerFilterAttribute.cs" />
     <Compile Include="Validators\ChangeStatusViewModelValidator.cs" />
     <Compile Include="Validators\DataLockStatusViewModelViewModelValidator.cs" />
+    <Compile Include="Validators\TransferConfirmationViewModelValidator.cs" />
     <Compile Include="Validators\TransferApprovalConfirmationViewModelValidator.cs" />
     <Compile Include="Validators\ProviderPriorityReOrderListValidator.cs" />
     <Compile Include="ViewModels\CommitmentsIndexViewModel.cs" />
+    <Compile Include="ViewModels\TransferConfirmationViewModel.cs" />
     <Compile Include="ViewModels\TransferApprovalConfirmationViewModel.cs" />
     <Compile Include="ViewModels\TransferApprenticeshipSumaryViewModel.cs" />
     <Compile Include="ViewModels\TransferCommitmentViewModel.cs" />
@@ -663,7 +665,8 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>_CoreDetail.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Views\Transfers\TransferApproval.cshtml" />
+    <Content Include="Views\Transfers\TransferConfirmation.cshtml" />
+    <Content Include="Views\Transfers\TransferDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="comt-assets\css\external-links\external-link-24x24.png" />

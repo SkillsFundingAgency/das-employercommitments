@@ -24,7 +24,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
             {
                 CommitmentId = 876,
                 TransferSenderId = 676,
-                TransferReceiverId = 100,
                 TransferStatus = TransferApprovalStatus.Rejected
             };
             _repositoryCommitment = new CommitmentView
@@ -51,7 +50,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
             _mockCommitmentApi.Verify(x => x.PatchTransferApprovalStatus(_command.TransferSenderId,
                 _command.CommitmentId,
                 It.Is<TransferApprovalRequest>(p =>
-                    p.TransferReceiverId == _command.TransferReceiverId &&
                     p.TransferApprovalStatus == _command.TransferStatus &&
                     p.UserEmail == _command.UserEmail && p.UserName == _command.UserName)));
         }
