@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
 
             //Assert
             MockMediator.Verify(x => x.SendAsync(It.Is<GetCommitmentQueryRequest>(c =>
-                c.AccountId == 123 && c.CommitmentId == 789 && c.CallType == CallerType.TransferSender)));
+                c.AccountId == 123 && c.CommitmentId == 789 && c.CallerType == CallerType.TransferSender)));
         }
 
         [Test]

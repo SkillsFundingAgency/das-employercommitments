@@ -1151,7 +1151,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     AccountId = accountId,
                     CommitmentId = commitmentId,
-                    CallType = CallerType.TransferSender
+                    CallerType = CallerType.TransferSender
                 });
 
                 var viewModel = _commitmentMapper.MapToTransferCommitmentViewModel(data.Commitment);
