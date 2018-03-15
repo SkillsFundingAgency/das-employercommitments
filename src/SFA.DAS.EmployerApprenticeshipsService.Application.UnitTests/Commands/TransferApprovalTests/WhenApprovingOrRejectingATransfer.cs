@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
         [SetUp]
         public void Setup()
         {
-            _command = new TransferApprovalCommand { CommitmentId = 876, TransferSenderId = 676, TransferReceiverId = 100, TransferStatus = TransferApprovalStatus.Rejected};
+            _command = new TransferApprovalCommand { CommitmentId = 876, TransferSenderId = 676, TransferStatus = TransferApprovalStatus.Rejected};
             _repositoryCommitment = new CommitmentView { TransferSenderId = _command.TransferSenderId, TransferApprovalStatus = TransferApprovalStatus.Pending};
 
             _mockCommitmentApi = new Mock<IEmployerCommitmentApi>();
@@ -38,7 +38,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
             _mockCommitmentApi.Verify(x => x.PatchTransferApprovalStatus(_command.TransferSenderId,
                 _command.CommitmentId,
                 It.Is<TransferApprovalRequest>(p =>
-                    p.TransferReceiverId == _command.TransferReceiverId &&
                     p.TransferApprovalStatus == _command.TransferStatus &&
                     p.UserEmail == _command.UserEmail && p.UserName == _command.UserName)));
         }

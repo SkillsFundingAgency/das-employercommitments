@@ -50,13 +50,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
                 OwinWrapper.GetClaimValue(DasClaimTypes.Email));
 
-            var status = (bool)viewModel.ApprovalConfirmed ? "Approved" : "Rejected";
+            var status = (bool)viewModel.ApprovalConfirmed ? "approved" : "rejected";
 
-            return View("TransferConfirmation", new TransferConfirmationViewModel { TransferApprovalStatus = status });
+            return View("TransferConfirmation", new TransferConfirmationViewModel { TransferApprovalStatus = status, TransferReceiverName = viewModel.TransferReceiverName});
         }
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("{hashedCommitmentId}/confirmation")]
         public async Task<ActionResult> TransferConfirmation(TransferConfirmationViewModel request)
         {

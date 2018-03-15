@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FeatureToggle;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections;
-using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
-using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
@@ -48,7 +44,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
 
             //Assert
             MockMediator.Verify(x => x.SendAsync(It.Is<TransferApprovalCommand>(c =>
-                c.TransferSenderId == TransferSenderId && c.TransferReceiverId == TransferReceiverId &&
+                c.TransferSenderId == TransferSenderId && 
                 c.CommitmentId == CommitmentId && c.UserName == "UserName" && c.UserEmail == "UserEmail")), Times.Once);
         }
     }

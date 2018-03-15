@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
             var request = new TransferApprovalRequest
             {
                 TransferApprovalStatus = message.TransferStatus,
-                TransferReceiverId = message.TransferReceiverId,
+                TransferReceiverId = commitment.EmployerAccountId,
                 UserEmail = message.UserEmail,
                 UserName = message.UserName
             };

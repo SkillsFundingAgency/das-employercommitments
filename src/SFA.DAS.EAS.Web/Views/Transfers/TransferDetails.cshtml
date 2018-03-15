@@ -29,15 +29,6 @@
     <div class="column-full">
         <hr class="hr-top" />
         <div class="column-one-third">
-            Account Id
-        </div>
-        <div class="column-two-thirds">
-            @Model.Data.HashedTransferReceiverAccountId
-        </div>
-    </div>
-    <div class="column-full">
-        <hr class="hr-top" />
-        <div class="column-one-third">
             Cohort Reference
         </div>
         <div class="column-half">
@@ -101,7 +92,7 @@
             </fieldset>
             <button type="submit" class="button" id="submit-transfer-connection">Continue</button>
             @Html.AntiForgeryToken()
-            @Html.Hidden("HashedTransferReceiverAccountId", Model.Data.HashedTransferReceiverAccountId)
+            @Html.Hidden("TransferReceiverName", Model.Data.LegalEntityName)
         </form>
     </div>
 </div>

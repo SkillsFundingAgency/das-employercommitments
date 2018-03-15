@@ -616,7 +616,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     CommitmentId = commitmentId,
                     TransferSenderId = transferSenderId,
-                    TransferReceiverId = _hashingService.DecodeValue(model.HashedTransferReceiverAccountId),
                     TransferStatus = model.ApprovalConfirmed == true ? TransferApprovalStatus.Approved : TransferApprovalStatus.Rejected,
                     UserEmail = userEmail,
                     UserName = userDisplayName
