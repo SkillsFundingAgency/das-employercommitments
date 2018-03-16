@@ -14,7 +14,11 @@
 
 <h1 class="heading-xlarge">@ViewBag.Title</h1>
 
-@Html.Partial("ValidationSummary", Html.ViewData.ModelState)
+<div class="grid-row">
+    <div class="column-full">
+        @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
+    </div>
+</div>
 
 <div class="grid-row">
     <div class="column-full">
