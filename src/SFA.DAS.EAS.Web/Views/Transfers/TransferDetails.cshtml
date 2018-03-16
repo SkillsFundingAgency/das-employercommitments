@@ -80,14 +80,14 @@
                 <div class="form-error-group form-group @Html.AddClassIfPropertyInError("Confirmation", "error")">
                     <h2 class="heading-medium" for="">Do you want to approve this transfer request?</h2>
                     <div>
-                        @Html.ValidationMessage("ApprovalConfirmed", "Please choose an option", new { id = "error-message-Confirmation" })
+                        @Html.ValidationMessage("ApprovalConfirmed", "Please choose an option", new { id = "error-message-ApprovalConfirmed" })
                     </div>
-                    <label class="block-label selection-button-radio" for="Confirmation-True">
-                        @Html.RadioButton("ApprovalConfirmed", "True", new { id = "Confirmation-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
+                    <label class="block-label selection-button-radio" for="ApprovalConfirmed-True">
+                        @Html.RadioButton("ApprovalConfirmed", "True", new { id = "ApprovalConfirmed-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
                         Yes, use approve the request
                     </label>
-                    <label class="block-label selection-button-radio" for="Confirmation-False">
-                        @Html.RadioButton("ApprovalConfirmed", "False", new { id = "Confirmation-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
+                    <label class="block-label selection-button-radio" for="ApprovalConfirmed-False">
+                        @Html.RadioButton("ApprovalConfirmed", "False", new { id = "ApprovalConfirmed-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
                         No, reject the request
                     </label>
                 </div>
