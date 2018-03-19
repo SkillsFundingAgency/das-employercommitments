@@ -4983,19 +4983,23 @@ h2 .float-right {
   clear: both;
 }
 
-#approve-transfer-cohort .hr-bottom {
+#approve-transfer-cohort .hr-bottom,
+#transfer-confirmation .hr-bottom {
   clear: both;
 }
 
-#approve-transfer-cohort .error .heading-medium {
+#approve-transfer-cohort .error .heading-medium,
+#transfer-confirmation .error .heading-medium {
   margin-top: 0;
 }
 
-#approve-transfer-cohort .approve-transfer {
+#approve-transfer-cohort .approve-transfer,
+#transfer-confirmation .approve-transfer {
   margin-top: 30px;
 }
 
-#approve-transfer-cohort .approve-transfer h2 {
+#approve-transfer-cohort .approve-transfer h2,
+#transfer-confirmation .approve-transfer h2 {
   margin-top: 0;
 }
 
