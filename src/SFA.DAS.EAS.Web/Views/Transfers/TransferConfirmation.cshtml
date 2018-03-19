@@ -12,7 +12,6 @@
         @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
     </div>
 </div>
-
 <div class="grid-row">
     <div class="column-two-thirds">
         <div class="success-summary">
@@ -21,7 +20,6 @@
         </div>
     </div>
 </div>
-
 <div class="grid-row">
     <div class="column-two-thirds">
         <form method="POST" action="@Url.Action("TransferConfirmation")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
@@ -52,7 +50,6 @@
         </form>
     </div>
 </div>
-
 @section breadcrumb {
     <div class="breadcrumbs">
         <a href="@Url.Action("TransferDetails")" aria-label="Back to apprentice details" class="back-link">Back</a>
