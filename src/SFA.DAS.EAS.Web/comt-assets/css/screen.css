@@ -5600,6 +5600,10 @@ h2 .float-right {
   margin-top: 0;
 }
 
+#approve-transfer-cohort .approve-transfer {
+  margin-top: 30px;
+}
+
 @media only screen and (max-device-width: 640px), only screen and (max-device-width: 667px), only screen and (max-width: 480px) {
   #apprentice-details .tableResponsive {
     margin-top: 30px;

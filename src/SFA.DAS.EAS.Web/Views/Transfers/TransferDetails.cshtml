@@ -76,7 +76,7 @@
     <div class="column-two-thirds">
         <form method="POST" action="@Url.Action("TransferApproval")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
 
-            <fieldset role="radiogroup" aria-required="true">
+            <fieldset role="radiogroup" aria-required="true" class="approve-transfer">
                 <div class="form-error-group form-group @Html.AddClassIfPropertyInError("ApprovalConfirmed", "error")">
                     <h2 class="heading-medium" for="">Do you want to approve this transfer request?</h2>
                     <div>
