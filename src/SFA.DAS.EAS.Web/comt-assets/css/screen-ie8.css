@@ -4930,7 +4930,7 @@ h2 .float-right {
   clear: both;
 }
 
-#approve-transfer-cohort h2 .heading-medium .error {
+#approve-transfer-cohort .error .heading-medium {
   margin-top: 0;
 }
 
