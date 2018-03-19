@@ -4979,6 +4979,10 @@ h2 .float-right {
   clear: both;
 }
 
+#approve-transfer-cohort h2 .heading-medium .error {
+  margin-top: 0;
+}
+
 @media only screen and (max-device-width: 640px), only screen and (max-device-width: 667px), only screen and (max-width: 480px) {
   #apprentice-details .tableResponsive {
     margin-top: 30px;
