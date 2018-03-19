@@ -8,6 +8,12 @@
 }
 
 <div class="grid-row">
+    <div class="column-full">
+        @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
+    </div>
+</div>
+
+<div class="grid-row">
     <div class="column-two-thirds">
         <div class="success-summary">
             <h1 class="heading-medium">@ViewBag.Title</h1>
@@ -19,8 +25,6 @@
 <div class="grid-row">
     <div class="column-two-thirds">
         <form method="POST" action="@Url.Action("TransferConfirmation")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
-
-            @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
 
             <fieldset role="radiogroup" aria-required="true">
                 <div class="form-error-group form-group @Html.AddClassIfPropertyInError("UrlAddress", "error")">
@@ -48,3 +52,9 @@
         </form>
     </div>
 </div>
+
+@section breadcrumb {
+    <div class="breadcrumbs">
+        <a href="@Url.Action("TransferDetails")" aria-label="Back to apprentice details" class="back-link">Back</a>
+    </div>
+}
