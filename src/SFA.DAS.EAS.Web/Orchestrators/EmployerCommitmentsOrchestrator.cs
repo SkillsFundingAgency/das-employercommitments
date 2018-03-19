@@ -14,6 +14,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteApprentice;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment;
+using SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountLegalEntities;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections;
@@ -603,6 +604,25 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
+        public async Task SetTransferApprovalStatus(string hashedAccountId, string hashedCommitmentId, TransferApprovalConfirmationViewModel model, string externalUserId, string userDisplayName, string userEmail)
+        {
+            var transferSenderId = _hashingService.DecodeValue(hashedAccountId);
+            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
+            _logger.Info($"Transfer Approval Confirmation: Sender Account: {transferSenderId}, CommitmentId: {commitmentId}, Approving {model.ApprovalConfirmed}");
+
+            await CheckUserAuthorization(async () =>
+            {
+                await _mediator.SendAsync(new TransferApprovalCommand
+                {
+                    CommitmentId = commitmentId,
+                    TransferSenderId = transferSenderId,
+                    TransferStatus = model.ApprovalConfirmed == true ? TransferApprovalStatus.Approved : TransferApprovalStatus.Rejected,
+                    UserEmail = userEmail,
+                    UserName = userDisplayName
+                });
+            }, hashedAccountId, externalUserId);
+        }
+
         public async Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitNewCommitmentModel(string hashedAccountId, string externalUserId, string transferConnectionCode, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string providerId, string providerName, string cohortRef, SaveStatus saveStatus)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
@@ -1079,8 +1099,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         }
 
-
-
         public async Task<Dictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship)
         {
             var overlappingErrors = await _mediator.SendAsync(
@@ -1118,6 +1136,31 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         });
 
                     }, model.HashedAccountId, externalUser);
+        }
+
+        public async Task<OrchestratorResponse<TransferCommitmentViewModel>> GetCommitmentDetailsForTransfer(
+            string hashedTransferAccountId, string hashedCommitmentId, string externalUserId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedTransferAccountId);
+            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
+            _logger.Info($"Getting Commitment Details, Transfer Account: {accountId}, CommitmentId: {commitmentId}");
+
+            return await CheckUserAuthorization(async () =>
+            {
+                var data = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                {
+                    AccountId = accountId,
+                    CommitmentId = commitmentId,
+                    CallerType = CallerType.TransferSender
+                });
+
+                var viewModel = _commitmentMapper.MapToTransferCommitmentViewModel(data.Commitment);
+
+                return new OrchestratorResponse<TransferCommitmentViewModel>
+                {
+                    Data = viewModel
+                };
+            }, hashedTransferAccountId, externalUserId);
         }
 
         private async Task<(long?, string)> GetTransferConnectionInfo(string hashedAccountId, string transferConnectionCode, string externalUserId)
