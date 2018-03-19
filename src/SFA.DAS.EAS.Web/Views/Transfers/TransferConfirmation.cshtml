@@ -33,7 +33,7 @@
                         @Html.ValidationMessage("UrlAddress", "Please choose an option", new { id = "error-message-UrlAddress" })
                     </div>
                     <label class="block-label selection-button-radio" for="UrlAddress-Transfers">
-                        @Html.RadioButton("UrlAddress", Url.ExternalUrlAction("teams", "transfers"), new { id = "UrlAddress-Transfers", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Transfers')" })
+                        @Html.RadioButton("UrlAddress", Url.ExternalUrlAction("transfers"), new { id = "UrlAddress-Transfers", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Transfers')" })
                         Go to the transfers dashboard
                     </label>
                     <label class="block-label selection-button-radio" for="UrlAddress-Home">

@@ -12,8 +12,6 @@
 
 
 
-
-
 <div class="grid-row">
     <div class="column-full">
         @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
@@ -107,28 +105,29 @@
         <div class="column-two-thirds">
             <form method="POST" action="@Url.Action("TransferApproval")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
 
-            <fieldset role="radiogroup" aria-required="true" class="approve-transfer">
-                <div class="form-error-group form-group @Html.AddClassIfPropertyInError("ApprovalConfirmed", "error")">
-                    <h2 class="heading-medium" for="">Do you want to approve this transfer request?</h2>
-                    <div>
-                        @Html.ValidationMessage("ApprovalConfirmed", "Please choose an option", new { id = "error-message-ApprovalConfirmed" })
+                <fieldset role="radiogroup" aria-required="true" class="approve-transfer">
+                    <div class="form-error-group form-group @Html.AddClassIfPropertyInError("ApprovalConfirmed", "error")">
+                        <h2 class="heading-medium" for="">Do you want to approve this transfer request?</h2>
+                        <div>
+                            @Html.ValidationMessage("ApprovalConfirmed", "Please choose an option", new {id = "error-message-ApprovalConfirmed"})
+                        </div>
+                        <label class="block-label selection-button-radio" for="ApprovalConfirmed-True">
+                            @Html.RadioButton("ApprovalConfirmed", "True", new {id = "ApprovalConfirmed-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')"})
+                            Yes, use approve the request
+                        </label>
+                        <label class="block-label selection-button-radio" for="ApprovalConfirmed-False">
+                            @Html.RadioButton("ApprovalConfirmed", "False", new {id = "ApprovalConfirmed-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')"})
+                            No, reject the request
+                        </label>
                     </div>
-                    <label class="block-label selection-button-radio" for="ApprovalConfirmed-True">
-                        @Html.RadioButton("ApprovalConfirmed", "True", new { id = "ApprovalConfirmed-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
-                        Yes, use approve the request
-                    </label>
-                    <label class="block-label selection-button-radio" for="ApprovalConfirmed-False">
-                        @Html.RadioButton("ApprovalConfirmed", "False", new { id = "ApprovalConfirmed-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
-                        No, reject the request
-                    </label>
-                </div>
-            </fieldset>
-            <button type="submit" class="button" id="submit-transfer-connection">Continue</button>
-            @Html.AntiForgeryToken()
-            @Html.Hidden("TransferReceiverName", Model.Data.LegalEntityName)
-        </form>
+                </fieldset>
+                <button type="submit" class="button" id="submit-transfer-connection">Continue</button>
+                @Html.AntiForgeryToken()
+                @Html.Hidden("TransferReceiverName", Model.Data.LegalEntityName)
+            </form>
+        </div>
     </div>
-</div>
+}
 @section breadcrumb {
     <div class="breadcrumbs">
         <a href="@Url.ExternalUrlAction("transfers")">Back to Transfers</a>
