@@ -12,13 +12,13 @@
 
 
 
-<h1 class="heading-xlarge">@ViewBag.Title</h1>
-
 <div class="grid-row">
     <div class="column-full">
         @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
     </div>
 </div>
+
+<h1 class="heading-xlarge">@ViewBag.Title</h1>
 
 <div class="grid-row">
     <div class="column-full">
@@ -77,7 +77,7 @@
         <form method="POST" action="@Url.Action("TransferApproval")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
 
             <fieldset role="radiogroup" aria-required="true">
-                <div class="form-error-group form-group @Html.AddClassIfPropertyInError("Confirmation", "error")">
+                <div class="form-error-group form-group @Html.AddClassIfPropertyInError("ApprovalConfirmed", "error")">
                     <h2 class="heading-medium" for="">Do you want to approve this transfer request?</h2>
                     <div>
                         @Html.ValidationMessage("ApprovalConfirmed", "Please choose an option", new { id = "error-message-ApprovalConfirmed" })
