@@ -12,13 +12,15 @@
 
 
 
-<h1 class="heading-xlarge">@ViewBag.Title</h1>
+
 
 <div class="grid-row">
     <div class="column-full">
         @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
     </div>
 </div>
+
+<h1 class="heading-xlarge">@ViewBag.Title</h1>
 
 <div class="grid-row">
     <div class="column-full">
@@ -68,13 +70,42 @@
                 <p>@item.SummaryDescription</p>
             }
         </div>
-        <hr class="hr-bottom" />
+        @if (Model.Data.PendingApproval)
+        {
+            <hr class="hr-bottom"/>
+        }
     </div>
+    @if (!Model.Data.PendingApproval)
+    {
+        <div class="column-full">
+            <hr class="hr-top"/>
+            <div class="column-one-third">
+                @Model.Data.TransferApprovalStatus By
+            </div>
+            <div class="column-two-thirds">
+                @Model.Data.TransferApprovalSetBy
+            </div>
+        </div>
+        <div class="column-full">
+            <hr class="hr-top" />
+            <div class="column-one-third">
+                @Model.Data.TransferApprovalStatus On
+            </div>
+            <div class="column-two-thirds">
+                @($"{Model.Data.TransferApprovalSetOn:dd MMM yyyy}")
+            </div>
+        </div>
+        <div class="column-full">
+            <hr class="hr-bottom" />
+        </div>
+    }
 </div>
 
-<div class="grid-row">
-    <div class="column-two-thirds">
-        <form method="POST" action="@Url.Action("TransferApproval")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
+@if (Model.Data.PendingApproval)
+{
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <form method="POST" action="@Url.Action("TransferApproval")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
 
             <fieldset role="radiogroup" aria-required="true">
                 <div class="form-error-group form-group @Html.AddClassIfPropertyInError("Confirmation", "error")">
