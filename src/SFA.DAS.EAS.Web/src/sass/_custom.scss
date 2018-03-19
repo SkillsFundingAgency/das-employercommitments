@@ -853,9 +853,24 @@ h2{
     }
 }
 
-#approve-transfer-cohort{
-    .hr-bottom{
-        clear:both;
+#approve-transfer-cohort,
+#transfer-confirmation {
+    .hr-bottom {
+        clear: both;
+    }
+
+    .error {
+        .heading-medium {
+            margin-top: 0;
+        }
+    }
+
+    .approve-transfer {
+        margin-top: 30px;
+
+        h2 {
+            margin-top: 0;
+        }
     }
 }
 
