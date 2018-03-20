@@ -102,8 +102,8 @@
       <HintPath>..\packages\ReflectionMagic.2.0.0\lib\net40\ReflectionMagic.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=2.0.0.61349, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.2.0.0.61349\lib\net45\SFA.DAS.Commitments.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=2.0.0.63332, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.2.0.0.63332\lib\net45\SFA.DAS.Commitments.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Common.Domain, Version=1.3.0.44308, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.3.0.44308\lib\net45\SFA.DAS.Common.Domain.dll</HintPath>
@@ -248,6 +248,8 @@
   <ItemGroup>
     <Compile Include="App_Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="Controllers\ControllerTestBase.cs" />
+    <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenGettingEditStopDateDetails.cs" />
+    <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenUpdatingApprenticeshipStopDate.cs" />
     <Compile Include="Infrastructure\StructureMapRegistrationTests\WhenAddingLogging.cs" />
     <Compile Include="Infrastructure\StructureMapRegistrationTests\WhenAddingMessaging.cs" />
     <Compile Include="Infrastructure\StructureMapRegistrationTests\WhenInitalisingTheContainer.cs" />
@@ -265,6 +267,8 @@
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingApprenticeship.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenDeletingApprenticeship.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingIndexView.cs" />
+    <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenUpdatingAnEmployeeStopDate.cs" />
+    <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingEditApprenticeshipStopDateViewModel.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingProviderPriorityList.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingtLegalEntitySignedAgreement.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingDeleteApprenticeshipConfirmation.cs" />
@@ -275,6 +279,7 @@
     <Compile Include="Orchestrators\Mappers\WhenMappingApprenticeshipAlertMessages.cs" />
     <Compile Include="Orchestrators\Mappers\WhenMappingApprenticeshipViewModel.cs" />
     <Compile Include="Orchestrators\Mappers\WhenMappingDataLockWithPriceHistory.cs" />
+    <Compile Include="Orchestrators\Mappers\WhenMappingEditApprenticeshipStopDateViewModel.cs" />
     <Compile Include="Orchestrators\Mappers\WhenMappingProviderPaymentPriority.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingApprenticeships.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenMappingApprenticeshipFilters.cs" />
@@ -302,12 +307,14 @@
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingTrainingCode.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingTrainingDates.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingUln.cs" />
+    <Compile Include="Validators\EditApprenticeshipStopDate\WhenValidatingNewStopDate.cs" />
     <Compile Include="Validators\ProviderSelectionTest\WhenValidatingProviderId.cs" />
     <Compile Include="Views\EmployerCommitments\EmployerCommitmentsDetailsPage.cs" />
     <Compile Include="Views\EmployerCommitments\ViewApprenticeshipEntryPage.cs" />
     <Compile Include="Views\EmployerManageApprentices\ListAllPage.cs" />
     <Compile Include="Views\EmployerManageApprentices\EditStartedApprenticeshipsPage.cs" />
     <Compile Include="Views\EmployerManageApprentices\ConfirmChangesPage.cs" />
+    <Compile Include="Views\EmployerManageApprentices\EmployerManageApprenticesDetailsPage.cs" />
     <Compile Include="Views\EmployerManageApprentices\OrchestratedViewChangesPage.cs" />
     <Compile Include="Views\OfflineBrowserCapabilities.cs" />
     <Compile Include="Views\OfflineHttpContext.cs" />

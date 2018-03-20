@@ -191,11 +191,11 @@
     <Reference Include="SFA.DAS.Audit.Types, Version=1.0.0.20553, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Audit.Client.1.0.0.20553\lib\net45\SFA.DAS.Audit.Types.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=2.0.0.61349, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.2.0.0.61349\lib\net45\SFA.DAS.Commitments.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=2.0.0.63332, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.2.0.0.63332\lib\net45\SFA.DAS.Commitments.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=2.0.0.61349, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.2.0.0.61349\lib\net45\SFA.DAS.Commitments.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=2.0.0.63332, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.2.0.0.63332\lib\net45\SFA.DAS.Commitments.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Common.Domain, Version=1.3.0.44308, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.3.0.44308\lib\net45\SFA.DAS.Common.Domain.dll</HintPath>
@@ -449,6 +449,7 @@
     <Compile Include="Extensions\ValidationResultExtensions.cs" />
     <Compile Include="Orchestrators\DataLockOrchestrator.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestrator.cs" />
+    <Compile Include="Orchestrators\IEmployerManageApprenticeshipsOrchestrator.cs" />
     <Compile Include="Orchestrators\Mappers\ApprenticeshipFiltersMapper.cs" />
     <Compile Include="Orchestrators\Mappers\IApprenticeshipFiltersMapper.cs" />
     <Compile Include="Plumbing\GoogleAnalytics.cs" />
@@ -456,6 +457,7 @@
     <Compile Include="Plumbing\Mvc\GoogleTagManagerFilterAttribute.cs" />
     <Compile Include="Validators\ChangeStatusViewModelValidator.cs" />
     <Compile Include="Validators\DataLockStatusViewModelViewModelValidator.cs" />
+    <Compile Include="Validators\EditStopDateViewModelValidator.cs" />
     <Compile Include="Validators\ProviderPriorityReOrderListValidator.cs" />
     <Compile Include="ViewModels\CommitmentsIndexViewModel.cs" />
     <Compile Include="ViewModels\CoreDetailsViewModel.cs" />
@@ -465,6 +467,7 @@
     <Compile Include="ViewModels\ManageApprenticeships\ChangeStatusChoiceViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\CourseChange.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\DataLockStatusViewModel.cs" />
+    <Compile Include="ViewModels\ManageApprenticeships\EditApprenticeshipStopDateViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PaymentOrderViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PriceChange.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PriceHistoryViewModel.cs" />
@@ -601,10 +604,20 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ConfirmChanges.cshtml</DependentUpon>
     </Compile>
+    <Compile Include="Views\EmployerManageApprentices\Details.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Details.cshtml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EmployerManageApprentices\EditStartedApprenticeship.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EditStartedApprenticeship.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EmployerManageApprentices\EditStopDate.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditStopDate.cshtml</DependentUpon>
     </Compile>
     <Compile Include="Views\EmployerManageApprentices\ListAll.generated.cs">
       <AutoGen>True</AutoGen>
@@ -1063,7 +1076,10 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ListAll.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Views\EmployerManageApprentices\Details.cshtml" />
+    <Content Include="Views\EmployerManageApprentices\Details.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Details.generated.cs</LastGenOutput>
+    </Content>
     <Content Include="Views\EmployerCommitments\YourCohorts.cshtml" />
     <Content Include="Views\EmployerCommitments\DeleteApprenticeshipConfirmation.cshtml" />
     <Content Include="Views\EmployerCommitments\RequestList.cshtml" />
@@ -1131,6 +1147,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EmployerCommitments\SelectTransferConnection.cshtml" />
+    <Content Include="Views\EmployerManageApprentices\EditStopDate.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>EditStopDate.generated.cs</LastGenOutput>
+    </Content>
     <None Include="Views\razorgenerator.directives" />
   </ItemGroup>
   <ItemGroup>

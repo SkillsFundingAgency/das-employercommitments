@@ -10,7 +10,7 @@
 }
 <div class="grid-row">
     <div class="column-two-thirds">
-        <h1 class="heading-xlarge">@Model.Data.FirstName @Model.Data.LastName</h1>
+        <h1 class="heading-xlarge" id="learnerName">@Model.Data.FirstName @Model.Data.LastName</h1>
 
         @if (Model.Data.PendingChanges == PendingChanges.ReadyForApproval)
         {
@@ -70,7 +70,7 @@
             <tr>
                 <th scope="row">Status</th>
                 <td>@Model.Data.Status</td>
-                <td>
+                <td id="editStatusLink">
                     @if (Model.Data.CanEditStatus)
                     {
                         @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
@@ -81,13 +81,21 @@
             {
                 <tr>
                     <th scope="row">Stop applies from</th>
-                    <td>
+                    <td id="stopDate">
                         @if (Model.Data.StopDate.HasValue)
                         {
                             @Model.Data.StopDate.Value.ToGdsFormat()
                         }
                     </td>
-                    <td>@*this td is required*@</td>
+                    
+                    @if (Model.Data.CanEditStopDate)
+                    {
+                        <td id="editStopDateLink">@Html.RouteLink("Edit stop date", "EditStopDateOption")</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
                 </tr>
             }
             </tbody>
