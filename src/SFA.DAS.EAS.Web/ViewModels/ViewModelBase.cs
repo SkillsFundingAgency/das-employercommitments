@@ -34,6 +34,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 
         public void AddErrorsFromDictionary(Dictionary<string, string> errorDictionary)
         {
+            if (errorDictionary == null) return;
+
             foreach (var property in errorDictionary.Keys)
             {
                 if (ErrorDictionary.ContainsKey(property)) continue;

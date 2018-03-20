@@ -92,7 +92,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             var apprenticeship = new Apprenticeship { ULN = uln };
 
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
 
             Assert.AreEqual(uln, viewModel.ULN);
         }
@@ -104,7 +104,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             var apprenticeship = new Apprenticeship { StopDate = expectedStopDate };
 
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
 
             Assert.AreEqual(expectedStopDate, viewModel.StopDate);
         }

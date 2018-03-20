@@ -451,6 +451,7 @@
     <Compile Include="Extensions\ValidationResultExtensions.cs" />
     <Compile Include="Orchestrators\DataLockOrchestrator.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestrator.cs" />
+    <Compile Include="Orchestrators\IEmployerManageApprenticeshipsOrchestrator.cs" />
     <Compile Include="Orchestrators\Mappers\ApprenticeshipFiltersMapper.cs" />
     <Compile Include="Orchestrators\Mappers\IApprenticeshipFiltersMapper.cs" />
     <Compile Include="Plumbing\GoogleAnalytics.cs" />
@@ -458,6 +459,7 @@
     <Compile Include="Plumbing\Mvc\GoogleTagManagerFilterAttribute.cs" />
     <Compile Include="Validators\ChangeStatusViewModelValidator.cs" />
     <Compile Include="Validators\DataLockStatusViewModelViewModelValidator.cs" />
+    <Compile Include="Validators\EditStopDateViewModelValidator.cs" />
     <Compile Include="Validators\TransferConfirmationViewModelValidator.cs" />
     <Compile Include="Validators\TransferApprovalConfirmationViewModelValidator.cs" />
     <Compile Include="Validators\ProviderPriorityReOrderListValidator.cs" />
@@ -473,6 +475,7 @@
     <Compile Include="ViewModels\ManageApprenticeships\ChangeStatusChoiceViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\CourseChange.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\DataLockStatusViewModel.cs" />
+    <Compile Include="ViewModels\ManageApprenticeships\EditApprenticeshipStopDateViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PaymentOrderViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PriceChange.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PriceHistoryViewModel.cs" />
@@ -609,10 +612,20 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ConfirmChanges.cshtml</DependentUpon>
     </Compile>
+    <Compile Include="Views\EmployerManageApprentices\Details.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Details.cshtml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EmployerManageApprentices\EditStartedApprenticeship.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EditStartedApprenticeship.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EmployerManageApprentices\EditStopDate.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditStopDate.cshtml</DependentUpon>
     </Compile>
     <Compile Include="Views\EmployerManageApprentices\ListAll.generated.cs">
       <AutoGen>True</AutoGen>
@@ -1073,7 +1086,10 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ListAll.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Views\EmployerManageApprentices\Details.cshtml" />
+    <Content Include="Views\EmployerManageApprentices\Details.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Details.generated.cs</LastGenOutput>
+    </Content>
     <Content Include="Views\EmployerCommitments\YourCohorts.cshtml" />
     <Content Include="Views\EmployerCommitments\DeleteApprenticeshipConfirmation.cshtml" />
     <Content Include="Views\EmployerCommitments\RequestList.cshtml" />
@@ -1141,6 +1157,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EmployerCommitments\SelectTransferConnection.cshtml" />
+    <Content Include="Views\EmployerManageApprentices\EditStopDate.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>EditStopDate.generated.cs</LastGenOutput>
+    </Content>
     <None Include="Views\razorgenerator.directives" />
   </ItemGroup>
   <ItemGroup>
