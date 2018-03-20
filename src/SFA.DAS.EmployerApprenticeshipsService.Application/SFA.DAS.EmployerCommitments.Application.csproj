@@ -159,6 +159,9 @@
     <Compile Include="Commands\DeleteApprentice\DeleteApprenticeshipCommandValidator.cs" />
     <Compile Include="Commands\ResolveRequestedChanges\ResolveRequestedChangesCommand.cs" />
     <Compile Include="Commands\ResolveRequestedChanges\ResolveRequestedChangesHandler.cs" />
+    <Compile Include="Commands\UpdateApprenticeshipStopDate\UpdateApprenticeshipStopDateCommand.cs" />
+    <Compile Include="Commands\UpdateApprenticeshipStopDate\UpdateApprenticeshipStopDateCommandHandler.cs" />
+    <Compile Include="Commands\UpdateApprenticeshipStopDate\UpdateApprenticeshipStopDateCommandValidator.cs" />
     <Compile Include="Commands\TransferApprovalStatus\TransferApprovalCommand.cs" />
     <Compile Include="Commands\TransferApprovalStatus\TransferApprovalCommandHandler.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\UpdateProviderPaymentPriorityValidator.cs" />
@@ -227,6 +230,9 @@
     <Compile Include="Queries\GetApprenticeshipDataLockSummary\GetApprenticeshipDataLockSummaryQueryHandler.cs" />
     <Compile Include="Queries\GetApprenticeshipDataLockSummary\GetApprenticeshipDataLockSummaryQueryRequest.cs" />
     <Compile Include="Queries\GetApprenticeshipDataLockSummary\GetApprenticeshipDataLockSummaryQueryResponse.cs" />
+    <Compile Include="Queries\GetApprenticeshipsByUln\GetApprenticeshipsByUlnHandler.cs" />
+    <Compile Include="Queries\GetApprenticeshipsByUln\GetApprenticeshipsByUlnRequest.cs" />
+    <Compile Include="Queries\GetApprenticeshipsByUln\GetApprenticeshipsByUlnResponse.cs" />
     <Compile Include="Queries\GetCommitment\CallType.cs" />
     <Compile Include="Queries\GetPriceHistoryQueryRequest\GetPriceHistoryQueryHandler.cs" />
     <Compile Include="Queries\GetPriceHistoryQueryRequest\GetPriceHistoryQueryRequest.cs" />

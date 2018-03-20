@@ -1,10 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipsByUln;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
@@ -20,7 +24,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void ShouldNotCreateAlertsForEmptyApprenticeship()
         {
             var apprenticeship = new Apprenticeship();
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
             viewModel.Alerts.Count().Should().Be(0);
         }
 
@@ -28,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void EmployerCreatesChangeOfCircs()
         {
             var apprenticeship = new Apprenticeship { PendingUpdateOriginator = Originator.Employer };
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
             viewModel.Alerts.Count().Should().Be(1);
             viewModel.Alerts.FirstOrDefault().Should().Be("Changes pending");
         }
@@ -37,7 +41,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void ProviderCreatesChangeOfCircs()
         {
             var apprenticeship = new Apprenticeship { PendingUpdateOriginator = Originator.Provider };
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
             viewModel.Alerts.Count().Should().Be(1);
             viewModel.Alerts.FirstOrDefault().Should().Be("Changes for review");
         }
@@ -46,7 +50,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void UnTriagedDataLock07()
         {
             var apprenticeship = new Apprenticeship { DataLockPrice = true};
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
             viewModel.Alerts.Count().Should().Be(0);
         }
 
@@ -54,7 +58,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void TriagedDataLock07()
         {
             var apprenticeship = new Apprenticeship { DataLockPriceTriaged = true };
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
             viewModel.Alerts.Count().Should().Be(1);
             viewModel.Alerts.FirstOrDefault().Should().Be("Changes for review");
         }
@@ -63,7 +67,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void UnTriagedDataLockCourse()
         {
             var apprenticeship = new Apprenticeship { DataLockCourse = true };
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
             viewModel.Alerts.Count().Should().Be(0);
         }
 
@@ -71,7 +75,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void TriagedDataLockCourse()
         {
             var apprenticeship = new Apprenticeship { DataLockCourseTriaged = true };
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
             viewModel.Alerts.Count().Should().Be(1);
             viewModel.Alerts.FirstOrDefault().Should().Be("Changes requested");
         }
@@ -80,7 +84,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void CoCAndUntriagedPriceDataLock()
         {
             var apprenticeship = new Apprenticeship { PendingUpdateOriginator = Originator.Provider ,  DataLockPrice = true };
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
             viewModel.Alerts.Count().Should().Be(1);
             viewModel.Alerts.FirstOrDefault().Should().Be("Changes for review");
         }
@@ -89,7 +93,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void CoCAndUntriagedCourseDataLock()
         {
             var apprenticeship = new Apprenticeship { PendingUpdateOriginator = Originator.Provider, DataLockCourse = true };
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
             viewModel.Alerts.Count().Should().Be(1);
             viewModel.Alerts.FirstOrDefault().Should().Be("Changes for review");
         }
@@ -98,7 +102,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void DataLockPriceOneTriagedAndOneNotTriaged()
         {
             var apprenticeship = new Apprenticeship { DataLockPrice = true, DataLockPriceTriaged = true };
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
             viewModel.Alerts.Count().Should().Be(1);
             viewModel.Alerts.FirstOrDefault().Should().Be("Changes for review");
         }
@@ -107,9 +111,79 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void DataLockCourseOneTriagedAndOneNotTriaged()
         {
             var apprenticeship = new Apprenticeship { DataLockPrice = true, DataLockCourseTriaged = true };
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
             viewModel.Alerts.Count().Should().Be(1);
             viewModel.Alerts.FirstOrDefault().Should().Be("Changes requested");
+        }
+
+        [Test]
+        public void ShouldSetCanEditStopDateToTrueIfPaymentStatusIsWithdrawnAndStartDateIsNotEqualToStopDate()
+        {
+            var apprenticeship = new Apprenticeship { PaymentStatus = PaymentStatus.Withdrawn,
+                StartDate = new DateTime(2018, 01, 01), StopDate = new DateTime(2018, 02, 01) };
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
+            viewModel.CanEditStopDate.Should().BeTrue();
+        }
+
+        [Test]
+        public void ShouldSetCanEditStopDateToFalseIfPaymentStatusIsWithdrawnAndStartDateIsEqualToStopDate()
+        {
+            var apprenticeship = new Apprenticeship
+            {
+                PaymentStatus = PaymentStatus.Withdrawn,
+                StartDate = new DateTime(2018, 01, 01),
+                StopDate = new DateTime(2018, 01, 01)
+            };
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
+            viewModel.CanEditStopDate.Should().BeFalse();
+        }
+
+        [TestCase(PaymentStatus.Completed)]
+        [TestCase(PaymentStatus.Active)]
+        [TestCase(PaymentStatus.Deleted)]
+        [TestCase(PaymentStatus.Paused)]
+        [TestCase(PaymentStatus.PendingApproval)]
+        public void ShouldSetCanEditStopDateToFalseIfPaymentStatusIsNotWithdrawn(PaymentStatus status)
+        {
+            var apprenticeship = new Apprenticeship { PaymentStatus = status };
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
+            viewModel.CanEditStopDate.Should().BeFalse();
+        }
+
+        [Test]
+        public void ShouldSetCanEditStopDateToFalseIfTheUlnHasBeenReusedInAnActiveApprenticeship()
+        {
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetApprenticeshipsByUlnRequest>()))
+                .ReturnsAsync(new GetApprenticeshipsByUlnResponse
+                {
+                    Apprenticeships = new List<Apprenticeship>
+                    {
+                        { new Apprenticeship {} },
+                        { new Apprenticeship {} }
+                    }
+                });
+
+            var apprenticeship = new Apprenticeship
+            {
+                PaymentStatus = PaymentStatus.Withdrawn,
+                StartDate = new DateTime(2018, 01, 01),
+                StopDate = new DateTime(2018, 6, 01)
+            };
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
+            viewModel.CanEditStopDate.Should().BeFalse();
+        }
+
+        [Test]
+        public void ShouldSetCanEditStopDateToTrueIfTheUlnHasNotBeenReusedInAnActiveApprenticeship()
+        {
+            var apprenticeship = new Apprenticeship
+            {
+                PaymentStatus = PaymentStatus.Withdrawn,
+                StartDate = new DateTime(2018, 01, 01),
+                StopDate = new DateTime(2018, 6, 01)
+            };
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
+            viewModel.CanEditStopDate.Should().BeTrue();
         }
     }
 }
