@@ -45,7 +45,7 @@
             Status
         </div>
         <div class="column-two-thirds">
-            @Model.Data.TransferApprovalStatus
+            @Model.Data.TransferApprovalStatusDesc
         </div>
     </div>
     <div class="column-full">
@@ -78,7 +78,7 @@
         <div class="column-full">
             <hr class="hr-top"/>
             <div class="column-one-third">
-                @Model.Data.TransferApprovalStatus By
+                @Model.Data.TransferApprovalStatusDesc By
             </div>
             <div class="column-two-thirds">
                 @Model.Data.TransferApprovalSetBy
@@ -87,7 +87,7 @@
         <div class="column-full">
             <hr class="hr-top" />
             <div class="column-one-third">
-                @Model.Data.TransferApprovalStatus On
+                @Model.Data.TransferApprovalStatusDesc On
             </div>
             <div class="column-two-thirds">
                 @($"{Model.Data.TransferApprovalSetOn:dd MMM yyyy}")
@@ -113,7 +113,7 @@
                         </div>
                         <label class="block-label selection-button-radio" for="ApprovalConfirmed-True">
                             @Html.RadioButton("ApprovalConfirmed", "True", new {id = "ApprovalConfirmed-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')"})
-                            Yes, use approve the request
+                            Yes, approve the request
                         </label>
                         <label class="block-label selection-button-radio" for="ApprovalConfirmed-False">
                             @Html.RadioButton("ApprovalConfirmed", "False", new {id = "ApprovalConfirmed-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')"})

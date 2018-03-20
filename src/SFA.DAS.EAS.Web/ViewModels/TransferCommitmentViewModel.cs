@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using SFA.DAS.Commitments.Api.Types;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 {
@@ -17,10 +18,11 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string HashedCohortReference { get; set; }
         public decimal TotalCost { get; set; }
         public List<TransferCourseSummaryViewModel> TrainingList { get; set; }
-        public string TransferApprovalStatus { get; set; }
+        public string TransferApprovalStatusDesc { get; set; }
+        public TransferApprovalStatus TransferApprovalStatus { get; set; }
         public string TransferApprovalSetBy { get; set; }
         public DateTime? TransferApprovalSetOn { get; set; }
-        public bool PendingApproval => TransferApprovalStatus == "Pending";
+        public bool PendingApproval => TransferApprovalStatus == TransferApprovalStatus.Pending;
 
     }
 }

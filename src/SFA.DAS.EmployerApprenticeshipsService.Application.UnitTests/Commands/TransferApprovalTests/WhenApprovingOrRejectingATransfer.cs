@@ -28,9 +28,9 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
             };
             _repositoryCommitment = new CommitmentView
             {
-                TransferSenderInfo = new TransferSenderInfo
+                TransferSender = new TransferSender
                 {
-                    TransferSenderId = _command.TransferSenderId,
+                    Id = _command.TransferSenderId,
                     TransferApprovalStatus = TransferApprovalStatus.Pending
                 }
             };
@@ -65,7 +65,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
         [TestCase(TransferApprovalStatus.Rejected)]
         public async Task ThenThrowErrorIfTranferIsAlreadyApprovedOrRejected(TransferApprovalStatus status)
         {
-            _repositoryCommitment.TransferSenderInfo.TransferApprovalStatus = status;
+            _repositoryCommitment.TransferSender.TransferApprovalStatus = status;
             Assert.CatchAsync<InvalidRequestException>(() => _sut.Handle(_command));
         }
 
