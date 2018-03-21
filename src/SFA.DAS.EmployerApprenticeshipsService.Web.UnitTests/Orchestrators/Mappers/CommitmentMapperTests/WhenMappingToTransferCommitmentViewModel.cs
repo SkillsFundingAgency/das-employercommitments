@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MediatR;
 using Moq;
 using NUnit.Framework;
@@ -35,8 +36,14 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
                 Id = 789,
                 EmployerAccountId = 123,
                 LegalEntityName = "LegalEntityName",
-                TransferSenderId = 1000,
-                TransferSenderName = "Sender 1000",
+                TransferSender = new TransferSender
+                {
+                    Id = 1000,
+                    Name = "Sender 1000",
+                    TransferApprovalStatus = TransferApprovalStatus.Approved,
+                    TransferApprovalSetBy = "tester",
+                    TransferApprovalSetOn = new DateTime(2018, 3, 1)
+                },
                 Apprenticeships = new List<Apprenticeship>
                 {
                     new Apprenticeship
@@ -57,7 +64,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
                         TrainingName = "Name2",
                         Cost = 1000
                     },
-
                 }
             };
 
@@ -69,7 +75,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         [TestCase(TransferApprovalStatus.Pending, "Pending")]
         public void ThenMappingACommitmentWithAppenticesMapsFieldsCorrectly(TransferApprovalStatus status, string statusDescription)
         {
-            _commitmentView.TransferApprovalStatus = status;
+            _commitmentView.TransferSender.TransferApprovalStatus = status;
             var result = _sut.MapToTransferCommitmentViewModel(_commitmentView);
             Assert.AreEqual("DEF1000", result.HashedTransferSenderAccountId);
             Assert.AreEqual("XYZ789", result.HashedCohortReference);
@@ -82,7 +88,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             Assert.AreEqual("Name2", result.TrainingList[1].CourseTitle);
             Assert.AreEqual(1, result.TrainingList[1].ApprenticeshipCount);
             Assert.AreEqual("Name2 (1 Apprentices)", result.TrainingList[1].SummaryDescription);
-            Assert.AreEqual(statusDescription, result.TransferApprovalStatus);
+            Assert.AreEqual(statusDescription, result.TransferApprovalStatusDesc);
+            Assert.AreEqual("tester", result.TransferApprovalSetBy);
+            Assert.AreEqual(_commitmentView.TransferSender.TransferApprovalSetOn, result.TransferApprovalSetOn);
 
         }
         [Test]

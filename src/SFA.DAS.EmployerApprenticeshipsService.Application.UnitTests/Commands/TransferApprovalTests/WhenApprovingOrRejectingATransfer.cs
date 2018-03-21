@@ -20,8 +20,20 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
         [SetUp]
         public void Setup()
         {
-            _command = new TransferApprovalCommand { CommitmentId = 876, TransferSenderId = 676, TransferStatus = TransferApprovalStatus.Rejected};
-            _repositoryCommitment = new CommitmentView { TransferSenderId = _command.TransferSenderId, TransferApprovalStatus = TransferApprovalStatus.Pending};
+            _command = new TransferApprovalCommand
+            {
+                CommitmentId = 876,
+                TransferSenderId = 676,
+                TransferStatus = TransferApprovalStatus.Rejected
+            };
+            _repositoryCommitment = new CommitmentView
+            {
+                TransferSender = new TransferSender
+                {
+                    Id = _command.TransferSenderId,
+                    TransferApprovalStatus = TransferApprovalStatus.Pending
+                }
+            };
 
             _mockCommitmentApi = new Mock<IEmployerCommitmentApi>();
             _mockCommitmentApi.Setup(x => x.GetTransferSenderCommitment(It.IsAny<long>(), It.IsAny<long>()))
@@ -53,7 +65,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
         [TestCase(TransferApprovalStatus.Rejected)]
         public async Task ThenThrowErrorIfTranferIsAlreadyApprovedOrRejected(TransferApprovalStatus status)
         {
-            _repositoryCommitment.TransferApprovalStatus = status;
+            _repositoryCommitment.TransferSender.TransferApprovalStatus = status;
             Assert.CatchAsync<InvalidRequestException>(() => _sut.Handle(_command));
         }
 

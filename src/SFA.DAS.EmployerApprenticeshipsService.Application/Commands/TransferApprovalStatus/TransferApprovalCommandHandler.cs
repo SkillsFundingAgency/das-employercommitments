@@ -19,12 +19,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
         {
             var commitment = await _commitmentsService.GetTransferSenderCommitment(message.TransferSenderId, message.CommitmentId);
 
-            if (commitment.TransferSenderId != message.TransferSenderId)
+            if (commitment.TransferSender.Id != message.TransferSenderId)
                 throw new InvalidRequestException(new Dictionary<string, string> { { "Commitment", "This commitment does not belong to this Transfer Sender Account" } });
 
-            if (commitment.TransferApprovalStatus != Commitments.Api.Types.TransferApprovalStatus.Pending)
+            if (commitment.TransferSender.TransferApprovalStatus != Commitments.Api.Types.TransferApprovalStatus.Pending)
             {
-                var status = commitment.TransferApprovalStatus == Commitments.Api.Types.TransferApprovalStatus.Approved
+                var status = commitment.TransferSender.TransferApprovalStatus == Commitments.Api.Types.TransferApprovalStatus.Approved
                     ? "approved"
                     : "rejected";
 

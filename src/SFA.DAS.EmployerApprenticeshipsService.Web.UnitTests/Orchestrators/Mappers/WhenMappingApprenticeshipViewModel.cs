@@ -69,7 +69,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void ShouldHaveTransferFlagSetIfCommitmentHasTransferSender()
         {
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(+1), HasHadDataLockSuccess = false };
-            var commitment = new CommitmentView { TransferSenderId = 123 };
+            var commitment = new CommitmentView { TransferSender = new TransferSender { Id = 123 } };
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
 
             viewModel.IsPaidForByTransfer.Should().BeTrue();

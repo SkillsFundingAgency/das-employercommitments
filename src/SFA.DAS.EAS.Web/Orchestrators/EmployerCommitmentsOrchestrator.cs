@@ -375,7 +375,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     HashedAccountId = hashedAccountId,
                     HashedCommitmentId = hashedCommitmentId,
-                    IsPaidForByTransfer = commitmentData.Commitment.TransferSenderId.HasValue
+                    IsPaidForByTransfer = commitmentData.Commitment.TransferSender != null
                 };
 
                 return new OrchestratorResponse<ExtendedApprenticeshipViewModel>
@@ -383,7 +383,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ExtendedApprenticeshipViewModel
                     {
                         Apprenticeship = apprenticeship,
-                        ApprenticeshipProgrammes = await GetTrainingProgrammes(!commitmentData.Commitment.TransferSenderId.HasValue)
+                        ApprenticeshipProgrammes = await GetTrainingProgrammes(commitmentData.Commitment.TransferSender == null)
                     }
                 };
             }, hashedAccountId, externalUserId);
@@ -448,7 +448,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ExtendedApprenticeshipViewModel
                     {
                         Apprenticeship = apprenticeship,
-                        ApprenticeshipProgrammes = await GetTrainingProgrammes(!commitmentData.Commitment.TransferSenderId.HasValue),
+                        ApprenticeshipProgrammes = await GetTrainingProgrammes(commitmentData.Commitment.TransferSender == null),
                         ValidationErrors = _apprenticeshipMapper.MapOverlappingErrors(overlaps)
                     }
                 };
@@ -733,7 +733,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         ProviderName = data.Commitment.ProviderName,
                         LegalEntityName = data.Commitment.LegalEntityName,
                         Message = GetLatestMessage(data.Commitment.Messages, false)?.Message,
-                        IsTransfer = data.Commitment.TransferSenderId.HasValue
+                        IsTransfer = data.Commitment.TransferSender != null
                     }
                 };
             }, hashedAccountId, externalUserId);
@@ -903,7 +903,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var apprenticships = data.Commitment.Apprenticeships?.Select(
                     a => MapToApprenticeshipListItem(a, overlappingApprenticeships)).ToList() ?? new List<ApprenticeshipListItemViewModel>(0);
 
-                var trainingProgrammes = await GetTrainingProgrammes(!data.Commitment.TransferSenderId.HasValue);
+                var trainingProgrammes = await GetTrainingProgrammes(data.Commitment.TransferSender == null);
                 var apprenticeshipGroups = new List<ApprenticeshipListItemGroupViewModel>();
 
                 var errors = new Dictionary<string, string>();
