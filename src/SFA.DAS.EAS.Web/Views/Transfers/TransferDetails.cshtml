@@ -109,16 +109,16 @@
                     <div class="form-error-group form-group @Html.AddClassIfPropertyInError("ApprovalConfirmed", "error")">
                         <h2 class="heading-medium" for="">Do you want to approve this transfer request?</h2>
                         <div>
-                            @Html.ValidationMessage("ApprovalConfirmed", "Please choose an option", new {id = "error-message-ApprovalConfirmed"})
+                            @Html.ValidationMessage("ApprovalConfirmed", "Please choose an option", new { id = "error-message-ApprovalConfirmed" })
                         </div>
                         <label class="block-label selection-button-radio" for="ApprovalConfirmed-True">
-                            @Html.RadioButton("ApprovalConfirmed", "True", new {id = "ApprovalConfirmed-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')"})
+                            @Html.RadioButton("ApprovalConfirmed", "True", new { id = "ApprovalConfirmed-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
                             Yes, approve the request
                         </label>
-                        <label class="block-label selection-button-radio" for="ApprovalConfirmed-False">
-                            @Html.RadioButton("ApprovalConfirmed", "False", new {id = "ApprovalConfirmed-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')"})
+                        @*<label class="block-label selection-button-radio" for="ApprovalConfirmed-False">
+                            @Html.RadioButton("ApprovalConfirmed", "False", new { id = "ApprovalConfirmed-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
                             No, reject the request
-                        </label>
+                        </label>*@
                     </div>
                 </fieldset>
                 <button type="submit" class="button" id="submit-transfer-connection">Continue</button>
