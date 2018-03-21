@@ -45,14 +45,12 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Employer
                 {
                     new TransferConnectionViewModel
                     {
-                        TransferConnectionId = 1,
                         FundingEmployerAccountId = 1234,
                         FundingEmployerAccountName = "FirstAccountName",
                         FundingEmployerHashedAccountId = "FAN"
                     },
                     new TransferConnectionViewModel
                     {
-                        TransferConnectionId = 2,
                         FundingEmployerAccountId = 1235,
                         FundingEmployerAccountName = "SecondAccountName",
                         FundingEmployerHashedAccountId = "SAN"

@@ -16,7 +16,7 @@
       <Setting name="MyaBaseUrl" value="https://dev-eas.apprenticeships.sfa.bis.gov.uk/" />
       <Setting name="CommitmentsRoutePrefix" value="commitments" />
       <Setting name="CurrentTime" value="" />
-      <Setting name="UseAccountApiTransfersStub" value="true" />
+      <Setting name="UseAccountApiTransfersStub" value="false" />
       <Setting name="AccountApiTransfersStubRecordCount" value="3" />
       <Setting name="FeatureToggle.Transfers" value="true" />
     </ConfigurationSettings>
