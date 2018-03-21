@@ -103,8 +103,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Decorators
                     {
                         FundingEmployerAccountId = i,
                         FundingEmployerAccountName = $"Test Transfer Connection {i}",
-                        FundingEmployerHashedAccountId = _hashingService.HashValue(i),
-                        TransferConnectionId = i
+                        FundingEmployerHashedAccountId = _hashingService.HashValue(i)
                     });
                 }
             }
