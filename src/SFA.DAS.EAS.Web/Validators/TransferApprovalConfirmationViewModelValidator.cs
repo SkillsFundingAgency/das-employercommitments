@@ -8,7 +8,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         public TransferApprovalConfirmationViewModelValidator()
         {
             RuleFor(x => x.ApprovalConfirmed).NotNull().WithMessage("You must select an option")
-                .Must(EnsureOnlyTheApproveOptionIsValid).WithMessage("You can only aprove the transfer");
+                .Must(EnsureOnlyTheApproveOptionIsValid).WithMessage("You can only approve the transfer");
         }
 
         private static bool EnsureOnlyTheApproveOptionIsValid(bool? x)
