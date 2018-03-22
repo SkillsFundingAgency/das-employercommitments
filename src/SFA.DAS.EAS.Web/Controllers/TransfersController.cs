@@ -36,6 +36,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/approve")]
         public async Task<ActionResult> TransferApproval(string hashedAccountId, string hashedCommitmentId, TransferApprovalConfirmationViewModel viewModel)
         {
