@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
+using SFA.DAS.Commitments.Api.Types.Commitment;
 
 namespace SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment
 {
@@ -11,14 +12,22 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment
 
         public GetCommitmentQueryHandler(IEmployerCommitmentApi commitmentsApi)
         {
-            if (commitmentsApi == null)
-                throw new ArgumentNullException(nameof(commitmentsApi));
             _commitmentsApi = commitmentsApi;
         }
 
         public async Task<GetCommitmentQueryResponse> Handle(GetCommitmentQueryRequest message)
         {
-            var commitment = await _commitmentsApi.GetEmployerCommitment(message.AccountId, message.CommitmentId);
+            CommitmentView commitment = null;
+
+            switch (message.CallerType)
+            {
+                case CallerType.Employer:
+                    commitment = await _commitmentsApi.GetEmployerCommitment(message.AccountId, message.CommitmentId);
+                    break;
+                case CallerType.TransferSender:
+                    commitment = await _commitmentsApi.GetTransferSenderCommitment(message.AccountId, message.CommitmentId);
+                    break;
+            }
 
             return new GetCommitmentQueryResponse
             {
