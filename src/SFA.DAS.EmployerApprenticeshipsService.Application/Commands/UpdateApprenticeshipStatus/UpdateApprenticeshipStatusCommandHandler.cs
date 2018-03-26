@@ -16,7 +16,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
 {
     public sealed class UpdateApprenticeshipStatusCommandHandler : AsyncRequestHandler<UpdateApprenticeshipStatusCommand>
     {
-        private IEmployerCommitmentApi _commitmentsApi;
+        private readonly IEmployerCommitmentApi _commitmentsApi;
         private readonly IValidator<UpdateApprenticeshipStatusCommand> _validator;
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IMediator _mediator;
