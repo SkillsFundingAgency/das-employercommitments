@@ -53,6 +53,19 @@
                         <hr />
                     </div>
                 }
+                
+                @if (Model.Data.ShowPublicSectorReportingLink)
+                {
+                    <div class="column-half">
+                        <h2 class="heading-medium">
+                            <a href="@Url.ExternalPsrUrlAction("home")">Report public sector apprenticeship target</a>
+                        </h2>
+                        <p class="rj-home-spacer">
+                            Submit data on your progress towards the public sector apprenticeship target
+                        </p>
+                        <hr />
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -61,7 +74,7 @@
 @section breadcrumb {
     <div class="breadcrumbs">
         <ol role="navigation">
-            <li><a href="@Url.ExternalUrlAction("teams")">Home</a></li>
+            <li><a href="@Url.ExternalMyaUrlAction("teams")">Home</a></li>
             <li>Apprentices</li>
         </ol>
     </div>
