@@ -35,13 +35,27 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             Assert.AreEqual(0, result.Data.TransferFundedCohortsCount);
         }
 
-        [TestCase(
-            /*expectedDraftCount=*/1,
-            /*expectedReadyForReviewCount=*/0,
-            /*expectedWithProviderCount=*/0,
-            /*int expectedTransferFundedCohortsCount=*/0,
-            1L, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed, EditStatus.EmployerOnly, LastAction.None)]
-        public async Task ThenCountsShouldBeCorrectWhenEmployerHasASingleCommitment(
+        [TestCase(/*expectedDraftCount=*/1, /*expectedReadyForReviewCount=*/0,
+            /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/0,
+            1L, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
+            EditStatus.EmployerOnly, LastAction.None, TestName = "With receiving employer")]
+        [TestCase(/*expectedDraftCount=*/1, /*expectedReadyForReviewCount=*/0,
+            /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/0,
+            1L, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
+            EditStatus.ProviderOnly, LastAction.None, TestName = "With provider")]
+        [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
+            /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/1,
+            1L, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
+            EditStatus.Both, LastAction.None, TestName = "With sender but not yet actioned by them")]
+        [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
+            /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/1,
+            1L, TransferApprovalStatus.Rejected, AgreementStatus.NotAgreed,
+            EditStatus.EmployerOnly, LastAction.None, TestName = "With sender, rejected by them, but not yet saved or edited")]
+        [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
+            /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/0,
+            1L, TransferApprovalStatus.Approved, AgreementStatus.NotAgreed,
+            EditStatus.Both, LastAction.None, TestName = "Approved by all 3 parties")]
+        public async Task ThenCountsShouldBeCorrectWhenEmployerHasASingleCommitmentThats(
             int expectedDraftCount, int expectedReadyForReviewCount, int expectedWithProviderCount, int expectedTransferFundedCohortsCount,
             long? transferSenderId, TransferApprovalStatus transferApprovalStatus,
             AgreementStatus agreementStatus, EditStatus editStatus, LastAction lastAction)
