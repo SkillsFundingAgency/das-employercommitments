@@ -24,9 +24,7 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitments;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProvider;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipProvider;
 using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
 using SFA.DAS.EmployerCommitments.Web.Enums;
@@ -37,9 +35,7 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.NLog.Logger;
 
 using OrganisationType = SFA.DAS.Common.Domain.Types.OrganisationType;
-using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
-using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
@@ -57,8 +53,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly IAcademicYearValidator _academicYearValidator;
         private readonly IAcademicYearDateProvider _academicYearDateProvider;
 
-        private readonly IApprenticeshipViewModelValidator _apprenticeshipValidation;
-
         private readonly IFeatureToggleService _featureToggleService;
 
         public EmployerCommitmentsOrchestrator(
@@ -68,7 +62,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IApprenticeshipMapper apprenticeshipMapper,
             ICommitmentMapper commitmentMapper,
             ILog logger,
-            IApprenticeshipViewModelValidator apprenticeshipValidation,
             IFeatureToggleService featureToggleService) : base(mediator, hashingService, logger)
         {
             _mediator = mediator;
@@ -77,7 +70,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _apprenticeshipMapper = apprenticeshipMapper;
             _commitmentMapper = commitmentMapper;
             _logger = logger;
-            _apprenticeshipValidation = apprenticeshipValidation;
             _featureToggleService = featureToggleService;
         }
 
