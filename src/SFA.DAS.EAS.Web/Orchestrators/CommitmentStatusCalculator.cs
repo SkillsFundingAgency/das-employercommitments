@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Commitments.Api.Types;
+﻿using System;
+using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Web.Enums;
 
@@ -52,6 +53,21 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 return RequestStatus.ReadyForApproval;
 
             return RequestStatus.None;
+        }
+
+        public RequestStatus GetTransferStatus(EditStatus edit, TransferApprovalStatus transferApproval)
+        {
+            switch (transferApproval)
+            {
+                case TransferApprovalStatus.Pending:
+                    return edit == EditStatus.Both ? RequestStatus.WithSender : RequestStatus.NewRequest;
+                case TransferApprovalStatus.Approved:
+                    return RequestStatus.None;
+                case TransferApprovalStatus.Rejected:
+                    return RequestStatus.WithSender;
+                default:
+                    throw new Exception("Unexpected TransferApprovalStatus");
+            }
         }
     }
 }

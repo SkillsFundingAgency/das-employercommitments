@@ -753,31 +753,34 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 //todo: call into commitments api or db to get counts, seems excesive to fetch all cohorts data just to count
 
-                //var nonTransfercommitments = data.Commitments.Where(c => !c.TransferSenderId.HasValue);
-                //var transfercommitments = data.Commitments.Where(c => c.TransferSenderId.HasValue);
-
                 var commitmentsSplitByTransfer = data.Commitments.ToLookup(c => c.TransferSenderId.HasValue);
 
-                var commitmentStatuses = data.Commitments
+                // transfer cohorts
+                var transferCommitmentStatuses = commitmentsSplitByTransfer[true]
+                    .Select(c => _statusCalculator.GetTransferStatus(c.EditStatus, c.TransferApprovalStatus));
+
+                // non-transfer cohorts
+                var nonTransferCommitmentStatuses = commitmentsSplitByTransfer[false]
                     .Select(m => _statusCalculator.GetStatus(
                         m.EditStatus,
                         m.ApprenticeshipCount,
                         m.LastAction,
-                        m.AgreementStatus))
-                    .ToList();
+                        m.AgreementStatus));
 
-                // where(transfersenderid if null) -> existing status
-                // where(transfersenderid has value) -> new status (if we need to create one) -> RequestStatus.NewRequest (for draft) or RequestStatus.Transfer
-                // concat, then count
-
-                // draft needs 
-
-                // transfersenderid present
-                // EditStatus Both (receiver & provider approved)
-                // transfer approval status pending rejected
+                var commitmentStatuses = transferCommitmentStatuses
+                    .Concat(nonTransferCommitmentStatuses).ToArray();
 
                 return new OrchestratorResponse<YourCohortsViewModel>
                 {
+                    // Transfer funded cohorts in the bingo box doesn't actually
+                    // refer to all transfer funded cohorts, but rather to just those
+                    // transfer funded cohorts that are with the sender for approval
+                    // or have been rejected by the sender.
+                    // Transfer funded cohorts that are with the receiver or provider,
+                    // or with the sender but have been edited by the sender
+                    // (is that right, after editing does that send it back to the receiver?)
+                    // are counted as Draft cohorts instead.
+
                     Data = new YourCohortsViewModel
                     {
                         DraftCount = commitmentStatuses.Count(m =>
@@ -789,7 +792,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                              m == RequestStatus.WithProviderForApproval
                           || m == RequestStatus.SentToProvider
                           || m == RequestStatus.SentForReview),
-                        TransferFundedCohortsCount = 0
+                        TransferFundedCohortsCount = commitmentStatuses.Count(m =>
+                            m == RequestStatus.WithSender)
                     }
                 };
 

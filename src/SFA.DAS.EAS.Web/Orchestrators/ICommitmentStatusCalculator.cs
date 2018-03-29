@@ -7,5 +7,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
     public interface ICommitmentStatusCalculator
     {
         RequestStatus GetStatus(EditStatus editStatus, int apprenticeshipCount, LastAction lastAction, AgreementStatus? overallAgreementStatus);
+        RequestStatus GetTransferStatus(EditStatus edit, TransferApprovalStatus transferApproval);
     }
 }
