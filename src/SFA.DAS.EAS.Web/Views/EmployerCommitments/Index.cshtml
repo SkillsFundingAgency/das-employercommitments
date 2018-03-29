@@ -1,4 +1,4 @@
-﻿@using SFA.DAS.EmployerCommitments.Web
+@using SFA.DAS.EmployerCommitments.Web
 @using SFA.DAS.EmployerCommitments.Web.Extensions
 @using SFA.DAS.EmployerCommitments.Web.ViewModels
 
@@ -31,7 +31,8 @@
                     <p class="rj-home-spacer">Review, edit, approve and add more apprentices to cohorts you’ve already started.</p>
                     <hr />
                 </div>
-
+            </div>
+            <div class="grid-row">
                 <div class="column-half">
                     <h2 class="heading-medium">
                         <a href="@Url.Action("ListAll", "EmployerManageApprentices")">Manage your apprentices</a>
@@ -53,19 +54,22 @@
                         <hr />
                     </div>
                 }
+            </div>
                 
-                @if (Model.Data.ShowPublicSectorReportingLink)
-                {
-                    <div class="column-half">
-                        <h2 class="heading-medium">
-                            <a href="@Url.ExternalPsrUrlAction("home")">Report public sector apprenticeship target</a>
-                        </h2>
-                        <p class="rj-home-spacer">
-                            Submit data on your progress towards the public sector apprenticeship target
-                        </p>
-                        <hr />
-                    </div>
-                }
+            @if (Model.Data.ShowPublicSectorReportingLink)
+            {
+              <div class="grid-row">
+                <div class="column-half">
+                    <h2 class="heading-medium">
+                        <a href="@Url.ExternalPsrUrlAction("home")">Report public sector apprenticeship target</a>
+                    </h2>
+                    <p class="rj-home-spacer">
+                        Submit data on your progress towards the public sector apprenticeship target
+                    </p>
+                    <hr />
+                </div>
+              </div>
+            }
             </div>
         </div>
     </div>
