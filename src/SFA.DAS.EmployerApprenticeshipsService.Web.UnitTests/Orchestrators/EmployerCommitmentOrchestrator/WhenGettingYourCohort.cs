@@ -54,6 +54,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/0,
             ValidTransferSenderId, TransferApprovalStatus.Approved, AgreementStatus.NotAgreed,
             EditStatus.Both, LastAction.None, 1, TestName = "Approved by all 3 parties")]
+        [TestCase(/*expectedDraftCount=*/1, /*expectedReadyForReviewCount=*/0,
+            /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/0,
+            null, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
+            EditStatus.EmployerOnly, LastAction.None, 0, TestName = "Just created by an employer")]
         [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
             /*expectedWithProviderCount=*/1, /*expectedTransferFundedCohortsCount=*/0,
             null, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
@@ -91,13 +95,19 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             Assert.AreEqual(expectedTransferFundedCohortsCount, result.Data.TransferFundedCohortsCount);
         }
 
+        [TestCase(/*expectedDraftCount=*/2, /*expectedReadyForReviewCount=*/0,
+            /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/0,
+            null, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
+            EditStatus.EmployerOnly, LastAction.None, 0,
+            ValidTransferSenderId, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
+            EditStatus.EmployerOnly, LastAction.None, 0, TestName = "With a transfers draft and a non-transfers draft")]
         [TestCase(/*expectedDraftCount=*/1, /*expectedReadyForReviewCount=*/0,
             /*expectedWithProviderCount=*/1, /*expectedTransferFundedCohortsCount=*/0,
             null, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
             EditStatus.ProviderOnly, LastAction.None, 0,
             ValidTransferSenderId, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
-            EditStatus.EmployerOnly, LastAction.None, 0, TestName = "")]
-        public async Task ThenCountsShouldBeCorrectWhenEmployerHasTwoCommitmentsThat(
+            EditStatus.EmployerOnly, LastAction.None, 0, TestName = "With a transfers draft and a non-transfers with provider")]
+        public async Task ThenCountsShouldBeCorrectWhenEmployerHasTwoCommitments(
             int expectedDraftCount, int expectedReadyForReviewCount, int expectedWithProviderCount, int expectedTransferFundedCohortsCount,
             long? transferSenderId1, TransferApprovalStatus transferApprovalStatus1,
             AgreementStatus agreementStatus1, EditStatus editStatus1, LastAction lastAction1, int apprenticeshipCount1,
