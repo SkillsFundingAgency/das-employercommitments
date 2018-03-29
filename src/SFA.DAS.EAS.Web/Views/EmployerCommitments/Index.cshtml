@@ -40,7 +40,10 @@
                     <p class="rj-home-spacer">
                         View approved apprentices, update details of existing apprentices or stop and pause payments to training providers.
                     </p>
-                    <hr />
+                    @if (!Model.Data.ShowPublicSectorReportingLink)
+                    {
+                        <hr />
+                    }
                 </div>
                 @if (Model.Data.ShowSetPaymentPriorityLink)
                 {
@@ -51,24 +54,27 @@
                         <p class="rj-home-spacer">
                             View and change the order in which your providers are paid from your available funds.
                         </p>
-                        <hr />
+                        @if (!Model.Data.ShowPublicSectorReportingLink)
+                        {
+                            <hr />
+                        }
                     </div>
                 }
             </div>
                 
             @if (Model.Data.ShowPublicSectorReportingLink)
             {
-              <div class="grid-row">
-                <div class="column-half">
-                    <h2 class="heading-small">
-                        <a href="@Url.ExternalPsrUrlAction("home")">Report public sector apprenticeship target</a>
-                    </h2>
-                    <p class="font-xsmall rj-home-spacer">
-                        Submit data on your progress towards the public sector apprenticeship target
-                    </p>
-                    <hr />
+                <hr class="hr-double" />
+                <div class="grid-row">
+                    <div class="column-half">
+                        <h2 class="heading-medium">
+                            <a href="@Url.ExternalPsrUrlAction("home")">Report public sector apprenticeship target</a>
+                        </h2>
+                        <p class="rj-home-spacer">
+                            Submit data on your progress towards the public sector apprenticeship target
+                        </p>
+                    </div>
                 </div>
-              </div>
             }
         </div>
     </div>
