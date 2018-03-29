@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -15,6 +12,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
     [TestFixture]
     public class WhenGettingYourCohort : OrchestratorTestBase
     {
+        private const long ValidTransferSenderId = 1L;
+
         [Test]
         public async Task ThenAllCountsShouldBeZeroIfNoCommitments()
         {
@@ -37,28 +36,32 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
 
         [TestCase(/*expectedDraftCount=*/1, /*expectedReadyForReviewCount=*/0,
             /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/0,
-            1L, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
-            EditStatus.EmployerOnly, LastAction.None, TestName = "With receiving employer")]
+            ValidTransferSenderId, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
+            EditStatus.EmployerOnly, LastAction.None, 0, TestName = "With receiving employer")]
         [TestCase(/*expectedDraftCount=*/1, /*expectedReadyForReviewCount=*/0,
             /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/0,
-            1L, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
-            EditStatus.ProviderOnly, LastAction.None, TestName = "With provider")]
+            ValidTransferSenderId, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
+            EditStatus.ProviderOnly, LastAction.None, 0, TestName = "With provider")]
         [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
             /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/1,
-            1L, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
-            EditStatus.Both, LastAction.None, TestName = "With sender but not yet actioned by them")]
+            ValidTransferSenderId, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
+            EditStatus.Both, LastAction.None, 1, TestName = "With sender but not yet actioned by them")]
         [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
             /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/1,
-            1L, TransferApprovalStatus.Rejected, AgreementStatus.NotAgreed,
-            EditStatus.EmployerOnly, LastAction.None, TestName = "With sender, rejected by them, but not yet saved or edited")]
+            ValidTransferSenderId, TransferApprovalStatus.Rejected, AgreementStatus.NotAgreed,
+            EditStatus.EmployerOnly, LastAction.None, 1, TestName = "With sender, rejected by them, but not yet saved or edited")]
         [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
             /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/0,
-            1L, TransferApprovalStatus.Approved, AgreementStatus.NotAgreed,
-            EditStatus.Both, LastAction.None, TestName = "Approved by all 3 parties")]
+            ValidTransferSenderId, TransferApprovalStatus.Approved, AgreementStatus.NotAgreed,
+            EditStatus.Both, LastAction.None, 1, TestName = "Approved by all 3 parties")]
+        [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
+            /*expectedWithProviderCount=*/1, /*expectedTransferFundedCohortsCount=*/0,
+            null, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
+            EditStatus.ProviderOnly, LastAction.None, 0, TestName = "Been sent to provider by employer to add apprentices")]
         public async Task ThenCountsShouldBeCorrectWhenEmployerHasASingleCommitmentThats(
             int expectedDraftCount, int expectedReadyForReviewCount, int expectedWithProviderCount, int expectedTransferFundedCohortsCount,
             long? transferSenderId, TransferApprovalStatus transferApprovalStatus,
-            AgreementStatus agreementStatus, EditStatus editStatus, LastAction lastAction)
+            AgreementStatus agreementStatus, EditStatus editStatus, LastAction lastAction, int apprenticeshipCount)
         {
             //Arrange
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetCommitmentsQuery>()))
@@ -72,7 +75,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                             TransferApprovalStatus = transferApprovalStatus,
                             AgreementStatus = agreementStatus,
                             EditStatus = editStatus,
-                            LastAction = lastAction
+                            LastAction = lastAction,
+                            ApprenticeshipCount = apprenticeshipCount
                         }
                     }
                 });
@@ -87,5 +91,54 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             Assert.AreEqual(expectedTransferFundedCohortsCount, result.Data.TransferFundedCohortsCount);
         }
 
+        [TestCase(/*expectedDraftCount=*/1, /*expectedReadyForReviewCount=*/0,
+            /*expectedWithProviderCount=*/1, /*expectedTransferFundedCohortsCount=*/0,
+            null, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
+            EditStatus.ProviderOnly, LastAction.None, 0,
+            ValidTransferSenderId, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
+            EditStatus.EmployerOnly, LastAction.None, 0, TestName = "")]
+        public async Task ThenCountsShouldBeCorrectWhenEmployerHasTwoCommitmentsThat(
+            int expectedDraftCount, int expectedReadyForReviewCount, int expectedWithProviderCount, int expectedTransferFundedCohortsCount,
+            long? transferSenderId1, TransferApprovalStatus transferApprovalStatus1,
+            AgreementStatus agreementStatus1, EditStatus editStatus1, LastAction lastAction1, int apprenticeshipCount1,
+            long? transferSenderId2, TransferApprovalStatus transferApprovalStatus2,
+            AgreementStatus agreementStatus2, EditStatus editStatus2, LastAction lastAction2, int apprenticeshipCount2)
+        {
+            //Arrange
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetCommitmentsQuery>()))
+                .ReturnsAsync(new GetCommitmentsResponse
+                {
+                    Commitments = new List<CommitmentListItem>
+                    {
+                        new CommitmentListItem
+                        {
+                            TransferSenderId = transferSenderId1,
+                            TransferApprovalStatus = transferApprovalStatus1,
+                            AgreementStatus = agreementStatus1,
+                            EditStatus = editStatus1,
+                            LastAction = lastAction1,
+                            ApprenticeshipCount = apprenticeshipCount1
+                        },
+                        new CommitmentListItem
+                        {
+                            TransferSenderId = transferSenderId2,
+                            TransferApprovalStatus = transferApprovalStatus2,
+                            AgreementStatus = agreementStatus2,
+                            EditStatus = editStatus2,
+                            LastAction = lastAction2,
+                            ApprenticeshipCount = apprenticeshipCount2
+                        }
+                    }
+                });
+
+            //Act
+            var result = await EmployerCommitmentOrchestrator.GetYourCohorts("ABC123", "ABC321");
+
+            //Assert
+            Assert.AreEqual(expectedDraftCount, result.Data.DraftCount);
+            Assert.AreEqual(expectedReadyForReviewCount, result.Data.ReadyForReviewCount);
+            Assert.AreEqual(expectedWithProviderCount, result.Data.WithProviderCount);
+            Assert.AreEqual(expectedTransferFundedCohortsCount, result.Data.TransferFundedCohortsCount);
+        }
     }
 }
