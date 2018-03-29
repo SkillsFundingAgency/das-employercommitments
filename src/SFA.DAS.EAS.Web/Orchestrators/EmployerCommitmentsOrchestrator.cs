@@ -751,6 +751,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     AccountId = accountId
                 });
 
+                //todo: call into commitments api or db to get counts, seems excesive to fetch all cohorts data just to count
+
+                //var nonTransfercommitments = data.Commitments.Where(c => !c.TransferSenderId.HasValue);
+                //var transfercommitments = data.Commitments.Where(c => c.TransferSenderId.HasValue);
+
+                var commitmentsSplitByTransfer = data.Commitments.ToLookup(c => c.TransferSenderId.HasValue);
+
                 var commitmentStatuses = data.Commitments
                     .Select(m => _statusCalculator.GetStatus(
                         m.EditStatus,
@@ -758,6 +765,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         m.LastAction,
                         m.AgreementStatus))
                     .ToList();
+
+                // where(transfersenderid if null) -> existing status
+                // where(transfersenderid has value) -> new status (if we need to create one) -> RequestStatus.NewRequest (for draft) or RequestStatus.Transfer
+                // concat, then count
+
+                // draft needs 
+
+                // transfersenderid present
+                // EditStatus Both (receiver & provider approved)
+                // transfer approval status pending rejected
 
                 return new OrchestratorResponse<YourCohortsViewModel>
                 {
@@ -771,7 +788,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         WithProviderCount = commitmentStatuses.Count(m =>
                              m == RequestStatus.WithProviderForApproval
                           || m == RequestStatus.SentToProvider
-                          || m == RequestStatus.SentForReview)
+                          || m == RequestStatus.SentForReview),
+                        TransferFundedCohortsCount = 0
                     }
                 };
 
@@ -1248,6 +1266,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 Name = commitment.Reference,
                 LegalEntityName = commitment.LegalEntityName,
                 ProviderName = commitment.ProviderName,
+                //it's calculating the status here also
                 Status = _statusCalculator.GetStatus(commitment.EditStatus, commitment.ApprenticeshipCount, commitment.LastAction, commitment.AgreementStatus),
                 LatestMessage = latestMessage
             };
