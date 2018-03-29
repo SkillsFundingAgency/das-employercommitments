@@ -21,14 +21,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 return RequestStatus.Approved;
 
             if (editStatus == EditStatus.ProviderOnly)
-            {
                 return GetProviderOnlyStatus(lastAction, hasApprenticeships);
-            }
 
             if (editStatus == EditStatus.EmployerOnly)
-            {
                 return GetEmployerOnlyStatus(lastAction, hasApprenticeships, overallAgreementStatus);
-            }
 
             return RequestStatus.None;
         }
