@@ -292,9 +292,10 @@
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenResumingAStartedApprenticeshipAfterPauseInLastAcademicYear.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenUserSelectsToEditStatus.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenMappingApprenticeship.cs" />
-    <Compile Include="StatusCalculator\WhenGettingStatusOfCommitment.cs" />
+    <Compile Include="StatusCalculator\WhenGettingStatusOfNonTransferCommitment.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenValidateingApprenticeshipUpdate.cs" />
     <Compile Include="Orchestrators\Mappers\ApprenticeshipMapperBase.cs" />
+    <Compile Include="StatusCalculator\WhenGettingStatusOfTransferCommitment.cs" />
     <Compile Include="Validators\ApprovedApprenticeships\ApprovedApprenticeshipValidatorTestBase.cs" />
     <Compile Include="Plumbing\CommitmentRoutePrefixTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
