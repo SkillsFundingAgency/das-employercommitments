@@ -64,6 +64,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         public RequestStatus GetTransferStatus(EditStatus edit, TransferApprovalStatus transferApproval)
         {
             const string invalidStateExceptionMessagePrefix = "Transfer funder commitment in invalid state: ";
+
+            if (edit >= EditStatus.Neither)
+                throw new Exception("Unexpected EditStatus");
+
             switch (transferApproval)
             {
                 case TransferApprovalStatus.Pending:
