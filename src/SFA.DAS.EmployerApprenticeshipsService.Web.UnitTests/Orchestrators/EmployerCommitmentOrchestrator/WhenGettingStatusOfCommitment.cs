@@ -10,7 +10,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
     [TestFixture]
     public sealed class WhenGettingStatusOfCommitment
     {
-        private static readonly ICommitmentStatusCalculator _calculator = new CommitmentStatusCalculator();
+        private static readonly ICommitmentStatusCalculator Calculator = new CommitmentStatusCalculator();
+
+        #region GetStatus
 
         [TestCase(RequestStatus.SentToProvider, AgreementStatus.NotAgreed, EditStatus.ProviderOnly, 0, LastAction.None, TestName = "Employer sends to provider to add apprentices")]
         [TestCase(RequestStatus.SentToProvider, AgreementStatus.NotAgreed, EditStatus.ProviderOnly, 1, LastAction.None, TestName = "Provider adds apprenticeship")]
@@ -28,7 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         public void EmployerSendsToProviderToAddApprentices(RequestStatus expectedResult, AgreementStatus agreementStatus, EditStatus editStatus, int numberOfApprenticeships, LastAction lastAction)
         {
             // Scenario 1
-            var status = _calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
+            var status = Calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
 
             status.Should().Be(expectedResult);
         }
@@ -40,7 +42,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         public void EmployerCreatesANewCohort(RequestStatus expectedResult, AgreementStatus agreementStatus, EditStatus editStatus, int numberOfApprenticeships, LastAction lastAction)
         {
             // Scenario 2
-            var status = _calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
+            var status = Calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
 
             status.Should().Be(expectedResult);
         }
@@ -50,9 +52,27 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         public void Scenario3(RequestStatus expectedResult, AgreementStatus agreementStatus, EditStatus editStatus, int numberOfApprenticeships, LastAction lastAction)
         {
             // Scenario 3
-            var status = _calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
+            var status = Calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
 
             status.Should().Be(expectedResult);
         }
+
+        #endregion GetStatus
+
+        #region GetTransferStatus
+
+        [TestCase(RequestStatus.NewRequest, EditStatus.EmployerOnly, TransferApprovalStatus.Pending, TestName = "With receiving employer")]
+        [TestCase(RequestStatus.NewRequest, EditStatus.ProviderOnly, TransferApprovalStatus.Pending, TestName = "With provider")]
+        [TestCase(RequestStatus.WithSender, EditStatus.Both, TransferApprovalStatus.Pending, TestName = "With sender but not yet actioned by them")]
+        [TestCase(RequestStatus.WithSender, EditStatus.EmployerOnly, TransferApprovalStatus.Rejected, TestName = "With sender, rejected by them, but not yet saved or edited")]
+        [TestCase(RequestStatus.None, EditStatus.Both, TransferApprovalStatus.Approved, TestName = "Approved by all 3 parties")]
+        public void CommitmentIsTransferFundedAndExpectedState(RequestStatus expectedResult, EditStatus editStatus, TransferApprovalStatus transferApprovalStatus)
+        {
+            var status = Calculator.GetTransferStatus(editStatus, transferApprovalStatus);
+
+            Assert.AreEqual(expectedResult, status);
+        }
+
+        #endregion GetTransferStatus
     }
 } 
