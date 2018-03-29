@@ -2,6 +2,7 @@
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Web.Enums;
+using SFA.DAS.EmployerCommitments.Web.Exceptions;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
@@ -62,14 +63,22 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public RequestStatus GetTransferStatus(EditStatus edit, TransferApprovalStatus transferApproval)
         {
+            const string invalidStateExceptionMessagePrefix = "Transfer funder commitment in invalid state: ";
             switch (transferApproval)
             {
                 case TransferApprovalStatus.Pending:
                     return edit == EditStatus.Both ? RequestStatus.WithSender : RequestStatus.NewRequest;
+
                 case TransferApprovalStatus.Approved:
+                    if (edit != EditStatus.Both)
+                        throw new InvalidStateException($"{invalidStateExceptionMessagePrefix}If approved by sender, must be approved by receiver and provider");
                     return RequestStatus.None;
+
                 case TransferApprovalStatus.Rejected:
+                    if (edit != EditStatus.EmployerOnly)
+                        throw new InvalidStateException($"{invalidStateExceptionMessagePrefix}If just rejected by sender, must be with receiver");
                     return RequestStatus.WithSender;
+
                 default:
                     throw new Exception("Unexpected TransferApprovalStatus");
             }
