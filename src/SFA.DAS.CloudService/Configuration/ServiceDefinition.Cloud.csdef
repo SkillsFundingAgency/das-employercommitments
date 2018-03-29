@@ -32,6 +32,7 @@
       <Setting name="UseAccountApiTransfersStub" />
       <Setting name="AccountApiTransfersStubRecordCount" />
       <Setting name="FeatureToggle.Transfers" />
+      <Setting name="FeatureToggle.TransfersRejectOption" />
     </ConfigurationSettings>
     <Endpoints>
       <InputEndpoint name="HttpsIn" protocol="https" port="443" certificate="WebSslCert" />
