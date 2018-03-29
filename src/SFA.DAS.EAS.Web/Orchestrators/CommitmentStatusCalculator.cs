@@ -7,6 +7,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
     public sealed class CommitmentStatusCalculator : ICommitmentStatusCalculator
     {
+        // all the consumers of this will eventually need to be updated to take account of transfers
+        // we could fold-in GetTransferStatus into GetStatus (adding isTransfer & transferApprovalStatus as params)
+        // but if we did that now, it would expand the scope of the current story beyond its boundaries
+        // and require work that should be part of future transfer stories
+        // but we might want to refactor this later on
         public RequestStatus GetStatus(EditStatus editStatus, int apprenticeshipCount, LastAction lastAction, AgreementStatus? overallAgreementStatus)
         {
             bool hasApprenticeships = apprenticeshipCount > 0;
