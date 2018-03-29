@@ -12,7 +12,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
     {
         private static readonly ICommitmentStatusCalculator _calculator = new CommitmentStatusCalculator();
 
-        [TestCase(RequestStatus.SentForReview, LastAction.Amend, AgreementStatus.NotAgreed, TestName = "Sent for review")]
         [TestCase(RequestStatus.SentForReview, LastAction.Amend, AgreementStatus.ProviderAgreed, TestName = "Sent for review that was approved by provider")]
         [TestCase(RequestStatus.WithProviderForApproval, LastAction.Approve, AgreementStatus.EmployerAgreed, TestName = "Sent for approval")]
         [TestCase(RequestStatus.WithProviderForApproval, LastAction.Approve, AgreementStatus.NotAgreed, TestName = "Sent for approval but changed by provider")]
