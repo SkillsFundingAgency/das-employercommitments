@@ -7,7 +7,7 @@ using SFA.DAS.EmployerCommitments.Web.Enums;
 using SFA.DAS.EmployerCommitments.Web.Exceptions;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 
-namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
+namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
 {
     [TestFixture]
     public sealed class WhenGettingStatusOfCommitment

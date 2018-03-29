@@ -12,14 +12,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
     {
         private static readonly ICommitmentStatusCalculator _calculator = new CommitmentStatusCalculator();
 
-        [TestCase(RequestStatus.SentToProvider, LastAction.None, TestName = "New request sent")]
-        public void WhenThereAreNoApprentices(RequestStatus expectedResult, LastAction lastAction)
-        {
-            var status = _calculator.GetStatus(EditStatus.ProviderOnly, 0, lastAction, AgreementStatus.NotAgreed);
-
-            status.Should().Be(expectedResult);
-        }
-
         [TestCase(RequestStatus.SentForReview, LastAction.Amend, AgreementStatus.NotAgreed, TestName = "Sent for review")]
         [TestCase(RequestStatus.SentForReview, LastAction.Amend, AgreementStatus.ProviderAgreed, TestName = "Sent for review that was approved by provider")]
         [TestCase(RequestStatus.WithProviderForApproval, LastAction.Approve, AgreementStatus.EmployerAgreed, TestName = "Sent for approval")]
