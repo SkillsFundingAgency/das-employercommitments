@@ -890,6 +890,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 //todo: need to filter in transfer commitments and call GetTransferStatus (or combine the 2 into 1 GetStatus)
                 var allCommitments = await GetAllCommitments(accountId);
 
+                // add TransferSender to CommitmentListItem? (need TransferSenderName)
+                // -ve 2 extra unused fields when transfer
+                // +-ve less blank fields when not transfer
+                // how much refactoring required??
+
                 var transferFundedCommitments = allCommitments.Where(c =>
                     c.TransferSenderId.HasValue &&
                     _statusCalculator.GetTransferStatus(c.EditStatus, c.TransferApprovalStatus) ==
