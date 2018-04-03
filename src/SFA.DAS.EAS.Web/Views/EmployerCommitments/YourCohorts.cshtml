@@ -59,7 +59,22 @@
             </h2>
             <p class="heading-small">Draft</p>
         </div>
-
+    
+        <div class="column-one-half bingo-background block-four @GetClickableClass(Model.Data.TransferFundedCohortsCount)">
+            <h2 class="bold-xxlarge">
+                @if (Model.Data.TransferFundedCohortsCount > 0)
+                {
+                    <a href="@Url.Action("TransferFundedCohorts")" title="@Model.Data.TransferFundedCohortsCount with funding employer" aria-label="View all transfer-funded cohorts">
+                        @Model.Data.TransferFundedCohortsCount
+                    </a>
+                }
+                else
+                {
+                    <span>0</span>
+                }
+            </h2>
+            <p class="heading-small">Transfer-funded cohorts</p>
+        </div>
     </div> <!-- /column-two-thirds-->
 
     <div class="column-one-third pull-right"></div><!-- /column-one-third -->
