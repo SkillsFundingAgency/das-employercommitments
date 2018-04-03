@@ -764,13 +764,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 return new OrchestratorResponse<YourCohortsViewModel>
                 {
-                    // Transfer funded cohorts in the bingo box doesn't actually
+                    // The count of transfer funded cohorts in the bingo box doesn't actually
                     // refer to all transfer funded cohorts, but rather to just those
                     // transfer funded cohorts that are with the sender for approval
                     // or have been rejected by the sender.
-                    // Transfer funded cohorts that are with the receiver or provider,
-                    // or with the sender but have been edited by the sender
-                    // (is that right, after editing does that send it back to the receiver?)
+                    // Transfer funded cohorts that are with the receiver or provider
+                    // after having been rejected by the sender (and edited by the receiver)
                     // are counted as Draft cohorts instead.
 
                     Data = new YourCohortsViewModel
