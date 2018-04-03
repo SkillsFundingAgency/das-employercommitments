@@ -98,6 +98,20 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         }
 
         [HttpGet]
+        [Route("cohorts/transferFunded")]
+        public async Task<ActionResult> TransferFunded(string hashedAccountId)
+        {
+            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+                return View("AccessDenied");
+
+            //todo: what's this doing, or more importantly why?
+            SaveRequestStatusInCookie(RequestStatus.WithSender);
+
+            var model = await EmployerCommitmentsOrchestrator.GetAllTransferFunded(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+            return View("TransferFundedCohorts", model);
+        }
+
+        [HttpGet]
         [Route("Inform")]
         public async Task<ActionResult> Inform(string hashedAccountId)
         {

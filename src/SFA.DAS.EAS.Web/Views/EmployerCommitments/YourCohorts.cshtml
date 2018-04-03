@@ -64,7 +64,7 @@
             <h2 class="bold-xxlarge">
                 @if (Model.Data.TransferFundedCohortsCount > 0)
                 {
-                    <a href="@Url.Action("TransferFundedCohorts")" title="@Model.Data.TransferFundedCohortsCount with funding employer" aria-label="View all transfer-funded cohorts">
+                    <a href="@Url.Action("TransferFunded")" title="@Model.Data.TransferFundedCohortsCount with funding employer" aria-label="View all transfer-funded cohorts">
                         @Model.Data.TransferFundedCohortsCount
                     </a>
                 }

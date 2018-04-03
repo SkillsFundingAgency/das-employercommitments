@@ -878,6 +878,35 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
+        //rename to WithSender?
+        public async Task<OrchestratorResponse<TransferFundedCohortsViewModel>> GetAllTransferFunded(string hashedAccountId, string externalUserId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            _logger.Info($"Getting your transfer-funded cohorts for Account: {accountId}");
+
+            return await CheckUserAuthorization(async () =>
+            {
+                //todo: refactor the multiple getalls above (1 getallcommitments, then where after!)
+                //todo: need to filter in transfer commitments and call GetTransferStatus (or combine the 2 into 1 GetStatus)
+                var allCommitments = await GetAllCommitments(accountId);
+
+                var transferFundedCommitments = allCommitments.Where(c =>
+                    c.TransferSenderId.HasValue &&
+                    _statusCalculator.GetTransferStatus(c.EditStatus, c.TransferApprovalStatus) ==
+                    RequestStatus.WithProviderForApproval);
+
+                return new OrchestratorResponse<TransferFundedCohortsViewModel>
+                {
+                    Data = new TransferFundedCohortsViewModel
+                    {
+                        //AccountHashId = hashedAccountId,
+                        Commitments = MapFrom(transferFundedCommitments)
+                    }
+                };
+
+            }, hashedAccountId, externalUserId);
+        }
+
         private async Task<IEnumerable<CommitmentListItem>> GetAll(long accountId, RequestStatus requestStatus)
         {
             _logger.Info($"Getting all Commitments for Account: {accountId}");
@@ -890,6 +919,31 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             m => _statusCalculator.GetStatus(m.EditStatus, m.ApprenticeshipCount, m.LastAction, m.AgreementStatus)
                                     == requestStatus);
         }
+
+        //private IEnumerable<CommitmentListItem> FilterByStatus(IEnumerable<CommitmentListItem> commitments, RequestStatus requestStatus)
+        //{
+        //    return commitments.Where(
+        //        m => _statusCalculator.GetStatus(m.EditStatus, m.ApprenticeshipCount, m.LastAction, m.AgreementStatus)
+        //             == requestStatus);
+        //}
+
+        private async Task<IEnumerable<CommitmentListItem>> GetAllCommitments(long accountId)
+        {
+            _logger.Info($"Getting all Commitments for Account: {accountId}");
+
+            var data = await _mediator.SendAsync(new GetCommitmentsQuery
+            {
+                AccountId = accountId
+            });
+            return data.Commitments;
+        }
+
+        //private IEnumerable<RequestStatus> GetStatuses(IEnumerable<CommitmentListItem> commitments)
+        //{
+        //    // really we should have a CalculateStatus on CommitmentListItem!
+        //    return commitments.Select(
+        //        m => _statusCalculator.GetStatus(m.EditStatus, m.ApprenticeshipCount, m.LastAction, m.AgreementStatus));
+        //}
 
         public async Task<OrchestratorResponse<CommitmentDetailsViewModel>> GetCommitmentDetails(string hashedAccountId, string hashedCommitmentId, string externalUserId)
         {
@@ -1246,6 +1300,21 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             var commitmentsList = commitments.Select(m => MapFrom(m, GetLatestMessage(m.Messages, showEmployer)?.Message));
 
             return commitmentsList;
+        }
+
+        private IEnumerable<TransferFundedCohortsListItemViewModel> MapFrom(IEnumerable<CommitmentListItem> commitments)
+        {
+            //todo: throw if TransferApprovalStatus == Approved?
+            return commitments.Select(c => new TransferFundedCohortsListItemViewModel
+            {
+                HashedCommitmentId = _hashingService.HashValue(c.Id),
+                //todo:SendingEmployer = c.TransferSenderId,
+                SendingEmployer = "todo!",
+                ProviderName = c.ProviderName,
+                TransferApprovalStatus = c.TransferApprovalStatus,
+                ShowLink = c.TransferApprovalStatus == TransferApprovalStatus.Rejected ? ShowLink.Edit : ShowLink.Details
+                //Status = _statusCalculator.GetStatus(commitment.EditStatus, commitment.ApprenticeshipCount, commitment.LastAction, commitment.AgreementStatus),
+            });
         }
 
         private MessageView GetLatestMessage(IEnumerable<MessageView> messages, bool showEmployer)

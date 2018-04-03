@@ -528,6 +528,8 @@
     <Compile Include="ViewModels\NotificationSettingsViewModel.cs" />
     <Compile Include="ViewModels\ProviderPriorityReOrderViewModel.cs" />
     <Compile Include="ViewModels\SummaryUnsubscribeViewModel.cs" />
+    <Compile Include="ViewModels\TransferFundedCohortsListItemViewModel.cs" />
+    <Compile Include="ViewModels\TransferFundedCohortsViewModel.cs" />
     <Compile Include="ViewModels\YourCohortsViewModel.cs" />
     <Compile Include="ViewModels\AcknowledgementViewModel.cs" />
     <Compile Include="ViewModels\ApprenticeshipListItemViewModel.cs" />
@@ -1163,6 +1165,7 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>EditStopDate.generated.cs</LastGenOutput>
     </Content>
+    <Content Include="Views\EmployerCommitments\TransferFundedCohorts.cshtml" />
     <None Include="Views\razorgenerator.directives" />
   </ItemGroup>
   <ItemGroup>
