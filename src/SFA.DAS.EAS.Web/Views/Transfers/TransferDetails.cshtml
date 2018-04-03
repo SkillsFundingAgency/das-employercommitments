@@ -122,7 +122,7 @@
                     </div>
                 </fieldset>
                 <button type="submit" class="button" id="submit-transfer-connection">Continue</button>
-                <a class="button text-link" href="@Url.ExternalUrlAction("transfers")" title="continue">Cancel</a>
+                <a class="button text-link" href="@Url.ExternalMyaUrlAction("transfers")" title="continue">Cancel</a>
 
                 @Html.AntiForgeryToken()
                 @Html.Hidden("TransferReceiverName", Model.Data.LegalEntityName)
@@ -132,7 +132,7 @@
 }
 @section breadcrumb {
     <div class="breadcrumbs">
-        <a href="@Url.ExternalUrlAction("transfers")">Back to Transfers</a>
+        <a href="@Url.ExternalMyaUrlAction("transfers")">Back to Transfers</a>
     </div>
 }
 
