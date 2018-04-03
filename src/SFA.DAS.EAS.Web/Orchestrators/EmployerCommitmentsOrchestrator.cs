@@ -1262,12 +1262,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 Name = commitment.Reference,
                 LegalEntityName = commitment.LegalEntityName,
                 ProviderName = commitment.ProviderName,
-                //it's calculating the status here also
                 Status = _statusCalculator.GetStatus(commitment.EditStatus, commitment.ApprenticeshipCount, commitment.LastAction, commitment.AgreementStatus),
                 LatestMessage = latestMessage
             };
         }
-
 
         private ApprenticeshipListItemViewModel MapToApprenticeshipListItem(Apprenticeship apprenticeship, GetOverlappingApprenticeshipsQueryResponse overlappingApprenticeships)
         {
