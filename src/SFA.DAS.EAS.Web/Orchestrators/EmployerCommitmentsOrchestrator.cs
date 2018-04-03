@@ -743,7 +743,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     AccountId = accountId
                 });
 
-                //todo: call into commitments api or db to get counts, seems excesive to fetch all cohorts data just to count
+                //todo: call into commitments api or db to get counts, seems excessive to fetch all cohorts data just to count
 
                 var commitmentsSplitByTransfer = data.Commitments.ToLookup(c => c.TransferSenderId.HasValue);
 
