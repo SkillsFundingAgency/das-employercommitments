@@ -115,10 +115,14 @@
                             @Html.RadioButton("ApprovalConfirmed", "True", new { id = "ApprovalConfirmed-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
                             Yes, approve the request
                         </label>
-                        @*<label class="block-label selection-button-radio" for="ApprovalConfirmed-False">
-                            @Html.RadioButton("ApprovalConfirmed", "False", new { id = "ApprovalConfirmed-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
-                            No, reject the request
-                        </label>*@
+                        
+                        @if (Model.Data.EnableRejection)
+                        {
+                            <label class="block-label selection-button-radio" for="ApprovalConfirmed-False">
+                                @Html.RadioButton("ApprovalConfirmed", "False", new { id = "ApprovalConfirmed-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
+                                No, reject the request
+                            </label>
+                        }
                     </div>
                 </fieldset>
                 <button type="submit" class="button" id="submit-transfer-connection">Continue</button>
