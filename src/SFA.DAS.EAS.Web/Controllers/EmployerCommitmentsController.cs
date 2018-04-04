@@ -619,7 +619,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return View(model);
         }
 
-
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/submit")]

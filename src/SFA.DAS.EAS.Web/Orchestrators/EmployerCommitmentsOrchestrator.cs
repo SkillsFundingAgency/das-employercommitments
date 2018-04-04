@@ -792,7 +792,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
                 {
-                    var commitments = (await GetAll(accountId, RequestStatus.NewRequest)).ToList();
+                    var commitments = (await GetAllCommitmentsOfStatus(accountId, RequestStatus.NewRequest)).ToArray();
 
                     return new OrchestratorResponse<CommitmentListViewModel>
                     {
@@ -803,7 +803,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             PageTitle = "Draft cohorts",
                             PageId = "draft-cohorts",
                             PageHeading = "Draft cohorts",
-                            PageHeading2 = $"You have <strong>{commitments.Count}</strong> cohort{_addPluralizationSuffix(commitments.ToList().Count)} waiting to be sent to a training provider:",
+                            PageHeading2 = $"You have <strong>{commitments.Length}</strong> cohort{_addPluralizationSuffix(commitments.Length)} waiting to be sent to a training provider:",
                         }
                     };
 
@@ -817,11 +817,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                var readyForReview = (await GetAll(accountId, RequestStatus.ReadyForReview)).ToList();
-                var readyForApproval = (await GetAll(accountId, RequestStatus.ReadyForApproval)).ToList();
-                var commitments = readyForReview
-                    .Concat(readyForApproval)
-                    .ToList();
+                var commitments = (await GetAllCommitmentsOfStatus(accountId, RequestStatus.ReadyForReview, RequestStatus.ReadyForApproval)).ToArray();
 
                 return new OrchestratorResponse<CommitmentListViewModel>
                 {
@@ -832,8 +828,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         PageTitle = "Cohorts for review",
                         PageId = "ready-for-review",
                         PageHeading = "Cohorts for review",
-                        PageHeading2 = $"You have <strong>{commitments.Count}</strong> cohort{_addPluralizationSuffix(commitments.ToList().Count)} ready for review:",
-
+                        PageHeading2 = $"You have <strong>{commitments.Length}</strong> cohort{_addPluralizationSuffix(commitments.Length)} ready for review:"
                     }
                 };
 
@@ -847,16 +842,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                //var allCommitments = await GetAllCommitments(accountId);
-
-                var withProviderForApproval = await GetAll(accountId, RequestStatus.WithProviderForApproval);
-                var sentForReview = await GetAll(accountId, RequestStatus.SentForReview);
-                var sentToProvider = await GetAll(accountId, RequestStatus.SentToProvider);
-
-                var commitments = withProviderForApproval
-                                  .Concat(sentForReview)
-                                  .Concat(sentToProvider)
-                                  .ToList();
+                var commitments = (await GetAllCommitmentsOfStatus(accountId, 
+                    RequestStatus.WithProviderForApproval,
+                    RequestStatus.SentForReview,
+                    RequestStatus.SentToProvider)).ToArray();
 
                 return new OrchestratorResponse<CommitmentListViewModel>
                 {
@@ -867,7 +856,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         PageTitle = "Cohorts with training providers",
                         PageId = "with-the-provider",
                         PageHeading = "Cohorts with training providers",
-                        PageHeading2 = $"You have <strong>{commitments.Count}</strong> cohort{_addPluralizationSuffix(commitments.ToList().Count)} with training providers for them to add apprentices, or review and approve details:"
+                        PageHeading2 = $"You have <strong>{commitments.Length}</strong> cohort{_addPluralizationSuffix(commitments.Length)} with training providers for them to add apprentices, or review and approve details:"
                     }
                 };
 
@@ -908,15 +897,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        private async Task<IEnumerable<CommitmentListItem>> GetAll(long accountId, RequestStatus requestStatus)
-        {
-            _logger.Info($"Getting all Commitments for Account: {accountId}");
+        //todo: only show transfers bingo box if transfers toggled on
 
-            var data = await _mediator.SendAsync(new GetCommitmentsQuery
-            {
-                AccountId = accountId
-            });
-            return data.Commitments.Where(m => m.GetStatus() == requestStatus);
+        private async Task<IEnumerable<CommitmentListItem>> GetAllCommitmentsOfStatus(long accountId, params RequestStatus[] statuses)
+        {
+            return (await GetAllCommitments(accountId)).Where(c => statuses.Contains(c.GetStatus()));
         }
 
         private async Task<IEnumerable<CommitmentListItem>> GetAllCommitments(long accountId)
@@ -1101,20 +1086,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 };
 
             }, hashedAccountId, externalUserId);
-
         }
-
 
         public async Task<bool> AnyCohortsForCurrentStatus(string hashedAccountId, params RequestStatus[] requestStatusFromSession)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var data = new List<CommitmentListItem>();
-            foreach (var status in requestStatusFromSession)
-            {
-                var d = (await GetAll(accountId, status)).ToList();
-                data.AddRange(d);
-            }
-            return data.Any();
+            var allCommitments = await GetAllCommitments(accountId);
+            return allCommitments.Any(c => requestStatusFromSession.Contains(c.GetStatus()));
         }
 
         public async Task<OrchestratorResponse<LegalEntitySignedAgreementViewModel>> GetLegalEntitySignedAgreementViewModel(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string cohortRef, string userId)
@@ -1148,7 +1126,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Status = HttpStatusCode.BadRequest
                 };
             }
-
         }
 
         public async Task<Dictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship)
@@ -1159,10 +1136,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Apprenticeship = new List<Apprenticeship> { await _apprenticeshipMapper.MapFrom(apprenticeship) }
                 });
 
-            var result = _apprenticeshipMapper.MapOverlappingErrors(overlappingErrors);
-
-           
-            return result;
+            return _apprenticeshipMapper.MapOverlappingErrors(overlappingErrors);
         }
 
         public async Task DeleteApprenticeship(DeleteApprenticeshipConfirmationViewModel model, string externalUser, string userName, string userEmail)
@@ -1280,11 +1254,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             };
         }
 
-        private IEnumerable<CommitmentListItemViewModel> MapFrom(List<CommitmentListItem> commitments, bool showEmployer)
+        private IEnumerable<CommitmentListItemViewModel> MapFrom(IEnumerable<CommitmentListItem> commitments, bool showEmployer)
         {
-            var commitmentsList = commitments.Select(m => MapFrom(m, GetLatestMessage(m.Messages, showEmployer)?.Message));
-
-            return commitmentsList;
+            return commitments.Select(m => MapFrom(m, GetLatestMessage(m.Messages, showEmployer)?.Message));
         }
 
         private IEnumerable<TransferFundedCohortsListItemViewModel> MapFrom(IEnumerable<CommitmentListItem> commitments)

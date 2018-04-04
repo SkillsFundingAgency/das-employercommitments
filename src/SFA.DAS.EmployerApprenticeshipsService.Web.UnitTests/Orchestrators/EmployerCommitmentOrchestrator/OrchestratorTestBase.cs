@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using MediatR;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
+using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetFrameworks;
@@ -103,6 +107,61 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 MockCommitmentMapper.Object,
                 MockLogger.Object,
                 MockFeatureToggleService.Object);
+        }
+
+        protected CommitmentListItem GetTestCommitmentOfStatus(long id, RequestStatus requestStatus)
+        {
+            switch (requestStatus)
+            {
+                case RequestStatus.WithProviderForApproval:
+                    return new CommitmentListItem
+                    {
+                        Id = id,
+                        Reference = id.ToString(),
+                        EditStatus = EditStatus.ProviderOnly,
+                        LastAction = LastAction.Approve,
+                        ApprenticeshipCount = 1,
+                        AgreementStatus = AgreementStatus.EmployerAgreed
+                    };
+                case RequestStatus.SentForReview:
+                    return new CommitmentListItem
+                    {
+                        Id = id,
+                        Reference = id.ToString(),
+                        EditStatus = EditStatus.ProviderOnly,
+                        LastAction = LastAction.Amend,
+                        ApprenticeshipCount = 1,
+                        AgreementStatus = AgreementStatus.NotAgreed
+                    };
+                case RequestStatus.SentToProvider:
+                    return new CommitmentListItem
+                    {
+                        Id = id,
+                        Reference = id.ToString(),
+                        EditStatus = EditStatus.ProviderOnly,
+                        LastAction = LastAction.None,
+                        ApprenticeshipCount = 1,
+                        AgreementStatus = AgreementStatus.NotAgreed
+                    };
+                case RequestStatus.ReadyForReview:
+                    return new CommitmentListItem
+                    {
+                        Id = id,
+                        Reference = id.ToString(),
+                        EditStatus = EditStatus.EmployerOnly,
+                        LastAction = LastAction.Amend,
+                        ApprenticeshipCount = 1,
+                        AgreementStatus = AgreementStatus.NotAgreed
+                    };
+                default:
+                    Assert.Fail("Add the RequestStatus you require above, or else fix your test!");
+                    throw new NotImplementedException();
+            }
+        }
+
+        protected IEnumerable<CommitmentListItem> GetTestCommitmentsOfStatus(long startId, params RequestStatus[] requestStatuses)
+        {
+            return requestStatuses.Select(s => GetTestCommitmentOfStatus(startId++, s));
         }
     }
 }
