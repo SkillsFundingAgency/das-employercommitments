@@ -9,7 +9,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
     [TestFixture]
     public sealed class WhenGettingStatusOfNonTransferCommitment
     {
-        private static readonly ICommitmentStatusCalculator Calculator = new CommitmentStatusCalculator();
+        // either should text GetStatus() extension method and have CommitmentStatusCalculator internal,
+        // or even better test it indirectly though the new orchestration unit tests
+        private static readonly CommitmentStatusCalculator Calculator = new CommitmentStatusCalculator();
 
         [TestCase(RequestStatus.SentToProvider, AgreementStatus.NotAgreed, EditStatus.ProviderOnly, 0, LastAction.None, TestName = "Employer sends to provider to add apprentices")]
         [TestCase(RequestStatus.SentToProvider, AgreementStatus.NotAgreed, EditStatus.ProviderOnly, 1, LastAction.None, TestName = "Provider adds apprenticeship")]

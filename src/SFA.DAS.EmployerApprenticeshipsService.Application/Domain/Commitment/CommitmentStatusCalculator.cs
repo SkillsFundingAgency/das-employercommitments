@@ -5,13 +5,14 @@ using SFA.DAS.EmployerCommitments.Application.Exceptions;
 
 namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
 {
-    public sealed class CommitmentStatusCalculator : ICommitmentStatusCalculator
+    public sealed class CommitmentStatusCalculator
     {
         // all the consumers of this will eventually need to be updated to take account of transfers
         // we could fold-in GetTransferStatus into GetStatus (adding isTransfer & transferApprovalStatus as params)
         // but if we did that now, it would expand the scope of the current story beyond its boundaries
         // and require work that should be part of future transfer stories
         // but we might want to refactor this later on
+        // also, this class should be internal
         public RequestStatus GetStatus(EditStatus editStatus, int apprenticeshipCount, LastAction lastAction, AgreementStatus? overallAgreementStatus)
         {
             bool hasApprenticeships = apprenticeshipCount > 0;

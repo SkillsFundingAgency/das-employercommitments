@@ -5,7 +5,6 @@ using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
-using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.HashingService;
 
@@ -16,7 +15,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
     {
         private CommitmentMapper _sut;
         private Mock<IHashingService> _hashingService;
-        private Mock<ICommitmentStatusCalculator> _commitmentStatusCalculator;
         private CommitmentView _commitmentView;
 
         [SetUp]
@@ -25,8 +23,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             _hashingService = new Mock<IHashingService>();
             _hashingService.Setup(x => x.HashValue(789)).Returns("XYZ789");
             _hashingService.Setup(x => x.HashValue(1000)).Returns("DEF1000");
-
-            _commitmentStatusCalculator = new Mock<ICommitmentStatusCalculator>();
 
             _commitmentView = new CommitmentView
             {
@@ -64,7 +60,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
                 }
             };
 
-            _sut = new CommitmentMapper(_hashingService.Object, _commitmentStatusCalculator.Object);
+            _sut = new CommitmentMapper(_hashingService.Object);
         }
 
         [TestCase(TransferApprovalStatus.Approved, "Approved")]

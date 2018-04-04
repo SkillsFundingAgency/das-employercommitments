@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
     [TestFixture]
     public sealed class WhenGettingStatusOfTransferCommitment
     {
-        private static readonly ICommitmentStatusCalculator Calculator = new CommitmentStatusCalculator();
+        private static readonly CommitmentStatusCalculator Calculator = new CommitmentStatusCalculator();
 
         [TestCase(RequestStatus.NewRequest, EditStatus.EmployerOnly, TransferApprovalStatus.Pending, TestName = "With receiving employer")]
         [TestCase(RequestStatus.NewRequest, EditStatus.ProviderOnly, TransferApprovalStatus.Pending, TestName = "With provider")]

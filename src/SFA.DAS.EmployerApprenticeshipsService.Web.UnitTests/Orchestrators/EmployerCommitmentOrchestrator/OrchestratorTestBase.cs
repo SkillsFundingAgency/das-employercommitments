@@ -5,7 +5,6 @@ using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
-using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetFrameworks;
@@ -25,8 +24,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
 {
     public abstract class OrchestratorTestBase
     {
-        private ICommitmentStatusCalculator _calculator;
-
         protected Mock<ICommitmentMapper> MockCommitmentMapper;
         protected Mock<IApprenticeshipMapper> MockApprenticeshipMapper;
         protected Mock<ILog> MockLogger;
@@ -43,7 +40,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         {
             MockMediator = new Mock<IMediator>();
             MockLogger = new Mock<ILog>();
-            _calculator = new CommitmentStatusCalculator();
             MockApprenticeshipMapper = new Mock<IApprenticeshipMapper>();
             MockCommitmentMapper = new Mock<ICommitmentMapper>();
             MockAcademicYearValidator = new Mock<IAcademicYearValidator>();
@@ -103,7 +99,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             EmployerCommitmentOrchestrator = new EmployerCommitmentsOrchestrator(
                 MockMediator.Object,
                 MockHashingService.Object,
-                _calculator,
                 MockApprenticeshipMapper.Object,
                 MockCommitmentMapper.Object,
                 MockLogger.Object,

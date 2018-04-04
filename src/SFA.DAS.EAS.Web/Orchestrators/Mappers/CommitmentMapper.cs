@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
-using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
+using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.HashingService;
 
@@ -14,17 +13,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
     public sealed class CommitmentMapper : ICommitmentMapper
     {
         private readonly IHashingService _hashingService;
-        private readonly ICommitmentStatusCalculator _statusCalculator;
 
-        public CommitmentMapper(IHashingService hashingService, ICommitmentStatusCalculator statusCalculator)
+        public CommitmentMapper(IHashingService hashingService)
         {
-            if (hashingService == null)
-                throw new ArgumentNullException(nameof(hashingService));
-            if (statusCalculator == null)
-                throw new ArgumentNullException(nameof(statusCalculator));
-
-            _hashingService = hashingService;
-            _statusCalculator = statusCalculator;
+            _hashingService = hashingService ?? throw new ArgumentNullException(nameof(hashingService));
         }
 
         public async Task<CommitmentListItemViewModel> MapToCommitmentListItemViewModelAsync(CommitmentListItem commitment, Func<CommitmentListItem, Task<string>> latestMessageFunc)
@@ -37,7 +29,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 Name = commitment.Reference,
                 LegalEntityName = commitment.LegalEntityName,
                 ProviderName = commitment.ProviderName,
-                Status = _statusCalculator.GetStatus(commitment.EditStatus, commitment.ApprenticeshipCount, commitment.LastAction, commitment.AgreementStatus),
+                Status = commitment.GetStatus(),
                 LatestMessage = await messageTask
             };
         }
@@ -55,7 +47,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
         public TransferCommitmentViewModel MapToTransferCommitmentViewModel(CommitmentView commitment)
         {
-
             var apprenticeships = commitment.Apprenticeships ?? new List<Apprenticeship>();
 
             var grouped = apprenticeships.GroupBy(l => l.TrainingCode).Select(cl =>
@@ -72,27 +63,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 LegalEntityName = commitment.LegalEntityName,
                 HashedCohortReference = _hashingService.HashValue(commitment.Id),
                 TrainingList = grouped.ToList(),
-                TransferApprovalStatusDesc = ToApprovalStatusDescription(commitment.TransferSender.TransferApprovalStatus),
+                TransferApprovalStatusDesc = commitment.TransferSender.TransferApprovalStatus.ToString(),
                 TransferApprovalStatus = commitment.TransferSender.TransferApprovalStatus,
                 TransferApprovalSetBy = commitment.TransferSender.TransferApprovalSetBy,
                 TransferApprovalSetOn = commitment.TransferSender.TransferApprovalSetOn,
                 TotalCost = apprenticeships.Sum(x => x.Cost) ?? 0
             };
-        }
-
-        private string ToApprovalStatusDescription(TransferApprovalStatus commitmentTransferApprovalStatus)
-        {
-            switch (commitmentTransferApprovalStatus)
-            {
-                case TransferApprovalStatus.Approved:
-                    return "Approved";
-                case TransferApprovalStatus.Rejected:
-                    return "Rejected";
-                case TransferApprovalStatus.Pending:
-                    return "Pending";
-                default:
-                    return "Unknown";
-            }
         }
     }
 }

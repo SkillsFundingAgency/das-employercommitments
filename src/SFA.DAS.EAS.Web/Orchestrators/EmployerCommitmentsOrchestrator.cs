@@ -17,6 +17,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
+using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountLegalEntities;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
@@ -45,7 +46,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly IMediator _mediator;
         private readonly IHashingService _hashingService;
         private readonly ILog _logger;
-        private readonly ICommitmentStatusCalculator _statusCalculator;
 
         private readonly Func<int, string> _addPluralizationSuffix = i => i > 1 ? "s" : "";
         private readonly IApprenticeshipMapper _apprenticeshipMapper;
@@ -58,7 +58,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         public EmployerCommitmentsOrchestrator(
             IMediator mediator,
             IHashingService hashingService,
-            ICommitmentStatusCalculator statusCalculator,
             IApprenticeshipMapper apprenticeshipMapper,
             ICommitmentMapper commitmentMapper,
             ILog logger,
@@ -66,7 +65,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         {
             _mediator = mediator;
             _hashingService = hashingService;
-            _statusCalculator = statusCalculator;
             _apprenticeshipMapper = apprenticeshipMapper;
             _commitmentMapper = commitmentMapper;
             _logger = logger;
@@ -749,15 +747,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 // transfer cohorts
                 var transferCommitmentStatuses = commitmentsSplitByTransfer[true]
-                    .Select(c => _statusCalculator.GetTransferStatus(c.EditStatus, c.TransferApprovalStatus));
+                    .Select(c => c.GetTransferStatus());
 
                 // non-transfer cohorts
                 var nonTransferCommitmentStatuses = commitmentsSplitByTransfer[false]
-                    .Select(m => _statusCalculator.GetStatus(
-                        m.EditStatus,
-                        m.ApprenticeshipCount,
-                        m.LastAction,
-                        m.AgreementStatus));
+                    .Select(m => m.GetStatus());
 
                 var commitmentStatuses = transferCommitmentStatuses
                     .Concat(nonTransferCommitmentStatuses).ToArray();
@@ -895,12 +889,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 // add TransferSender to CommitmentListItem? (need TransferSenderName)
                 // -ve 2 extra unused fields when transfer
                 // +-ve less blank fields when not transfer
+                // +-ve 2 other fields might be interpreted as empty, when it's just that they haven't been populated
                 // how much refactoring required??
 
                 var transferFundedCommitments = allCommitments.Where(c =>
                     c.TransferSenderId.HasValue &&
-                    _statusCalculator.GetTransferStatus(c.EditStatus, c.TransferApprovalStatus) ==
-                    RequestStatus.WithProviderForApproval);
+                    c.GetTransferStatus() == RequestStatus.WithSender);
 
                 return new OrchestratorResponse<TransferFundedCohortsViewModel>
                 {
@@ -922,17 +916,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 AccountId = accountId
             });
-            return data.Commitments.Where(
-                            m => _statusCalculator.GetStatus(m.EditStatus, m.ApprenticeshipCount, m.LastAction, m.AgreementStatus)
-                                    == requestStatus);
+            return data.Commitments.Where(m => m.GetStatus() == requestStatus);
         }
-
-        //private IEnumerable<CommitmentListItem> FilterByStatus(IEnumerable<CommitmentListItem> commitments, RequestStatus requestStatus)
-        //{
-        //    return commitments.Where(
-        //        m => _statusCalculator.GetStatus(m.EditStatus, m.ApprenticeshipCount, m.LastAction, m.AgreementStatus)
-        //             == requestStatus);
-        //}
 
         private async Task<IEnumerable<CommitmentListItem>> GetAllCommitments(long accountId)
         {
@@ -944,13 +929,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             });
             return data.Commitments;
         }
-
-        //private IEnumerable<RequestStatus> GetStatuses(IEnumerable<CommitmentListItem> commitments)
-        //{
-        //    // really we should have a CalculateStatus on CommitmentListItem!
-        //    return commitments.Select(
-        //        m => _statusCalculator.GetStatus(m.EditStatus, m.ApprenticeshipCount, m.LastAction, m.AgreementStatus));
-        //}
 
         public async Task<OrchestratorResponse<CommitmentDetailsViewModel>> GetCommitmentDetails(string hashedAccountId, string hashedCommitmentId, string externalUserId)
         {
@@ -1018,7 +996,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Name = data.Commitment.Reference,
                     LegalEntityName = data.Commitment.LegalEntityName,
                     ProviderName = data.Commitment.ProviderName,
-                    Status = _statusCalculator.GetStatus(data.Commitment.EditStatus, data.Commitment.Apprenticeships.Count, data.Commitment.LastAction, data.Commitment.AgreementStatus),
+                    Status = data.Commitment.GetStatus(),
                     HasApprenticeships = apprenticships.Count > 0,
                     Apprenticeships = apprenticships,
                     ShowApproveOnlyOption = data.Commitment.AgreementStatus == AgreementStatus.ProviderAgreed,
@@ -1337,7 +1315,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 Name = commitment.Reference,
                 LegalEntityName = commitment.LegalEntityName,
                 ProviderName = commitment.ProviderName,
-                Status = _statusCalculator.GetStatus(commitment.EditStatus, commitment.ApprenticeshipCount, commitment.LastAction, commitment.AgreementStatus),
+                Status = commitment.GetStatus(),
                 LatestMessage = latestMessage
             };
         }
