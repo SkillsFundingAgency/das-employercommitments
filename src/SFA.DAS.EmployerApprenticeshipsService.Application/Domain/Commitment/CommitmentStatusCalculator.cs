@@ -2,9 +2,8 @@
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
-using SFA.DAS.EmployerCommitments.Web.Enums;
 
-namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
+namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
 {
     public sealed class CommitmentStatusCalculator : ICommitmentStatusCalculator
     {

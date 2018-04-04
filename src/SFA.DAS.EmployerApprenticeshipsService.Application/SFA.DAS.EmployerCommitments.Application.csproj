@@ -167,6 +167,10 @@
     <Compile Include="Commands\UpdateProviderPaymentPriority\UpdateProviderPaymentPriorityValidator.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\UpdateProviderPaymentPriorityCommand.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\UpdateProviderPaymentPriorityCommandHandler.cs" />
+    <Compile Include="Domain\Commitment\CommitmentStatusCalculator.cs" />
+    <Compile Include="Domain\Commitment\ICommitmentStatusCalculator.cs" />
+    <Compile Include="Domain\Commitment\RequestStatus.cs" />
+    <Compile Include="Exceptions\InvalidStateException.cs" />
     <Compile Include="Extensions\ApprenticeshipExtensions.cs" />
     <Compile Include="ApprenticeshipInfoServiceWrapper.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStatus\UpdateApprenticeshipStatusCommand.cs" />
@@ -210,9 +214,9 @@
     <Compile Include="Commands\SendNotification\SendNotificationCommandValidator.cs" />
     <Compile Include="Extensions\CommitmentListItemExtensions.cs" />
     <Compile Include="Factories\IGenericEventFactory.cs" />
-    <Compile Include="InvalidRequestException.cs" />
+    <Compile Include="Exceptions\InvalidRequestException.cs" />
     <Compile Include="Messages\QueueMessage.cs" />
-    <Compile Include="NotFoundException.cs" />
+    <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\ApprenticeshipSearch\ApprenticeshipSearchQueryHandler.cs" />
     <Compile Include="Queries\ApprenticeshipSearch\ApprenticeshipSearchQueryRequest.cs" />

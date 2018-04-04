@@ -3,6 +3,7 @@ using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeship;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateApprenticeshipTests
 {

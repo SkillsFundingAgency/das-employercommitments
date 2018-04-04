@@ -8,7 +8,6 @@ using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
-using SFA.DAS.EmployerCommitments.Application;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteApprentice;
@@ -16,6 +15,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.DeleteCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeship;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountLegalEntities;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
@@ -28,7 +28,6 @@ using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipProvider;
 using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
 using SFA.DAS.EmployerCommitments.Web.Enums;
-using SFA.DAS.EmployerCommitments.Web.Exceptions;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
@@ -853,6 +852,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
+                //var allCommitments = await GetAllCommitments(accountId);
+
                 var withProviderForApproval = await GetAll(accountId, RequestStatus.WithProviderForApproval);
                 var sentForReview = await GetAll(accountId, RequestStatus.SentForReview);
                 var sentToProvider = await GetAll(accountId, RequestStatus.SentToProvider);

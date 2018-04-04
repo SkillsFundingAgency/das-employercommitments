@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SFA.DAS.EmployerCommitments.Web.Exceptions
+namespace SFA.DAS.EmployerCommitments.Application.Exceptions
 {
     public class InvalidStateException : Exception
     {
