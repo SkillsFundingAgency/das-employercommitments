@@ -2,8 +2,7 @@
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
-using SFA.DAS.EmployerCommitments.Web.Enums;
-using SFA.DAS.EmployerCommitments.Web.Orchestrators;
+using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
 {
