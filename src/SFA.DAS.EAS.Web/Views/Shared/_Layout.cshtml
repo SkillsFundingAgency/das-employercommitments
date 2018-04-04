@@ -105,7 +105,7 @@
 
     <div id="global-cookie-message">
         <p>
-            GOV.UK uses cookies to make the site simpler. <a href="@Url.ExternalUrlAction("service", "privacy",true)">Find out more about cookies</a>
+            GOV.UK uses cookies to make the site simpler. <a href="@Url.ExternalMyaUrlAction("service", "privacy",true)">Find out more about cookies</a>
         </p>
     </div>
 
@@ -134,21 +134,21 @@
                     <p class="floating-head-text">Your employer account </p>
                     <nav id="user-nav">
                         <ul role="menubar">
-                            <li><a href="@Url.ExternalUrlAction("service", "help", true)" class="menu-main">Help</a></li>
+                            <li><a href="@Url.ExternalMyaUrlAction("service", "help", true)" class="menu-main">Help</a></li>
                             @if (HttpContext.Current.User.Identity.IsAuthenticated)
                             {
 
                                 <li class="has-sub-menu">
                                     <a href="/" role="menuitem" class="menu-main">Settings</a>
                                     <ul role="menu" id="settings-menu" class="js-hidden">
-                                        <li><a href="@Url.ExternalUrlAction("service", "accounts",true)" role="menuitem" class="sub-menu-item">Your accounts</a></li>
+                                        <li><a href="@Url.ExternalMyaUrlAction("service", "accounts",true)" role="menuitem" class="sub-menu-item">Your accounts</a></li>
                                         @if (string.IsNullOrWhiteSpace(ViewBag.HideNav))
                                         {
-                                            <li><a href="@Url.ExternalUrlAction("rename")" role="menuitem" class="sub-menu-item">Rename account</a></li>
+                                            <li><a href="@Url.ExternalMyaUrlAction("rename")" role="menuitem" class="sub-menu-item">Rename account</a></li>
                                         }
                                         <li><a href="@UserLinksViewModel.ChangePasswordLink" class="sub-menu-item">Change your password</a></li>
                                         <li><a href="@UserLinksViewModel.ChangeEmailLink" class="sub-menu-item">Change your email address</a></li>
-                                        <li><a href="@Url.ExternalUrlAction("settings", "notifications",true)" class="sub-menu-item">Notification settings</a></li>
+                                        <li><a href="@Url.ExternalMyaUrlAction("settings", "notifications",true)" class="sub-menu-item">Notification settings</a></li>
 
                                     </ul>
                                 </li>
@@ -159,7 +159,7 @@
                             {
                                 if (Model?.GetType().GetProperty("HideHeaderSignInLink") == null)
                                 {
-                                    <li><a href="@Url.ExternalUrlAction("service", "signin",true)" role="menuitem">Sign in / Register</a></li>
+                                    <li><a href="@Url.ExternalMyaUrlAction("service", "signin",true)" role="menuitem">Sign in / Register</a></li>
                                 }
                             }
                         </ul>
@@ -176,12 +176,12 @@
 
                 <nav class="header-inner">
                     <ul role="menubar" id="global-nav-links">
-                        <li><a href="@Url.ExternalUrlAction("teams")" class="@(ViewBag.Section == "home" ? "selected" : "")" role="menuitem">Home</a></li>
-                        <li><a href="@Url.ExternalUrlAction("balance")" class="@(ViewBag.Section == "finance" ? "selected" : "")" role="menuitem">Finance</a></li>
+                        <li><a href="@Url.ExternalMyaUrlAction("teams")" class="@(ViewBag.Section == "home" ? "selected" : "")" role="menuitem">Home</a></li>
+                        <li><a href="@Url.ExternalMyaUrlAction("balance")" class="@(ViewBag.Section == "finance" ? "selected" : "")" role="menuitem">Finance</a></li>
                         <li><a href="@Url.Action("Index", "EmployerCommitments")" class="@(ViewBag.Section == "apprentices" ? "selected" : "")" role="menuitem">Apprentices</a></li>
-                        <li><a href="@Url.ExternalUrlAction("teams", "view")" class="@(ViewBag.Section == "team" ? "selected" : "")" role="menuitem">Your team</a></li>
-                        <li><a href="@Url.ExternalUrlAction("agreements")" class="@(ViewBag.Section == "organisations" ? "selected" : "")" role="menuitem">Your organisations and agreements</a></li>
-                        <li><a href="@Url.ExternalUrlAction("schemes")" class="@(ViewBag.Section == "paye" ? "selected" : "")" role="menuitem">PAYE schemes</a></li>
+                        <li><a href="@Url.ExternalMyaUrlAction("teams", "view")" class="@(ViewBag.Section == "team" ? "selected" : "")" role="menuitem">Your team</a></li>
+                        <li><a href="@Url.ExternalMyaUrlAction("agreements")" class="@(ViewBag.Section == "organisations" ? "selected" : "")" role="menuitem">Your organisations and agreements</a></li>
+                        <li><a href="@Url.ExternalMyaUrlAction("schemes")" class="@(ViewBag.Section == "paye" ? "selected" : "")" role="menuitem">PAYE schemes</a></li>
                     </ul>
                 </nav>
             </div>
@@ -202,9 +202,9 @@
             <div class="footer-meta">
                 <div class="footer-meta-inner">
                     <ul class="platform-help-links">
-                        <li><a href="@Url.ExternalUrlAction("service", "help",true)">Help</a></li>
+                        <li><a href="@Url.ExternalMyaUrlAction("service", "help",true)">Help</a></li>
                         <li><a href="https://www.surveymonkey.co.uk/r/2JPLQ9T" target="_blank">Feedback</a></li>
-                        <li><a href="@Url.ExternalUrlAction("service", "privacy",true)">Privacy and cookies</a></li>
+                        <li><a href="@Url.ExternalMyaUrlAction("service", "privacy",true)">Privacy and cookies</a></li>
                         <li>Built by the <a href="http://gov.uk/sfa" target="_blank">Education and Skills Funding Agency</a></li>
                     </ul>
                     <div class="open-government-licence">

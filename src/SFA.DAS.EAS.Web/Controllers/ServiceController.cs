@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Route("signout")]
         public ActionResult SignOut()
         {
-            return OwinWrapper.SignOutUser(Url.ExternalUrlAction("service","signout",true));
+            return OwinWrapper.SignOutUser(Url.ExternalMyaUrlAction("service","signout",true));
         }
 
         [Authorize]
@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Route("password/change")]
         public ActionResult HandlePasswordChanged(bool userCancelled = false)
         {
-            var url = Url.ExternalUrlAction("service", $"password/change?userCancelled={userCancelled}", true);
+            var url = Url.ExternalMyaUrlAction("service", $"password/change?userCancelled={userCancelled}", true);
             return Redirect(url);
         }
 
@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Route("email/change")]
         public ActionResult HandleEmailChanged(bool userCancelled = false)
         {
-            var url = Url.ExternalUrlAction("service", $"password/change?userCancelled={userCancelled}", true);
+            var url = Url.ExternalMyaUrlAction("service", $"password/change?userCancelled={userCancelled}", true);
             return Redirect(url);
         }
     }
