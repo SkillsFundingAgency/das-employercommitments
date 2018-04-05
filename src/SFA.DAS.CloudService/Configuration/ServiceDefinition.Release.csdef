@@ -27,11 +27,14 @@
       <Setting name="LoggingRedisKey"/>
       <Setting name="TokenCertificateThumbprint"/>
       <Setting name="MyaBaseUrl" />
+      <Setting name="PsrBaseUrl" />
       <Setting name="CommitmentsRoutePrefix" />
       <Setting name="CurrentTime" />
       <Setting name="UseAccountApiTransfersStub" />
       <Setting name="AccountApiTransfersStubRecordCount" />
       <Setting name="FeatureToggle.Transfers" />
+      <Setting name="FeatureToggle.PublicSectorReporting" />
+      <Setting name="FeatureToggle.TransfersRejectOption" />
     </ConfigurationSettings>
     <Endpoints>
       <InputEndpoint name="HttpsIn" protocol="https" port="443" certificate="WebSslCert" loadBalancer="das-empc-ilb"/>

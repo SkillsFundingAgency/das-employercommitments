@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
+using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.HashingService;
 
@@ -13,10 +14,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
     public sealed class CommitmentMapper : ICommitmentMapper
     {
         private readonly IHashingService _hashingService;
+        private readonly IFeatureToggleService _featureToggleService;
 
-        public CommitmentMapper(IHashingService hashingService)
+        public CommitmentMapper(IHashingService hashingService, IFeatureToggleService featureToggleService)
         {
-            _hashingService = hashingService ?? throw new ArgumentNullException(nameof(hashingService));
+            _hashingService = hashingService;
+            _featureToggleService = featureToggleService;
         }
 
         public async Task<CommitmentListItemViewModel> MapToCommitmentListItemViewModelAsync(CommitmentListItem commitment, Func<CommitmentListItem, Task<string>> latestMessageFunc)
@@ -67,7 +70,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 TransferApprovalStatus = commitment.TransferSender.TransferApprovalStatus,
                 TransferApprovalSetBy = commitment.TransferSender.TransferApprovalSetBy,
                 TransferApprovalSetOn = commitment.TransferSender.TransferApprovalSetOn,
-                TotalCost = apprenticeships.Sum(x => x.Cost) ?? 0
+                TotalCost = apprenticeships.Sum(x => x.Cost) ?? 0,
+                EnableRejection = _featureToggleService.Get<TransfersRejectOption>().FeatureEnabled
             };
         }
     }

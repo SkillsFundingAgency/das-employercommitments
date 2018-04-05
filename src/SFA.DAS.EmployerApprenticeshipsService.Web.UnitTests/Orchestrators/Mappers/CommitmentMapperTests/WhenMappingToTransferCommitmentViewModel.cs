@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using FeatureToggle;
+using MediatR;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
+using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.HashingService;
 
@@ -15,6 +20,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
     {
         private CommitmentMapper _sut;
         private Mock<IHashingService> _hashingService;
+        private Mock<IFeatureToggleService> _featureToggleService;
+        private Mock<IFeatureToggle> _featureToggle;
         private CommitmentView _commitmentView;
 
         [SetUp]
@@ -60,7 +67,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
                 }
             };
 
-            _sut = new CommitmentMapper(_hashingService.Object);
+            _featureToggleService = new Mock<IFeatureToggleService>();
+            _featureToggle = new Mock<IFeatureToggle>();
+            _featureToggleService.Setup(x => x.Get<TransfersRejectOption>()).Returns(_featureToggle.Object);
+
+            _sut = new CommitmentMapper(_hashingService.Object, _featureToggleService.Object);
         }
 
         [TestCase(TransferApprovalStatus.Approved, "Approved")]
@@ -92,6 +103,18 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             _commitmentView.Apprenticeships = null;
             var result = _sut.MapToTransferCommitmentViewModel(_commitmentView);
             Assert.AreEqual(0, result.TrainingList.Count);
+        }
+
+        [TestCase(true, true)]
+        [TestCase(false, false)]
+        public void ThenRejectionEnabledIfFeatureToggledOn(bool featureToggleEnabled, bool expectEnabled)
+        {
+            //Arrange
+            _featureToggle.Setup(x => x.FeatureEnabled).Returns(featureToggleEnabled);
+
+            //Assert
+            var result = _sut.MapToTransferCommitmentViewModel(_commitmentView);
+            Assert.AreEqual(expectEnabled, result.EnableRejection);
         }
     }
 }
