@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.HashingService;
