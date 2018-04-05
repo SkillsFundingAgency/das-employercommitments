@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
         public void EmployerSendsToProviderToAddApprentices(RequestStatus expectedResult, AgreementStatus agreementStatus, EditStatus editStatus, int numberOfApprenticeships, LastAction lastAction)
         {
             // Scenario 1
-            var status = Calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
+            var status = Calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus, null, null);
 
             status.Should().Be(expectedResult);
         }
@@ -41,7 +41,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
         public void EmployerCreatesANewCohort(RequestStatus expectedResult, AgreementStatus agreementStatus, EditStatus editStatus, int numberOfApprenticeships, LastAction lastAction)
         {
             // Scenario 2
-            var status = Calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
+            var status = Calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus, null, null);
 
             status.Should().Be(expectedResult);
         }
@@ -53,7 +53,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
         public void Scenario3(RequestStatus expectedResult, AgreementStatus agreementStatus, EditStatus editStatus, int numberOfApprenticeships, LastAction lastAction)
         {
             // Scenario 3
-            var status = Calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
+            var status = Calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus, null, null);
 
             status.Should().Be(expectedResult);
         }

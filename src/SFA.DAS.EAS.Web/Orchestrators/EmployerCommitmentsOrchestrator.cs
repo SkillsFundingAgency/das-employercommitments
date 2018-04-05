@@ -736,25 +736,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                var data = await _mediator.SendAsync(new GetCommitmentsQuery
-                {
-                    AccountId = accountId
-                });
+                var commitmentStatuses = (await GetAllCommitments(accountId)).Select(c => c.GetStatus()).ToArray();
 
                 //todo: call into commitments api or db to get counts, seems excessive to fetch all cohorts data just to count
-
-                var commitmentsSplitByTransfer = data.Commitments.ToLookup(c => c.TransferSenderId.HasValue);
-
-                // transfer cohorts
-                var transferCommitmentStatuses = commitmentsSplitByTransfer[true]
-                    .Select(c => c.GetTransferStatus());
-
-                // non-transfer cohorts
-                var nonTransferCommitmentStatuses = commitmentsSplitByTransfer[false]
-                    .Select(m => m.GetStatus());
-
-                var commitmentStatuses = transferCommitmentStatuses
-                    .Concat(nonTransferCommitmentStatuses).ToArray();
 
                 return new OrchestratorResponse<YourCohortsViewModel>
                 {
@@ -871,19 +855,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                //todo: refactor the multiple getalls above (1 getallcommitments, then where after!)
-                //todo: need to filter in transfer commitments and call GetTransferStatus (or combine the 2 into 1 GetStatus)
-                var allCommitments = await GetAllCommitments(accountId);
-
-                // add TransferSender to CommitmentListItem? (need TransferSenderName)
-                // -ve 2 extra unused fields when transfer
-                // +-ve less blank fields when not transfer
-                // +-ve 2 other fields might be interpreted as empty, when it's just that they haven't been populated
-                // how much refactoring required??
-
-                var transferFundedCommitments = allCommitments.Where(c =>
-                    c.TransferSenderId.HasValue &&
-                    c.GetTransferStatus() == RequestStatus.WithSender);
+                var transferFundedCommitments = (await GetAllCommitments(accountId)).Where(c => c.GetStatus() == RequestStatus.WithSender);
 
                 return new OrchestratorResponse<TransferFundedCohortsViewModel>
                 {
@@ -1265,11 +1237,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             return commitments.Select(c => new TransferFundedCohortsListItemViewModel
             {
                 HashedCommitmentId = _hashingService.HashValue(c.Id),
-                //todo:SendingEmployer = c.TransferSenderId,
-                SendingEmployer = "todo!",
+                SendingEmployer = c.TransferSenderName,
                 ProviderName = c.ProviderName,
                 TransferApprovalStatus = c.TransferApprovalStatus,
-                ShowLink = c.TransferApprovalStatus == TransferApprovalStatus.Rejected ? ShowLink.Edit : ShowLink.Details
+                ShowLink = c.TransferApprovalStatus == TransferApprovalStatus.Rejected ? ShowLink.Edit : ShowLink.Details,
                 //Status = _statusCalculator.GetStatus(commitment.EditStatus, commitment.ApprenticeshipCount, commitment.LastAction, commitment.AgreementStatus),
             });
         }

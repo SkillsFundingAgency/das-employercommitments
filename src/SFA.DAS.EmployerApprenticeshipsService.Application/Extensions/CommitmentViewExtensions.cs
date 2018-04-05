@@ -13,7 +13,13 @@ namespace SFA.DAS.EmployerCommitments.Application.Extensions
 
         public static RequestStatus GetStatus(this CommitmentView commitment)
         {
-            return StatusCalculator.GetStatus(commitment.EditStatus, commitment.Apprenticeships.Count, commitment.LastAction, commitment.AgreementStatus);
+            return StatusCalculator.GetStatus(
+                commitment.EditStatus, 
+                commitment.Apprenticeships.Count, 
+                commitment.LastAction, 
+                commitment.AgreementStatus,
+                commitment.TransferSender?.Id,
+                commitment.TransferSender?.TransferApprovalStatus);
         }
     }
 }

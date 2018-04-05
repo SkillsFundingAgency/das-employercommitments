@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
         [TestCase(RequestStatus.None, EditStatus.Both, TransferApprovalStatus.Approved, TestName = "Approved by all 3 parties")]
         public void CommitmentIsTransferFundedAndInValidState(RequestStatus expectedResult, EditStatus editStatus, TransferApprovalStatus transferApprovalStatus)
         {
-            var status = Calculator.GetTransferStatus(editStatus, transferApprovalStatus);
+            var status = Calculator.GetStatus(editStatus, 1, LastAction.None, AgreementStatus.NotAgreed, 1, transferApprovalStatus);
 
             Assert.AreEqual(expectedResult, status);
         }
@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
         [TestCase(TransferApprovalStatus.Rejected, EditStatus.ProviderOnly, TestName = "If rejected by sender, must be with receiver, not provider")]
         public void CommitmentIsTransferFundedAndInInvalidState(TransferApprovalStatus transferApprovalStatus, EditStatus editStatus)
         {
-            Assert.Throws<InvalidStateException>(() => Calculator.GetTransferStatus(editStatus, transferApprovalStatus));
+            Assert.Throws<InvalidStateException>(() => Calculator.GetStatus(editStatus, 1, LastAction.None, AgreementStatus.NotAgreed, 1, transferApprovalStatus));
         }
 
         [TestCase((TransferApprovalStatus)3, EditStatus.ProviderOnly, TestName = "TransferApprovalStatus bogus")]
@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
         [TestCase(TransferApprovalStatus.Approved, (EditStatus)4, TestName = "EditStatus bogus")]
         public void CommitmentIsTransferFundedAndStatusesAreInvalid(TransferApprovalStatus transferApprovalStatus, EditStatus editStatus)
         {
-            Assert.Throws<Exception>(() => Calculator.GetTransferStatus(editStatus, transferApprovalStatus));
+            Assert.Throws<Exception>(() => Calculator.GetStatus(editStatus, 1, LastAction.None, AgreementStatus.NotAgreed, 1, transferApprovalStatus));
         }
     }
 }
