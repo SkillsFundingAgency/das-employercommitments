@@ -1240,7 +1240,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 ProviderName = c.ProviderName,
                 TransferApprovalStatus = c.TransferApprovalStatus,
                 ShowLink = c.TransferApprovalStatus == TransferApprovalStatus.Rejected ? ShowLink.Edit : ShowLink.Details,
-                //Status = _statusCalculator.GetStatus(commitment.EditStatus, commitment.ApprenticeshipCount, commitment.LastAction, commitment.AgreementStatus),
             });
         }
 
