@@ -2,10 +2,9 @@
 @model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<TransferFundedCohortsViewModel>
 
 @{
-    ViewBag.Title = "Transfer-funded cohorts"; // Model.Data.PageTitle;
+    ViewBag.Title = "Transfer-funded cohorts";
     ViewBag.Section = "apprentices";
-    //todo: do we need to do something else for the pageid more than making one up?
-    ViewBag.PageId = "transfer-funded-cohorts"; // Model.Data.PageId;
+    ViewBag.PageId = "transfer-funded-cohorts";
 }
 
 <div class="grid-row">
@@ -68,6 +67,6 @@
 
 @section gaDataLayer {
     <script>
-        sfa.dataLayer.vpv = '/accounts/apprentices/cohorts/transfer-funded-cohorts'; // Model.Data.PageId
+        sfa.dataLayer.vpv = '/accounts/apprentices/cohorts/transfer-funded-cohorts';
     </script>
 }
