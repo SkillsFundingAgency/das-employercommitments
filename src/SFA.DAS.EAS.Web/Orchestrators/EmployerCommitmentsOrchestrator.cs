@@ -858,19 +858,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                var transferFundedCommitments = (await GetAllCommitments(accountId)).Where(
-                    c =>
-                    {
-                        var status = c.GetStatus();
-                        return status == RequestStatus.WithSenderForApproval
-                            || status == RequestStatus.RejectedBySender;
-                    });
+                var transferFundedCommitments = await GetAllCommitmentsOfStatus(accountId,
+                    RequestStatus.WithSenderForApproval, RequestStatus.RejectedBySender);
 
                 return new OrchestratorResponse<TransferFundedCohortsViewModel>
                 {
                     Data = new TransferFundedCohortsViewModel
                     {
-                        //AccountHashId = hashedAccountId,
                         Commitments = MapFrom(transferFundedCommitments)
                     }
                 };
