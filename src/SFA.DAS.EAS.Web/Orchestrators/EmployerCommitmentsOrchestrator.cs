@@ -775,7 +775,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
                 {
-                    var commitments = (await GetAllCommitmentsOfStatus(accountId, RequestStatus.NewRequest)).ToArray();
+                    var commitments = (await GetAllCommitmentsOfStatus(accountId,
+                        RequestStatus.NewRequest)).ToArray();
 
                     return new OrchestratorResponse<CommitmentListViewModel>
                     {
@@ -800,7 +801,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                var commitments = (await GetAllCommitmentsOfStatus(accountId, RequestStatus.ReadyForReview, RequestStatus.ReadyForApproval)).ToArray();
+                var commitments = (await GetAllCommitmentsOfStatus(accountId,
+                    RequestStatus.ReadyForReview, RequestStatus.ReadyForApproval)).ToArray();
 
                 return new OrchestratorResponse<CommitmentListViewModel>
                 {
@@ -846,7 +848,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        //rename to WithSender?
         public async Task<OrchestratorResponse<TransferFundedCohortsViewModel>> GetAllTransferFunded(string hashedAccountId, string externalUserId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
@@ -854,7 +855,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                var transferFundedCommitments = (await GetAllCommitments(accountId)).Where(c => c.GetStatus() == RequestStatus.WithSender);
+                var transferFundedCommitments = (await GetAllCommitments(accountId)).Where(
+                    c => c.GetStatus() == RequestStatus.WithSender);
 
                 return new OrchestratorResponse<TransferFundedCohortsViewModel>
                 {
@@ -867,8 +869,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             }, hashedAccountId, externalUserId);
         }
-
-        //todo: only show transfers bingo box if transfers toggled on
 
         private async Task<IEnumerable<CommitmentListItem>> GetAllCommitmentsOfStatus(long accountId, params RequestStatus[] statuses)
         {
