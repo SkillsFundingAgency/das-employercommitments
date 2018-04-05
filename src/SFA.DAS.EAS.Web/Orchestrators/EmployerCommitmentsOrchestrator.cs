@@ -151,7 +151,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         public async Task<OrchestratorResponse<SelectTransferConnectionViewModel>> GetTransferConnections(
             string hashedAccountId, string externalUserId)
         {
-
             if (!_featureToggleService.Get<Transfers>().FeatureEnabled)
             {
                 return new OrchestratorResponse<SelectTransferConnectionViewModel>
@@ -761,8 +760,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                              m == RequestStatus.WithProviderForApproval
                           || m == RequestStatus.SentToProvider
                           || m == RequestStatus.SentForReview),
-                        TransferFundedCohortsCount = commitmentStatuses.Count(m =>
-                            m == RequestStatus.WithSender)
+                        TransferFundedCohortsCount = _featureToggleService.Get<Transfers>().FeatureEnabled
+                            ? commitmentStatuses.Count(m => m == RequestStatus.WithSender) : (int?)null
                     }
                 };
 
