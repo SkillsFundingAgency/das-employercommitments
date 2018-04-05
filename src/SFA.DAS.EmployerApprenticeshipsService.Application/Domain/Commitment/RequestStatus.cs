@@ -28,7 +28,10 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
         [Description("Approved")]
         Approved,
 
-        [Description("With sender for approval or rejected by sender")]
-        WithSender
+        [Description("With sender for approval")]
+        WithSenderForApproval,
+
+        [Description("Rejected by sender")]
+        RejectedBySender
     }
 }

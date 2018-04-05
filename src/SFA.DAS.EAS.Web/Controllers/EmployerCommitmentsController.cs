@@ -105,8 +105,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            //todo: what's this doing, or more importantly why?
-            SaveRequestStatusInCookie(RequestStatus.WithSender);
+            //todo: the pattern seems to be pick one of the statuses associated with a bingo box and save that in the cookie
+            // to represent e.g. which page to go back to after delete. we could refactor this, perhaps introduce a new enum.
+            // also, subsequent transfer stories will need to check for this status when they GetRequestStatusFromCookie()
+            SaveRequestStatusInCookie(RequestStatus.WithSenderForApproval);
 
             var model = await EmployerCommitmentsOrchestrator.GetAllTransferFunded(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
             return View("TransferFundedCohorts", model);
@@ -429,7 +431,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return RedirectToAction("YourCohorts", new { viewModel.HashedAccountId });
 
             return Redirect(GetReturnToListUrl(viewModel.HashedAccountId));
-
         }
 
         [HttpGet]

@@ -761,7 +761,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                           || m == RequestStatus.SentToProvider
                           || m == RequestStatus.SentForReview),
                         TransferFundedCohortsCount = _featureToggleService.Get<Transfers>().FeatureEnabled
-                            ? commitmentStatuses.Count(m => m == RequestStatus.WithSender) : (int?)null
+                            ? commitmentStatuses.Count(m => 
+                                m == RequestStatus.WithSenderForApproval
+                                || m == RequestStatus.RejectedBySender) : (int?)null
                     }
                 };
 
@@ -856,7 +858,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             return await CheckUserAuthorization(async () =>
             {
                 var transferFundedCommitments = (await GetAllCommitments(accountId)).Where(
-                    c => c.GetStatus() == RequestStatus.WithSender);
+                    c =>
+                    {
+                        var status = c.GetStatus();
+                        return status == RequestStatus.WithSenderForApproval
+                            || status == RequestStatus.RejectedBySender;
+                    });
 
                 return new OrchestratorResponse<TransferFundedCohortsViewModel>
                 {

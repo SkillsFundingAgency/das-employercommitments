@@ -69,7 +69,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
             switch (transferApproval)
             {
                 case TransferApprovalStatus.Pending:
-                    return edit == EditStatus.Both ? RequestStatus.WithSender : RequestStatus.NewRequest;
+                    return edit == EditStatus.Both ? RequestStatus.WithSenderForApproval : RequestStatus.NewRequest;
 
                 case TransferApprovalStatus.Approved:
                     if (edit != EditStatus.Both)
@@ -79,7 +79,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
                 case TransferApprovalStatus.Rejected:
                     if (edit != EditStatus.EmployerOnly)
                         throw new InvalidStateException($"{invalidStateExceptionMessagePrefix}If just rejected by sender, must be with receiver");
-                    return RequestStatus.WithSender;
+                    return RequestStatus.RejectedBySender;
 
                 default:
                     throw new Exception("Unexpected TransferApprovalStatus");
