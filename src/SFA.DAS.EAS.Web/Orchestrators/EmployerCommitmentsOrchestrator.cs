@@ -353,7 +353,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                await AssertCommitmentStatus(commitmentId, accountId);
+                await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
 
                 var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
                 {
@@ -387,7 +387,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             await CheckUserAuthorization(async () =>
             {
-                await AssertCommitmentStatus(commitmentId, accountId);
+                await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
 
                 await _mediator.SendAsync(new CreateApprenticeshipCommand
                 {
@@ -409,7 +409,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                await AssertCommitmentStatus(commitmentId, accountId);
+                await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
 
                 var apprenticeshipData = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
                 {
@@ -487,7 +487,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             await CheckUserAuthorization(async () =>
             {
-                await AssertCommitmentStatus(commitmentId, accountId);
+                await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
 
                 await _mediator.SendAsync(new UpdateApprenticeshipCommand
                 {
@@ -516,9 +516,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         CommitmentId = commitmentId
                     });
 
-                    AssertCommitmentStatus(response.Commitment, EditStatus.EmployerOnly);
-                    AssertCommitmentStatus(response.Commitment, AgreementStatus.EmployerAgreed,
-                        AgreementStatus.ProviderAgreed, AgreementStatus.NotAgreed);
+                    CheckCommitmentIsVisibleToEmployer(response.Commitment);
 
                     var legalEntity =
                         await GetLegalEntityByCode(hashedAccountId, externalUserId, response.Commitment.LegalEntityId);
@@ -653,9 +651,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     CommitmentId = _hashingService.DecodeValue(hashedCommitmentId)
                 });
 
-                AssertCommitmentStatus(data.Commitment, EditStatus.EmployerOnly);
-                AssertCommitmentStatus(data.Commitment, AgreementStatus.EmployerAgreed, AgreementStatus.ProviderAgreed, AgreementStatus.NotAgreed);
-
+                CheckCommitmentIsVisibleToEmployer(data.Commitment);
                 var commitment = _commitmentMapper.MapToCommitmentViewModel(data.Commitment);
 
                 return new OrchestratorResponse<SubmitCommitmentViewModel>
@@ -902,7 +898,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     CommitmentId = commitmentId
                 });
 
-                AssertCommitmentStatus(data.Commitment, AgreementStatus.EmployerAgreed, AgreementStatus.ProviderAgreed, AgreementStatus.NotAgreed);
+                CheckCommitmentIsVisibleToEmployer(data.Commitment);
 
                 var overlappingApprenticeships = await _mediator.SendAsync(
                    new GetOverlappingApprenticeshipsQueryRequest
@@ -987,8 +983,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             CommitmentId = commitmentId
                         });
 
-                        AssertCommitmentStatus(commitmentData.Commitment, EditStatus.EmployerOnly);
-                        AssertCommitmentStatus(commitmentData.Commitment, AgreementStatus.EmployerAgreed, AgreementStatus.ProviderAgreed, AgreementStatus.NotAgreed);
+                        CheckCommitmentIsVisibleToEmployer(commitmentData.Commitment);
 
                         Func<string, string> textOrDefault = txt => !string.IsNullOrEmpty(txt) ? txt : "without training course details";
                         var programmeSummary = commitmentData.Commitment.Apprenticeships
@@ -1044,7 +1039,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     ApprenticeshipId = apprenticeshipId
                 });
 
-                await AssertCommitmentStatus(commitmentId, accountId);
+                await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
 
                 return new OrchestratorResponse<DeleteApprenticeshipConfirmationViewModel>
                 {
@@ -1281,36 +1276,37 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             };
         }
 
-        private static void AssertCommitmentStatus(
-            CommitmentView commitment,
-            params AgreementStatus[] allowedAgreementStatuses)
-        {
-            if (commitment == null)
-                throw new InvalidStateException("Null commitment");
 
-            if (!allowedAgreementStatuses.Contains(commitment.AgreementStatus))
-                throw new InvalidStateException($"Invalid commitment state (agreement status is {commitment.AgreementStatus}, expected {string.Join(",", allowedAgreementStatuses)}), CommitmentId: {commitment.Id}");
-        }
-
-        private async Task AssertCommitmentStatus(long commitmentId, long accountId)
+        private async Task CheckCommitmentIsVisibleToEmployer(long commitmentId, long accountId)
         {
             var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
             {
                 AccountId = accountId,
                 CommitmentId = commitmentId
             });
-            AssertCommitmentStatus(commitmentData.Commitment, EditStatus.EmployerOnly);
-            AssertCommitmentStatus(commitmentData.Commitment, AgreementStatus.EmployerAgreed, AgreementStatus.ProviderAgreed, AgreementStatus.NotAgreed);
+            CheckCommitmentIsVisibleToEmployer(commitmentData.Commitment);
         }
 
-        private static void AssertCommitmentStatus(CommitmentView commitment, params EditStatus[] allowedEditStatuses)
+        private static void CheckCommitmentIsVisibleToEmployer(CommitmentView commitment)
         {
+            //what are we trying to achieve here? we don't really want to assert the state of the commitment generally
+            //we are trying to assert that the commitment is in the right state for the employer user to view it
+            //(editability is something else)
+
+            //a commitment can be viewed by an employer user if:
+            // a) for non-transfer cohort, the agreement status is not BothAgreed
+            // b) for a transfer cohort:
+            //    i) the transfer approval status is not Approved (the agreement status can be anything)
+            // this is the definition of "right of the line" for respective cases, thus not visible to user.
+
             if (commitment == null)
                 throw new InvalidStateException("Null commitment");
 
-            if (!allowedEditStatuses.Contains(commitment.EditStatus))
-                throw new InvalidStateException($"Invalid commitment state (edit status is {commitment.EditStatus}, expected {string.Join(",", allowedEditStatuses)}), CommitmentId: {commitment.Id}");
-        }
+            if(commitment.TransferSender != null && commitment.TransferSender.TransferApprovalStatus == TransferApprovalStatus.Approved)
+                throw new InvalidStateException("Invalid commitment state - approved by transfer sender");
 
+            if (commitment.TransferSender == null && commitment.AgreementStatus == AgreementStatus.BothAgreed)
+                throw new InvalidStateException("Invalid commitment state - agreement status is BothAgreed");
+        }
     }
 }

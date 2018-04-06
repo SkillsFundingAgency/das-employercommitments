@@ -18,6 +18,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         [Test]
         public async Task ThenFrameworksAreNotRetrievedForCohortsFundedByTransfer()
         {
+            CommitmentView.EditStatus = EditStatus.Both;
             CommitmentView.TransferSender = new TransferSender { Id = 123};
 
         await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
@@ -70,7 +71,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         }
 
         [Test]
-        public async Task ThenIfTheCohortWasApprovedByTransferSenderThenShouldThrownAnException()
+        public async Task ThenIfTheCohortWasApprovedByTransferSenderThenShouldThrowAnException()
         {
             CommitmentView.AgreementStatus = AgreementStatus.BothAgreed;
             CommitmentView.EditStatus = EditStatus.Both;
@@ -78,6 +79,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             {
                 TransferApprovalStatus = TransferApprovalStatus.Approved
             };
+
+            Assert.ThrowsAsync<InvalidStateException>(() =>
+                EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId"));
+        }
+
+        [Test]
+        public async Task ThenIfCohortIsNotForTransferThenIfApprovedByBothPartiesShouldThrowAnException()
+        {
+            CommitmentView.AgreementStatus = AgreementStatus.BothAgreed;
+            CommitmentView.EditStatus = EditStatus.Both;
+            CommitmentView.TransferSender = null;
 
             Assert.ThrowsAsync<InvalidStateException>(() =>
                 EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId"));
