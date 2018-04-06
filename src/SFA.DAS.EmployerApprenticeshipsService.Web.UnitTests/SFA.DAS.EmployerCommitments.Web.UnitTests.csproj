@@ -259,6 +259,7 @@
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingProviderAssignedCommitment.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingApprenticeship.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingCommitmentDetails.cs" />
+    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingTransferRequestViewModelForTransferSender.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingSkeletonApprenticeshipDetails.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingAcknowledgementModelForExistingCommitment.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingCommitmentViewModelForTransferSender.cs" />
