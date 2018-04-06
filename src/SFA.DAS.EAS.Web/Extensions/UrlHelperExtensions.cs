@@ -5,23 +5,41 @@ namespace SFA.DAS.EmployerCommitments.Web.Extensions
 {
     public static class UrlHelperExtensions
     {
-        public static string ExternalUrlAction(this UrlHelper helper, string controllerName, string actionName="", bool ignoreAccountId = false)
+        public static string ExternalMyaUrlAction(this UrlHelper helper, string controllerName, string actionName="", bool ignoreAccountId = false)
         {
-
-            var baseUrl = GetBaseUrl();
-
-            var accountId = helper.RequestContext.RouteData.Values["hashedAccountId"];
-
-            return ignoreAccountId ? $"{baseUrl}{controllerName}/{actionName}" 
-                                    : $"{baseUrl}accounts/{accountId}/{controllerName}/{actionName}";
-            
+            var baseUrl = GetMyaBaseUrl();
+            return BuildExternalUrl(helper, baseUrl, controllerName, actionName, ignoreAccountId);
         }
 
-        private static string GetBaseUrl()
+        public static string ExternalPsrUrlAction(this UrlHelper helper, string controllerName, string actionName = "", bool ignoreAccountId = false)
         {
-            return CloudConfigurationManager.GetSetting("MyaBaseUrl").EndsWith("/")
-                ? CloudConfigurationManager.GetSetting("MyaBaseUrl")
-                : CloudConfigurationManager.GetSetting("MyaBaseUrl") + "/";
+            var baseUrl = GetPsrBaseUrl();
+            return BuildExternalUrl(helper, baseUrl, controllerName, actionName, ignoreAccountId);
+        }
+
+        private static string GetMyaBaseUrl()
+        {
+            return GetBaseUrl("MyaBaseUrl");
+        }
+
+        private static string GetPsrBaseUrl()
+        {
+            return GetBaseUrl("PsrBaseUrl");
+        }
+
+        private static string GetBaseUrl(string configKey)
+        {
+            return CloudConfigurationManager.GetSetting(configKey).EndsWith("/")
+                ? CloudConfigurationManager.GetSetting(configKey)
+                : CloudConfigurationManager.GetSetting(configKey) + "/";
+        }
+
+        private static string BuildExternalUrl(UrlHelper helper, string baseUrl, string controllerName, string actionName = "", bool ignoreAccountId = false)
+        {
+            var accountId = helper.RequestContext.RouteData.Values["hashedAccountId"];
+
+            return ignoreAccountId ? $"{baseUrl}{controllerName}/{actionName}"
+                : $"{baseUrl}accounts/{accountId}/{controllerName}/{actionName}";
         }
     }
 }

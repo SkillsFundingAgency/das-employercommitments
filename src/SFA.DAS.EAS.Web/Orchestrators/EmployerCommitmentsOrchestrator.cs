@@ -27,7 +27,6 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTransferRequest;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipProvider;
 using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
 using SFA.DAS.EmployerCommitments.Web.Enums;
@@ -38,7 +37,6 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.NLog.Logger;
 
 using OrganisationType = SFA.DAS.Common.Domain.Types.OrganisationType;
-using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.HashingService;
@@ -95,7 +93,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     Data = new CommitmentsIndexViewModel
                     {
-                        ShowSetPaymentPriorityLink = response.Data != null && response.Data.Count > 1
+                        ShowSetPaymentPriorityLink = response.Data != null && response.Data.Count > 1,
+                        ShowPublicSectorReportingLink = _featureToggleService.Get<PublicSectorReporting>().FeatureEnabled
                     }
                 };
             }, hashedAccountId, externalUserId);

@@ -8,6 +8,7 @@ using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.HashingService;
 
@@ -17,16 +18,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
     {
         private readonly IHashingService _hashingService;
         private readonly ICommitmentStatusCalculator _statusCalculator;
+        private readonly IFeatureToggleService _featureToggleService;
 
-        public CommitmentMapper(IHashingService hashingService, ICommitmentStatusCalculator statusCalculator)
+        public CommitmentMapper(IHashingService hashingService, ICommitmentStatusCalculator statusCalculator,
+            IFeatureToggleService featureToggleService)
         {
-            if (hashingService == null)
-                throw new ArgumentNullException(nameof(hashingService));
-            if (statusCalculator == null)
-                throw new ArgumentNullException(nameof(statusCalculator));
-
             _hashingService = hashingService;
             _statusCalculator = statusCalculator;
+            _featureToggleService = featureToggleService;
         }
 
         public async Task<CommitmentListItemViewModel> MapToCommitmentListItemViewModelAsync(CommitmentListItem commitment, Func<CommitmentListItem, Task<string>> latestMessageFunc)
@@ -96,7 +95,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 TransferApprovalStatus = commitment.TransferSender.TransferApprovalStatus,
                 TransferApprovalSetBy = commitment.TransferSender.TransferApprovalSetBy,
                 TransferApprovalSetOn = commitment.TransferSender.TransferApprovalSetOn,
-                TotalCost = apprenticeships.Sum(x => x.Cost) ?? 0
+                TotalCost = apprenticeships.Sum(x => x.Cost) ?? 0,
+                EnableRejection = _featureToggleService.Get<TransfersRejectOption>().FeatureEnabled
             };
         }
 
