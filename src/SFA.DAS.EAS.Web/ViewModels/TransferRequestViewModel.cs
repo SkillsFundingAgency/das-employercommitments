@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using SFA.DAS.Commitments.Api.Types;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 {
-    public sealed class TransferCommitmentViewModel
+    public sealed class TransferRequestViewModel
     {
-        public TransferCommitmentViewModel()
+        public TransferRequestViewModel()
         {
             TrainingList = new List<TrainingCourseSummaryViewModel>();
         }

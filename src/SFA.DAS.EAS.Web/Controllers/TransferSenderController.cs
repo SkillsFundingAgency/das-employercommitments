@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.UserProfile;
@@ -11,12 +10,11 @@ using SFA.DAS.EmployerUsers.WebClientComponents;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
-    [Obsolete("Use TransferRequestController")]
     [Authorize]
-    [CommitmentsRoutePrefix("accounts/{hashedaccountId}/transfers")]
-    public class TransfersController : BaseEmployerController
+    [CommitmentsRoutePrefix("accounts/{hashedaccountId}/sender/transfers")]
+    public class TransferSenderController : BaseEmployerController
     {
-        public TransfersController(EmployerCommitmentsOrchestrator employerCommitmentsOrchestrator, IOwinWrapper owinWrapper,
+        public TransferSenderController(EmployerCommitmentsOrchestrator employerCommitmentsOrchestrator, IOwinWrapper owinWrapper,
             IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage, 
             ICookieStorageService<string> lastCohortCookieStorageService)
             : base(employerCommitmentsOrchestrator, owinWrapper, multiVariantTestingService, flashMessage, lastCohortCookieStorageService)
@@ -25,17 +23,18 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
-        [Route("{hashedCommitmentId}")]
-        public async Task<ActionResult> TransferDetails(string hashedAccountId, string hashedCommitmentId)
+        [Route("{hashedTransferRequestId}")]
+        public async Task<ActionResult> TransferDetails(string hashedAccountId, string hashedTransferRequestId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model = await EmployerCommitmentsOrchestrator.GetCommitmentDetailsForTransfer(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
+            var model = await EmployerCommitmentsOrchestrator.GetTransferRequestDetails(hashedAccountId, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
 
             return View(model);
         }
 
+        /*
         [HttpPost]
         [ValidateAntiForgeryToken]
         [OutputCache(CacheProfile = "NoCache")]
@@ -70,6 +69,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
             return Redirect(request.UrlAddress);
         }
-
+        */
     }
 }

@@ -25,6 +25,7 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticesh
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProvider;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetTransferRequest;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipProvider;
@@ -41,6 +42,7 @@ using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.HashingService;
+using CallerType = SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment.CallerType;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
@@ -1157,6 +1159,31 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var viewModel = _commitmentMapper.MapToTransferCommitmentViewModel(data.Commitment);
 
                 return new OrchestratorResponse<TransferCommitmentViewModel>
+                {
+                    Data = viewModel
+                };
+            }, hashedTransferAccountId, externalUserId);
+        }
+
+        public async Task<OrchestratorResponse<TransferRequestViewModel>> GetTransferRequestDetails(
+            string hashedTransferAccountId, string hashedTransferRequestId, string externalUserId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedTransferAccountId);
+            var transferRequestId = _hashingService.DecodeValue(hashedTransferRequestId);
+            _logger.Info($"Getting TransferRequest Details, Transfer Account: {accountId}, TransferRequestId: {transferRequestId}");
+
+            return await CheckUserAuthorization(async () =>
+            {
+                var data = await _mediator.SendAsync(new GetTransferRequestQueryRequest
+                {
+                    AccountId = accountId,
+                    TransferRequestId = transferRequestId,
+                    CallerType = Application.Queries.GetTransferRequest.CallerType.TransferSender
+                });
+
+                var viewModel = _commitmentMapper.MapToTransferRequestViewModel(data.TransferRequest);
+
+                return new OrchestratorResponse<TransferRequestViewModel>
                 {
                     Data = viewModel
                 };
