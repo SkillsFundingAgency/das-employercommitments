@@ -47,8 +47,7 @@
                                 <a href="@Url.Action("Details", new {commitment.HashedCommitmentId})" title="View cohort" aria-label="View cohort">Details</a>
                                 break;
                             case ShowLink.Edit:
-                                //todo: edit link
-                                <a href="@Url.Action("Edit", new {commitment.HashedCommitmentId})" title="Edit cohort" aria-label="Edit cohort">Edit</a>
+                                <a href="@Url.Action("Details", new {commitment.HashedCommitmentId})" title="Edit cohort" aria-label="Edit cohort">Edit</a>
                                 break;
                         }
                     </td>
