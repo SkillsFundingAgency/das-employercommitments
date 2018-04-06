@@ -12,9 +12,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
     [Authorize]
     [CommitmentsRoutePrefix("accounts/{hashedaccountId}/sender/transfers")]
-    public class TransferSenderController : BaseEmployerController
+    public class TransferRequestController : BaseEmployerController
     {
-        public TransferSenderController(EmployerCommitmentsOrchestrator employerCommitmentsOrchestrator, IOwinWrapper owinWrapper,
+        public TransferRequestController(EmployerCommitmentsOrchestrator employerCommitmentsOrchestrator, IOwinWrapper owinWrapper,
             IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage, 
             ICookieStorageService<string> lastCohortCookieStorageService)
             : base(employerCommitmentsOrchestrator, owinWrapper, multiVariantTestingService, flashMessage, lastCohortCookieStorageService)
@@ -34,7 +34,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return View(model);
         }
 
-        /*
         [HttpPost]
         [ValidateAntiForgeryToken]
         [OutputCache(CacheProfile = "NoCache")]
@@ -43,7 +42,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var model = await EmployerCommitmentsOrchestrator.GetCommitmentDetailsForTransfer(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
+                var model = await EmployerCommitmentsOrchestrator.GetTransferRequestDetails(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
 
                 return View("TransferDetails", model);
             }
@@ -57,7 +56,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return View("TransferConfirmation", new TransferConfirmationViewModel { TransferApprovalStatus = status, TransferReceiverName = viewModel.TransferReceiverName});
         }
 
-
+        /*
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("{hashedCommitmentId}/confirmation")]

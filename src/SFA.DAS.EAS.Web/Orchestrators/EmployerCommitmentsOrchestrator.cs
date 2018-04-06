@@ -624,6 +624,28 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
+        public async Task SetTransferRequestApprovalStatus(string hashedAccountId, string hashedCommitmentId, string hashedTransferRequestId, TransferApprovalConfirmationViewModel model, string externalUserId, string userDisplayName, string userEmail)
+        {
+            var transferSenderId = _hashingService.DecodeValue(hashedAccountId);
+            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
+            var transferRequestId = _hashingService.DecodeValue(hashedTransferRequestId);
+            _logger.Info($"Transfer Approval Confirmation: Sender Account: {transferSenderId}, CommitmentId: {commitmentId}, Approving {model.ApprovalConfirmed}");
+
+            await CheckUserAuthorization(async () =>
+            {
+                await _mediator.SendAsync(new TransferApprovalCommand
+                {
+                    CommitmentId = commitmentId,
+                    TransferSenderId = transferSenderId,
+                    TransferRequestId = transferRequestId,
+                    TransferStatus = model.ApprovalConfirmed == true ? TransferApprovalStatus.Approved : TransferApprovalStatus.Rejected,
+                    UserEmail = userEmail,
+                    UserName = userDisplayName
+                });
+            }, hashedAccountId, externalUserId);
+        }
+
+
         public async Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitNewCommitmentModel(string hashedAccountId, string externalUserId, string transferConnectionCode, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string providerId, string providerName, string cohortRef, SaveStatus saveStatus)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
