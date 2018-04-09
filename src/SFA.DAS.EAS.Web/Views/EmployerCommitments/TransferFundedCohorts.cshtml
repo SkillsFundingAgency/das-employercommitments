@@ -9,9 +9,9 @@
 
 <div class="grid-row">
     <div class="column-full">
-        <h1 class="heading-xlarge">Transfer-funded Cohorts</h1>
+        <h1 class="heading-xlarge">Transfer-funded cohorts</h1>
 
-        <p class="dynamic-heading">You have @Model.Data.Commitments.Count() cohorts to be paid via a transfer</p>
+        <p class="dynamic-heading">You have <strong>@Model.Data.Commitments.Count()</strong> cohorts to be paid via a transfer</p>
 
         <table class="tableResponsive to-be-sent-list">
             <thead>
@@ -29,16 +29,16 @@
                 {
                 <tr>
                     <td>
-                        @commitment.SendingEmployer &nbsp;
+                        @commitment.SendingEmployer
                     </td>
                     <td>
-                        @commitment.ProviderName &nbsp;
+                        @commitment.ProviderName
                     </td>
                     <td>
-                        @commitment.HashedCommitmentId &nbsp;
+                        @commitment.HashedCommitmentId
                     </td>
                     <td>
-                        @commitment.TransferApprovalStatus &nbsp;
+                        @commitment.TransferApprovalStatus
                     </td>
                     <td>
                         @switch (commitment.ShowLink)
