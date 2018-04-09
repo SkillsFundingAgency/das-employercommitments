@@ -8,5 +8,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
     {
         public string TransferReceiverName { get; set; }
         public bool? ApprovalConfirmed { get; set; }
+        public string HashedCohortReference { get; set; }
+
     }
 }

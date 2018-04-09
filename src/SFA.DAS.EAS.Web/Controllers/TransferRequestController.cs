@@ -11,7 +11,7 @@ using SFA.DAS.EmployerUsers.WebClientComponents;
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
     [Authorize]
-    [CommitmentsRoutePrefix("accounts/{hashedaccountId}/sender/transfers")]
+    [CommitmentsRoutePrefix("accounts/{hashedaccountId}")]
     public class TransferRequestController : BaseEmployerController
     {
         public TransferRequestController(EmployerCommitmentsOrchestrator employerCommitmentsOrchestrator, IOwinWrapper owinWrapper,
@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
-        [Route("{hashedTransferRequestId}")]
+        [Route("sender/transfers/{hashedTransferRequestId}")]
         public async Task<ActionResult> TransferDetails(string hashedAccountId, string hashedTransferRequestId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -37,17 +37,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [OutputCache(CacheProfile = "NoCache")]
-        [Route("{hashedCommitmentId}/approve")]
-        public async Task<ActionResult> TransferApproval(string hashedAccountId, string hashedCommitmentId, TransferApprovalConfirmationViewModel viewModel)
+        [Route("sender/transfers/{hashedTransferRequestId}/approve")]
+        public async Task<ActionResult> TransferApproval(string hashedAccountId, string hashedTransferRequestId,  TransferApprovalConfirmationViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                var model = await EmployerCommitmentsOrchestrator.GetTransferRequestDetails(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
+                var model = await EmployerCommitmentsOrchestrator.GetTransferRequestDetails(hashedAccountId, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
 
                 return View("TransferDetails", model);
             }
-
-            await EmployerCommitmentsOrchestrator.SetTransferApprovalStatus(hashedAccountId, hashedCommitmentId, viewModel, OwinWrapper.GetClaimValue(@"sub"),
+            await EmployerCommitmentsOrchestrator.SetTransferRequestApprovalStatus(hashedAccountId, viewModel.HashedCohortReference, hashedTransferRequestId, viewModel, OwinWrapper.GetClaimValue(@"sub"),
                 OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
                 OwinWrapper.GetClaimValue(DasClaimTypes.Email));
 
@@ -56,10 +55,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return View("TransferConfirmation", new TransferConfirmationViewModel { TransferApprovalStatus = status, TransferReceiverName = viewModel.TransferReceiverName});
         }
 
-        /*
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("{hashedCommitmentId}/confirmation")]
+        [Route("sender/transfers/{hashedTransferRequestId}/confirmation")]
         public async Task<ActionResult> TransferConfirmation(TransferConfirmationViewModel request)
         {
             if (!ModelState.IsValid)
@@ -68,6 +66,5 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
             return Redirect(request.UrlAddress);
         }
-        */
     }
 }

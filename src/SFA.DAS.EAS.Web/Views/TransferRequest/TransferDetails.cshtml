@@ -129,6 +129,7 @@
 
                 @Html.AntiForgeryToken()
                 @Html.Hidden("TransferReceiverName", Model.Data.LegalEntityName)
+                @Html.Hidden("HashedCohortReference", Model.Data.HashedCohortReference)
             </form>
         </div>
     </div>
