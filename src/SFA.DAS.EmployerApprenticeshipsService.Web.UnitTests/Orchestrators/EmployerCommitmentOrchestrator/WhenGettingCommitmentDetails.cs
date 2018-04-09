@@ -40,8 +40,50 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockMediator.Verify(x => x.SendAsync(It.IsAny<GetTrainingProgrammesQueryRequest>()), Times.Once);
         }
 
+        [TestCase(EditStatus.EmployerOnly, false)]
+        [TestCase(EditStatus.ProviderOnly, true)]
+        public async Task ThenPageTitleShouldBeDictatedByEditStatus(EditStatus editStatus, bool expectReadOnly)
+        {
+            CommitmentView.AgreementStatus = AgreementStatus.NotAgreed;
+            CommitmentView.EditStatus = editStatus;
+
+            var result = await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
+
+            Assert.AreEqual(expectReadOnly, result.Data.IsReadOnly);
+        }
+
         [Test]
-        public async Task ThenIfTheCohortHasBeenRejectedByTransferSenderThenItIsEditable()
+        public async Task ThenIfTheCohortIsPendingTransferApprovalThenItIsReadOnly()
+        {
+            CommitmentView.AgreementStatus = AgreementStatus.BothAgreed;
+            CommitmentView.EditStatus = EditStatus.Both;
+            CommitmentView.TransferSender = new TransferSender
+            {
+                TransferApprovalStatus = TransferApprovalStatus.Pending
+            };
+
+            var result = await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
+
+            Assert.IsTrue(result.Data.IsReadOnly);
+        }
+
+        [Test]
+        public async Task ThenPageTitleForTransferPendingShouldBeReviewYourCohort()
+        {
+            CommitmentView.AgreementStatus = AgreementStatus.BothAgreed;
+            CommitmentView.EditStatus = EditStatus.Both;
+            CommitmentView.TransferSender = new TransferSender
+            {
+                TransferApprovalStatus = TransferApprovalStatus.Pending
+            };
+
+            var result = await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
+
+            Assert.AreEqual("Review your cohort", result.Data.PageTitle);            
+        }
+
+        [Test]
+        public async Task ThenPageTitleForTransferRejectedShouldBeReviewYourCohort()
         {
             CommitmentView.AgreementStatus = AgreementStatus.BothAgreed;
             CommitmentView.EditStatus = EditStatus.EmployerOnly;
@@ -52,22 +94,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
 
             var result = await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
 
-            Assert.IsFalse(result.Data.IsReadOnly);
-        }
-
-        [Test]
-        public async Task ThenIfTheCohortIsPendingTransferApprovalThenItIsReadOnly()
-        {
-            CommitmentView.AgreementStatus = AgreementStatus.BothAgreed;
-            CommitmentView.EditStatus = EditStatus.Both;
-            CommitmentView.TransferSender = new TransferSender
-            {
-                TransferApprovalStatus = TransferApprovalStatus.Pending,
-            };
-
-            var result = await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
-
-            Assert.IsTrue(result.Data.IsReadOnly);
+            Assert.AreEqual("Review your cohort", result.Data.PageTitle);
         }
 
         [Test]

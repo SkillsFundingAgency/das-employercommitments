@@ -936,14 +936,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         errors.Add($"{apprenticeshipListGroup.GroupId}", $"Overlapping training dates{trainingTitle}");
                     }
                     
-
                     if (apprenticeshipListGroup.ApprenticeshipsOverFundingLimit > 0)
                     {
                         warnings.Add(apprenticeshipListGroup.GroupId, $"Cost for {apprenticeshipListGroup.TrainingProgramme.Title}");
                     }
-
                 }
-                
+
+                var pageTitle = data.Commitment.EditStatus == EditStatus.EmployerOnly
+                                || data.Commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Pending
+                                    ? "Review your cohort"
+                                    : "View your cohort";
+
                 var viewModel = new CommitmentDetailsViewModel
                 {
                     HashedId = _hashingService.HashValue(data.Commitment.Id),
@@ -959,7 +962,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     HasOverlappingErrors = apprenticeshipGroups.Any(m => m.ShowOverlapError),
                     IsReadOnly = data.Commitment.EditStatus != EditStatus.EmployerOnly,
                     Warnings = warnings,
-                    Errors = errors
+                    Errors = errors,
+                    PageTitle = pageTitle
                 };
 
                 return new OrchestratorResponse<CommitmentDetailsViewModel>
