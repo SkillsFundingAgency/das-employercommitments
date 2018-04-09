@@ -353,13 +353,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
-
                 var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
                 {
                     AccountId = accountId,
                     CommitmentId = commitmentId
                 });
+
+                CheckCommitmentIsVisibleToEmployer(commitmentData.Commitment);
 
                 var apprenticeship = new ApprenticeshipViewModel
                 {
@@ -409,8 +409,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
-
                 var apprenticeshipData = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
                 {
                     AccountId = accountId,
@@ -422,6 +420,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     AccountId = accountId,
                     CommitmentId = apprenticeshipData.Apprenticeship.CommitmentId
                 });
+
+                CheckCommitmentIsVisibleToEmployer(commitmentData.Commitment);
 
                 var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(apprenticeshipData.Apprenticeship, commitmentData.Commitment);
 
