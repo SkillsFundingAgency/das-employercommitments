@@ -25,5 +25,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public bool IsReadOnly { get; set; }
         public Dictionary<string, string> Errors { get; set; }
         public string PageTitle { get; set; }
+        public bool HideDeleteButton { get; set; }
     }
 }
