@@ -24,5 +24,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public Dictionary<string, string> Warnings { get; set; }
         public bool IsReadOnly { get; set; }
         public Dictionary<string, string> Errors { get; set; }
+        public string PageTitle { get; set; }
     }
 }

@@ -50,17 +50,8 @@
                     </ul>
                 </div>
             }
-
-
-            @if (Model.Data.IsReadOnly)
-            {
-                <h1 class="heading-xlarge">View your cohort</h1>
-            }
-            else
-            {
-                <h1 class="heading-xlarge">Review your cohort</h1>
-            }
-
+            
+            <h1 class="heading-xlarge">@Model.Data.PageTitle</h1>
 
         </div>
     </div>
