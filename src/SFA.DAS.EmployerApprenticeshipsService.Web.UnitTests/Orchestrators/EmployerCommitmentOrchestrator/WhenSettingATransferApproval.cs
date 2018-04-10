@@ -1,9 +1,7 @@
 ﻿using System.Threading.Tasks;
-using FeatureToggle;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
@@ -11,13 +9,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
     [TestFixture]
     public class WhenSettingATransferApproval : OrchestratorTestBase
     {
-        private Mock<IFeatureToggle> _mockFeatureToggle;
-        private GetAccountTransferConnectionsResponse _sendAsyncResponse;
         const string HashedTransferSenderId = "ABC123";
         const long TransferSenderId = 123;
         const string HashedCommitmentId = "ABC1234";
         const long CommitmentId = 1234;
-        const string UserId = "User1";
 
         [SetUp]
         public void Arrange()

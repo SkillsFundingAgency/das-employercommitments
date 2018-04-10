@@ -50,9 +50,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly Func<int, string> _addPluralizationSuffix = i => i > 1 ? "s" : "";
         private readonly IApprenticeshipMapper _apprenticeshipMapper;
         private readonly ICommitmentMapper _commitmentMapper;
-        private readonly IAcademicYearValidator _academicYearValidator;
-        private readonly IAcademicYearDateProvider _academicYearDateProvider;
-
         private readonly IFeatureToggleService _featureToggleService;
 
         public EmployerCommitmentsOrchestrator(
