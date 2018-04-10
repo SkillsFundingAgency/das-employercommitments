@@ -85,7 +85,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     Data = new CommitmentsIndexViewModel
                     {
-                        ShowSetPaymentPriorityLink = response.Data != null && response.Data.Count > 1
+                        ShowSetPaymentPriorityLink = response.Data != null && response.Data.Count > 1,
+                        ShowPublicSectorReportingLink = _featureToggleService.Get<PublicSectorReporting>().FeatureEnabled
                     }
                 };
             }, hashedAccountId, externalUserId);

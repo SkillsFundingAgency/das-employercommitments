@@ -249,7 +249,9 @@
     <Compile Include="Models\Apprenticeship\ChangeOption.cs" />
     <Compile Include="Models\Apprenticeship\ChangeStatusType.cs" />
     <Compile Include="Models\Apprenticeship\RecordStatus.cs" />
+    <Compile Include="Models\FeatureToggles\PublicSectorReporting.cs" />
     <Compile Include="Models\FeatureToggles\Transfers.cs" />
+    <Compile Include="Models\FeatureToggles\TransfersRejectOption.cs" />
     <Compile Include="Models\Organisation\Address.cs" />
     <Compile Include="Models\Organisation\EmployerAgreementStatus.cs" />
     <Compile Include="Models\Organisation\TransferConnection.cs" />
