@@ -56,18 +56,18 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
         }
 
         [Test]
-        public async Task ThenThrowErrorIfTranferSenderDoesNotMatchTransferSenderOnCommitment()
+        public void ThenThrowErrorIfTranferSenderDoesNotMatchTransferSenderOnCommitment()
         {
             _command.TransferSenderId = 9877;
-            Assert.CatchAsync<InvalidRequestException>(() => _sut.Handle(_command));
+            Assert.CatchAsync<InvalidRequestException>(async () => await _sut.Handle(_command));
         }
 
         [TestCase(TransferApprovalStatus.Approved)]
         [TestCase(TransferApprovalStatus.Rejected)]
-        public async Task ThenThrowErrorIfTranferIsAlreadyApprovedOrRejected(TransferApprovalStatus status)
+        public void ThenThrowErrorIfTranferIsAlreadyApprovedOrRejected(TransferApprovalStatus status)
         {
             _repositoryCommitment.TransferSender.TransferApprovalStatus = status;
-            Assert.CatchAsync<InvalidRequestException>(() => _sut.Handle(_command));
+            Assert.CatchAsync<InvalidRequestException>(async () => await _sut.Handle(_command));
         }
 
     }
