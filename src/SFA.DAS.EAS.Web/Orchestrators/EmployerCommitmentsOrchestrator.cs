@@ -963,7 +963,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     IsReadOnly = data.Commitment.EditStatus != EditStatus.EmployerOnly,
                     Warnings = warnings,
                     Errors = errors,
-                    PageTitle = pageTitle
+                    PageTitle = pageTitle,
+                    HideDeleteButton = data.Commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Rejected
                 };
 
                 return new OrchestratorResponse<CommitmentDetailsViewModel>

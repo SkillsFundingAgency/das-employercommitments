@@ -98,6 +98,32 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         }
 
         [Test]
+        public async Task ThenDeleteButtonShouldBeVisible()
+        {
+            CommitmentView.AgreementStatus = AgreementStatus.NotAgreed;
+            CommitmentView.EditStatus = EditStatus.EmployerOnly;
+
+            var result = await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
+
+            Assert.IsFalse(result.Data.HideDeleteButton);
+        }
+
+        [Test]
+        public async Task ThenIfTheCohortWasRejectedByTransferSenderThenDeleteButtonShouldBeHidden()
+        {
+            CommitmentView.AgreementStatus = AgreementStatus.BothAgreed;
+            CommitmentView.EditStatus = EditStatus.EmployerOnly;
+            CommitmentView.TransferSender = new TransferSender
+            {
+                TransferApprovalStatus = TransferApprovalStatus.Rejected
+            };
+
+            var result = await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
+
+            Assert.IsTrue(result.Data.HideDeleteButton);
+        }
+
+        [Test]
         public async Task ThenIfTheCohortWasApprovedByTransferSenderThenShouldThrowAnException()
         {
             CommitmentView.AgreementStatus = AgreementStatus.BothAgreed;
