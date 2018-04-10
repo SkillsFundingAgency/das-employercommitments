@@ -21,7 +21,7 @@
       <Setting name="AccountApiTransfersStubRecordCount" value="__AccountApiTransfersStubRecordCount__" />
       <Setting name="FeatureToggle.Transfers" value="__FeatureToggle.Transfers__" />
       <Setting name="FeatureToggle.PublicSectorReporting" value="__FeatureToggle.PublicSectorReporting__" />
-            <Setting name="FeatureToggle.TransfersRejectOption" value="__FeatureToggle.TransfersRejectOption" />
+            <Setting name="FeatureToggle.TransfersRejectOption" value="__FeatureToggle.TransfersRejectOption__" />
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="WebSslCert" thumbprint="E280E23D933FE3A62AF335BE9768A2C9D65CCC9A" thumbprintAlgorithm="sha1" />
