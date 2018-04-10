@@ -10,14 +10,14 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
         // this class should be internal
         public RequestStatus GetStatus(EditStatus editStatus, int apprenticeshipCount, LastAction lastAction, AgreementStatus? overallAgreementStatus, long? transferSenderId, TransferApprovalStatus? transferApprovalStatus)
         {
+            bool hasApprenticeships = apprenticeshipCount > 0;
+
             if (transferSenderId.HasValue)
             {
                 if (!transferApprovalStatus.HasValue)
                     throw new InvalidStateException("TransferSenderId supplied, but no TransferApprovalStatus");
-                return GetTransferStatus(editStatus, transferApprovalStatus.Value);
+                return GetTransferStatus(editStatus, transferApprovalStatus.Value, lastAction, hasApprenticeships);
             }
-
-            bool hasApprenticeships = apprenticeshipCount > 0;
 
             if (editStatus == EditStatus.Both)
                 return RequestStatus.Approved;
@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
             return RequestStatus.None;
         }
 
-        private RequestStatus GetTransferStatus(EditStatus edit, TransferApprovalStatus transferApproval)
+        private RequestStatus GetTransferStatus(EditStatus edit, TransferApprovalStatus transferApproval, LastAction lastAction, bool hasApprenticeships)
         {
             const string invalidStateExceptionMessagePrefix = "Transfer funder commitment in invalid state: ";
 
@@ -69,7 +69,19 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
             switch (transferApproval)
             {
                 case TransferApprovalStatus.Pending:
-                    return edit == EditStatus.Both ? RequestStatus.WithSenderForApproval : RequestStatus.NewRequest;
+                {
+                    switch (edit)
+                    {
+                            case EditStatus.Both:
+                                return RequestStatus.WithSenderForApproval;
+                            case EditStatus.EmployerOnly:
+                                return RequestStatus.NewRequest;
+                            case EditStatus.ProviderOnly:
+                                return GetProviderOnlyStatus(lastAction, hasApprenticeships);
+                            default:
+                                throw new Exception("Unexpected EditStatus");
+                        }
+                }
 
                 case TransferApprovalStatus.Approved:
                     if (edit != EditStatus.Both)
