@@ -5,12 +5,12 @@ using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Web.Enums;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 
-namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
+namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
 {
     [TestFixture]
-    public sealed class WhenGettingStatusOfCommitment
+    public sealed class WhenGettingStatusOfNonTransferCommitment
     {
-        private static readonly ICommitmentStatusCalculator _calculator = new CommitmentStatusCalculator();
+        private static readonly ICommitmentStatusCalculator Calculator = new CommitmentStatusCalculator();
 
         [TestCase(RequestStatus.SentToProvider, AgreementStatus.NotAgreed, EditStatus.ProviderOnly, 0, LastAction.None, TestName = "Employer sends to provider to add apprentices")]
         [TestCase(RequestStatus.SentToProvider, AgreementStatus.NotAgreed, EditStatus.ProviderOnly, 1, LastAction.None, TestName = "Provider adds apprenticeship")]
@@ -28,7 +28,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         public void EmployerSendsToProviderToAddApprentices(RequestStatus expectedResult, AgreementStatus agreementStatus, EditStatus editStatus, int numberOfApprenticeships, LastAction lastAction)
         {
             // Scenario 1
-            var status = _calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
+            var status = Calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
 
             status.Should().Be(expectedResult);
         }
@@ -40,17 +40,19 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         public void EmployerCreatesANewCohort(RequestStatus expectedResult, AgreementStatus agreementStatus, EditStatus editStatus, int numberOfApprenticeships, LastAction lastAction)
         {
             // Scenario 2
-            var status = _calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
+            var status = Calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
 
             status.Should().Be(expectedResult);
         }
 
         [TestCase(RequestStatus.WithProviderForApproval, AgreementStatus.EmployerAgreed, EditStatus.ProviderOnly, 2, LastAction.Approve, TestName = "Employer approves already approved commitment")]
+        [TestCase(RequestStatus.WithProviderForApproval, AgreementStatus.NotAgreed, EditStatus.ProviderOnly, 2, LastAction.Approve, TestName = "Sent for approval but changed by provider")]
         [TestCase(RequestStatus.Approved, AgreementStatus.BothAgreed, EditStatus.Both, 2, LastAction.Approve, TestName = "Provider approves already approved commitment")]
+        [TestCase(RequestStatus.SentForReview, AgreementStatus.ProviderAgreed, EditStatus.ProviderOnly, 2, LastAction.Amend, TestName = "Sent for review that was approved by provider")]
         public void Scenario3(RequestStatus expectedResult, AgreementStatus agreementStatus, EditStatus editStatus, int numberOfApprenticeships, LastAction lastAction)
         {
             // Scenario 3
-            var status = _calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
+            var status = Calculator.GetStatus(editStatus, numberOfApprenticeships, lastAction, agreementStatus);
 
             status.Should().Be(expectedResult);
         }

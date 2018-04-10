@@ -7,5 +7,7 @@
         public int ReadyForReviewCount { get; set; }
 
         public int WithProviderCount { get; set; }
+
+        public int TransferFundedCohortsCount { get; set; }
     }
 }
