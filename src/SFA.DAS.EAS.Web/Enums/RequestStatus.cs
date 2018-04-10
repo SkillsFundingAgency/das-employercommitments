@@ -6,6 +6,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Enums
     {
         None, // No use here.
 
+        // New request or back with receiver/provider after rejection by sender, i.e. Draft status
         [Description("New request")]
         NewRequest,
 
@@ -25,6 +26,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Enums
         ReadyForApproval,
 
         [Description("Approved")]
-        Approved
+        Approved,
+
+        [Description("With sender for approval or rejected by sender")]
+        WithSender
     }
 }

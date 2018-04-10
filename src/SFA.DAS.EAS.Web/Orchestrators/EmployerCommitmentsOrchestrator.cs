@@ -38,7 +38,6 @@ using SFA.DAS.NLog.Logger;
 
 using OrganisationType = SFA.DAS.Common.Domain.Types.OrganisationType;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
-using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.HashingService;
 using CallerType = SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment.CallerType;
 
@@ -57,8 +56,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly IAcademicYearValidator _academicYearValidator;
         private readonly IAcademicYearDateProvider _academicYearDateProvider;
 
-        private readonly IApprenticeshipViewModelValidator _apprenticeshipValidation;
-
         private readonly IFeatureToggleService _featureToggleService;
 
         public EmployerCommitmentsOrchestrator(
@@ -68,7 +65,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IApprenticeshipMapper apprenticeshipMapper,
             ICommitmentMapper commitmentMapper,
             ILog logger,
-            IApprenticeshipViewModelValidator apprenticeshipValidation,
             IFeatureToggleService featureToggleService) : base(mediator, hashingService, logger)
         {
             _mediator = mediator;
@@ -77,7 +73,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _apprenticeshipMapper = apprenticeshipMapper;
             _commitmentMapper = commitmentMapper;
             _logger = logger;
-            _apprenticeshipValidation = apprenticeshipValidation;
             _featureToggleService = featureToggleService;
         }
 
@@ -774,16 +769,35 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     AccountId = accountId
                 });
 
-                var commitmentStatuses = data.Commitments
+                //todo: call into commitments api or db to get counts, seems excessive to fetch all cohorts data just to count
+
+                var commitmentsSplitByTransfer = data.Commitments.ToLookup(c => c.TransferSenderId.HasValue);
+
+                // transfer cohorts
+                var transferCommitmentStatuses = commitmentsSplitByTransfer[true]
+                    .Select(c => _statusCalculator.GetTransferStatus(c.EditStatus, c.TransferApprovalStatus));
+
+                // non-transfer cohorts
+                var nonTransferCommitmentStatuses = commitmentsSplitByTransfer[false]
                     .Select(m => _statusCalculator.GetStatus(
                         m.EditStatus,
                         m.ApprenticeshipCount,
                         m.LastAction,
-                        m.AgreementStatus))
-                    .ToList();
+                        m.AgreementStatus));
+
+                var commitmentStatuses = transferCommitmentStatuses
+                    .Concat(nonTransferCommitmentStatuses).ToArray();
 
                 return new OrchestratorResponse<YourCohortsViewModel>
                 {
+                    // The count of transfer funded cohorts in the bingo box doesn't actually
+                    // refer to all transfer funded cohorts, but rather to just those
+                    // transfer funded cohorts that are with the sender for approval
+                    // or have been rejected by the sender.
+                    // Transfer funded cohorts that are with the receiver or provider
+                    // after having been rejected by the sender (and edited by the receiver)
+                    // are counted as Draft cohorts instead.
+
                     Data = new YourCohortsViewModel
                     {
                         DraftCount = commitmentStatuses.Count(m =>
@@ -794,7 +808,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         WithProviderCount = commitmentStatuses.Count(m =>
                              m == RequestStatus.WithProviderForApproval
                           || m == RequestStatus.SentToProvider
-                          || m == RequestStatus.SentForReview)
+                          || m == RequestStatus.SentForReview),
+                        TransferFundedCohortsCount = commitmentStatuses.Count(m =>
+                            m == RequestStatus.WithSender)
                     }
                 };
 
@@ -1300,7 +1316,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 LatestMessage = latestMessage
             };
         }
-
 
         private ApprenticeshipListItemViewModel MapToApprenticeshipListItem(Apprenticeship apprenticeship, GetOverlappingApprenticeshipsQueryResponse overlappingApprenticeships)
         {
