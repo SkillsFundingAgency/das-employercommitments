@@ -38,8 +38,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/0,
             ValidTransferSenderId, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
             EditStatus.EmployerOnly, LastAction.None, 0, TestName = "With receiving employer")]
-        [TestCase(/*expectedDraftCount=*/1, /*expectedReadyForReviewCount=*/0,
-            /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/0,
+        [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
+            /*expectedWithProviderCount=*/1, /*expectedTransferFundedCohortsCount=*/0,
             ValidTransferSenderId, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
             EditStatus.ProviderOnly, LastAction.None, 0, TestName = "With provider")]
         [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
