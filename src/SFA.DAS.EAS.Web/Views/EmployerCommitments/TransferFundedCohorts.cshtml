@@ -11,7 +11,8 @@
     <div class="column-full">
         <h1 class="heading-xlarge">Transfer-funded cohorts</h1>
 
-        <p class="dynamic-heading">You have <strong>@Model.Data.Commitments.Count()</strong> cohorts to be paid via a transfer</p>
+        @{ var commitmentsCount = Model.Data.Commitments.Count(); }
+        <p class="dynamic-heading">You have <strong>@commitmentsCount</strong> cohort@(commitmentsCount > 1?"s":"") to be paid via a transfer</p>
 
         <table class="tableResponsive to-be-sent-list">
             <thead>
