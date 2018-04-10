@@ -26,7 +26,9 @@ namespace SFA.DAS.EmployerCommitments.Web
     public class MvcApplication : System.Web.HttpApplication
     {
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+#pragma warning disable CS0169
         private static RedisTarget _redisTarget; // Required to ensure assembly is copied to output.
+#pragma warning restore CS0169
 
         protected void Application_Start()
         {
