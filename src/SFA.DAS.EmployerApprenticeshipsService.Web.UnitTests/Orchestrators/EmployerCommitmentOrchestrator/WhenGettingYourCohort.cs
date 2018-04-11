@@ -28,10 +28,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             var result = await EmployerCommitmentOrchestrator.GetYourCohorts("ABC123", "ABC321");
 
             //Assert
-            Assert.AreEqual(0, result.Data.DraftCount);
-            Assert.AreEqual(0, result.Data.ReadyForReviewCount);
-            Assert.AreEqual(0, result.Data.WithProviderCount);
-            Assert.AreEqual(0, result.Data.TransferFundedCohortsCount);
+            Assert.AreEqual(0, result.Data.DraftCount, "Incorrect DraftCount");
+            Assert.AreEqual(0, result.Data.ReadyForReviewCount, "Incorrect ReadyForReviewCount");
+            Assert.AreEqual(0, result.Data.WithProviderCount, "Incorrect WithProviderCount");
+            Assert.AreEqual(0, result.Data.TransferFundedCohortsCount, "IncorrectTransferFundedCohortsCount");
         }
 
         [TestCase(/*expectedDraftCount=*/1, /*expectedReadyForReviewCount=*/0,
@@ -44,8 +44,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             EditStatus.ProviderOnly, LastAction.None, 0, TestName = "With provider")]
         [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
             /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/1,
-            ValidTransferSenderId, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
-            EditStatus.Both, LastAction.None, 1, TestName = "With sender but not yet actioned by them")]
+            ValidTransferSenderId, TransferApprovalStatus.Pending, AgreementStatus.BothAgreed,
+            EditStatus.Both, LastAction.Approve, 1, TestName = "With sender but not yet actioned by them")]
         [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
             /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/1,
             ValidTransferSenderId, TransferApprovalStatus.Rejected, AgreementStatus.NotAgreed,
@@ -89,10 +89,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             var result = await EmployerCommitmentOrchestrator.GetYourCohorts("ABC123", "ABC321");
 
             //Assert
-            Assert.AreEqual(expectedDraftCount, result.Data.DraftCount);
-            Assert.AreEqual(expectedReadyForReviewCount, result.Data.ReadyForReviewCount);
-            Assert.AreEqual(expectedWithProviderCount, result.Data.WithProviderCount);
-            Assert.AreEqual(expectedTransferFundedCohortsCount, result.Data.TransferFundedCohortsCount);
+            Assert.AreEqual(expectedDraftCount, result.Data.DraftCount, "Incorrect DraftCount");
+            Assert.AreEqual(expectedReadyForReviewCount, result.Data.ReadyForReviewCount, "Incorrect ReadyForReviewCount");
+            Assert.AreEqual(expectedWithProviderCount, result.Data.WithProviderCount, "Incorrect WithProviderCount");
+            Assert.AreEqual(expectedTransferFundedCohortsCount, result.Data.TransferFundedCohortsCount, "IncorrectTransferFundedCohortsCount");
         }
 
         [TestCase(/*expectedDraftCount=*/2, /*expectedReadyForReviewCount=*/0,
@@ -145,10 +145,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             var result = await EmployerCommitmentOrchestrator.GetYourCohorts("ABC123", "ABC321");
 
             //Assert
-            Assert.AreEqual(expectedDraftCount, result.Data.DraftCount);
-            Assert.AreEqual(expectedReadyForReviewCount, result.Data.ReadyForReviewCount);
-            Assert.AreEqual(expectedWithProviderCount, result.Data.WithProviderCount);
-            Assert.AreEqual(expectedTransferFundedCohortsCount, result.Data.TransferFundedCohortsCount);
+            Assert.AreEqual(expectedDraftCount, result.Data.DraftCount, "Incorrect DraftCount");
+            Assert.AreEqual(expectedReadyForReviewCount, result.Data.ReadyForReviewCount, "Incorrect ReadyForReviewCount");
+            Assert.AreEqual(expectedWithProviderCount, result.Data.WithProviderCount, "Incorrect WithProviderCount");
+            Assert.AreEqual(expectedTransferFundedCohortsCount, result.Data.TransferFundedCohortsCount, "IncorrectTransferFundedCohortsCount");
         }
     }
 }
