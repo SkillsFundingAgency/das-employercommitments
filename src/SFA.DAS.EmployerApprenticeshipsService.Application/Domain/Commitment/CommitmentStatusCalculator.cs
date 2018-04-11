@@ -1,21 +1,22 @@
 ﻿using System;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
-using SFA.DAS.EmployerCommitments.Web.Enums;
-using SFA.DAS.EmployerCommitments.Web.Exceptions;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
 
-namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
+namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
 {
-    public sealed class CommitmentStatusCalculator : ICommitmentStatusCalculator
+    internal sealed class CommitmentStatusCalculator
     {
-        // all the consumers of this will eventually need to be updated to take account of transfers
-        // we could fold-in GetTransferStatus into GetStatus (adding isTransfer & transferApprovalStatus as params)
-        // but if we did that now, it would expand the scope of the current story beyond its boundaries
-        // and require work that should be part of future transfer stories
-        // but we might want to refactor this later on
-        public RequestStatus GetStatus(EditStatus editStatus, int apprenticeshipCount, LastAction lastAction, AgreementStatus? overallAgreementStatus)
+        public RequestStatus GetStatus(EditStatus editStatus, int apprenticeshipCount, LastAction lastAction, AgreementStatus? overallAgreementStatus, long? transferSenderId, TransferApprovalStatus? transferApprovalStatus)
         {
             bool hasApprenticeships = apprenticeshipCount > 0;
+
+            if (transferSenderId.HasValue)
+            {
+                if (!transferApprovalStatus.HasValue)
+                    throw new InvalidStateException("TransferSenderId supplied, but no TransferApprovalStatus");
+                return GetTransferStatus(editStatus, transferApprovalStatus.Value, lastAction, hasApprenticeships);
+            }
 
             if (editStatus == EditStatus.Both)
                 return RequestStatus.Approved;
@@ -57,7 +58,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             return RequestStatus.None;
         }
 
-        public RequestStatus GetTransferStatus(EditStatus edit, TransferApprovalStatus transferApproval)
+        private RequestStatus GetTransferStatus(EditStatus edit, TransferApprovalStatus transferApproval, LastAction lastAction, bool hasApprenticeships)
         {
             const string invalidStateExceptionMessagePrefix = "Transfer funder commitment in invalid state: ";
 
@@ -67,7 +68,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             switch (transferApproval)
             {
                 case TransferApprovalStatus.Pending:
-                    return edit == EditStatus.Both ? RequestStatus.WithSender : RequestStatus.NewRequest;
+                {
+                    switch (edit)
+                    {
+                            case EditStatus.Both:
+                                return RequestStatus.WithSenderForApproval;
+                            case EditStatus.EmployerOnly:
+                                return RequestStatus.NewRequest;
+                            case EditStatus.ProviderOnly:
+                                return GetProviderOnlyStatus(lastAction, hasApprenticeships);
+                            default:
+                                throw new Exception("Unexpected EditStatus");
+                        }
+                }
 
                 case TransferApprovalStatus.Approved:
                     if (edit != EditStatus.Both)
@@ -77,7 +90,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 case TransferApprovalStatus.Rejected:
                     if (edit != EditStatus.EmployerOnly)
                         throw new InvalidStateException($"{invalidStateExceptionMessagePrefix}If just rejected by sender, must be with receiver");
-                    return RequestStatus.WithSender;
+                    return RequestStatus.RejectedBySender;
 
                 default:
                     throw new Exception("Unexpected TransferApprovalStatus");

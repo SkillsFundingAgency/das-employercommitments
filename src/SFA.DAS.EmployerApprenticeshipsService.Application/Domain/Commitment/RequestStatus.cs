@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace SFA.DAS.EmployerCommitments.Web.Enums
+namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
 {
     public enum RequestStatus
     {
@@ -28,7 +28,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Enums
         [Description("Approved")]
         Approved,
 
-        [Description("With sender for approval or rejected by sender")]
-        WithSender
+        //With sender for approval
+        [Description("Pending")]
+        WithSenderForApproval,
+
+        //Rejected by transfer
+        [Description("Rejected")]
+        RejectedBySender
     }
 }

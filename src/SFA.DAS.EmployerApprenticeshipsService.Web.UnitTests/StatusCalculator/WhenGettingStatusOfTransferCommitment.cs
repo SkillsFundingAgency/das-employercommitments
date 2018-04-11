@@ -1,26 +1,35 @@
 ﻿using System;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types;
+using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
-using SFA.DAS.EmployerCommitments.Web.Enums;
-using SFA.DAS.EmployerCommitments.Web.Exceptions;
-using SFA.DAS.EmployerCommitments.Web.Orchestrators;
+using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
+using SFA.DAS.EmployerCommitments.Application.Extensions;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
 {
     [TestFixture]
     public sealed class WhenGettingStatusOfTransferCommitment
     {
-        private static readonly ICommitmentStatusCalculator Calculator = new CommitmentStatusCalculator();
-
         [TestCase(RequestStatus.NewRequest, EditStatus.EmployerOnly, TransferApprovalStatus.Pending, TestName = "With receiving employer")]
-        [TestCase(RequestStatus.NewRequest, EditStatus.ProviderOnly, TransferApprovalStatus.Pending, TestName = "With provider")]
-        [TestCase(RequestStatus.WithSender, EditStatus.Both, TransferApprovalStatus.Pending, TestName = "With sender but not yet actioned by them")]
-        [TestCase(RequestStatus.WithSender, EditStatus.EmployerOnly, TransferApprovalStatus.Rejected, TestName = "With sender, rejected by them, but not yet saved or edited")]
+        [TestCase(RequestStatus.SentToProvider, EditStatus.ProviderOnly, TransferApprovalStatus.Pending, TestName = "With provider")]
+        [TestCase(RequestStatus.WithSenderForApproval, EditStatus.Both, TransferApprovalStatus.Pending, TestName = "With sender but not yet actioned by them")]
+        [TestCase(RequestStatus.RejectedBySender, EditStatus.EmployerOnly, TransferApprovalStatus.Rejected, TestName = "With sender, rejected by them, but not yet saved or edited")]
         [TestCase(RequestStatus.None, EditStatus.Both, TransferApprovalStatus.Approved, TestName = "Approved by all 3 parties")]
         public void CommitmentIsTransferFundedAndInValidState(RequestStatus expectedResult, EditStatus editStatus, TransferApprovalStatus transferApprovalStatus)
         {
-            var status = Calculator.GetTransferStatus(editStatus, transferApprovalStatus);
+            var commitment = new CommitmentListItem
+            {
+                AgreementStatus = AgreementStatus.NotAgreed,
+                ApprenticeshipCount = 1,
+                LastAction = LastAction.None,
+                EditStatus = editStatus,
+                TransferSenderId = 1,
+                TransferApprovalStatus = transferApprovalStatus
+            };
+
+            var status = commitment.GetStatus();
 
             Assert.AreEqual(expectedResult, status);
         }
@@ -31,7 +40,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
         [TestCase(TransferApprovalStatus.Rejected, EditStatus.ProviderOnly, TestName = "If rejected by sender, must be with receiver, not provider")]
         public void CommitmentIsTransferFundedAndInInvalidState(TransferApprovalStatus transferApprovalStatus, EditStatus editStatus)
         {
-            Assert.Throws<InvalidStateException>(() => Calculator.GetTransferStatus(editStatus, transferApprovalStatus));
+            var commitment = new CommitmentListItem
+            {
+                AgreementStatus = AgreementStatus.NotAgreed,
+                ApprenticeshipCount = 1,
+                LastAction = LastAction.None,
+                EditStatus = editStatus,
+                TransferSenderId = 1,
+                TransferApprovalStatus = transferApprovalStatus
+            };
+
+            Assert.Throws<InvalidStateException>(() => commitment.GetStatus());
         }
 
         [TestCase((TransferApprovalStatus)3, EditStatus.ProviderOnly, TestName = "TransferApprovalStatus bogus")]
@@ -41,7 +60,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
         [TestCase(TransferApprovalStatus.Approved, (EditStatus)4, TestName = "EditStatus bogus")]
         public void CommitmentIsTransferFundedAndStatusesAreInvalid(TransferApprovalStatus transferApprovalStatus, EditStatus editStatus)
         {
-            Assert.Throws<Exception>(() => Calculator.GetTransferStatus(editStatus, transferApprovalStatus));
+            var commitment = new CommitmentListItem
+            {
+                AgreementStatus = AgreementStatus.NotAgreed,
+                ApprenticeshipCount = 1,
+                LastAction = LastAction.None,
+                EditStatus = editStatus,
+                TransferSenderId = 1,
+                TransferApprovalStatus = transferApprovalStatus
+            };
+
+            Assert.Throws<Exception>(() => commitment.GetStatus());
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using NLog;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
 
 namespace SFA.DAS.EmployerCommitments.Web.Exceptions
 {

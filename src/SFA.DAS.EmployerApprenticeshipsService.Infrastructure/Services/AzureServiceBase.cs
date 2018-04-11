@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
             return config;
         }
 
-        public async Task<T> GetModelFromBlobStorage<T>(string containerName, string blobName)
+        public async Task<TModel> GetModelFromBlobStorage<TModel>(string containerName, string blobName)
         {
             using (var blobData = await GetBlobDataFromAzure(containerName, blobName))
             {
@@ -57,8 +57,8 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
                     var jsonContent = reader.ReadToEnd();
 
                     return string.IsNullOrEmpty(jsonContent)
-                        ? default(T)
-                        : JsonConvert.DeserializeObject<T>(jsonContent);
+                        ? default(TModel)
+                        : JsonConvert.DeserializeObject<TModel>(jsonContent);
                 }
             }
         }

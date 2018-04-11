@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SFA.DAS.EmployerCommitments.Application
+namespace SFA.DAS.EmployerCommitments.Application.Exceptions
 {
     public class NotFoundException : Exception
     {

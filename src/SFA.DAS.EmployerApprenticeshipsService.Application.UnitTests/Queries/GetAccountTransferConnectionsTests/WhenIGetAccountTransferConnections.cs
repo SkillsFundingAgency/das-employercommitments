@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
