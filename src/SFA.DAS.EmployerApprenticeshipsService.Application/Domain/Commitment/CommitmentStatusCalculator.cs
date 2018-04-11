@@ -5,9 +5,8 @@ using SFA.DAS.EmployerCommitments.Application.Exceptions;
 
 namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
 {
-    public sealed class CommitmentStatusCalculator
+    internal sealed class CommitmentStatusCalculator
     {
-        // this class should be internal
         public RequestStatus GetStatus(EditStatus editStatus, int apprenticeshipCount, LastAction lastAction, AgreementStatus? overallAgreementStatus, long? transferSenderId, TransferApprovalStatus? transferApprovalStatus)
         {
             bool hasApprenticeships = apprenticeshipCount > 0;
