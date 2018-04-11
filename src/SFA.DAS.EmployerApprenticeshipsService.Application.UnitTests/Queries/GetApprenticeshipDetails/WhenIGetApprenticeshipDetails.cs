@@ -12,7 +12,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetApprentic
     class WhenIGetApprenticeshipDetails : QueryBaseTest<GetApprenticeshipDetailsHandler, GetApprenticeshipDetailsQuery, GetApprenticeshipDetailsResponse>
     {
         private Mock<IApprenticeshipInfoServiceWrapper> _apprenticeshipInfoService;
-        private Domain.Models.ApprenticeshipProvider.Provider _provider;
+        private EmployerCommitments.Domain.Models.ApprenticeshipProvider.Provider _provider;
         
         public override GetApprenticeshipDetailsQuery Query { get; set; }
         public override GetApprenticeshipDetailsHandler RequestHandler { get; set; }
@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetApprentic
         {
             base.SetUp();
 
-            _provider = new Domain.Models.ApprenticeshipProvider.Provider
+            _provider = new EmployerCommitments.Domain.Models.ApprenticeshipProvider.Provider
             {
                 Name = "Test Provider"
             };
@@ -69,7 +69,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetApprentic
             _apprenticeshipInfoService.Setup(x => x.GetProvider(It.IsAny<int>())).Returns(new ProvidersView
             {
                 CreatedDate = DateTime.Now,
-                Provider = new Domain.Models.ApprenticeshipProvider.Provider()
+                Provider = new EmployerCommitments.Domain.Models.ApprenticeshipProvider.Provider()
             });
 
             //Act

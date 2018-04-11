@@ -58,7 +58,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("sender/transfers/{hashedTransferRequestId}/confirmation")]
-        public async Task<ActionResult> TransferConfirmation(TransferConfirmationViewModel request)
+        public ActionResult TransferConfirmation(TransferConfirmationViewModel request)
         {
             if (!ModelState.IsValid)
             {

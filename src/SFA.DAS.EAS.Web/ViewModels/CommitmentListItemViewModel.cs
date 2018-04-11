@@ -1,4 +1,4 @@
-﻿using SFA.DAS.EmployerCommitments.Web.Enums;
+﻿using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 {

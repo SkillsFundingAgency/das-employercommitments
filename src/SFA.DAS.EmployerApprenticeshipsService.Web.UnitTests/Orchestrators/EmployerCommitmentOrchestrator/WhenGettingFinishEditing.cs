@@ -7,21 +7,17 @@ using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.Commitments.Api.Types.Validation;
-using SFA.DAS.EmployerCommitments.Application;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountLegalEntities;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
-using SFA.DAS.Commitments.Api.Types.Apprenticeship;
-using System;
-using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
 {
     [TestFixture]
     public class WhenGettingFinishEditing : OrchestratorTestBase
     {
-        
         [SetUp]
         public void Arrange()
         {

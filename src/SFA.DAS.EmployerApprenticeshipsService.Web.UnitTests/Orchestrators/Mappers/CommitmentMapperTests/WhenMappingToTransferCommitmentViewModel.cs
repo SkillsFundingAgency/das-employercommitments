@@ -19,7 +19,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
     {
         private CommitmentMapper _sut;
         private Mock<IHashingService> _hashingService;
-        private Mock<ICommitmentStatusCalculator> _commitmentStatusCalculator;
         private Mock<IFeatureToggleService> _featureToggleService;
         private Mock<IFeatureToggle> _featureToggle;
         private CommitmentView _commitmentView;
@@ -31,8 +30,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
         {
             _hashingService = new Mock<IHashingService>();
             _hashingService.Setup(x => x.HashValue(It.IsAny<long>())).Returns((long p) => $"XYZ{p}");
-
-            _commitmentStatusCalculator = new Mock<ICommitmentStatusCalculator>();
 
             _commitmentView = new CommitmentView
             {
@@ -101,7 +98,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
             _featureToggle = new Mock<IFeatureToggle>();
             _featureToggleService.Setup(x => x.Get<TransfersRejectOption>()).Returns(_featureToggle.Object);
 
-            _sut = new CommitmentMapper(_hashingService.Object, _commitmentStatusCalculator.Object, _featureToggleService.Object);
+            _sut = new CommitmentMapper(_hashingService.Object, _featureToggleService.Object);
         }
 
         [TestCase(TransferApprovalStatus.Approved, "Approved")]

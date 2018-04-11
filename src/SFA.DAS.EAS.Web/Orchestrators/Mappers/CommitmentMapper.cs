@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.ServiceBus.Messaging;
-using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
-using SFA.DAS.Commitments.Api.Types.Commitment.Types;
+using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
@@ -17,14 +15,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
     public sealed class CommitmentMapper : ICommitmentMapper
     {
         private readonly IHashingService _hashingService;
-        private readonly ICommitmentStatusCalculator _statusCalculator;
         private readonly IFeatureToggleService _featureToggleService;
 
-        public CommitmentMapper(IHashingService hashingService, ICommitmentStatusCalculator statusCalculator,
-            IFeatureToggleService featureToggleService)
+        public CommitmentMapper(IHashingService hashingService, IFeatureToggleService featureToggleService)
         {
             _hashingService = hashingService;
-            _statusCalculator = statusCalculator;
             _featureToggleService = featureToggleService;
         }
 
@@ -38,7 +33,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 Name = commitment.Reference,
                 LegalEntityName = commitment.LegalEntityName,
                 ProviderName = commitment.ProviderName,
-                Status = _statusCalculator.GetStatus(commitment.EditStatus, commitment.ApprenticeshipCount, commitment.LastAction, commitment.AgreementStatus),
+                Status = commitment.GetStatus(),
                 LatestMessage = await messageTask
             };
         }
@@ -63,7 +58,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 LegalEntityName = transferRequest.LegalEntityName,
                 HashedCohortReference = _hashingService.HashValue(transferRequest.CommitmentId),
                 TrainingList = transferRequest.TrainingList?.Select(MapTrainingCourse).ToList() ?? new List<TrainingCourseSummaryViewModel>(),
-                TransferApprovalStatusDesc = ToApprovalStatusDescription(transferRequest.Status),
+                TransferApprovalStatusDesc = transferRequest.Status.ToString(),
                 TransferApprovalStatus = transferRequest.Status,
                 TransferApprovalSetBy = transferRequest.ApprovedOrRejectedByUserName,
                 TransferApprovalSetOn = transferRequest.ApprovedOrRejectedOn,
@@ -75,7 +70,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         [Obsolete]
         public TransferCommitmentViewModel MapToTransferCommitmentViewModel(CommitmentView commitment)
         {
-
             var apprenticeships = commitment.Apprenticeships ?? new List<Apprenticeship>();
 
             var grouped = apprenticeships.GroupBy(l => l.TrainingCode).Select(cl =>
@@ -92,7 +86,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 LegalEntityName = commitment.LegalEntityName,
                 HashedCohortReference = _hashingService.HashValue(commitment.Id),
                 TrainingList = grouped.ToList(),
-                TransferApprovalStatusDesc = ToApprovalStatusDescription(commitment.TransferSender.TransferApprovalStatus),
+                TransferApprovalStatusDesc = commitment.TransferSender.TransferApprovalStatus.ToString(),
                 TransferApprovalStatus = commitment.TransferSender.TransferApprovalStatus,
                 TransferApprovalSetBy = commitment.TransferSender.TransferApprovalSetBy,
                 TransferApprovalSetOn = commitment.TransferSender.TransferApprovalSetOn,
@@ -111,19 +105,5 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             };
         }
 
-        private string ToApprovalStatusDescription(TransferApprovalStatus commitmentTransferApprovalStatus)
-        {
-            switch (commitmentTransferApprovalStatus)
-            {
-                case TransferApprovalStatus.Approved:
-                    return "Approved";
-                case TransferApprovalStatus.Rejected:
-                    return "Rejected";
-                case TransferApprovalStatus.Pending:
-                    return "Pending";
-                default:
-                    return "Unknown";
-            }
-        }
     }
 }

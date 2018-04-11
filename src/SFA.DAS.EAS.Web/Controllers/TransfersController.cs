@@ -58,11 +58,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return View("TransferConfirmation", new TransferConfirmationViewModel { TransferApprovalStatus = status, TransferReceiverName = viewModel.TransferReceiverName});
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("{hashedCommitmentId}/confirmation")]
-        public async Task<ActionResult> TransferConfirmation(TransferConfirmationViewModel request)
+        public ActionResult TransferConfirmation(TransferConfirmationViewModel request)
         {
             if (!ModelState.IsValid)
             {
@@ -70,6 +69,5 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
             return Redirect(request.UrlAddress);
         }
-
     }
 }
