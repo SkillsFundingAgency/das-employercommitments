@@ -18,14 +18,20 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
 
         protected override async Task HandleCore(TransferApprovalCommand message)
         {
-            var commitment = await _commitmentsService.GetTransferSenderCommitment(message.TransferSenderId, message.CommitmentId);
+            var commitment =
+                await _commitmentsService.GetTransferSenderCommitment(message.TransferSenderId, message.CommitmentId);
 
             if (commitment.TransferSender.Id != message.TransferSenderId)
-                throw new InvalidRequestException(new Dictionary<string, string> { { "Commitment", "This commitment does not belong to this Transfer Sender Account" } });
+                throw new InvalidRequestException(new Dictionary<string, string>
+                {
+                    {"Commitment", "This commitment does not belong to this Transfer Sender Account"}
+                });
 
-            if (commitment.TransferSender.TransferApprovalStatus != Commitments.Api.Types.TransferApprovalStatus.Pending)
+            if (commitment.TransferSender.TransferApprovalStatus !=
+                Commitments.Api.Types.TransferApprovalStatus.Pending)
             {
-                var status = commitment.TransferSender.TransferApprovalStatus == Commitments.Api.Types.TransferApprovalStatus.Approved
+                var status = commitment.TransferSender.TransferApprovalStatus ==
+                             Commitments.Api.Types.TransferApprovalStatus.Approved
                     ? "approved"
                     : "rejected";
 
@@ -43,7 +49,14 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
                 UserName = message.UserName
             };
 
-            await _commitmentsService.PatchTransferApprovalStatus(message.TransferSenderId, message.CommitmentId, request);
+            if (message.TransferRequestId > 0)
+            {
+                await _commitmentsService.PatchTransferApprovalStatus(message.TransferSenderId, message.CommitmentId, message.TransferRequestId, request);
+            }
+            else
+            {
+                await _commitmentsService.PatchTransferApprovalStatus(message.TransferSenderId, message.CommitmentId, request);
+            }
         }
     }
 }

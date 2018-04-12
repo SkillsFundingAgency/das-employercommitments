@@ -49,12 +49,31 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             };
         }
 
+        public TransferRequestViewModel MapToTransferRequestViewModel(TransferRequest transferRequest)
+        {
+            return new TransferRequestViewModel()
+            {
+                HashedTransferReceiverAccountId = _hashingService.HashValue(transferRequest.ReceivingEmployerAccountId),
+                HashedTransferSenderAccountId = _hashingService.HashValue(transferRequest.SendingEmployerAccountId),
+                LegalEntityName = transferRequest.LegalEntityName,
+                HashedCohortReference = _hashingService.HashValue(transferRequest.CommitmentId),
+                TrainingList = transferRequest.TrainingList?.Select(MapTrainingCourse).ToList() ?? new List<TrainingCourseSummaryViewModel>(),
+                TransferApprovalStatusDesc = transferRequest.Status.ToString(),
+                TransferApprovalStatus = transferRequest.Status,
+                TransferApprovalSetBy = transferRequest.ApprovedOrRejectedByUserName,
+                TransferApprovalSetOn = transferRequest.ApprovedOrRejectedOn,
+                TotalCost = transferRequest.TransferCost,
+                EnableRejection = _featureToggleService.Get<TransfersRejectOption>().FeatureEnabled
+            };
+        }
+
+        [Obsolete]
         public TransferCommitmentViewModel MapToTransferCommitmentViewModel(CommitmentView commitment)
         {
             var apprenticeships = commitment.Apprenticeships ?? new List<Apprenticeship>();
 
             var grouped = apprenticeships.GroupBy(l => l.TrainingCode).Select(cl =>
-                new TransferCourseSummaryViewModel
+                new TrainingCourseSummaryViewModel
                 {
                     CourseTitle = cl.First().TrainingName,
                     ApprenticeshipCount = cl.Count()
@@ -75,5 +94,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 EnableRejection = _featureToggleService.Get<TransfersRejectOption>().FeatureEnabled
             };
         }
+
+
+        private TrainingCourseSummaryViewModel MapTrainingCourse(TrainingCourseSummary source)
+        {
+            return new TrainingCourseSummaryViewModel
+            {
+                CourseTitle = source.CourseTitle,
+                ApprenticeshipCount = source.ApprenticeshipCount
+            };
+        }
+
     }
 }
