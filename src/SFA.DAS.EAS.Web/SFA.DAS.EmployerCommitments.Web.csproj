@@ -448,6 +448,8 @@
     <Compile Include="Controllers\TransfersController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Decorators\AccountApiClientDecorator.cs" />
+    <Compile Include="PublicHashingService\IPublicHashingService.cs" />
+    <Compile Include="PublicHashingService\PublicHashingService.cs" />
     <Compile Include="DependencyResolution\StructureMapValidatorFactory.cs" />
     <Compile Include="DependencyResolution\ValidationRegistry.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
