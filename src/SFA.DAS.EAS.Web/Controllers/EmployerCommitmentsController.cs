@@ -485,6 +485,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return await RedisplayCreateApprenticeshipView(apprenticeship);
             }
 
+            if (apprenticeship.IsInTransferRejectedCohort)
+            {
+                AddFlashMessageToCookie(new FlashMessageViewModel
+                {
+                    Severity = FlashMessageSeverityLevel.Success,
+                    Message = "You have successfully edited your cohort.  This will now be available within your Drafts."
+                });
+            }
+
             return RedirectToAction("Details", new { hashedAccountId = apprenticeship.HashedAccountId, hashedCommitmentId = apprenticeship.HashedCommitmentId });
         }
 
@@ -542,6 +551,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             {
                 apprenticeship.AddErrorsFromDictionary(ex.ErrorMessages);
                 return await RedisplayEditApprenticeshipView(apprenticeship);
+            }
+
+            if (apprenticeship.IsInTransferRejectedCohort)
+            {
+                AddFlashMessageToCookie(new FlashMessageViewModel
+                {
+                    Severity = FlashMessageSeverityLevel.Success,
+                    Message = "You have successfully edited your cohort.  This will now be available within your Drafts."
+                });
             }
 
             return RedirectToAction("Details", new { hashedAccountId = apprenticeship.HashedAccountId, hashedCommitmentId = apprenticeship.HashedCommitmentId });
