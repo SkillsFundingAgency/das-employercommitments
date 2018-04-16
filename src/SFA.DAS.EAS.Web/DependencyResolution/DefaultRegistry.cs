@@ -293,7 +293,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
         private void ConfigureHashingService(EmployerCommitmentsServiceConfiguration config)
         {
             For<IHashingService>().Use(x => new HashingService.HashingService(config.AllowedHashstringCharacters, config.Hashstring));
-            For<IPublicHashingService>().Use(x => new PublicHashingService.PublicHashingService(config.ExternalAllowedHashstringCharacters, config.ExternalHashstring));
+            For<IPublicHashingService>().Use(x => new PublicHashingService.PublicHashingService(config.PublicAllowedHashstringCharacters, config.PublicHashstring));
         }
 
     }
