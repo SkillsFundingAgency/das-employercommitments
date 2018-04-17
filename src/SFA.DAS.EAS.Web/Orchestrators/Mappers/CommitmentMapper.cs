@@ -58,7 +58,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             return new TransferRequestViewModel()
             {
                 HashedTransferReceiverAccountId = _hashingService.HashValue(transferRequest.ReceivingEmployerAccountId),
+                PublicHashedTransferReceiverAccountId = _publicHashingService.HashValue(transferRequest.ReceivingEmployerAccountId),
                 HashedTransferSenderAccountId = _hashingService.HashValue(transferRequest.SendingEmployerAccountId),
+                PublicHashedTransferSenderAccountId = _publicHashingService.HashValue(transferRequest.SendingEmployerAccountId),
                 LegalEntityName = transferRequest.LegalEntityName,
                 HashedCohortReference = _hashingService.HashValue(transferRequest.CommitmentId),
                 TrainingList = transferRequest.TrainingList?.Select(MapTrainingCourse).ToList() ?? new List<TrainingCourseSummaryViewModel>(),
@@ -96,7 +98,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             return new TransferCommitmentViewModel()
             {
                 HashedTransferReceiverAccountId = _hashingService.HashValue(commitment.EmployerAccountId),
+                PublicHashedTransferReceiverAccountId = _publicHashingService.HashValue(commitment.EmployerAccountId),
                 HashedTransferSenderAccountId = _hashingService.HashValue(commitment.TransferSender.Id.Value),
+                PublicHashedTransferSenderAccountId = _publicHashingService.HashValue(commitment.TransferSender.Id.Value),
                 LegalEntityName = commitment.LegalEntityName,
                 HashedCohortReference = _hashingService.HashValue(commitment.Id),
                 TrainingList = grouped.ToList(),

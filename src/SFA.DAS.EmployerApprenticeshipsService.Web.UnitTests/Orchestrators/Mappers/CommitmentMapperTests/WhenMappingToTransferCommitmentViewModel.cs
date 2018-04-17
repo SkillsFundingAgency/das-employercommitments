@@ -8,7 +8,6 @@ using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
-using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
 using SFA.DAS.HashingService;
@@ -20,6 +19,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
     {
         private CommitmentMapper _sut;
         private Mock<IHashingService> _hashingService;
+        private Mock<IPublicHashingService> _publicHashingService;
         private Mock<IFeatureToggleService> _featureToggleService;
         private Mock<IFeatureToggle> _featureToggle;
         private CommitmentView _commitmentView;
@@ -31,6 +31,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
         {
             _hashingService = new Mock<IHashingService>();
             _hashingService.Setup(x => x.HashValue(It.IsAny<long>())).Returns((long p) => $"XYZ{p}");
+            _publicHashingService = new Mock<IPublicHashingService>();
+            _publicHashingService.Setup(x => x.HashValue(It.IsAny<long>())).Returns((long p) => $"CDE{p}");
 
             _commitmentView = new CommitmentView
             {
@@ -99,7 +101,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
             _featureToggle = new Mock<IFeatureToggle>();
             _featureToggleService.Setup(x => x.Get<TransfersRejectOption>()).Returns(_featureToggle.Object);
 
-            _sut = new CommitmentMapper(_hashingService.Object, _featureToggleService.Object, Mock.Of<IPublicHashingService>());
+            _sut = new CommitmentMapper(_hashingService.Object, _featureToggleService.Object, _publicHashingService.Object);
         }
 
         [TestCase(TransferApprovalStatus.Approved, "Approved")]
@@ -110,6 +112,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
             _commitmentView.TransferSender.TransferApprovalStatus = status;
             var result = _sut.MapToTransferCommitmentViewModel(_commitmentView);
             Assert.AreEqual($"XYZ{_commitmentView.TransferSender.Id}", result.HashedTransferSenderAccountId);
+            Assert.AreEqual($"CDE{_commitmentView.TransferSender.Id}", result.PublicHashedTransferSenderAccountId);
+            Assert.AreEqual($"XYZ{_commitmentView.EmployerAccountId}", result.HashedTransferReceiverAccountId);
+            Assert.AreEqual($"CDE{_commitmentView.EmployerAccountId}", result.PublicHashedTransferReceiverAccountId);
             Assert.AreEqual($"XYZ{_commitmentView.Id}", result.HashedCohortReference);
             Assert.AreEqual("LegalEntityName", result.LegalEntityName);
             Assert.AreEqual(1300m, result.TotalCost);
@@ -134,6 +139,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
             _transferRequest.Status = status;
             var result = _sut.MapToTransferRequestViewModel(_transferRequest);
             Assert.AreEqual($"XYZ{_transferRequest.SendingEmployerAccountId}", result.HashedTransferSenderAccountId);
+            Assert.AreEqual($"CDE{_transferRequest.SendingEmployerAccountId}", result.PublicHashedTransferSenderAccountId);
+            Assert.AreEqual($"XYZ{_transferRequest.ReceivingEmployerAccountId}", result.HashedTransferReceiverAccountId);
+            Assert.AreEqual($"CDE{_transferRequest.ReceivingEmployerAccountId}", result.PublicHashedTransferReceiverAccountId);
             Assert.AreEqual($"XYZ{_transferRequest.CommitmentId}", result.HashedCohortReference);
             Assert.AreEqual("LegalEntityName", result.LegalEntityName);
             Assert.AreEqual(10999m, result.TotalCost);
