@@ -10,7 +10,6 @@ using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.Commitments.Api.Types.ProviderPayment;
 using SFA.DAS.Commitments.Api.Types.Validation.Types;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipsByUln;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
@@ -141,7 +140,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 EmployerRef = apprenticeship.EmployerRef,
                 HasStarted = !isStartDateInFuture,
                 IsLockedForUpdate = isLockedForUpdate,
-                IsPaidForByTransfer = commitment.TransferSender != null
+                IsPaidForByTransfer = commitment.TransferSender != null,
+                IsTransferFundedAndNoSuccessfulIrlSubmission = commitment.TransferSender != null && !apprenticeship.HasHadDataLockSuccess
             };
         }
 

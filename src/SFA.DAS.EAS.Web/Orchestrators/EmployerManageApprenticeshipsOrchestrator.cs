@@ -55,6 +55,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         private const string CookieName = "sfa-das-employerapprenticeshipsservice-apprentices";
 
+        //todo: switch the validator to a singleton, so the rules are only set up once
+        //      see, https://stackoverflow.com/questions/42365741/fluent-validator-withmessage-and-singleton-instance
+
         public EmployerManageApprenticeshipsOrchestrator(
             IMediator mediator,
             IHashingService hashingService,
@@ -68,21 +71,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IAcademicYearValidator academicYearValidator)
             : base(mediator, hashingService, logger)
         {
-            if (mediator == null)
-                throw new ArgumentNullException(nameof(mediator));
-            if (hashingService == null)
-                throw new ArgumentNullException(nameof(hashingService));
-            if (apprenticeshipMapper == null)
-                throw new ArgumentNullException(nameof(apprenticeshipMapper));
-            if (currentDateTime == null)
-                throw new ArgumentNullException(nameof(currentDateTime));
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-            if (approvedApprenticeshipValidator == null)
-                throw new ArgumentNullException(nameof(approvedApprenticeshipValidator));
-            if (apprenticeshipFiltersMapper == null)
-                throw new ArgumentNullException(nameof(apprenticeshipFiltersMapper));
-
             _mediator = mediator;
             _hashingService = hashingService;
             _apprenticeshipMapper = apprenticeshipMapper;
