@@ -49,6 +49,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
             if (!hasApprenticeships || lastAction == LastAction.None)
                 return RequestStatus.NewRequest;
 
+            // LastAction.Approve > LastAction.Amend, but then AgreementStatus >= ProviderAgreed, so no need for > on LastAction??
             if (lastAction >= LastAction.Amend && overallAgreementStatus == AgreementStatus.NotAgreed)
                 return RequestStatus.ReadyForReview;
 
