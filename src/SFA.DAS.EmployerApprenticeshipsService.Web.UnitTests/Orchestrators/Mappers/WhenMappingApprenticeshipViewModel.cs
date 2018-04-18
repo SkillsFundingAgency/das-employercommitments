@@ -3,7 +3,7 @@ using System;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-
+using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
@@ -107,6 +107,24 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
 
             Assert.AreEqual(expectedStopDate, viewModel.StopDate);
+        }
+
+        [TestCase(TransferApprovalStatus.Rejected, true)]
+        [TestCase(TransferApprovalStatus.Pending, false)]
+        public void ThenCohortTransferRejectionIsIndicated(TransferApprovalStatus status, bool expectRejectionIndicated)
+        {
+            var apprenticeship = new Apprenticeship();
+            var commitment = new CommitmentView
+            {
+                TransferSender = new TransferSender
+                {
+                    TransferApprovalStatus = status
+                }
+            };
+
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
+
+            Assert.AreEqual(expectRejectionIndicated, viewModel.IsInTransferRejectedCohort);
         }
     }
 }

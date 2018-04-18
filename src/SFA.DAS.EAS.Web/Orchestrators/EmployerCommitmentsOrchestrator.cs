@@ -365,7 +365,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     HashedAccountId = hashedAccountId,
                     HashedCommitmentId = hashedCommitmentId,
-                    IsPaidForByTransfer = commitmentData.Commitment.TransferSender != null
+                    IsPaidForByTransfer = commitmentData.Commitment.TransferSender != null,
+                    IsInTransferRejectedCohort = commitmentData.Commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Rejected
                 };
 
                 return new OrchestratorResponse<ExtendedApprenticeshipViewModel>
