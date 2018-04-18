@@ -19,10 +19,10 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public decimal TotalCost { get; set; }
         public List<TrainingCourseSummaryViewModel> TrainingList { get; set; }
         public string TransferApprovalStatusDesc { get; set; }
-        public TransferApprovalStatus TransferApprovalStatus { get; set; }
+        public TransferApprovalStatus? TransferApprovalStatus { get; set; }
         public string TransferApprovalSetBy { get; set; }
         public DateTime? TransferApprovalSetOn { get; set; }
-        public bool PendingApproval => TransferApprovalStatus == TransferApprovalStatus.Pending;
+        public bool PendingApproval => TransferApprovalStatus.HasValue && TransferApprovalStatus.Value == Commitments.Api.Types.TransferApprovalStatus.Pending;
         public bool EnableRejection { get; set; }
 
     }

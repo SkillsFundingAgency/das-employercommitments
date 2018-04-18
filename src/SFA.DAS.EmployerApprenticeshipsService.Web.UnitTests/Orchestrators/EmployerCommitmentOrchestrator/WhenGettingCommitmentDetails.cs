@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         public async Task ThenFrameworksAreNotRetrievedForCohortsFundedByTransfer()
         {
             CommitmentView.EditStatus = EditStatus.Both;
-            CommitmentView.TransferSender = new TransferSender { Id = 123};
+            CommitmentView.TransferSender = new TransferSender { Id = 123, TransferApprovalStatus = TransferApprovalStatus.Pending };
 
         await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
 
