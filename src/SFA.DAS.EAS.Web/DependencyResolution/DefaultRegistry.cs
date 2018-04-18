@@ -86,8 +86,9 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<ICache>().Use<InMemoryCache>(); //RedisCache
 
             For<IApprenticeshipInfoServiceConfiguration>().Use(config.ApprenticeshipInfoService);
+            //todo: this validator should probably be a singleton
             For<IApprenticeshipViewModelValidator>().Use<ApprenticeshipViewModelValidator>();
-            For<IValidateApprovedApprenticeship>().Use<ApprovedApprenticeshipViewModelValidator>();
+            For<IValidateApprovedApprenticeship>().Use<ApprovedApprenticeshipViewModelValidator>().Singleton();
 
             ConfigureHashingService(config);
             SetUpCommitmentApi(config);

@@ -55,9 +55,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         private const string CookieName = "sfa-das-employerapprenticeshipsservice-apprentices";
 
-        //todo: switch the validator to a singleton, so the rules are only set up once
-        //      see, https://stackoverflow.com/questions/42365741/fluent-validator-withmessage-and-singleton-instance
-
         public EmployerManageApprenticeshipsOrchestrator(
             IMediator mediator,
             IHashingService hashingService,
