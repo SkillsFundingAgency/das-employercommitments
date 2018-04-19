@@ -23,14 +23,13 @@
                     <legend class="visuallyhidden">Edit apprentice</legend>
 
                     @if (Model.Data.Apprenticeship.HasStarted)
-            {
-                @Html.Partial("EditStartedApprenticeship", Model.Data)
-    }
-    else
-    {
-        @Html.Partial("EditApprenticeship", Model.Data)
-}
-
+                    {
+                        @Html.Partial("EditStartedApprenticeship", Model.Data)
+                    }
+                    else
+                    {
+                        @Html.Partial("EditApprenticeship", Model.Data)
+                    }
 
                 </fieldset>
             </div>
