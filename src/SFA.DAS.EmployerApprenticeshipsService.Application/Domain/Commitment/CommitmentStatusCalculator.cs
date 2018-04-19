@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
 
         private RequestStatus GetEmployerOnlyStatus(LastAction lastAction, bool hasApprenticeships, AgreementStatus? overallAgreementStatus)
         {
-            if (!hasApprenticeships || lastAction == LastAction.None)
+            if (!hasApprenticeships || lastAction == LastAction.None || lastAction == LastAction.AmendAfterRejected)
                 return RequestStatus.NewRequest;
 
             // LastAction.Approve > LastAction.Amend, but then AgreementStatus >= ProviderAgreed, so no need for > on LastAction??

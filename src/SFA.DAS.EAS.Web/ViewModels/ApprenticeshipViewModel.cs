@@ -85,5 +85,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string EmployerRefError => GetErrorMessage(nameof(EmployerRef));
         public string TrainingCodeError => GetErrorMessage(nameof(TrainingCode));
         public bool IsLockedForUpdate { get; set; }
+        public bool IsInTransferRejectedCohort { get; set; }
     }
 }
