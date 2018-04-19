@@ -586,10 +586,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Views\EmployerManageApprentices\EditStartedApprenticeship.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>EditStartedApprenticeship.generated.cs</LastGenOutput>
-    </Content>
+    <Content Include="Views\EmployerManageApprentices\EditStartedApprenticeship.cshtml" />
     <Content Include="Views\Shared\ApprenticeshipUpdate.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ApprenticeshipUpdate.generated.cs</LastGenOutput>
@@ -618,11 +615,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Details.cshtml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\EmployerManageApprentices\EditStartedApprenticeship.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EditStartedApprenticeship.cshtml</DependentUpon>
     </Compile>
     <Compile Include="Views\EmployerManageApprentices\EditStopDate.generated.cs">
       <AutoGen>True</AutoGen>
@@ -653,11 +645,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ApprenticeshipUpdate.cshtml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Shared\EditApprenticeship.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EditApprenticeship.cshtml</DependentUpon>
     </Compile>
     <Compile Include="Views\Shared\Pagination.generated.cs">
       <AutoGen>True</AutoGen>
@@ -1113,10 +1100,7 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ConfirmChanges.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Views\Shared\EditApprenticeship.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>EditApprenticeship.generated.cs</LastGenOutput>
-    </Content>
+    <Content Include="Views\Shared\EditApprenticeship.cshtml" />
     <Content Include="Views\EmployerManageApprentices\ReviewChanges.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ReviewChanges.generated.cs</LastGenOutput>

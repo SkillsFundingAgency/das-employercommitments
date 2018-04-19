@@ -13,7 +13,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
     [TestFixture]
     public class WhenMappingApprenticeshipViewModel : ApprenticeshipMapperBase
     {
-
         private DateTime _now;
 
         [SetUp]
@@ -36,18 +35,23 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             n.Should().Be(_now);
 
-            viewModel.IsLockedForUpdate.Should().BeFalse();
+            viewModel.CanUpdateStartDate.Should().BeTrue();
+            viewModel.CanUpdateEndDate.Should().BeTrue();
+            viewModel.CanUpdateTraining.Should().BeTrue();
+            viewModel.CanUpdateCost.Should().BeTrue();
             viewModel.HasStarted.Should().BeTrue();
         }
 
-
         [Test]
-        public void ShouldHaveLockedStatusIfAtLeastOneDataLocksSuccesFound()
+        public void ShouldHaveLockedStatusIfAtLeastOneDataLocksSuccessFound()
         {
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1), HasHadDataLockSuccess = true };
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, new CommitmentView());
 
-            viewModel.IsLockedForUpdate.Should().BeTrue();
+            viewModel.CanUpdateStartDate.Should().BeFalse();
+            viewModel.CanUpdateEndDate.Should().BeFalse();
+            viewModel.CanUpdateTraining.Should().BeFalse();
+            viewModel.CanUpdateCost.Should().BeFalse();
             viewModel.HasStarted.Should().BeTrue();
         }
 
@@ -60,7 +64,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-5), HasHadDataLockSuccess = false };
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, new CommitmentView());
 
-            viewModel.IsLockedForUpdate.Should().BeTrue();
+            viewModel.CanUpdateStartDate.Should().BeFalse();
+            viewModel.CanUpdateEndDate.Should().BeFalse();
+            viewModel.CanUpdateTraining.Should().BeFalse();
+            viewModel.CanUpdateCost.Should().BeFalse();
             viewModel.HasStarted.Should().BeTrue();
         }
 
@@ -75,14 +82,13 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         }
 
         [Test]
-        public void ShouldNotHaveITransferFlagSetIfCommitmentHasNoTransferSender()
+        public void ShouldNotHaveTransferFlagSetIfCommitmentHasNoTransferSender()
         {
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(+1), HasHadDataLockSuccess = false };
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, new CommitmentView());
 
             viewModel.IsPaidForByTransfer.Should().BeFalse();
         }
-
 
         [Test]
         public void ThenULNIsMapped()
@@ -108,11 +114,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             Assert.AreEqual(expectedStopDate, viewModel.StopDate);
         }
 
-        [TestCase(true, false, true)]
+        [TestCase(false, false, true, TestName = "Disabled as transfer and no successful ilr submission")]
         [TestCase(false, true, true)]
-        [TestCase(false, false, false)]
+        [TestCase(true, false, false)]
         [TestCase(false, true, false)]
-        public void ThenIsTransferFundedAndNoSuccessfulIrlSubmissionShouldBeSetCorrectly(bool expected, bool dataLockSuccess, bool transferSender)
+        public void ThenCanUpdateStartDateAndTrainingIsSetCorrectly(bool expected, bool dataLockSuccess, bool transferSender)
         {
             var apprenticeship = new Apprenticeship { HasHadDataLockSuccess = dataLockSuccess };
             var commitment = new CommitmentView();
@@ -122,7 +128,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
 
-            Assert.AreEqual(expected, viewModel.IsTransferFundedAndNoSuccessfulIrlSubmission);
+            Assert.AreEqual(expected, viewModel.CanUpdateStartDate);
+            Assert.AreEqual(expected, viewModel.CanUpdateTraining);
         }
     }
 }

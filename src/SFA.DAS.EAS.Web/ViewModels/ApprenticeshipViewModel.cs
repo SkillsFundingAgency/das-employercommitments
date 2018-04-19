@@ -71,7 +71,12 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 
         public bool IsPaidForByTransfer { get; set; }
 
-        public bool IsTransferFundedAndNoSuccessfulIrlSubmission { get; set; }
+        //public bool IsTransferFundedAndNoSuccessfulIrlSubmission { get; set; }
+
+        public bool CanUpdateStartDate { get; set; }
+        public bool CanUpdateEndDate { get; set; }
+        public bool CanUpdateTraining { get; set; }
+        public bool CanUpdateCost { get; set; }
 
         public string FirstNameError => GetErrorMessage(nameof(FirstName));
         public string LastNameError => GetErrorMessage(nameof(LastName));
@@ -84,6 +89,5 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string EndDateOverlapError => GetErrorMessage("EndDateOverlap");
         public string EmployerRefError => GetErrorMessage(nameof(EmployerRef));
         public string TrainingCodeError => GetErrorMessage(nameof(TrainingCode));
-        public bool IsLockedForUpdate { get; set; }
     }
 }

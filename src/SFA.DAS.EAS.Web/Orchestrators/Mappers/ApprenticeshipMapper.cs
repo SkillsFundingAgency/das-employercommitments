@@ -113,9 +113,18 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             var isStartDateInFuture = apprenticeship.StartDate.HasValue && apprenticeship.StartDate.Value >
                                       new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1);
 
-            var isLockedForUpdate = apprenticeship.HasHadDataLockSuccess || _academicYearValidator.IsAfterLastAcademicYearFundingPeriod &&
-                                    apprenticeship.StartDate.HasValue &&
-                                    _academicYearValidator.Validate(apprenticeship.StartDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod;
+            var isUpdatable = !(apprenticeship.HasHadDataLockSuccess || _academicYearValidator.IsAfterLastAcademicYearFundingPeriod &&
+                                apprenticeship.StartDate.HasValue &&
+                                _academicYearValidator.Validate(apprenticeship.StartDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod);
+
+            var isTransferFundedAndNoSuccessfulIlrSubmission =
+                commitment.TransferSender != null && !apprenticeship.HasHadDataLockSuccess;
+
+            //todo: Comparing EditApprenticeship.cshtml and EditStartedApprenticeship.cshtml there are only small differences
+            //      that probably don't need to be there. Now that we have flags to enable/disable the fields, they could be merged into 1.
+
+            // EditApprenticeship ignores the CanUpdateEndDate and CanUpdateCost and always has them updatable (which is ok
+            // because the partial is only displayed if !HasStarted). If we merge the two partials (see above), the discrepancy disappears
 
             return new ApprenticeshipViewModel
             {
@@ -139,9 +148,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 ProviderRef = apprenticeship.ProviderRef,
                 EmployerRef = apprenticeship.EmployerRef,
                 HasStarted = !isStartDateInFuture,
-                IsLockedForUpdate = isLockedForUpdate,
+                CanUpdateStartDate = (isStartDateInFuture && isTransferFundedAndNoSuccessfulIlrSubmission) || (isUpdatable && !isTransferFundedAndNoSuccessfulIlrSubmission),
+                CanUpdateEndDate = isStartDateInFuture || isUpdatable,
+                CanUpdateTraining = (isStartDateInFuture && isTransferFundedAndNoSuccessfulIlrSubmission) || (isUpdatable && !isTransferFundedAndNoSuccessfulIlrSubmission),
+                CanUpdateCost = isStartDateInFuture || isUpdatable,
                 IsPaidForByTransfer = commitment.TransferSender != null,
-                IsTransferFundedAndNoSuccessfulIrlSubmission = commitment.TransferSender != null && !apprenticeship.HasHadDataLockSuccess
             };
         }
 
