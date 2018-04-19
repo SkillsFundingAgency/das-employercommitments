@@ -10,6 +10,7 @@ using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
+using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
 using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.CommitmentMapperTests
@@ -98,7 +99,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
             _featureToggle = new Mock<IFeatureToggle>();
             _featureToggleService.Setup(x => x.Get<TransfersRejectOption>()).Returns(_featureToggle.Object);
 
-            _sut = new CommitmentMapper(_hashingService.Object, _featureToggleService.Object);
+            _sut = new CommitmentMapper(_hashingService.Object, _featureToggleService.Object, Mock.Of<IPublicHashingService>());
         }
 
         [TestCase(TransferApprovalStatus.Approved, "Approved")]

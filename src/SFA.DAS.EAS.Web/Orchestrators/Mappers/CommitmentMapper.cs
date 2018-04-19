@@ -7,6 +7,8 @@ using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
+using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
+using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.HashingService;
 
@@ -16,11 +18,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
     {
         private readonly IHashingService _hashingService;
         private readonly IFeatureToggleService _featureToggleService;
+        private readonly IPublicHashingService _publicHashingService;
 
-        public CommitmentMapper(IHashingService hashingService, IFeatureToggleService featureToggleService)
+        public CommitmentMapper(IHashingService hashingService, IFeatureToggleService featureToggleService, IPublicHashingService publicHashingService)
         {
             _hashingService = hashingService;
             _featureToggleService = featureToggleService;
+            _publicHashingService = publicHashingService;
         }
 
         public async Task<CommitmentListItemViewModel> MapToCommitmentListItemViewModelAsync(CommitmentListItem commitment, Func<CommitmentListItem, Task<string>> latestMessageFunc)
@@ -65,6 +69,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 TotalCost = transferRequest.TransferCost,
                 EnableRejection = _featureToggleService.Get<TransfersRejectOption>().FeatureEnabled
             };
+        }
+
+        public IEnumerable<TransferConnectionViewModel> MapToTransferConnectionsViewModel(List<TransferConnection> transferConnections)
+        {
+            return transferConnections.Select(x =>
+                new TransferConnectionViewModel
+                {
+                    TransferConnectionCode = _publicHashingService.HashValue(x.AccountId),
+                    TransferConnectionName = x.AccountName
+                });
         }
 
         [Obsolete]

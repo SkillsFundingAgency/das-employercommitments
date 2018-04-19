@@ -39,6 +39,7 @@ using SFA.DAS.NLog.Logger;
 
 using OrganisationType = SFA.DAS.Common.Domain.Types.OrganisationType;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
+using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
 using SFA.DAS.HashingService;
 using CallerType = SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment.CallerType;
 
@@ -48,6 +49,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
     {
         private readonly IMediator _mediator;
         private readonly IHashingService _hashingService;
+        private readonly IPublicHashingService _publicHashingService;
         private readonly ILog _logger;
 
         private readonly Func<int, string> _addPluralizationSuffix = i => i > 1 ? "s" : "";
@@ -58,6 +60,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         public EmployerCommitmentsOrchestrator(
             IMediator mediator,
             IHashingService hashingService,
+            IPublicHashingService publicHashingService,
             IApprenticeshipMapper apprenticeshipMapper,
             ICommitmentMapper commitmentMapper,
             ILog logger,
@@ -65,6 +68,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         {
             _mediator = mediator;
             _hashingService = hashingService;
+            _publicHashingService = publicHashingService;
             _apprenticeshipMapper = apprenticeshipMapper;
             _commitmentMapper = commitmentMapper;
             _logger = logger;
@@ -158,7 +162,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     Data = new SelectTransferConnectionViewModel
                     {
-                        TransferConnections = new List<TransferConnection>()
+                        TransferConnections = new List<TransferConnectionViewModel>()
                     }
                 };
             }
@@ -171,7 +175,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     Data = new SelectTransferConnectionViewModel
                     {
-                        TransferConnections = response.TransferConnections
+                        TransferConnections = _commitmentMapper.MapToTransferConnectionsViewModel(response.TransferConnections)
                     }
                 };
             }, hashedAccountId, externalUserId);
@@ -1217,11 +1221,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             if (!string.IsNullOrEmpty(transferConnectionCode))
             {
-                var transferConnections = await GetTransferConnectionsNoAuthorizationCheck(hashedAccountId, externalUserId);
-                var transferConnection = transferConnections.TransferConnections.Single(x =>
-                    x.HashedAccountId.Equals(transferConnectionCode, StringComparison.InvariantCultureIgnoreCase));
-                transferSenderId = _hashingService.DecodeValue(transferConnectionCode);
-                transferSenderName = transferConnection.AccountName;
+                var data = await GetTransferConnectionsNoAuthorizationCheck(hashedAccountId, externalUserId);
+                var transferConnections = _commitmentMapper.MapToTransferConnectionsViewModel(data.TransferConnections);
+
+                var transferConnection = transferConnections.Single(x =>
+                    x.TransferConnectionCode.Equals(transferConnectionCode, StringComparison.InvariantCultureIgnoreCase));
+                transferSenderId = _publicHashingService.DecodeValue(transferConnectionCode);
+                transferSenderName = transferConnection.TransferConnectionName;
             }
 
             return (transferSenderId, transferSenderName);

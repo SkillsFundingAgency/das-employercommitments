@@ -26,15 +26,15 @@
                     </legend>
                     @foreach (var entity in Model.Data.TransferConnections)
                     {
-                        <label class="block-label selection-button-radio" for="TransferConnection-@entity.HashedAccountId">
-                            @Html.RadioButton("TransferConnectionCode", @entity.HashedAccountId,
+                        <label class="block-label selection-button-radio" for="TransferConnection-@entity.TransferConnectionCode">
+                            @Html.RadioButton("TransferConnectionCode", @entity.TransferConnectionCode,
                                 new
                                 {
-                                    @id = "TransferConnection-" + entity.HashedAccountId,
-                                    dataOptionName = $"{entity.AccountName}",
-                                    onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{entity.AccountName}')"
+                                    @id = "TransferConnection-" + entity.TransferConnectionCode,
+                                    dataOptionName = $"{entity.TransferConnectionName}",
+                                    onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{entity.TransferConnectionName}')"
                                 })
-                            Yes, I will use transfer funds from @entity.AccountName
+                            Yes, I will use transfer funds from @entity.TransferConnectionName
                         </label>
                         <hr/>
                     }

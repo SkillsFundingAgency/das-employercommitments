@@ -63,9 +63,9 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Employer
 
             //Assert
             Assert.AreEqual(2, transferingEntities.Count);
-            Assert.AreEqual("FAN", transferingEntities[0].HashedAccountId);
+            Assert.AreEqual(1234, transferingEntities[0].AccountId);
             Assert.AreEqual("FirstAccountName", transferingEntities[0].AccountName);
-            Assert.AreEqual("SAN", transferingEntities[1].HashedAccountId);
+            Assert.AreEqual(1235, transferingEntities[1].AccountId);
             Assert.AreEqual("SecondAccountName", transferingEntities[1].AccountName);
         }
 
