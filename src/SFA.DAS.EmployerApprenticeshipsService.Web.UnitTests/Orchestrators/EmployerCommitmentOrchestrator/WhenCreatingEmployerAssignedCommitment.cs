@@ -103,8 +103,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         [Test]
         public async Task ShouldMapPropertiesToCommandWithoutTransferConnection()
         {
-            //Act
+            //Arrange
             _viewModel.TransferConnectionCode = null;
+
+            //Act
             await EmployerCommitmentOrchestrator.CreateEmployerAssignedCommitment(_viewModel, "externalUser",
                 "DisplayName", "UserEmail");
 

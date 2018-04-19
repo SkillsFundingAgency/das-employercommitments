@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FeatureToggle;
 using Moq;
 using NUnit.Framework;
@@ -40,7 +41,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
                 new TransferConnection {AccountName = "AccountName", AccountId = 123}
             };
 
-            var result = _sut.MapToTransferConnectionsViewModel(list);
+            var result = _sut.MapToTransferConnectionsViewModel(list).ToList();
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual($"XYZ{123}", result[0].TransferConnectionCode);

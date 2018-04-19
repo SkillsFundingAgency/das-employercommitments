@@ -71,14 +71,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             };
         }
 
-        public List<TransferConnectionViewModel> MapToTransferConnectionsViewModel(List<TransferConnection> transferConnections)
+        public IEnumerable<TransferConnectionViewModel> MapToTransferConnectionsViewModel(List<TransferConnection> transferConnections)
         {
             return transferConnections.Select(x =>
                 new TransferConnectionViewModel
                 {
                     TransferConnectionCode = _publicHashingService.HashValue(x.AccountId),
                     TransferConnectionName = x.AccountName
-                }).ToList();
+                });
         }
 
         [Obsolete]
