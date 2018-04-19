@@ -112,7 +112,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         [TestCase(false, true, true)]
         [TestCase(false, false, false)]
         [TestCase(false, true, false)]
-        public void ThenIsTransferFundedAndNoSuccessfulIrlSubmissionShouldBeSetCorrectly(bool expected, bool dataLockSuccess, bool transferSender)
+        public void ThenIsTransferFundedAndNoSuccessfulIlrSubmissionShouldBeSetCorrectly(bool expected, bool dataLockSuccess, bool transferSender)
         {
             var apprenticeship = new Apprenticeship { HasHadDataLockSuccess = dataLockSuccess };
             var commitment = new CommitmentView();
@@ -122,7 +122,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
 
-            Assert.AreEqual(expected, viewModel.IsTransferFundedAndNoSuccessfulIrlSubmission);
+            Assert.AreEqual(expected, viewModel.IsTransferFundedAndNoSuccessfulIlrSubmission);
         }
     }
 }

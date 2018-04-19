@@ -23,13 +23,13 @@
                     <legend class="visuallyhidden">Edit apprentice</legend>
 
                     @if (Model.Data.Apprenticeship.HasStarted)
-                    {
-                        @Html.Partial("EditStartedApprenticeship", Model.Data)
-                    }
-                    else
-                    {
-                        @Html.Partial("EditApprenticeship", Model.Data)
-                    }
+            {
+                @Html.Partial("EditStartedApprenticeship", Model.Data)
+    }
+    else
+    {
+        @Html.Partial("EditApprenticeship", Model.Data)
+}
 
 
                 </fieldset>
@@ -52,7 +52,8 @@
             @Html.Hidden("uln", Model.Data.Apprenticeship.ULN)
             @Html.Hidden("HasStarted", Model.Data.Apprenticeship.HasStarted)
             @Html.Hidden("IsLockedForUpdate", Model.Data.Apprenticeship.IsLockedForUpdate)
-            
+            @Html.Hidden("IsTransferFundedAndNoSuccessfulIlrSubmission", Model.Data.Apprenticeship.IsTransferFundedAndNoSuccessfulIlrSubmission)
+
             @* next line deliberately left commented. uncomment to take account of editing transfers in manage your apprenticeships *@
             @*@Html.Hidden("IsPaidForByTransfer", Model.Data.Apprenticeship.IsPaidForByTransfer)*@
 

@@ -141,7 +141,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 HasStarted = !isStartDateInFuture,
                 IsLockedForUpdate = isLockedForUpdate,
                 IsPaidForByTransfer = commitment.TransferSender != null,
-                IsTransferFundedAndNoSuccessfulIrlSubmission = commitment.TransferSender != null && !apprenticeship.HasHadDataLockSuccess
+                IsTransferFundedAndNoSuccessfulIlrSubmission = commitment.TransferSender != null && !apprenticeship.HasHadDataLockSuccess
             };
         }
 
