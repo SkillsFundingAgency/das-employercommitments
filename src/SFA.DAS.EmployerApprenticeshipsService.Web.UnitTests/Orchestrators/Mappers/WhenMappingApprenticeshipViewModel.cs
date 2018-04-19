@@ -7,7 +7,6 @@ using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
-using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 {
@@ -125,6 +124,23 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
 
             Assert.AreEqual(expectRejectionIndicated, viewModel.IsInTransferRejectedCohort);
+        }
+
+        [TestCase(true, false, true)]
+        [TestCase(false, true, true)]
+        [TestCase(false, false, false)]
+        [TestCase(false, true, false)]
+        public void ThenIsTransferFundedAndNoSuccessfulIlrSubmissionShouldBeSetCorrectly(bool expected, bool dataLockSuccess, bool transferSender)
+        {
+            var apprenticeship = new Apprenticeship { HasHadDataLockSuccess = dataLockSuccess };
+            var commitment = new CommitmentView();
+
+            if (transferSender)
+                commitment.TransferSender = new TransferSender();
+
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
+
+            Assert.AreEqual(expected, viewModel.IsTransferFundedAndNoSuccessfulIlrSubmission);
         }
     }
 }

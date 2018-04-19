@@ -71,6 +71,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 
         public bool IsPaidForByTransfer { get; set; }
 
+        public bool IsTransferFundedAndNoSuccessfulIlrSubmission { get; set; }
+
         public string FirstNameError => GetErrorMessage(nameof(FirstName));
         public string LastNameError => GetErrorMessage(nameof(LastName));
         public string DateOfBirthError => GetErrorMessage(nameof(DateOfBirth));
