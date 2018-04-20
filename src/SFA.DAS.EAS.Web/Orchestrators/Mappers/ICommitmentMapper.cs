@@ -10,5 +10,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         CommitmentViewModel MapToCommitmentViewModel(CommitmentView commitment);
         Task<CommitmentListItemViewModel> MapToCommitmentListItemViewModelAsync(CommitmentListItem commitment, Func<CommitmentListItem, Task<string>> latestMessageFunc);
         TransferCommitmentViewModel MapToTransferCommitmentViewModel(CommitmentView commitment);
+        TransferRequestViewModel MapToTransferRequestViewModel(TransferRequest transferRequest);
     }
 }

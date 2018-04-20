@@ -13,7 +13,6 @@ using SFA.DAS.EmployerCommitments.Domain.Models.AccountTeam;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
-using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.HashingService;
 
@@ -43,11 +42,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             _orchestrator = new EmployerCommitmentsOrchestrator(
                 _mediator.Object,
                 hashingService.Object, 
-                Mock.Of<ICommitmentStatusCalculator>(), 
                 Mock.Of<IApprenticeshipMapper>(), 
                 Mock.Of<ICommitmentMapper>(),
                 logger.Object,
-                Mock.Of<IApprenticeshipViewModelValidator>(),
                 _featureToggleService.Object);
         }
 

@@ -102,8 +102,8 @@
       <HintPath>..\packages\ReflectionMagic.2.0.0\lib\net40\ReflectionMagic.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=2.1.20.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.2.1.20\lib\net45\SFA.DAS.Commitments.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=2.1.160.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.2.1.160\lib\net45\SFA.DAS.Commitments.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Common.Domain, Version=1.3.0.44308, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.3.0.44308\lib\net45\SFA.DAS.Common.Domain.dll</HintPath>
@@ -141,8 +141,8 @@
       <HintPath>..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.3.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Diagnostics.Tracing, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.Tracing.4.3.0\lib\net462\System.Diagnostics.Tracing.dll</HintPath>
@@ -255,13 +255,18 @@
     <Compile Include="Infrastructure\StructureMapRegistrationTests\WhenInitalisingTheContainer.cs" />
     <Compile Include="Models\DateTimeViewModelTests.cs" />
     <Compile Include="Orchestrators\DataLockOrchestratorTests\WhenGettingDataLockChangeStatus.cs" />
+    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\CheckingForAnyCohortsForCurrentStatus.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingEmployerAssignedCommitment.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingProviderAssignedCommitment.cs" />
+    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingAllWithProvider.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingApprenticeship.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingCommitmentDetails.cs" />
+    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingTransferRequestViewModelForTransferSender.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingSkeletonApprenticeshipDetails.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingAcknowledgementModelForExistingCommitment.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingCommitmentViewModelForTransferSender.cs" />
+    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenSettingATransferRequestApproval.cs" />
+    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingYourCohort.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenSettingATransferApproval.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingTransferConnections.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\ManageApprenticeshipsOrchestratorTestBase.cs" />
@@ -292,15 +297,13 @@
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenResumingAStartedApprenticeshipAfterPauseInLastAcademicYear.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenUserSelectsToEditStatus.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenMappingApprenticeship.cs" />
-    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingStatusOfCommitment.cs" />
+    <Compile Include="StatusCalculator\WhenGettingStatusOfNonTransferCommitment.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenValidateingApprenticeshipUpdate.cs" />
     <Compile Include="Orchestrators\Mappers\ApprenticeshipMapperBase.cs" />
+    <Compile Include="StatusCalculator\WhenGettingStatusOfTransferCommitment.cs" />
     <Compile Include="Validators\ApprovedApprenticeships\ApprovedApprenticeshipValidatorTestBase.cs" />
     <Compile Include="Plumbing\CommitmentRoutePrefixTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StatusCalculator\WhenEditStatusIsWithEmployer.cs" />
-    <Compile Include="StatusCalculator\WhenEditStatusIsWithBoth.cs" />
-    <Compile Include="StatusCalculator\WhenEditStatusIsWithProvider.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\ApprenticeshipValidationTestBase.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingCost.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingDateOfBirth.cs" />

@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using FeatureToggle;
 using MediatR;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
+using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetFrameworks;
@@ -14,9 +19,9 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetUserAccountRole;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AccountTeam;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
+using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
-using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
@@ -25,8 +30,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
 {
     public abstract class OrchestratorTestBase
     {
-        private Mock<ICommitmentStatusCalculator> _mockCalculator;
-
         protected Mock<ICommitmentMapper> MockCommitmentMapper;
         protected Mock<IApprenticeshipMapper> MockApprenticeshipMapper;
         protected Mock<ILog> MockLogger;
@@ -35,8 +38,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         protected Mock<IAcademicYearDateProvider> MockAcademicYearDateProvider;
         protected Mock<IMediator> MockMediator;
         protected EmployerCommitmentsOrchestrator EmployerCommitmentOrchestrator;
-        protected Mock<IApprenticeshipViewModelValidator> MockApprenticeshipValidator;
         protected Mock<IFeatureToggleService> MockFeatureToggleService;
+        protected Mock<IFeatureToggle> MockFeatureToggleOn;
         protected CommitmentView CommitmentView;
 
         [SetUp]
@@ -44,13 +47,15 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         {
             MockMediator = new Mock<IMediator>();
             MockLogger = new Mock<ILog>();
-            _mockCalculator = new Mock<ICommitmentStatusCalculator>();
             MockApprenticeshipMapper = new Mock<IApprenticeshipMapper>();
             MockCommitmentMapper = new Mock<ICommitmentMapper>();
             MockAcademicYearValidator = new Mock<IAcademicYearValidator>();
             MockAcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
-            MockApprenticeshipValidator = new Mock<IApprenticeshipViewModelValidator>();
+
+            MockFeatureToggleOn = new Mock<IFeatureToggle>();
+            MockFeatureToggleOn.Setup(x => x.FeatureEnabled).Returns(true);
             MockFeatureToggleService = new Mock<IFeatureToggleService>();
+            MockFeatureToggleService.Setup(x => x.Get<Transfers>()).Returns(MockFeatureToggleOn.Object);
 
             MockHashingService = new Mock<IHashingService>();
             MockHashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);
@@ -105,12 +110,65 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             EmployerCommitmentOrchestrator = new EmployerCommitmentsOrchestrator(
                 MockMediator.Object,
                 MockHashingService.Object,
-                _mockCalculator.Object,
                 MockApprenticeshipMapper.Object,
                 MockCommitmentMapper.Object,
                 MockLogger.Object,
-                MockApprenticeshipValidator.Object,
                 MockFeatureToggleService.Object);
+        }
+
+        protected CommitmentListItem GetTestCommitmentOfStatus(long id, RequestStatus requestStatus)
+        {
+            switch (requestStatus)
+            {
+                case RequestStatus.WithProviderForApproval:
+                    return new CommitmentListItem
+                    {
+                        Id = id,
+                        Reference = id.ToString(),
+                        EditStatus = EditStatus.ProviderOnly,
+                        LastAction = LastAction.Approve,
+                        ApprenticeshipCount = 1,
+                        AgreementStatus = AgreementStatus.EmployerAgreed
+                    };
+                case RequestStatus.SentForReview:
+                    return new CommitmentListItem
+                    {
+                        Id = id,
+                        Reference = id.ToString(),
+                        EditStatus = EditStatus.ProviderOnly,
+                        LastAction = LastAction.Amend,
+                        ApprenticeshipCount = 1,
+                        AgreementStatus = AgreementStatus.NotAgreed
+                    };
+                case RequestStatus.SentToProvider:
+                    return new CommitmentListItem
+                    {
+                        Id = id,
+                        Reference = id.ToString(),
+                        EditStatus = EditStatus.ProviderOnly,
+                        LastAction = LastAction.None,
+                        ApprenticeshipCount = 1,
+                        AgreementStatus = AgreementStatus.NotAgreed
+                    };
+                case RequestStatus.ReadyForReview:
+                    return new CommitmentListItem
+                    {
+                        Id = id,
+                        Reference = id.ToString(),
+                        EditStatus = EditStatus.EmployerOnly,
+                        LastAction = LastAction.Amend,
+                        ApprenticeshipCount = 1,
+                        AgreementStatus = AgreementStatus.NotAgreed
+                    };
+                default:
+                    Assert.Fail("Add the RequestStatus you require above, or else fix your test!");
+                    throw new NotImplementedException();
+            }
+        }
+
+        protected IEnumerable<CommitmentListItem> GetTestCommitmentsOfStatus(long startId, params RequestStatus[] requestStatuses)
+        {
+            return requestStatuses.Select(s => GetTestCommitmentOfStatus(startId++, s));
         }
     }
 }

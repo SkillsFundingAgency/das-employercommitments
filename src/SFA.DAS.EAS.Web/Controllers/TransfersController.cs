@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.UserProfile;
@@ -10,6 +11,7 @@ using SFA.DAS.EmployerUsers.WebClientComponents;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
+    [Obsolete("Use TransferRequestController")]
     [Authorize]
     [CommitmentsRoutePrefix("accounts/{hashedaccountId}/transfers")]
     public class TransfersController : BaseEmployerController
@@ -56,11 +58,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return View("TransferConfirmation", new TransferConfirmationViewModel { TransferApprovalStatus = status, TransferReceiverName = viewModel.TransferReceiverName});
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("{hashedCommitmentId}/confirmation")]
-        public async Task<ActionResult> TransferConfirmation(TransferConfirmationViewModel request)
+        public ActionResult TransferConfirmation(TransferConfirmationViewModel request)
         {
             if (!ModelState.IsValid)
             {
@@ -68,6 +69,5 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
             return Redirect(request.UrlAddress);
         }
-
     }
 }

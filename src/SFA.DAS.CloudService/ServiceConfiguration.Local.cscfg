@@ -21,6 +21,7 @@
       <Setting name="AccountApiTransfersStubRecordCount" value="3" />
       <Setting name="FeatureToggle.Transfers" value="true" />
       <Setting name="FeatureToggle.PublicSectorReporting" value="true" />
+      <Setting name="FeatureToggle.TransfersRejectOption" value="true" />
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="WebSslCert" thumbprint="CE71D8AD4A859BD1803DBE03989801B56E5B6875" thumbprintAlgorithm="sha1" />

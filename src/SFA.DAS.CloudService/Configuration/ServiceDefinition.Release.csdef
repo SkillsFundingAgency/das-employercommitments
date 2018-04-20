@@ -34,6 +34,7 @@
       <Setting name="AccountApiTransfersStubRecordCount" />
       <Setting name="FeatureToggle.Transfers" />
       <Setting name="FeatureToggle.PublicSectorReporting" />
+      <Setting name="FeatureToggle.TransfersRejectOption" />
     </ConfigurationSettings>
     <Endpoints>
       <InputEndpoint name="HttpsIn" protocol="https" port="443" certificate="WebSslCert" loadBalancer="das-empc-ilb"/>
