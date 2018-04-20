@@ -24,24 +24,27 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
         private Mock<IFeatureToggle> _featureToggle;
         private CommitmentView _commitmentView;
         private TransferRequest _transferRequest;
+        private const long EmployerAccountId = 123;
+        private const long TransferSenderId = 1000;
+        private const long CommitmentId = 233;
 
 
         [SetUp]
         public void Arrange()
         {
             _hashingService = new Mock<IHashingService>();
-            _hashingService.Setup(x => x.HashValue(It.IsAny<long>())).Returns((long p) => $"XYZ{p}");
+            _hashingService.Setup(x => x.HashValue(It.IsAny<long>())).Returns((long p) => $"PRI{p}");
             _publicHashingService = new Mock<IPublicHashingService>();
-            _publicHashingService.Setup(x => x.HashValue(It.IsAny<long>())).Returns((long p) => $"CDE{p}");
+            _publicHashingService.Setup(x => x.HashValue(It.IsAny<long>())).Returns((long p) => $"PUB{p}");
 
             _commitmentView = new CommitmentView
             {
-                Id = 789,
-                EmployerAccountId = 123,
+                Id = CommitmentId,
+                EmployerAccountId = EmployerAccountId,
                 LegalEntityName = "LegalEntityName",
                 TransferSender = new TransferSender
                 {
-                    Id = 1000,
+                    Id = TransferSenderId,
                     Name = "Sender 1000",
                     TransferApprovalStatus = TransferApprovalStatus.Approved,
                     TransferApprovalSetBy = "tester",
@@ -111,11 +114,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
         {
             _commitmentView.TransferSender.TransferApprovalStatus = status;
             var result = _sut.MapToTransferCommitmentViewModel(_commitmentView);
-            Assert.AreEqual($"XYZ{_commitmentView.TransferSender.Id}", result.HashedTransferSenderAccountId);
-            Assert.AreEqual($"CDE{_commitmentView.TransferSender.Id}", result.PublicHashedTransferSenderAccountId);
-            Assert.AreEqual($"XYZ{_commitmentView.EmployerAccountId}", result.HashedTransferReceiverAccountId);
-            Assert.AreEqual($"CDE{_commitmentView.EmployerAccountId}", result.PublicHashedTransferReceiverAccountId);
-            Assert.AreEqual($"XYZ{_commitmentView.Id}", result.HashedCohortReference);
+            Assert.AreEqual($"PRI{TransferSenderId}", result.HashedTransferSenderAccountId);
+            Assert.AreEqual($"PUB{TransferSenderId}", result.PublicHashedTransferSenderAccountId);
+            Assert.AreEqual($"PRI{EmployerAccountId}", result.HashedTransferReceiverAccountId);
+            Assert.AreEqual($"PUB{EmployerAccountId}", result.PublicHashedTransferReceiverAccountId);
+            Assert.AreEqual($"PRI{CommitmentId}", result.HashedCohortReference);
             Assert.AreEqual("LegalEntityName", result.LegalEntityName);
             Assert.AreEqual(1300m, result.TotalCost);
             Assert.AreEqual(2, result.TrainingList.Count);
@@ -138,11 +141,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
         {
             _transferRequest.Status = status;
             var result = _sut.MapToTransferRequestViewModel(_transferRequest);
-            Assert.AreEqual($"XYZ{_transferRequest.SendingEmployerAccountId}", result.HashedTransferSenderAccountId);
-            Assert.AreEqual($"CDE{_transferRequest.SendingEmployerAccountId}", result.PublicHashedTransferSenderAccountId);
-            Assert.AreEqual($"XYZ{_transferRequest.ReceivingEmployerAccountId}", result.HashedTransferReceiverAccountId);
-            Assert.AreEqual($"CDE{_transferRequest.ReceivingEmployerAccountId}", result.PublicHashedTransferReceiverAccountId);
-            Assert.AreEqual($"XYZ{_transferRequest.CommitmentId}", result.HashedCohortReference);
+            Assert.AreEqual($"PRI{_transferRequest.SendingEmployerAccountId}", result.HashedTransferSenderAccountId);
+            Assert.AreEqual($"PUB{_transferRequest.SendingEmployerAccountId}", result.PublicHashedTransferSenderAccountId);
+            Assert.AreEqual($"PRI{_transferRequest.ReceivingEmployerAccountId}", result.HashedTransferReceiverAccountId);
+            Assert.AreEqual($"PUB{_transferRequest.ReceivingEmployerAccountId}", result.PublicHashedTransferReceiverAccountId);
+            Assert.AreEqual($"PRI{_transferRequest.CommitmentId}", result.HashedCohortReference);
             Assert.AreEqual("LegalEntityName", result.LegalEntityName);
             Assert.AreEqual(10999m, result.TotalCost);
             Assert.AreEqual(2, result.TrainingList.Count);
