@@ -60,6 +60,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 HashedTransferReceiverAccountId = _hashingService.HashValue(transferRequest.ReceivingEmployerAccountId),
                 PublicHashedTransferReceiverAccountId = _publicHashingService.HashValue(transferRequest.ReceivingEmployerAccountId),
                 HashedTransferSenderAccountId = _hashingService.HashValue(transferRequest.SendingEmployerAccountId),
+                TransferSenderName = transferRequest.TransferSenderName,
                 PublicHashedTransferSenderAccountId = _publicHashingService.HashValue(transferRequest.SendingEmployerAccountId),
                 LegalEntityName = transferRequest.LegalEntityName,
                 HashedCohortReference = _hashingService.HashValue(transferRequest.CommitmentId),

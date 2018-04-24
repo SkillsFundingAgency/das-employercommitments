@@ -17,7 +17,7 @@
       <Setting name="PsrBaseUrl" value="https://at-reporting.manage-apprenticeships.sfa.bis.gov.uk" />
       <Setting name="CommitmentsRoutePrefix" value="commitments" />
       <Setting name="CurrentTime" value="" />
-      <Setting name="UseAccountApiTransfersStub" value="false" />
+      <Setting name="UseAccountApiTransfersStub" value="true" />
       <Setting name="AccountApiTransfersStubRecordCount" value="3" />
       <Setting name="FeatureToggle.Transfers" value="true" />
       <Setting name="FeatureToggle.PublicSectorReporting" value="true" />

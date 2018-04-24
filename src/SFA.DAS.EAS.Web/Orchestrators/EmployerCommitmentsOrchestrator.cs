@@ -1190,7 +1190,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         }
 
         public async Task<OrchestratorResponse<TransferRequestViewModel>> GetTransferRequestDetails(
-            string hashedTransferAccountId, string hashedTransferRequestId, string externalUserId)
+            string hashedTransferAccountId, Application.Queries.GetTransferRequest.CallerType callerType, string hashedTransferRequestId, string externalUserId)
         {
             var accountId = _hashingService.DecodeValue(hashedTransferAccountId);
             var transferRequestId = _hashingService.DecodeValue(hashedTransferRequestId);
@@ -1202,7 +1202,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     AccountId = accountId,
                     TransferRequestId = transferRequestId,
-                    CallerType = Application.Queries.GetTransferRequest.CallerType.TransferSender
+                    CallerType = callerType
                 });
 
                 var viewModel = _commitmentMapper.MapToTransferRequestViewModel(data.TransferRequest);
