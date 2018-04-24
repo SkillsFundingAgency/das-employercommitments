@@ -119,8 +119,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                                     _academicYearValidator.Validate(apprenticeship.StartDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod;
 
             var isApprovedTransferAndNoSuccessfulIlrSubmission =
-                commitment.TransferSender != null
-                && commitment.TransferSender.TransferApprovalStatus == TransferApprovalStatus.Approved
+                commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Approved
                 && !apprenticeship.HasHadDataLockSuccess;
 
             return new ApprenticeshipViewModel
