@@ -126,21 +126,27 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             Assert.AreEqual(expectRejectionIndicated, viewModel.IsInTransferRejectedCohort);
         }
 
-        [TestCase(true, false, true)]
-        [TestCase(false, true, true)]
-        [TestCase(false, false, false)]
-        [TestCase(false, true, false)]
-        public void ThenIsTransferFundedAndNoSuccessfulIlrSubmissionShouldBeSetCorrectly(bool expected, bool dataLockSuccess, bool transferSender)
+        [TestCase(true, false, true, TransferApprovalStatus.Approved)]
+        [TestCase(false, true, true, TransferApprovalStatus.Approved)]
+        [TestCase(false, false, true, TransferApprovalStatus.Pending)]
+        [TestCase(false, true, true, TransferApprovalStatus.Pending)]
+        [TestCase(false, false, true, TransferApprovalStatus.Rejected)]
+        [TestCase(false, true, true, TransferApprovalStatus.Rejected)]
+        [TestCase(false, false, false, null)]
+        [TestCase(false, true, false, null)]
+        public void ThenIsApprovedTransferAndNoSuccessfulIlrSubmissionShouldBeSetCorrectly(bool expected, bool dataLockSuccess, bool transferSender, TransferApprovalStatus? transferApprovalStatus)
         {
             var apprenticeship = new Apprenticeship { HasHadDataLockSuccess = dataLockSuccess };
             var commitment = new CommitmentView();
 
             if (transferSender)
-                commitment.TransferSender = new TransferSender();
+            {
+                commitment.TransferSender = new TransferSender {TransferApprovalStatus = transferApprovalStatus};
+            }
 
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
 
-            Assert.AreEqual(expected, viewModel.IsTransferFundedAndNoSuccessfulIlrSubmission);
+            Assert.AreEqual(expected, viewModel.IsApprovedTransferAndNoSuccessfulIlrSubmission);
         }
     }
 }

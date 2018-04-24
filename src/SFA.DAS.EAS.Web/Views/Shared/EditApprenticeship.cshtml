@@ -81,7 +81,7 @@ else
     <div class="form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.TrainingCodeError) ? "error" : "")">
         <hr />
         <label class="form-label-bold" for="TrainingCode">Apprenticeship training course</label>
-        @if (Model.Apprenticeship.IsTransferFundedAndNoSuccessfulIlrSubmission)
+        @if (Model.Apprenticeship.IsApprovedTransferAndNoSuccessfulIlrSubmission)
         {
             <span id="TrainingCode">@Model.Apprenticeship.TrainingName</span>
             @Html.Hidden("TrainingCode", Model.Apprenticeship.TrainingCode)
@@ -111,7 +111,7 @@ else
 
     <span class="form-label-bold">Planned training start date</span>
 
-    @if (Model.Apprenticeship.IsTransferFundedAndNoSuccessfulIlrSubmission)
+    @if (Model.Apprenticeship.IsApprovedTransferAndNoSuccessfulIlrSubmission)
     {
         <span>@Model.Apprenticeship.StartDate.DateTime.Value.ToGdsFormatWithoutDay()</span>
 
