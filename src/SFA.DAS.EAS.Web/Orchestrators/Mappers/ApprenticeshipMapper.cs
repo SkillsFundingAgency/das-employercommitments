@@ -118,9 +118,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                                     apprenticeship.StartDate.HasValue &&
                                     _academicYearValidator.Validate(apprenticeship.StartDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod;
 
-            var isApprovedTransferAndNoSuccessfulIlrSubmission =
+            var isUpdateLockedForStartDateAndCourse =
                 commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Approved
-                && !apprenticeship.HasHadDataLockSuccess;
+                && (!apprenticeship.HasHadDataLockSuccess || (apprenticeship.HasHadDataLockSuccess && isStartDateInFuture));
+                                                                        //    /\ when approved or any transfer?
 
             return new ApprenticeshipViewModel
             {
@@ -147,7 +148,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 IsLockedForUpdate = isLockedForUpdate,
                 IsPaidForByTransfer = commitment.TransferSender != null,
                 IsInTransferRejectedCohort = commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Rejected,
-                IsApprovedTransferAndNoSuccessfulIlrSubmission = isApprovedTransferAndNoSuccessfulIlrSubmission
+                IsUpdateLockedForStartDateAndCourse = isUpdateLockedForStartDateAndCourse
             };
         }
 
