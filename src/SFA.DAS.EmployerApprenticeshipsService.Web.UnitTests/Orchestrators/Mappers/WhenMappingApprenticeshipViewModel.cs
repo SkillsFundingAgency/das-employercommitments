@@ -1,5 +1,4 @@
 using System;
-
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -13,7 +12,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
     [TestFixture]
     public class WhenMappingApprenticeshipViewModel : ApprenticeshipMapperBase
     {
-
         private DateTime _now;
 
         [SetUp]
@@ -40,7 +38,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             viewModel.HasStarted.Should().BeTrue();
         }
 
-
         [Test]
         public void ShouldHaveLockedStatusIfAtLeastOneDataLocksSuccesFound()
         {
@@ -62,6 +59,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             viewModel.IsLockedForUpdate.Should().BeTrue();
             viewModel.HasStarted.Should().BeTrue();
+        }
+
+        [Test]
+        public void ShouldHaveLockedStatusIfApprovedTransferFundedWithSuccessfulIlrSubmissionAndCourseNotYetStarted()
+        {
+            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(3), HasHadDataLockSuccess = true };
+            var commitment = new CommitmentView {TransferSender = new TransferSender {TransferApprovalStatus = TransferApprovalStatus.Approved}};
+
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
+
+            viewModel.IsLockedForUpdate.Should().BeTrue();
         }
 
         [Test]
@@ -126,6 +134,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             Assert.AreEqual(expectRejectionIndicated, viewModel.IsInTransferRejectedCohort);
         }
 
+        /// <remarks>
+        /// trainingStarted should have no material affect, so could be excluded, but i think there is some value in testing it
+        /// </remarks>
         [TestCase(true, false, true, true, TransferApprovalStatus.Approved)]
         [TestCase(false, true, true, true, TransferApprovalStatus.Approved)]
         [TestCase(false, false, true, true, TransferApprovalStatus.Pending)]
@@ -135,7 +146,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         [TestCase(false, false, false, true, null)]
         [TestCase(false, true, false, true, null)]
         [TestCase(true, false, true, false, TransferApprovalStatus.Approved)]
-        [TestCase(true, true, true, false, TransferApprovalStatus.Approved)]
+        [TestCase(false, true, true, false, TransferApprovalStatus.Approved)]
         [TestCase(false, false, true, false, TransferApprovalStatus.Pending)]
         [TestCase(false, true, true, false, TransferApprovalStatus.Pending)]
         [TestCase(false, false, true, false, TransferApprovalStatus.Rejected)]
