@@ -114,16 +114,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             var isStartDateInFuture = apprenticeship.StartDate.HasValue && apprenticeship.StartDate.Value >
                                       new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1);
 
-            //todo:
-            // for existing isLockedForUpdate, as only EditStartedApprenticeship checks the flag, implicit in the flag calc is !isStartDateInFuture
-            // as we need to check for the flag in EditApprenticeship (shown when !isStartDateInFuture), we need to add the explicit check
-            // to switch off the fields when the EditApprenticeship starts taking notice of the flag
-
-            //todo: need to add checks for isLockedForUpdate to (non-started) EditApprenticeship
-
-            // so flag will be (!isStartDateInFuture && existing) || (transfer && hashaddatalocksuccess && isStartDateInFuture)
-
-            // we could have 1 partial, and fold it into edit -> need to check the implicit differences, uln editable? we can add a field for that
+            //todo: we could have 1 partial, and fold it into edit.cshtml
 
             var isLockedForUpdate = (!isStartDateInFuture && 
                                     (apprenticeship.HasHadDataLockSuccess || _academicYearValidator.IsAfterLastAcademicYearFundingPeriod &&
