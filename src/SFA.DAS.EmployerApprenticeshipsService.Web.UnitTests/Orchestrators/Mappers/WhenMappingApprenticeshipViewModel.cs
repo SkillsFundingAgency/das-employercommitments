@@ -1,5 +1,4 @@
 using System;
-
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -13,7 +12,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
     [TestFixture]
     public class WhenMappingApprenticeshipViewModel : ApprenticeshipMapperBase
     {
-
         private DateTime _now;
 
         [SetUp]
@@ -40,7 +38,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             viewModel.HasStarted.Should().BeTrue();
         }
 
-
         [Test]
         public void ShouldHaveLockedStatusIfAtLeastOneDataLocksSuccesFound()
         {
@@ -62,6 +59,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             viewModel.IsLockedForUpdate.Should().BeTrue();
             viewModel.HasStarted.Should().BeTrue();
+        }
+
+        [Test]
+        public void ShouldHaveLockedStatusIfApprovedTransferFundedWithSuccessfulIlrSubmissionAndCourseNotYetStarted()
+        {
+            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(3), HasHadDataLockSuccess = true };
+            var commitment = new CommitmentView {TransferSender = new TransferSender {TransferApprovalStatus = TransferApprovalStatus.Approved}};
+
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
+
+            viewModel.IsLockedForUpdate.Should().BeTrue();
         }
 
         [Test]
@@ -126,27 +134,41 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             Assert.AreEqual(expectRejectionIndicated, viewModel.IsInTransferRejectedCohort);
         }
 
-        [TestCase(true, false, true, TransferApprovalStatus.Approved)]
-        [TestCase(false, true, true, TransferApprovalStatus.Approved)]
-        [TestCase(false, false, true, TransferApprovalStatus.Pending)]
-        [TestCase(false, true, true, TransferApprovalStatus.Pending)]
-        [TestCase(false, false, true, TransferApprovalStatus.Rejected)]
-        [TestCase(false, true, true, TransferApprovalStatus.Rejected)]
-        [TestCase(false, false, false, null)]
-        [TestCase(false, true, false, null)]
-        public void ThenIsApprovedTransferAndNoSuccessfulIlrSubmissionShouldBeSetCorrectly(bool expected, bool dataLockSuccess, bool transferSender, TransferApprovalStatus? transferApprovalStatus)
+        /// <remarks>
+        /// trainingStarted should have no material affect, so could be excluded, but i think there is some value in testing it
+        /// </remarks>
+        [TestCase(true, false, true, true, TransferApprovalStatus.Approved)]
+        [TestCase(false, true, true, true, TransferApprovalStatus.Approved)]
+        [TestCase(false, false, true, true, TransferApprovalStatus.Pending)]
+        [TestCase(false, true, true, true, TransferApprovalStatus.Pending)]
+        [TestCase(false, false, true, true, TransferApprovalStatus.Rejected)]
+        [TestCase(false, true, true, true, TransferApprovalStatus.Rejected)]
+        [TestCase(false, false, false, true, null)]
+        [TestCase(false, true, false, true, null)]
+        [TestCase(true, false, true, false, TransferApprovalStatus.Approved)]
+        [TestCase(false, true, true, false, TransferApprovalStatus.Approved)]
+        [TestCase(false, false, true, false, TransferApprovalStatus.Pending)]
+        [TestCase(false, true, true, false, TransferApprovalStatus.Pending)]
+        [TestCase(false, false, true, false, TransferApprovalStatus.Rejected)]
+        [TestCase(false, true, true, false, TransferApprovalStatus.Rejected)]
+        [TestCase(false, false, false, false, null)]
+        [TestCase(false, true, false, false, null)]
+        public void ThenIsUpdateLockedForStartDateAndCourseShouldBeSetCorrectly(
+            bool expected, bool dataLockSuccess, bool transferSender, bool trainingStarted, TransferApprovalStatus? transferApprovalStatus)
         {
-            var apprenticeship = new Apprenticeship { HasHadDataLockSuccess = dataLockSuccess };
-            var commitment = new CommitmentView();
+            var apprenticeship = new Apprenticeship {
+                HasHadDataLockSuccess = dataLockSuccess,
+                StartDate = _now.AddMonths(trainingStarted ? -1 : 1)
+            };
 
-            if (transferSender)
+            var commitment = new CommitmentView
             {
-                commitment.TransferSender = new TransferSender {TransferApprovalStatus = transferApprovalStatus};
-            }
+                TransferSender = transferSender ? new TransferSender { TransferApprovalStatus = transferApprovalStatus } : null
+            };
 
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
 
-            Assert.AreEqual(expected, viewModel.IsApprovedTransferAndNoSuccessfulIlrSubmission);
+            Assert.AreEqual(expected, viewModel.IsUpdateLockedForStartDateAndCourse);
         }
     }
 }

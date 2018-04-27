@@ -23,7 +23,7 @@
     </div>
 
     <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.DateOfBirthError) ? "error" : "")">
-
+	<hr />
         <span class="form-label-bold">Date of birth</span>
         <span class="form-hint">For example, 08 12 2001</span>
 
@@ -68,7 +68,7 @@
         </div>
     </div>
 
-    @if (Model.Apprenticeship.IsLockedForUpdate || Model.Apprenticeship.IsApprovedTransferAndNoSuccessfulIlrSubmission)
+    @if (Model.Apprenticeship.IsLockedForUpdate || Model.Apprenticeship.IsUpdateLockedForStartDateAndCourse)
     {
         <div class="form-group">
             <hr />
@@ -100,7 +100,7 @@
         </div>
     }
 
-    @if (Model.Apprenticeship.IsLockedForUpdate || Model.Apprenticeship.IsApprovedTransferAndNoSuccessfulIlrSubmission)
+    @if (Model.Apprenticeship.IsLockedForUpdate || Model.Apprenticeship.IsUpdateLockedForStartDateAndCourse)
     {
         <div class="form-error-group form-group">
             <hr />
@@ -124,7 +124,7 @@
     }
     else
     {
-        if (!Model.Apprenticeship.IsApprovedTransferAndNoSuccessfulIlrSubmission)
+        if (!Model.Apprenticeship.IsUpdateLockedForStartDateAndCourse)
         {
             <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError)
                                                       || !string.IsNullOrEmpty(Model.Apprenticeship.StartDateOverlapError)
@@ -150,17 +150,13 @@
                     }
 
                     <div class="form-group form-group-month">
-                        <label for="StartDate.Month">
-                            Month
-                        </label>
+                        <label for="StartDate.Month">Month</label>
 
                         @Html.TextBox("StartDate.Month", Model.Apprenticeship.StartDate.Month, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "StartDate.Month" })
 
                     </div>
-                    <div class="form-group form-group-month">
-                        <label for="StartDate.Year">
-                            Year
-                        </label>
+                    <div class="form-group form-group-year">
+                        <label for="StartDate.Year">Year</label>
                         @Html.TextBox("StartDate.Year", Model.Apprenticeship.StartDate.Year, new { @class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "StartDate.Year" })
                     </div>
                 </div>
@@ -229,8 +225,7 @@
                     <span class="error-message" id="error-message-cost">@Model.Apprenticeship.CostError</span>
                 }
             </label>
-            <span class="heading-small">£ </span>
-            @Html.TextBox("Cost", Model.Apprenticeship.Cost, new { @class = "form-control form-control-3-4", type = "text", aria_labelledby = "Cost", maxlength = "7" })
+            <span class="heading-small">£ </span>@Html.TextBox("Cost", Model.Apprenticeship.Cost, new { @class = "form-control form-control-3-4", type = "text", aria_labelledby = "Cost", maxlength = "7" })
         }
 
     </div>
@@ -248,8 +243,3 @@
         <p id="charCount" style="display:none;"><span name="countchars" id="countchars"></span> characters remaining</p>
     </div>
 </div>
-
-    @Html.Hidden("TrainingType", Model.Apprenticeship.TrainingType)
-    @Html.Hidden("TrainingName", Model.Apprenticeship.TrainingName)
-
-
