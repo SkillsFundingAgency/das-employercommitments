@@ -21,6 +21,9 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetTransferRequest
 
             switch (message.CallerType)
             {
+                case CallerType.TransferReceiver:
+                    transferRequest = await _commitmentsApi.GetTransferRequestForReceiver(message.AccountId, message.TransferRequestId);
+                    break;
                 case CallerType.TransferSender:
                     transferRequest = await _commitmentsApi.GetTransferRequestForSender(message.AccountId, message.TransferRequestId);
                     break;

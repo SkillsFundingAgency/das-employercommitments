@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetTransferRequest;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.UserProfile;
 using SFA.DAS.EmployerCommitments.Web.Authentication;
@@ -29,10 +30,24 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model = await EmployerCommitmentsOrchestrator.GetTransferRequestDetails(hashedAccountId, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
+            var model = await EmployerCommitmentsOrchestrator.GetTransferRequestDetails(hashedAccountId, CallerType.TransferSender, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
 
             return View(model);
         }
+
+        [HttpGet]
+        [OutputCache(CacheProfile = "NoCache")]
+        [Route("receiver/transfers/{hashedTransferRequestId}")]
+        public async Task<ActionResult> TransferDetailsForReceiver(string hashedAccountId, string hashedTransferRequestId)
+        {
+            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+                return View("AccessDenied");
+
+            var model = await EmployerCommitmentsOrchestrator.GetTransferRequestDetails(hashedAccountId, CallerType.TransferReceiver, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
+
+            return View(model);
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -42,7 +57,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var model = await EmployerCommitmentsOrchestrator.GetTransferRequestDetails(hashedAccountId, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
+                var model = await EmployerCommitmentsOrchestrator.GetTransferRequestDetails(hashedAccountId, CallerType.TransferSender, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
 
                 return View("TransferDetails", model);
             }
