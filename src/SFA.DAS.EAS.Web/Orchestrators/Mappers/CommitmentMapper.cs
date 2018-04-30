@@ -7,6 +7,8 @@ using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
+using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
+using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.HashingService;
 
@@ -16,11 +18,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
     {
         private readonly IHashingService _hashingService;
         private readonly IFeatureToggleService _featureToggleService;
+        private readonly IPublicHashingService _publicHashingService;
 
-        public CommitmentMapper(IHashingService hashingService, IFeatureToggleService featureToggleService)
+        public CommitmentMapper(IHashingService hashingService, IFeatureToggleService featureToggleService, IPublicHashingService publicHashingService)
         {
             _hashingService = hashingService;
             _featureToggleService = featureToggleService;
+            _publicHashingService = publicHashingService;
         }
 
         public async Task<CommitmentListItemViewModel> MapToCommitmentListItemViewModelAsync(CommitmentListItem commitment, Func<CommitmentListItem, Task<string>> latestMessageFunc)
@@ -54,7 +58,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             return new TransferRequestViewModel()
             {
                 HashedTransferReceiverAccountId = _hashingService.HashValue(transferRequest.ReceivingEmployerAccountId),
+                PublicHashedTransferReceiverAccountId = _publicHashingService.HashValue(transferRequest.ReceivingEmployerAccountId),
                 HashedTransferSenderAccountId = _hashingService.HashValue(transferRequest.SendingEmployerAccountId),
+                PublicHashedTransferSenderAccountId = _publicHashingService.HashValue(transferRequest.SendingEmployerAccountId),
                 LegalEntityName = transferRequest.LegalEntityName,
                 HashedCohortReference = _hashingService.HashValue(transferRequest.CommitmentId),
                 TrainingList = transferRequest.TrainingList?.Select(MapTrainingCourse).ToList() ?? new List<TrainingCourseSummaryViewModel>(),
@@ -65,6 +71,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 TotalCost = transferRequest.TransferCost,
                 EnableRejection = _featureToggleService.Get<TransfersRejectOption>().FeatureEnabled
             };
+        }
+
+        public IEnumerable<TransferConnectionViewModel> MapToTransferConnectionsViewModel(List<TransferConnection> transferConnections)
+        {
+            return transferConnections.Select(x =>
+                new TransferConnectionViewModel
+                {
+                    TransferConnectionCode = _publicHashingService.HashValue(x.AccountId),
+                    TransferConnectionName = x.AccountName
+                });
         }
 
         [Obsolete]
@@ -82,7 +98,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             return new TransferCommitmentViewModel()
             {
                 HashedTransferReceiverAccountId = _hashingService.HashValue(commitment.EmployerAccountId),
+                PublicHashedTransferReceiverAccountId = _publicHashingService.HashValue(commitment.EmployerAccountId),
                 HashedTransferSenderAccountId = _hashingService.HashValue(commitment.TransferSender.Id.Value),
+                PublicHashedTransferSenderAccountId = _publicHashingService.HashValue(commitment.TransferSender.Id.Value),
                 LegalEntityName = commitment.LegalEntityName,
                 HashedCohortReference = _hashingService.HashValue(commitment.Id),
                 TrainingList = grouped.ToList(),

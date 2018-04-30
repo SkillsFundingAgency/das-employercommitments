@@ -29,6 +29,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             {
                 TransferConnections = new List<TransferConnection> { new TransferConnection() }
             };
+            MockCommitmentMapper.Setup(x => x.MapToTransferConnectionsViewModel(It.IsAny<List<TransferConnection>>()))
+                .Returns(new List<TransferConnectionViewModel> {new TransferConnectionViewModel()});
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountTransferConnectionsRequest>())).ReturnsAsync(_sendAsyncResponse);
         }
 

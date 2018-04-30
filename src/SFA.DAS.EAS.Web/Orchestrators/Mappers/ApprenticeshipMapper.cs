@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.DataLock;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
@@ -10,7 +11,6 @@ using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.Commitments.Api.Types.ProviderPayment;
 using SFA.DAS.Commitments.Api.Types.Validation.Types;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipsByUln;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
@@ -114,9 +114,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             var isStartDateInFuture = apprenticeship.StartDate.HasValue && apprenticeship.StartDate.Value >
                                       new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1);
 
-            var isLockedForUpdate = apprenticeship.HasHadDataLockSuccess || _academicYearValidator.IsAfterLastAcademicYearFundingPeriod &&
+            //todo: we could have 1 partial, and fold it into edit.cshtml
+
+            var isLockedForUpdate = (!isStartDateInFuture && 
+                                    (apprenticeship.HasHadDataLockSuccess || _academicYearValidator.IsAfterLastAcademicYearFundingPeriod &&
                                     apprenticeship.StartDate.HasValue &&
-                                    _academicYearValidator.Validate(apprenticeship.StartDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod;
+                                    _academicYearValidator.Validate(apprenticeship.StartDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod))
+                                    ||
+                                    (commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Approved
+                                    && apprenticeship.HasHadDataLockSuccess && isStartDateInFuture);
+
+            var isUpdateLockedForStartDateAndCourse =
+                commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Approved
+                    && !apprenticeship.HasHadDataLockSuccess;
 
             return new ApprenticeshipViewModel
             {
@@ -141,7 +151,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 EmployerRef = apprenticeship.EmployerRef,
                 HasStarted = !isStartDateInFuture,
                 IsLockedForUpdate = isLockedForUpdate,
-                IsPaidForByTransfer = commitment.TransferSender != null
+                IsPaidForByTransfer = commitment.TransferSender != null,
+                IsInTransferRejectedCohort = commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Rejected,
+                IsUpdateLockedForStartDateAndCourse = isUpdateLockedForStartDateAndCourse
             };
         }
 

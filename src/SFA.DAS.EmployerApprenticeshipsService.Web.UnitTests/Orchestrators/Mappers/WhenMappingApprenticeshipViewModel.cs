@@ -1,20 +1,17 @@
 using System;
-
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-
+using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
-using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 {
     [TestFixture]
     public class WhenMappingApprenticeshipViewModel : ApprenticeshipMapperBase
     {
-
         private DateTime _now;
 
         [SetUp]
@@ -41,7 +38,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             viewModel.HasStarted.Should().BeTrue();
         }
 
-
         [Test]
         public void ShouldHaveLockedStatusIfAtLeastOneDataLocksSuccesFound()
         {
@@ -63,6 +59,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             viewModel.IsLockedForUpdate.Should().BeTrue();
             viewModel.HasStarted.Should().BeTrue();
+        }
+
+        [Test]
+        public void ShouldHaveLockedStatusIfApprovedTransferFundedWithSuccessfulIlrSubmissionAndCourseNotYetStarted()
+        {
+            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(3), HasHadDataLockSuccess = true };
+            var commitment = new CommitmentView {TransferSender = new TransferSender {TransferApprovalStatus = TransferApprovalStatus.Approved}};
+
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
+
+            viewModel.IsLockedForUpdate.Should().BeTrue();
         }
 
         [Test]
@@ -107,6 +114,61 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
 
             Assert.AreEqual(expectedStopDate, viewModel.StopDate);
+        }
+
+        [TestCase(TransferApprovalStatus.Rejected, true)]
+        [TestCase(TransferApprovalStatus.Pending, false)]
+        public void ThenCohortTransferRejectionIsIndicated(TransferApprovalStatus status, bool expectRejectionIndicated)
+        {
+            var apprenticeship = new Apprenticeship();
+            var commitment = new CommitmentView
+            {
+                TransferSender = new TransferSender
+                {
+                    TransferApprovalStatus = status
+                }
+            };
+
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
+
+            Assert.AreEqual(expectRejectionIndicated, viewModel.IsInTransferRejectedCohort);
+        }
+
+        /// <remarks>
+        /// trainingStarted should have no material affect, so could be excluded, but i think there is some value in testing it
+        /// </remarks>
+        [TestCase(true, false, true, true, TransferApprovalStatus.Approved)]
+        [TestCase(false, true, true, true, TransferApprovalStatus.Approved)]
+        [TestCase(false, false, true, true, TransferApprovalStatus.Pending)]
+        [TestCase(false, true, true, true, TransferApprovalStatus.Pending)]
+        [TestCase(false, false, true, true, TransferApprovalStatus.Rejected)]
+        [TestCase(false, true, true, true, TransferApprovalStatus.Rejected)]
+        [TestCase(false, false, false, true, null)]
+        [TestCase(false, true, false, true, null)]
+        [TestCase(true, false, true, false, TransferApprovalStatus.Approved)]
+        [TestCase(false, true, true, false, TransferApprovalStatus.Approved)]
+        [TestCase(false, false, true, false, TransferApprovalStatus.Pending)]
+        [TestCase(false, true, true, false, TransferApprovalStatus.Pending)]
+        [TestCase(false, false, true, false, TransferApprovalStatus.Rejected)]
+        [TestCase(false, true, true, false, TransferApprovalStatus.Rejected)]
+        [TestCase(false, false, false, false, null)]
+        [TestCase(false, true, false, false, null)]
+        public void ThenIsUpdateLockedForStartDateAndCourseShouldBeSetCorrectly(
+            bool expected, bool dataLockSuccess, bool transferSender, bool trainingStarted, TransferApprovalStatus? transferApprovalStatus)
+        {
+            var apprenticeship = new Apprenticeship {
+                HasHadDataLockSuccess = dataLockSuccess,
+                StartDate = _now.AddMonths(trainingStarted ? -1 : 1)
+            };
+
+            var commitment = new CommitmentView
+            {
+                TransferSender = transferSender ? new TransferSender { TransferApprovalStatus = transferApprovalStatus } : null
+            };
+
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
+
+            Assert.AreEqual(expected, viewModel.IsUpdateLockedForStartDateAndCourse);
         }
     }
 }

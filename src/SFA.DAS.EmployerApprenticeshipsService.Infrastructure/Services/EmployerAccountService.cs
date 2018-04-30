@@ -57,7 +57,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
 
             return listOfTransferConnections.Select(x => new TransferConnection
             {
-                HashedAccountId = x.FundingEmployerHashedAccountId,
+                AccountId = x.FundingEmployerAccountId,
                 AccountName = x.FundingEmployerAccountName
             }).ToList();
         }

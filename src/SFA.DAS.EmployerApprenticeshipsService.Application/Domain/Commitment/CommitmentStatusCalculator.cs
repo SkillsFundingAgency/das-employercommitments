@@ -13,9 +13,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
 
             if (transferSenderId.HasValue)
             {
-                if (!transferApprovalStatus.HasValue)
-                    throw new InvalidStateException("TransferSenderId supplied, but no TransferApprovalStatus");
-                return GetTransferStatus(editStatus, transferApprovalStatus.Value, lastAction, hasApprenticeships, overallAgreementStatus);
+                return GetTransferStatus(editStatus, transferApprovalStatus, lastAction, hasApprenticeships,  overallAgreementStatus);
             }
 
             if (editStatus == EditStatus.Both)
@@ -46,7 +44,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
 
         private RequestStatus GetEmployerOnlyStatus(LastAction lastAction, bool hasApprenticeships, AgreementStatus? overallAgreementStatus)
         {
-            if (!hasApprenticeships || lastAction == LastAction.None)
+            if (!hasApprenticeships || lastAction == LastAction.None || lastAction == LastAction.AmendAfterRejected)
                 return RequestStatus.NewRequest;
 
             // LastAction.Approve > LastAction.Amend, but then AgreementStatus >= ProviderAgreed, so no need for > on LastAction??
@@ -59,14 +57,14 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
             return RequestStatus.None;
         }
 
-        private RequestStatus GetTransferStatus(EditStatus edit, TransferApprovalStatus transferApproval, LastAction lastAction, bool hasApprenticeships, AgreementStatus? overallAgreementStatus)
+        private RequestStatus GetTransferStatus(EditStatus edit, TransferApprovalStatus? transferApproval, LastAction lastAction, bool hasApprenticeships, AgreementStatus? overallAgreementStatus)
         {
             const string invalidStateExceptionMessagePrefix = "Transfer funder commitment in invalid state: ";
 
             if (edit >= EditStatus.Neither)
                 throw new Exception("Unexpected EditStatus");
 
-            switch (transferApproval)
+            switch (transferApproval ?? TransferApprovalStatus.Pending)
             {
                 case TransferApprovalStatus.Pending:
                     {

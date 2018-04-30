@@ -33,6 +33,15 @@
     <div class="column-full">
         <hr class="hr-top" />
         <div class="column-one-third">
+            Receiving Employer Account Id
+        </div>
+        <div class="column-two-thirds">
+            @Model.Data.PublicHashedTransferReceiverAccountId
+        </div>
+    </div>
+    <div class="column-full">
+        <hr class="hr-top" />
+        <div class="column-one-third">
             Cohort Reference
         </div>
         <div class="column-half">
@@ -70,13 +79,13 @@
         </div>
         @if (Model.Data.PendingApproval)
         {
-            <hr class="hr-bottom"/>
+            <hr class="hr-bottom" />
         }
     </div>
     @if (!Model.Data.PendingApproval)
     {
         <div class="column-full">
-            <hr class="hr-top"/>
+            <hr class="hr-top" />
             <div class="column-one-third">
                 @Model.Data.TransferApprovalStatusDesc By
             </div>

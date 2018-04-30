@@ -22,6 +22,7 @@ using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
+using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
@@ -34,6 +35,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         protected Mock<IApprenticeshipMapper> MockApprenticeshipMapper;
         protected Mock<ILog> MockLogger;
         protected Mock<IHashingService> MockHashingService;
+        protected Mock<IPublicHashingService> MockPublicHashingService;
         protected Mock<IAcademicYearValidator> MockAcademicYearValidator;
         protected Mock<IAcademicYearDateProvider> MockAcademicYearDateProvider;
         protected Mock<IMediator> MockMediator;
@@ -61,6 +63,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockHashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);
             MockHashingService.Setup(x => x.DecodeValue("ABC321")).Returns(321L);
             MockHashingService.Setup(x => x.DecodeValue("ABC456")).Returns(456L);
+
+            MockPublicHashingService = new Mock<IPublicHashingService>();
 
             CommitmentView = new CommitmentView
             {
@@ -110,6 +114,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             EmployerCommitmentOrchestrator = new EmployerCommitmentsOrchestrator(
                 MockMediator.Object,
                 MockHashingService.Object,
+                MockPublicHashingService.Object,
                 MockApprenticeshipMapper.Object,
                 MockCommitmentMapper.Object,
                 MockLogger.Object,

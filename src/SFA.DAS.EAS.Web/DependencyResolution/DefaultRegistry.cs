@@ -40,6 +40,7 @@ using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Infrastructure.Caching;
 using SFA.DAS.EmployerCommitments.Infrastructure.Services;
+using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
@@ -86,8 +87,9 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<ICache>().Use<InMemoryCache>(); //RedisCache
 
             For<IApprenticeshipInfoServiceConfiguration>().Use(config.ApprenticeshipInfoService);
+            //todo: this validator should probably be a singleton
             For<IApprenticeshipViewModelValidator>().Use<ApprenticeshipViewModelValidator>();
-            For<IValidateApprovedApprenticeship>().Use<ApprovedApprenticeshipViewModelValidator>();
+            For<IValidateApprovedApprenticeship>().Use<ApprovedApprenticeshipViewModelValidator>().Singleton();
 
             ConfigureHashingService(config);
             SetUpCommitmentApi(config);
@@ -292,6 +294,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
         private void ConfigureHashingService(EmployerCommitmentsServiceConfiguration config)
         {
             For<IHashingService>().Use(x => new HashingService.HashingService(config.AllowedHashstringCharacters, config.Hashstring));
+            For<IPublicHashingService>().Use(x => new PublicHashingService.PublicHashingService(config.PublicAllowedHashstringCharacters, config.PublicHashstring));
         }
 
     }

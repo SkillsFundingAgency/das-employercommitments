@@ -45,6 +45,7 @@
             @Html.Hidden("AgreementStatus", Model.Data.Apprenticeship.AgreementStatus)
             @Html.Hidden("ProviderRef", Model.Data.Apprenticeship.ProviderRef)
             @Html.Hidden("IsPaidForByTransfer", Model.Data.Apprenticeship.IsPaidForByTransfer)
+            @Html.Hidden("IsInTransferRejectedCohort", Model.Data.Apprenticeship.IsInTransferRejectedCohort)
 
             <button type="submit" class="button" id="submit-edit-app-entry">Save</button>
             <a class="button delete-button" href="@Url.Action("DeleteApprenticeshipConfirmation", new { Model.Data.Apprenticeship.HashedCommitmentId, Model.Data.Apprenticeship.HashedApprenticeshipId })" aria-label="Cancel">Delete</a>
