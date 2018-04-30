@@ -114,9 +114,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             var isStartDateInFuture = apprenticeship.StartDate.HasValue && apprenticeship.StartDate.Value >
                                       new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1);
 
-            var isLockedForUpdate = apprenticeship.HasHadDataLockSuccess || _academicYearValidator.IsAfterLastAcademicYearFundingPeriod &&
+            //todo: we could have 1 partial, and fold it into edit.cshtml
+
+            var isLockedForUpdate = (!isStartDateInFuture && 
+                                    (apprenticeship.HasHadDataLockSuccess || _academicYearValidator.IsAfterLastAcademicYearFundingPeriod &&
                                     apprenticeship.StartDate.HasValue &&
-                                    _academicYearValidator.Validate(apprenticeship.StartDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod;
+                                    _academicYearValidator.Validate(apprenticeship.StartDate.Value) == AcademicYearValidationResult.NotWithinFundingPeriod))
+                                    ||
+                                    (commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Approved
+                                    && apprenticeship.HasHadDataLockSuccess && isStartDateInFuture);
+
+            var isUpdateLockedForStartDateAndCourse =
+                commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Approved
+                    && !apprenticeship.HasHadDataLockSuccess;
 
             return new ApprenticeshipViewModel
             {
@@ -143,7 +153,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 IsLockedForUpdate = isLockedForUpdate,
                 IsPaidForByTransfer = commitment.TransferSender != null,
                 IsInTransferRejectedCohort = commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Rejected,
-                IsTransferFundedAndNoSuccessfulIlrSubmission = commitment.TransferSender != null && !apprenticeship.HasHadDataLockSuccess
+                IsUpdateLockedForStartDateAndCourse = isUpdateLockedForStartDateAndCourse
             };
         }
 
