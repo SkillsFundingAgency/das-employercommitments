@@ -243,6 +243,7 @@
     <Compile Include="Interfaces\IProviderEmailLookupService.cs" />
     <Compile Include="Configuration\TokenServiceApiClientConfiguration.cs" />
     <Compile Include="Interfaces\IMultiVariantTestingService.cs" />
+    <Compile Include="Interfaces\IProviderEmailService.cs" />
     <Compile Include="Models\AcademicYear\AcademicYearValidationResult.cs" />
     <Compile Include="Models\Apprenticeship\ApprenticeshipStatus.cs" />
     <Compile Include="Models\Apprenticeship\ChangeOption.cs" />

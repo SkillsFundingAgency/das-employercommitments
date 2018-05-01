@@ -290,6 +290,7 @@
     <Compile Include="Queries\ValidateStatusChangeDate\ValidateStatusChangeDateQueryHandler.cs" />
     <Compile Include="Queries\ValidateStatusChangeDate\ValidateStatusChangeDateQueryResponse.cs" />
     <Compile Include="Queries\ValidateStatusChangeDate\ValidateStatusChangeDateQueryValidator.cs" />
+    <Compile Include="Services\ProviderEmailService.cs" />
     <Compile Include="Validation\IValidator.cs" />
     <Compile Include="Validation\ValidationResult.cs" />
   </ItemGroup>
