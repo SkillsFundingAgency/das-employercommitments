@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
         public void BaseSetup()
         {
             YearNow = DateTime.Now.Year;
-            CurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2018, 5, 1));
+            CurrentDateTime.Setup(x => x.Now).Returns(DateTime.Now.AddMonths(6));
             var academicYearProvider = new AcademicYearDateProvider(CurrentDateTime.Object);
             Validator = new ApprenticeshipViewModelValidator(
                 new WebApprenticeshipValidationText(academicYearProvider), 
