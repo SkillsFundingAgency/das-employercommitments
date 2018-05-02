@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         public async Task ShouldCallMediatorWithExpectedQuery()
         {
             //Act
-            await EmployerCommitmentOrchestrator.GetTransferRequestDetails("ABC123", "XYZ789", "UserA");
+            await EmployerCommitmentOrchestrator.GetTransferRequestDetails("ABC123", CallerType.TransferSender, "XYZ789", "UserA");
 
             //Assert
             MockMediator.Verify(x => x.SendAsync(It.Is<GetTransferRequestQueryRequest>(c =>
@@ -50,7 +50,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             //Arrange 
 
             //Act
-            await EmployerCommitmentOrchestrator.GetTransferRequestDetails("ABC123", "XYZ789", "UserA");
+            await EmployerCommitmentOrchestrator.GetTransferRequestDetails("ABC123", CallerType.TransferSender, "XYZ789", "UserA");
 
             //Assert
             MockCommitmentMapper.Verify(x=>x.MapToTransferRequestViewModel(_transferRequest));
@@ -62,7 +62,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             //Arrange 
 
             //Act
-            var result = await EmployerCommitmentOrchestrator.GetTransferRequestDetails("ABC123", "XYZ789", "UserA");
+            var result = await EmployerCommitmentOrchestrator.GetTransferRequestDetails("ABC123", CallerType.TransferSender, "XYZ789", "UserA");
 
             //Assert
             Assert.AreSame(_transferRequestViewModel, result.Data);

@@ -12,6 +12,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         }
 
         public string HashedTransferSenderAccountId { get; set; }
+        public string TransferSenderName { get; set; }
         public string PublicHashedTransferSenderAccountId { get; set; }
         public string HashedTransferReceiverAccountId { get; set; }
         public string PublicHashedTransferReceiverAccountId { get; set; }

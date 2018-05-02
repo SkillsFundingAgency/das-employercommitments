@@ -1,0 +1,112 @@
+﻿@using SFA.DAS.EmployerCommitments.Web
+@using SFA.DAS.EmployerCommitments.Web.Extensions
+@using SFA.DAS.EmployerCommitments.Web.ViewModels
+
+@{
+    ViewBag.Title = "Transfer request details";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageID = "approve-transfer-cohort";
+}
+
+@model OrchestratorResponse<TransferRequestViewModel>
+
+
+
+<div class="grid-row">
+    <div class="column-full">
+        @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
+    </div>
+</div>
+
+<h1 class="heading-xlarge">@ViewBag.Title</h1>
+
+<div class="grid-row">
+    <div class="column-full">
+        <hr class="hr-top" />
+        <div class="column-one-third">
+            Account Name
+        </div>
+        <div class="column-two-thirds">
+            @Model.Data.TransferSenderName
+        </div>
+    </div>
+    <div class="column-full">
+        <hr class="hr-top" />
+        <div class="column-one-third">
+            Cohort Reference
+        </div>
+        <div class="column-half">
+            @Model.Data.HashedCohortReference
+        </div>
+    </div>
+    <div class="column-full">
+        <hr class="hr-top" />
+        <div class="column-one-third">
+            Status
+        </div>
+        <div class="column-two-thirds">
+            @Model.Data.TransferApprovalStatusDesc
+        </div>
+    </div>
+    <div class="column-full">
+        <hr class="hr-top" />
+        <div class="column-one-third">
+            Total Cost
+        </div>
+        <div class="column-two-thirds">
+            @($"£{Model.Data.TotalCost:n0}")
+        </div>
+    </div>
+    <div class="column-full">
+        <hr class="hr-top" />
+        <div class="column-one-third">
+            Training
+        </div>
+        <div class="column-two-thirds">
+            @foreach (var item in Model.Data.TrainingList)
+            {
+                <p>@item.SummaryDescription</p>
+            }
+        </div>
+        @if (Model.Data.PendingApproval)
+        {
+            <hr class="hr-bottom" />
+        }
+    </div>
+    @if (!Model.Data.PendingApproval)
+    {
+        <div class="column-full">
+            <hr class="hr-top" />
+            <div class="column-one-third">
+                @Model.Data.TransferApprovalStatusDesc By
+            </div>
+            <div class="column-two-thirds">
+                @Model.Data.TransferApprovalSetBy
+            </div>
+        </div>
+        <div class="column-full">
+            <hr class="hr-top" />
+            <div class="column-one-third">
+                @Model.Data.TransferApprovalStatusDesc On
+            </div>
+            <div class="column-two-thirds">
+                @($"{Model.Data.TransferApprovalSetOn:dd MMM yyyy}")
+            </div>
+        </div>
+        <div class="column-full">
+            <hr class="hr-bottom" />
+        </div>
+    }
+</div>
+
+@section breadcrumb {
+    <div class="breadcrumbs">
+        <a href="@Url.ExternalMyaUrlAction("transfers")">Back to Transfers</a>
+    </div>
+}
+
+@section gaDataLayer {
+    <script>
+        sfa.dataLayer.vpv = '/accounts/apprentices/legalEntity/create/choose-organisation';
+    </script>
+}
