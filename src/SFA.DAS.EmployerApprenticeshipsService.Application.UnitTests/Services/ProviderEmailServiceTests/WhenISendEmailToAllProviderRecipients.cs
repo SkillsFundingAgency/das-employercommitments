@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.EmployerCommitments.Application.Services;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.Notification;
@@ -11,12 +12,12 @@ using SFA.DAS.NLog.Logger;
 using SFA.DAS.Notifications.Api.Client;
 using SFA.DAS.Notifications.Api.Types;
 
-namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEmailService
+namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEmailServiceTests
 {
     [TestFixture]
     public class WhenISendEmailToAllProviderRecipients
     {
-        private Application.Services.ProviderEmailService _providerEmailService;
+        private ProviderEmailService _providerEmailService;
         private Mock<IProviderEmailLookupService> _providerEmailLookupService;
         private Mock<INotificationsApi> _notificationsApi;
 
@@ -49,7 +50,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
                 .Callback<Email>(email => _sentEmails.Add(email))
                 .Returns(() => Task.CompletedTask);
 
-            _providerEmailService = new Application.Services.ProviderEmailService(_providerEmailLookupService.Object,
+            _providerEmailService = new ProviderEmailService(_providerEmailLookupService.Object,
                 _notificationsApi.Object, Mock.Of<ILog>(),
                 new EmployerCommitmentsServiceConfiguration
                 {
@@ -114,7 +115,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             await _act.Invoke();
 
             Assert.AreEqual(_exampleValidEmail.TemplateId, _sentEmails[0].TemplateId);
-            Assert.AreEqual(_exampleValidEmail.Tokens, _sentEmails[0].Tokens);
+            CollectionAssert.AreEqual(_exampleValidEmail.Tokens, _sentEmails[0].Tokens);
         }
     }
 }

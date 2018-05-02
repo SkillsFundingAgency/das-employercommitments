@@ -186,7 +186,8 @@
     <Compile Include="Queries\GetUserAccountRoleQueryTests\WhenIValidateTheRequest.cs" />
     <Compile Include="Queries\QueryBaseTest.cs" />
     <Compile Include="Queries\ValidateStatusChangeDateQuery\WhenValidatingChangeDate.cs" />
-    <Compile Include="Services\ProviderEmailService\WhenISendEmailToAllProviderRecipients.cs" />
+    <Compile Include="Services\ProviderEmailNotificationServiceTests\WhenISendTransferRejectedCommitmentEditEmailNotification.cs" />
+    <Compile Include="Services\ProviderEmailServiceTests\WhenISendEmailToAllProviderRecipients.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
