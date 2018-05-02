@@ -252,6 +252,7 @@
     <Compile Include="Models\FeatureToggles\PublicSectorReporting.cs" />
     <Compile Include="Models\FeatureToggles\Transfers.cs" />
     <Compile Include="Models\FeatureToggles\TransfersRejectOption.cs" />
+    <Compile Include="Models\Notification\EmailMessage.cs" />
     <Compile Include="Models\Organisation\Address.cs" />
     <Compile Include="Models\Organisation\EmployerAgreementStatus.cs" />
     <Compile Include="Models\Organisation\TransferConnection.cs" />
@@ -293,10 +294,6 @@
     <Compile Include="Models\ReferenceData\PublicSectorOrganisation.cs" />
     <Compile Include="Models\AccountTeam\Membership.cs" />
     <Compile Include="Models\AccountTeam\MembershipView.cs" />
-    <Compile Include="Models\Notification\EmailContent.cs" />
-    <Compile Include="Models\Notification\EmailMessage.cs" />
-    <Compile Include="Models\Notification\MessageFormat.cs" />
-    <Compile Include="Models\Notification\NotificationMessage.cs" />
     <Compile Include="Models\UserProfile\Role.cs" />
     <Compile Include="Models\UserProfile\User.cs" />
     <Compile Include="Models\UserProfile\Users.cs" />
