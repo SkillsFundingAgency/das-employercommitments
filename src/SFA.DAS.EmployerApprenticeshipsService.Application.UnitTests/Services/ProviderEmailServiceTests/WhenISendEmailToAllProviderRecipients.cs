@@ -80,7 +80,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         [Test]
         public async Task ThenTheProviderEmailLookupServiceIsCalledToRetrieveRecipientAddresses()
         {
-            await _act.Invoke();
+            await _act();
 
             _providerEmailLookupService.Verify(x => x.GetEmailsAsync(
                     It.Is<long>(l =>  l == _providerId),
@@ -91,7 +91,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         [Test]
         public async Task ThenTheNotificationsApiIsCalledToSendAnEmailForEachRecipient()
         {
-            await _act.Invoke();
+            await _act();
 
             CollectionAssert.AreEquivalent(_exampleRecipients, _sentEmails.Select(e => e.RecipientsAddress));
         }
@@ -103,7 +103,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             _commitmentNotificationConfiguration.SendEmail = false;
 
             //Act
-            await _act.Invoke();
+            await _act();
 
             //Assert
             Assert.IsEmpty(_sentEmails);
@@ -112,7 +112,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         [Test]
         public async Task ThenEmailMessagePropertiesAreMappedCorrectly()
         {
-            await _act.Invoke();
+            await _act();
 
             Assert.AreEqual(_exampleValidEmail.TemplateId, _sentEmails[0].TemplateId);
             CollectionAssert.AreEqual(_exampleValidEmail.Tokens, _sentEmails[0].Tokens);

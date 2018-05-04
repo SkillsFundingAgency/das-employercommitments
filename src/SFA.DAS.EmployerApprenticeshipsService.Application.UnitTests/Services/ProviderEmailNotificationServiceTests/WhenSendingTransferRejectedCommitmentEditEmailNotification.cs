@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         [Test]
         public async Task ThenProviderEmailServiceIsCalledToSendEmail()
         {
-            await _act.Invoke();
+            await _act();
 
             _providerEmailService.Verify(x => x.SendEmailToAllProviderRecipients(
                 It.Is<long>(l => l == _exampleCommitmentView.ProviderId),
@@ -71,7 +71,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         [Test]
         public async Task ThenEmailMessageTemplateIdIsSetCorrectly()
         {
-            await _act.Invoke();
+            await _act();
 
             Assert.AreEqual("ProviderTransferRejectedCommitmentEditNotification", _sentEmailMessage.TemplateId);
         }
@@ -79,7 +79,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         [Test]
         public async Task ThenEmailMessageIsTokenisedCorrectly()
         {
-            await _act.Invoke();
+            await _act();
 
             //Assert
 
