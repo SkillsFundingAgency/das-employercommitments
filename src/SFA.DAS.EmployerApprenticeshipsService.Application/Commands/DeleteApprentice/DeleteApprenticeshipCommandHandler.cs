@@ -34,8 +34,10 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.DeleteApprentice
                 throw new InvalidRequestException(validationResult.ValidationDictionary);
             }
 
+            var apprenticeship = await _commitmentsApi.GetEmployerApprenticeship(message.AccountId, message.ApprenticeshipId);
+
             var commitment = await
-                _commitmentsApi.GetEmployerCommitment(message.AccountId, message.ApprenticeshipId);
+                _commitmentsApi.GetEmployerCommitment(message.AccountId, apprenticeship.CommitmentId);
 
             await _commitmentsApi.DeleteEmployerApprenticeship(message.AccountId, message.ApprenticeshipId,
                 new DeleteRequest { UserId = message.UserId, LastUpdatedByInfo = new LastUpdateInfo { EmailAddress = message.UserEmailAddress, Name = message.UserDisplayName } });

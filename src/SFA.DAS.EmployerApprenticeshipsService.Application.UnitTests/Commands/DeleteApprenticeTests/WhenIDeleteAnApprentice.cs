@@ -4,6 +4,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types;
+using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteApprentice;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
@@ -27,6 +28,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.DeleteAppre
             _commitmentView = new CommitmentView();
 
             _commitmentsApi = new Mock<IEmployerCommitmentApi>();
+            _commitmentsApi.Setup(x => x.GetEmployerApprenticeship(It.IsAny<long>(), It.IsAny<long>()))
+                .ReturnsAsync(new Apprenticeship());
             _commitmentsApi.Setup(x => x.GetEmployerCommitment(It.IsAny<long>(), It.IsAny<long>()))
                 .ReturnsAsync(_commitmentView);
             _commitmentsApi.Setup(x => x.DeleteEmployerApprenticeship(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<DeleteRequest>()))
