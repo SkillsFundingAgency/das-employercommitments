@@ -5,6 +5,6 @@ namespace SFA.DAS.EmployerCommitments.Domain.Interfaces
 {
     public interface IProviderEmailNotificationService
     {
-        Task SendProviderTransferRejectedCommitmentEditEmailNotification(CommitmentView commitment);
+        Task SendProviderTransferRejectedCommitmentEditNotification(CommitmentView commitment);
     }
 }

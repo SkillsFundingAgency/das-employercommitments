@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeship
             if (commitment.TransferSender?.TransferApprovalStatus ==
                 Commitments.Api.Types.TransferApprovalStatus.Rejected)
             {
-                await _providerEmailNotificationService.SendProviderTransferRejectedCommitmentEditEmailNotification(
+                await _providerEmailNotificationService.SendProviderTransferRejectedCommitmentEditNotification(
                     commitment);
             }
         }

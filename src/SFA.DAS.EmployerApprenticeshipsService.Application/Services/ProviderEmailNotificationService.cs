@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
             _logger = logger;
         }
 
-        public async Task SendProviderTransferRejectedCommitmentEditEmailNotification(CommitmentView commitment)
+        public async Task SendProviderTransferRejectedCommitmentEditNotification(CommitmentView commitment)
         {
             var emailMessage = new EmailMessage
             {

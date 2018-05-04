@@ -5,22 +5,22 @@ using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
-using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeship;
+using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeship;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 
-namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateApprenticeshipTests
+namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateApprenticeshipTests
 {
     [TestFixture]
-    public sealed class WhenCreatingAnApprenticeship
+    public class WhenUpdatingAnApprenticeship
     {
-        private CreateApprenticeshipCommand _validCommand;
-        private CreateApprenticeshipCommandHandler _handler;
+        private UpdateApprenticeshipCommand _validCommand;
+        private UpdateApprenticeshipCommandHandler _handler;
         private Mock<IProviderEmailNotificationService> _providerEmailNotificationService;
         private Mock<IEmployerCommitmentApi> _commitmentApi;
         private CommitmentView _commitmentView;
 
         [SetUp]
-        public void Setup()
+        public void Arrange()
         {
             _commitmentView = new CommitmentView();
 
@@ -33,31 +33,17 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateAppre
                 .Setup(x => x.SendProviderTransferRejectedCommitmentEditNotification(It.IsAny<CommitmentView>()))
                 .Returns(() => Task.CompletedTask);
 
-            _handler = new CreateApprenticeshipCommandHandler(_commitmentApi.Object,
+            _handler = new UpdateApprenticeshipCommandHandler(_commitmentApi.Object,
                 _providerEmailNotificationService.Object);
 
-            _validCommand = new CreateApprenticeshipCommand
+            _validCommand = new UpdateApprenticeshipCommand
             {
                 AccountId = 123,
                 Apprenticeship = new Apprenticeship { CommitmentId = 5634 },
                 UserId = "ABC123",
-                UserDisplayName = "Bob",
-                UserEmailAddress = "test@email.com"
+                UserName = "Bob",
+                UserEmail = "test@email.com"
             };
-        }
-
-        [Test]
-        public async Task ThenTheApprenticeshipIsCreated()
-        {
-            await _handler.Handle(_validCommand);
-
-            _commitmentApi.Verify(
-                x =>
-                    x.CreateEmployerApprenticeship(_validCommand.AccountId, _validCommand.Apprenticeship.CommitmentId,
-                        It.Is<ApprenticeshipRequest>(
-                            y =>
-                                y.Apprenticeship == _validCommand.Apprenticeship && y.UserId == _validCommand.UserId && y.LastUpdatedByInfo.Name == _validCommand.UserDisplayName &&
-                                y.LastUpdatedByInfo.EmailAddress == _validCommand.UserEmailAddress)));
         }
 
         [Test]

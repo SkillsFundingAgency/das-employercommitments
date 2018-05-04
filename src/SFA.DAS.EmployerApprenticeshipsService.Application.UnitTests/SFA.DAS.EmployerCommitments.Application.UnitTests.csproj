@@ -169,6 +169,7 @@
     <Compile Include="Commands\UndoApprenticeshipUpdate\WhenValidatingCommand.cs" />
     <Compile Include="Commands\UndoApprenticeshipUpdate\WhenUndoingApprenticeshipUpdate.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStopDate\WhenUpdatingApprenticeshipStopDate.cs" />
+    <Compile Include="Commands\UpdateApprenticeshipTests\WhenUpdatingAnApprenticeship.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\WhenValidationUpdateProviderPaymentPriority.cs" />
     <Compile Include="FakeTimeProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -186,7 +187,7 @@
     <Compile Include="Queries\GetUserAccountRoleQueryTests\WhenIValidateTheRequest.cs" />
     <Compile Include="Queries\QueryBaseTest.cs" />
     <Compile Include="Queries\ValidateStatusChangeDateQuery\WhenValidatingChangeDate.cs" />
-    <Compile Include="Services\ProviderEmailNotificationServiceTests\WhenISendTransferRejectedCommitmentEditEmailNotification.cs" />
+    <Compile Include="Services\ProviderEmailNotificationServiceTests\WhenSendingTransferRejectedCommitmentEditEmailNotification.cs" />
     <Compile Include="Services\ProviderEmailServiceTests\WhenISendEmailToAllProviderRecipients.cs" />
   </ItemGroup>
   <ItemGroup>

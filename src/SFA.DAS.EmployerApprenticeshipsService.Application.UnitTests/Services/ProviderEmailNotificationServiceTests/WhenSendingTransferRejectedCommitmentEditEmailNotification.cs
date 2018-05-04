@@ -13,7 +13,7 @@ using SFA.DAS.NLog.Logger;
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEmailNotificationServiceTests
 {
     [TestFixture]
-    public class WhenISendTransferRejectedCommitmentEditEmailNotification
+    public class WhenSendingTransferRejectedCommitmentEditEmailNotification
     {
         private ProviderEmailNotificationService _providerEmailNotificationService;
 
@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             };
 
             _act = async () =>
-                await _providerEmailNotificationService.SendProviderTransferRejectedCommitmentEditEmailNotification(
+                await _providerEmailNotificationService.SendProviderTransferRejectedCommitmentEditNotification(
                     _exampleCommitmentView);
         }
 
