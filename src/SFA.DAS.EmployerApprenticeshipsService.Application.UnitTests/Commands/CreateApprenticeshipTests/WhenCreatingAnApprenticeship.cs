@@ -71,8 +71,10 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateAppre
             await _handler.Handle(_validCommand);
 
             _providerEmailNotificationService.Verify(x =>
-                x.SendProviderTransferRejectedCommitmentEditNotification(
-                    It.Is<CommitmentView>(c => c == _commitmentView)), Times.Once);
+                x.SendProviderTransferRejectedCommitmentEditNotification(It.Is<CommitmentView>(c =>
+                        c.LegalEntityName == _commitmentView.LegalEntityName &&
+                        c.Reference == _commitmentView.Reference)),
+                Times.Once);
         }
     }
 }
