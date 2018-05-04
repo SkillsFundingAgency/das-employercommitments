@@ -89,7 +89,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
                 {"CohortRef", _exampleCommitmentView.Reference}
             };
 
-            CollectionAssert.AreEqual(expectedTokens, _sentEmailMessage.Tokens);
+            CollectionAssert.AreEquivalent(expectedTokens, _sentEmailMessage.Tokens);
         }
     }
 }

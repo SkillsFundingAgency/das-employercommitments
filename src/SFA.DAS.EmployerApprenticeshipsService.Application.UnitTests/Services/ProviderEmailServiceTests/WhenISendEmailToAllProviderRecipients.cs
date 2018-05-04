@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
 
             _commitmentNotificationConfiguration = new CommitmentNotificationConfiguration {SendEmail = true};
 
-            _exampleRecipients = new List<string> { "Recipient1", "Recipient2", "Recipient3" };
+            _exampleRecipients = new List<string> { "Recipient1@example.com", "Recipient2@example.com", "Recipient3@example.com" };
             _providerEmailLookupService = new Mock<IProviderEmailLookupService>();
             _providerEmailLookupService.Setup(x => x.GetEmailsAsync(It.IsAny<long>(), It.IsAny<string>()))
                 .ReturnsAsync(_exampleRecipients);
@@ -115,7 +115,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             await _act();
 
             Assert.AreEqual(_exampleValidEmail.TemplateId, _sentEmails[0].TemplateId);
-            CollectionAssert.AreEqual(_exampleValidEmail.Tokens, _sentEmails[0].Tokens);
+            CollectionAssert.AreEquivalent(_exampleValidEmail.Tokens, _sentEmails[0].Tokens);
         }
     }
 }
