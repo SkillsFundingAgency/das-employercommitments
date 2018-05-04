@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -31,12 +32,13 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
 
             var recipients = await _providerEmailLookupService.GetEmailsAsync(providerId,lastUpdateEmailAddress);
 
-            foreach (var recipient in recipients)
+            var tasks = recipients.Select(recipient =>
             {
                 _logger.Info($"Sending email to: {recipient}");
-                var email = CreateEmailForRecipient(recipient, emailMessage);
-                await _notificationsApi.SendEmail(email);
-            }
+                return _notificationsApi.SendEmail(CreateEmailForRecipient(recipient, emailMessage));
+            });
+
+            await Task.WhenAll(tasks);
         }
 
         private Email CreateEmailForRecipient(string recipient, EmailMessage source)

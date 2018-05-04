@@ -1146,12 +1146,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             await CheckUserAuthorization(async () =>
                     {
-                        await _mediator.SendAsync(new GetApprenticeshipQueryRequest
-                        {
-                            AccountId = accountId,
-                            ApprenticeshipId = apprenticeshipId
-                        });
-
                         await _mediator.SendAsync(new DeleteApprenticeshipCommand
                         {
                             AccountId = accountId,
