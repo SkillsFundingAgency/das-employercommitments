@@ -46,7 +46,9 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 RecipientsAddress = recipient,
                 TemplateId = source.TemplateId,
                 Tokens = new Dictionary<string, string>(source.Tokens),
-                ReplyToAddress = "noreply@sfa.gov.uk"
+                ReplyToAddress = "noreply@sfa.gov.uk",
+                Subject = "x",
+                SystemId ="x"
             };
         }
     }

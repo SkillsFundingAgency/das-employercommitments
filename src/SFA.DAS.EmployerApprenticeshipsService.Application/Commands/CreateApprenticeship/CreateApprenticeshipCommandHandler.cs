@@ -1,10 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
+using SFA.DAS.EmployerCommitments.Application.Services;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeship
 {
@@ -12,12 +13,13 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeship
     {
         private readonly IEmployerCommitmentApi _commitmentsApi;
         private readonly CreateApprenticeshipCommandValidator _validator;
+        private readonly IProviderEmailNotificationService _providerEmailNotificationService;
 
-        public CreateApprenticeshipCommandHandler(IEmployerCommitmentApi commitmentsApi)
+        public CreateApprenticeshipCommandHandler(IEmployerCommitmentApi commitmentsApi,
+            IProviderEmailNotificationService providerEmailNotificationService)
         {
-            if (commitmentsApi == null)
-                throw new ArgumentNullException(nameof(commitmentsApi));
             _commitmentsApi = commitmentsApi;
+            _providerEmailNotificationService = providerEmailNotificationService;
             _validator = new CreateApprenticeshipCommandValidator();
         }
 
@@ -28,6 +30,9 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeship
             if (!validationResult.IsValid())
                 throw new InvalidRequestException(validationResult.ValidationDictionary);
 
+            var commitment = await
+                _commitmentsApi.GetEmployerCommitment(message.AccountId, message.Apprenticeship.CommitmentId);
+
             var apprenticeshipRequest = new ApprenticeshipRequest
             {
                 Apprenticeship = message.Apprenticeship,
@@ -35,6 +40,13 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeship
                 LastUpdatedByInfo = new LastUpdateInfo { EmailAddress = message.UserEmailAddress, Name = message.UserDisplayName }
             };
             await _commitmentsApi.CreateEmployerApprenticeship(message.AccountId, message.Apprenticeship.CommitmentId, apprenticeshipRequest);
+
+            if (commitment.TransferSender?.TransferApprovalStatus ==
+                Commitments.Api.Types.TransferApprovalStatus.Rejected)
+            {
+                await _providerEmailNotificationService.SendProviderTransferRejectedCommitmentEditEmailNotification(
+                    commitment);
+            }
         }
     }
 }
