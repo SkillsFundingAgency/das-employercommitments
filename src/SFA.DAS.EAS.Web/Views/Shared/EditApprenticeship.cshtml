@@ -93,7 +93,16 @@ else
         <div class="form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.TrainingCodeError) ? "error" : "")">
             <hr />
             <label class="form-label-bold" for="TrainingCode">Apprenticeship training course</label>
-            <span class="form-hint">Start typing in the name of the course or choose an option from the list</span>
+            
+            @if (Model.Apprenticeship.IsPaidForByTransfer)
+            {
+                <span class="form-hint">Start typing in the name of the apprenticeship standard or choose an option from the list</span>
+            }
+            else
+            {
+                <span class="form-hint">Start typing in the name of the course or choose an option from the list</span>
+            }
+            
             @if (!string.IsNullOrEmpty(Model.Apprenticeship.TrainingCodeError))
             {
                 <span class="error-message" id="error-message-TrainingCode">Choose a training course for this apprentice</span>
@@ -114,7 +123,7 @@ else
     {
         <div class="form-error-group form-group">
             <hr />
-            <label class="form-label-bold">Planned training start date</label>
+            <label class="form-label-bold">Planned training start date</label>          
             <span>@Model.Apprenticeship.StartDate.DateTime.Value.ToGdsFormatWithoutDay() </span>
         </div>
 
@@ -142,7 +151,15 @@ else
                 <hr />
 
                 <span class="form-label-bold">Planned training start date</span>
-                <span class="form-hint">For example, 09 2017</span>
+                
+                @if (Model.Apprenticeship.IsPaidForByTransfer)
+                {
+                    <span class="form-hint">Choose a date on or after May 2018. For example, 05 2018</span>
+                }
+                else
+                {
+                    <span class="form-hint">For example, 09 2017</span>
+                }
 
                 <div id="StartDate" class="form-date">
 
