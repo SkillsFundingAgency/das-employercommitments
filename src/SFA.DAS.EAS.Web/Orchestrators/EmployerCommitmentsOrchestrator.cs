@@ -991,7 +991,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Warnings = warnings,
                     Errors = errors,
                     PageTitle = pageTitle,
-                    HideDeleteButton = data.Commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Rejected
+                    HideDeleteButton = data.Commitment.TransferSender?.Id != null
                 };
 
                 return new OrchestratorResponse<CommitmentDetailsViewModel>
