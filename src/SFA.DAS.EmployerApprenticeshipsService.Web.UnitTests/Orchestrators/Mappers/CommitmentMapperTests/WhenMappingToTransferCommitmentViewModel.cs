@@ -127,7 +127,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
             Assert.AreEqual("Name (2 Apprentices)", result.TrainingList[0].SummaryDescription);
             Assert.AreEqual("Name2", result.TrainingList[1].CourseTitle);
             Assert.AreEqual(1, result.TrainingList[1].ApprenticeshipCount);
-            Assert.AreEqual("Name2 (1 Apprentices)", result.TrainingList[1].SummaryDescription);
+            Assert.AreEqual("Name2 (1 Apprentice)", result.TrainingList[1].SummaryDescription);
             Assert.AreEqual(statusDescription, result.TransferApprovalStatusDesc);
             Assert.AreEqual("tester", result.TransferApprovalSetBy);
             Assert.AreEqual(_commitmentView.TransferSender.TransferApprovalSetOn, result.TransferApprovalSetOn);
