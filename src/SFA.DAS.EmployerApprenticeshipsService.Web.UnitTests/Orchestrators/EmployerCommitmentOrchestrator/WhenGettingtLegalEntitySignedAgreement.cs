@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Commitments.Api.Types.Commitment;
+using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountLegalEntities;
 using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
@@ -13,6 +16,14 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
     [TestFixture]
     public class WhenGettingtLegalEntitySignedAgreement : OrchestratorTestBase
     {
+
+
+        [SetUp]
+        public void Arrange()
+        {
+
+        }
+
         [Test]
         public async Task ShouldCallMediatorToGetLegalEntityAgreementRequest()
         {
@@ -30,26 +41,72 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockMediator.Verify(x => x.SendAsync(It.Is<GetAccountLegalEntitiesRequest>(c => c.HashedAccountId == "ABC123" && c.UserId == "123EDC")), Times.Once);
         }
 
-        [TestCase(true, Description = "The Employer has signed the agreement")]
-        [TestCase(false, Description = "The Employer has not signed the agreement")]
-        public async Task ThenTheViewModelShouldReflectWhetherTheAgreementHasBeenSigned(bool isSigned)
+        //[TestCase(true, Description = "The Employer has signed the agreement")]
+        //[TestCase(false, Description = "The Employer has not signed the agreement")]
+        //public async Task ThenTheViewModelShouldReflectWhetherTheAgreementHasBeenSigned(bool isSigned)
+        //{
+        //    //Arrange
+        //    MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
+        //        .ReturnsAsync(new GetAccountLegalEntitiesResponse
+        //        {
+        //            LegalEntities = new List<LegalEntity> { new LegalEntity
+        //            {
+        //                Code = "XYZ123",
+        //                AgreementStatus = isSigned ? EmployerAgreementStatus.Signed : EmployerAgreementStatus.Pending
+        //            } }
+        //        });
+
+        //    //Act
+        //    var result = await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", null, "XYZ123", "C789", "123EDC");
+
+        //    //Assert
+        //    Assert.AreEqual(isSigned, result.Data.HasSignedAgreement);
+        //}
+
+
+        [TestCase(EmployerAgreementStatus.Signed, EmployerAgreementStatus.Pending, true)]
+        [TestCase(EmployerAgreementStatus.Signed, EmployerAgreementStatus.Signed, true)]
+        [TestCase(EmployerAgreementStatus.Superseded, EmployerAgreementStatus.Signed, true)]
+        [TestCase(EmployerAgreementStatus.Superseded, EmployerAgreementStatus.Pending, false)]
+        public async Task ThenHasSignedAgreementIsCorrectlyDeterminedForNonTransfers(EmployerAgreementStatus v1,
+            EmployerAgreementStatus v2, bool expectHasSigned)
         {
             //Arrange
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
                 .ReturnsAsync(new GetAccountLegalEntitiesResponse
                 {
-                    LegalEntities = new List<LegalEntity> { new LegalEntity
-                    {
-                        Code = "XYZ123",
-                        AgreementStatus = isSigned ? EmployerAgreementStatus.Signed : EmployerAgreementStatus.Pending
-                    } }
+                    LegalEntities = new List<LegalEntity> { new LegalEntity { Code = "123" } }
                 });
 
             //Act
-            var result = await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", null, "XYZ123", "C789", "123EDC");
+            await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", null, "123", "C789", "123EDC");
+
 
             //Assert
-            Assert.AreEqual(isSigned, result.Data.HasSignedAgreement);
+            throw new NotImplementedException();
+
+        }
+
+        [TestCase(EmployerAgreementStatus.Signed, EmployerAgreementStatus.Signed, true)]
+        [TestCase(EmployerAgreementStatus.Superseded, EmployerAgreementStatus.Signed, true)]
+        [TestCase(EmployerAgreementStatus.Superseded, EmployerAgreementStatus.Pending, false)]
+        [TestCase(EmployerAgreementStatus.Signed, EmployerAgreementStatus.Pending, false)]
+        public async Task ThenHasSignedAgreementIsCorrectlyDeterminedForTransfers(EmployerAgreementStatus v1,
+            EmployerAgreementStatus v2, bool expectHasSigned)
+        {
+            //Arrange
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
+                .ReturnsAsync(new GetAccountLegalEntitiesResponse
+                {
+                    LegalEntities = new List<LegalEntity> { new LegalEntity { Code = "123" } }
+                });
+
+            //Act
+            await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", "789FGH", "123", "C789", "123EDC");
+
+
+            //Assert
+            throw new NotImplementedException();
         }
 
         [Test]
@@ -105,5 +162,30 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             result.Data.TransferConnectionCode.Should().Be("T1234");
         }
 
+
+        private GetAccountLegalEntitiesResponse MockLegalEntitiesResponse(EmployerAgreementStatus v1,
+            EmployerAgreementStatus v2)
+        {
+            var result = new GetAccountLegalEntitiesResponse
+            {
+                LegalEntities = new List<LegalEntity>
+                {
+                    new LegalEntity
+                    {
+                        //todo: VersionNumber
+                        Code = "1",
+                        AgreementStatus = v1
+                    },
+                    new LegalEntity
+                    {
+                        //todo: VersionNumber
+                        Code = "2",
+                        AgreementStatus = v1
+                    }
+                }
+            };
+
+            return result;
+        }
     }
 }

@@ -526,6 +526,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     var legalEntity =
                         await GetLegalEntityByCode(hashedAccountId, externalUserId, response.Commitment.LegalEntityId);
 
+                    //todo: this is to change
+                    //check: response.Commitment.TransferSender
                     var hasSigned = legalEntity.AgreementStatus == EmployerAgreementStatus.Signed;
 
                     var overlaps = await _mediator.SendAsync(
@@ -1102,6 +1104,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 var legalEntity = await GetLegalEntityByCode(hashedAccountId, userId, legalEntityCode);
 
+                //todo: this is to change
+                //todo: if transferConnectionCode param has a value, then it's a transfer
                 var hasSigned = legalEntity.AgreementStatus == EmployerAgreementStatus.Signed;
 
                 response.Data = new LegalEntitySignedAgreementViewModel
