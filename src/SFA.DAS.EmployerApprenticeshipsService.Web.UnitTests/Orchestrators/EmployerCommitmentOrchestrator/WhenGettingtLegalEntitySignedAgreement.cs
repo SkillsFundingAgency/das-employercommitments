@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Commitments.Api.Types.Commitment;
-using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountLegalEntities;
 using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
@@ -29,29 +26,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             //Assert
             MockMediator.Verify(x => x.SendAsync(It.Is<GetAccountLegalEntitiesRequest>(c => c.HashedAccountId == "ABC123" && c.UserId == "123EDC")), Times.Once);
         }
-
-        //[TestCase(true, Description = "The Employer has signed the agreement")]
-        //[TestCase(false, Description = "The Employer has not signed the agreement")]
-        //public async Task ThenTheViewModelShouldReflectWhetherTheAgreementHasBeenSigned(bool isSigned)
-        //{
-        //    //Arrange
-        //    MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
-        //        .ReturnsAsync(new GetAccountLegalEntitiesResponse
-        //        {
-        //            LegalEntities = new List<LegalEntity> { new LegalEntity
-        //            {
-        //                Code = "XYZ123",
-        //                AgreementStatus = isSigned ? EmployerAgreementStatus.Signed : EmployerAgreementStatus.Pending
-        //            } }
-        //        });
-
-        //    //Act
-        //    var result = await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", null, "XYZ123", "C789", "123EDC");
-
-        //    //Assert
-        //    Assert.AreEqual(isSigned, result.Data.HasSignedAgreement);
-        //}
-
 
         [TestCase(EmployerAgreementStatus.Signed, EmployerAgreementStatus.Pending, true)]
         [TestCase(EmployerAgreementStatus.Signed, EmployerAgreementStatus.Signed, true)]
