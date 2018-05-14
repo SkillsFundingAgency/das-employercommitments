@@ -16,23 +16,12 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
     [TestFixture]
     public class WhenGettingtLegalEntitySignedAgreement : OrchestratorTestBase
     {
-
-
-        [SetUp]
-        public void Arrange()
-        {
-
-        }
-
         [Test]
         public async Task ShouldCallMediatorToGetLegalEntityAgreementRequest()
         {
             //Arrange
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
-                .ReturnsAsync(new GetAccountLegalEntitiesResponse
-                {
-                    LegalEntities = new List<LegalEntity> { new LegalEntity {Code="123"} }
-                });
+                .ReturnsAsync(MockLegalEntitiesResponse(EmployerAgreementStatus.Removed, EmployerAgreementStatus.Signed));
 
             //Act
             await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", null, "123", "C789","123EDC");
@@ -73,17 +62,14 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         {
             //Arrange
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
-                .ReturnsAsync(new GetAccountLegalEntitiesResponse
-                {
-                    LegalEntities = new List<LegalEntity> { new LegalEntity { Code = "123" } }
-                });
+                .ReturnsAsync(MockLegalEntitiesResponse(v1, v2));
 
             //Act
-            await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", null, "123", "C789", "123EDC");
+            var result = await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", null, "123", "C789", "123EDC");
 
 
             //Assert
-            throw new NotImplementedException();
+            Assert.AreEqual(expectHasSigned, result.Data.HasSignedAgreement);
 
         }
 
@@ -96,17 +82,14 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         {
             //Arrange
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
-                .ReturnsAsync(new GetAccountLegalEntitiesResponse
-                {
-                    LegalEntities = new List<LegalEntity> { new LegalEntity { Code = "123" } }
-                });
+                .ReturnsAsync(MockLegalEntitiesResponse(v1, v2));
 
             //Act
-            await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", "789FGH", "123", "C789", "123EDC");
+            var result = await EmployerCommitmentOrchestrator.GetLegalEntitySignedAgreementViewModel("ABC123", "789FGH", "123", "C789", "123EDC");
 
 
             //Assert
-            throw new NotImplementedException();
+            Assert.AreEqual(expectHasSigned, result.Data.HasSignedAgreement);
         }
 
         [Test]
@@ -134,7 +117,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                     LegalEntities = new List<LegalEntity> { new LegalEntity
                     {
                         Code = "XYZ1233",
-                        AgreementStatus = EmployerAgreementStatus.Signed 
+                        Agreements = new List<Agreement>
+                        {
+                            new Agreement { TemplateVersionNumber = 2, Status = EmployerAgreementStatus.Signed }
+                        }
                     } }
                 });
 
@@ -152,7 +138,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
                 .ReturnsAsync(new GetAccountLegalEntitiesResponse
                 {
-                    LegalEntities = new List<LegalEntity> { new LegalEntity { Code = "123" } }
+                    LegalEntities = new List<LegalEntity> { new LegalEntity { Code = "123", Agreements = new List<Agreement>()} }
                 });
 
             //Act
@@ -172,15 +158,12 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 {
                     new LegalEntity
                     {
-                        //todo: VersionNumber
-                        Code = "1",
-                        AgreementStatus = v1
-                    },
-                    new LegalEntity
-                    {
-                        //todo: VersionNumber
-                        Code = "2",
-                        AgreementStatus = v1
+                        Code = "123",
+                        Agreements = new List<Agreement>
+                        {
+                            new Agreement { TemplateVersionNumber = 1, Status = v1 },
+                            new Agreement { TemplateVersionNumber = 2, Status = v2 }
+                        }
                     }
                 }
             };

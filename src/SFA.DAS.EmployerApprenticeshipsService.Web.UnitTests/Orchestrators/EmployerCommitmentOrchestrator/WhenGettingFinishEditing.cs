@@ -27,7 +27,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             _commitmentView = new CommitmentView
             {
                 Id = 123,
-                LegalEntityId = "321",
+                LegalEntityId = "123",
                 EditStatus = EditStatus.EmployerOnly
             };
 
@@ -52,7 +52,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
                 .ReturnsAsync(new GetAccountLegalEntitiesResponse
                 {
-                    LegalEntities = new List<LegalEntity> { new LegalEntity { Code = "321" } }
+                    LegalEntities = new List<LegalEntity> { new LegalEntity { Code = "123", Agreements = new List<Agreement>() } }
                 });
 
             //Act
@@ -62,32 +62,12 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockMediator.Verify(x => x.SendAsync(It.Is<GetAccountLegalEntitiesRequest>(c => c.HashedAccountId == "ABC123" && c.UserId== "XYZ123")), Times.Once);
         }
 
-        //[TestCase(true, Description = "The Employer has signed the agreement")]
-        //[TestCase(false, Description = "The Employer has not signed the agreement")]
-        //public async Task ThenTheViewModelShouldReflectWhetherTheAgreementHasBeenSigned(bool isSigned)
-        //{
-        //    //Arrange
-        //    MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountLegalEntitiesRequest>()))
-        //        .ReturnsAsync(new GetAccountLegalEntitiesResponse
-        //        {
-        //            LegalEntities = new List<LegalEntity> { new LegalEntity
-        //            {
-        //                Code = "321",
-        //                AgreementStatus = isSigned ? EmployerAgreementStatus.Signed : EmployerAgreementStatus.Pending
-        //            } }
-        //        });
-
-        //    //Act
-        //    var result = await EmployerCommitmentOrchestrator.GetFinishEditingViewModel("ABC123", "XYZ123", "ABC321");
-
-        //    //Assert
-        //    Assert.AreEqual(isSigned, result.Data.HasSignedTheAgreement);
-        //}
-
         [TestCase(EmployerAgreementStatus.Signed, EmployerAgreementStatus.Pending, true)]
         [TestCase(EmployerAgreementStatus.Signed, EmployerAgreementStatus.Signed, true)]
-        [TestCase(EmployerAgreementStatus.Superseded, EmployerAgreementStatus.Signed, true)]
-        [TestCase(EmployerAgreementStatus.Superseded, EmployerAgreementStatus.Pending, false)]
+        [TestCase(EmployerAgreementStatus.Removed, EmployerAgreementStatus.Signed, true)]
+        [TestCase(null, EmployerAgreementStatus.Signed, true)]
+        [TestCase(EmployerAgreementStatus.Removed, EmployerAgreementStatus.Pending, false)]
+        [TestCase(null, EmployerAgreementStatus.Pending, false)]
         public async Task ThenHasSignedAgreementIsCorrectlyDeterminedForNonTransfers(EmployerAgreementStatus v1,
             EmployerAgreementStatus v2, bool expectHasSigned)
         {
@@ -101,14 +81,15 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             var result = await EmployerCommitmentOrchestrator.GetFinishEditingViewModel("ABC123", "XYZ123", "ABC321");
 
             //Assert
-            throw new NotImplementedException();
-
+            Assert.AreEqual(expectHasSigned, result.Data.HasSignedTheAgreement);
         }
 
         [TestCase(EmployerAgreementStatus.Signed, EmployerAgreementStatus.Signed, true)]
-        [TestCase(EmployerAgreementStatus.Superseded, EmployerAgreementStatus.Signed, true)]
-        [TestCase(EmployerAgreementStatus.Superseded, EmployerAgreementStatus.Pending, false)]
+        [TestCase(EmployerAgreementStatus.Removed, EmployerAgreementStatus.Signed, true)]
+        [TestCase(null, EmployerAgreementStatus.Signed, true)]
+        [TestCase(EmployerAgreementStatus.Removed, EmployerAgreementStatus.Pending, false)]
         [TestCase(EmployerAgreementStatus.Signed, EmployerAgreementStatus.Pending, false)]
+        [TestCase(null, EmployerAgreementStatus.Pending, false)]
         public async Task ThenHasSignedAgreementIsCorrectlyDeterminedForTransfers(EmployerAgreementStatus v1,
             EmployerAgreementStatus v2, bool expectHasSigned)
         {
@@ -122,9 +103,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             var result = await EmployerCommitmentOrchestrator.GetFinishEditingViewModel("ABC123", "XYZ123", "ABC321");
 
             //Assert
-            throw new NotImplementedException();
+            Assert.AreEqual(expectHasSigned, result.Data.HasSignedTheAgreement);
         }
-
 
         [Test]
         public async Task ThenIfAnInvalidRequestExceptionIsThrownThenTheOrchestratorResponseIsPopulatedAsBadRequest()
@@ -151,7 +131,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                     LegalEntities = new List<LegalEntity> { new LegalEntity
                     {
                         Code = "XYZ1233",
-                        AgreementStatus = EmployerAgreementStatus.Signed
+                        Agreements = new List<Agreement>
+                        {
+                            new Agreement { TemplateVersionNumber = 2, Status = EmployerAgreementStatus.Signed }
+                        }
                     } }
                 });
 
@@ -162,29 +145,32 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             Assert.AreEqual(HttpStatusCode.BadRequest, actual.Status);
         }
 
-        private GetAccountLegalEntitiesResponse MockLegalEntitiesResponse(EmployerAgreementStatus v1,
-            EmployerAgreementStatus v2)
+        private GetAccountLegalEntitiesResponse MockLegalEntitiesResponse(EmployerAgreementStatus? v1,
+            EmployerAgreementStatus? v2)
         {
-            var result = new GetAccountLegalEntitiesResponse
+            var agreements = new List<Agreement>();
+
+            if (v1.HasValue)
+            {
+                agreements.Add( new Agreement {TemplateVersionNumber = 1, Status = v1.Value } );
+            }
+
+            if (v2.HasValue)
+            {
+                agreements.Add(new Agreement { TemplateVersionNumber = 2, Status = v2.Value });
+            }
+
+            return new GetAccountLegalEntitiesResponse
             {
                 LegalEntities = new List<LegalEntity>
                 {
                     new LegalEntity
                     {
-                        //todo: VersionNumber
-                        Code = "1",
-                        AgreementStatus = v1
-                    },
-                    new LegalEntity
-                    {
-                        //todo: VersionNumber
-                        Code = "2",
-                        AgreementStatus = v1
+                        Code = "123",
+                        Agreements = agreements
                     }
                 }
             };
-
-            return result;
         }
 
     }
