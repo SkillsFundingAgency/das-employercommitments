@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
-using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
@@ -25,21 +21,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             _hashingService = hashingService;
             _featureToggleService = featureToggleService;
             _publicHashingService = publicHashingService;
-        }
-
-        public async Task<CommitmentListItemViewModel> MapToCommitmentListItemViewModelAsync(CommitmentListItem commitment, Func<CommitmentListItem, Task<string>> latestMessageFunc)
-        {
-            var messageTask = latestMessageFunc.Invoke(commitment);
-
-            return new CommitmentListItemViewModel
-            {
-                HashedCommitmentId = _hashingService.HashValue(commitment.Id),
-                Name = commitment.Reference,
-                LegalEntityName = commitment.LegalEntityName,
-                ProviderName = commitment.ProviderName,
-                Status = commitment.GetStatus(),
-                LatestMessage = await messageTask
-            };
         }
 
         public CommitmentViewModel MapToCommitmentViewModel(CommitmentView commitment)
@@ -84,37 +65,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 });
         }
 
-        [Obsolete]
-        public TransferCommitmentViewModel MapToTransferCommitmentViewModel(CommitmentView commitment)
-        {
-            var apprenticeships = commitment.Apprenticeships ?? new List<Apprenticeship>();
-
-            var grouped = apprenticeships.GroupBy(l => l.TrainingCode).Select(cl =>
-                new TrainingCourseSummaryViewModel
-                {
-                    CourseTitle = cl.First().TrainingName,
-                    ApprenticeshipCount = cl.Count()
-                });
-
-            return new TransferCommitmentViewModel()
-            {
-                HashedTransferReceiverAccountId = _hashingService.HashValue(commitment.EmployerAccountId),
-                PublicHashedTransferReceiverAccountId = _publicHashingService.HashValue(commitment.EmployerAccountId),
-                HashedTransferSenderAccountId = _hashingService.HashValue(commitment.TransferSender.Id.Value),
-                PublicHashedTransferSenderAccountId = _publicHashingService.HashValue(commitment.TransferSender.Id.Value),
-                LegalEntityName = commitment.LegalEntityName,
-                HashedCohortReference = _hashingService.HashValue(commitment.Id),
-                TrainingList = grouped.ToList(),
-                TransferApprovalStatusDesc = commitment.TransferSender.TransferApprovalStatus.ToString(),
-                TransferApprovalStatus = commitment.TransferSender.TransferApprovalStatus,
-                TransferApprovalSetBy = commitment.TransferSender.TransferApprovalSetBy,
-                TransferApprovalSetOn = commitment.TransferSender.TransferApprovalSetOn,
-                TotalCost = apprenticeships.Sum(x => x.Cost) ?? 0,
-                EnableRejection = _featureToggleService.Get<TransfersRejectOption>().FeatureEnabled
-            };
-        }
-
-
         private TrainingCourseSummaryViewModel MapTrainingCourse(TrainingCourseSummary source)
         {
             return new TrainingCourseSummaryViewModel
@@ -123,6 +73,5 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 ApprenticeshipCount = source.ApprenticeshipCount
             };
         }
-
     }
 }

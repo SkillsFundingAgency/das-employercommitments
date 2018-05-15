@@ -26,7 +26,6 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitments;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProvider;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTransferRequest;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipProvider;
@@ -41,7 +40,6 @@ using OrganisationType = SFA.DAS.Common.Domain.Types.OrganisationType;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
 using SFA.DAS.HashingService;
-using CallerType = SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment.CallerType;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
@@ -597,25 +595,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task SetTransferApprovalStatus(string hashedAccountId, string hashedCommitmentId, TransferApprovalConfirmationViewModel model, string externalUserId, string userDisplayName, string userEmail)
-        {
-            var transferSenderId = _hashingService.DecodeValue(hashedAccountId);
-            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
-            _logger.Info($"Transfer Approval Confirmation: Sender Account: {transferSenderId}, CommitmentId: {commitmentId}, Approving {model.ApprovalConfirmed}");
-
-            await CheckUserAuthorization(async () =>
-            {
-                await _mediator.SendAsync(new TransferApprovalCommand
-                {
-                    CommitmentId = commitmentId,
-                    TransferSenderId = transferSenderId,
-                    TransferStatus = model.ApprovalConfirmed == true ? TransferApprovalStatus.Approved : TransferApprovalStatus.Rejected,
-                    UserEmail = userEmail,
-                    UserName = userDisplayName
-                });
-            }, hashedAccountId, externalUserId);
-        }
-
         public async Task SetTransferRequestApprovalStatus(string hashedAccountId, string hashedCommitmentId, string hashedTransferRequestId, TransferApprovalConfirmationViewModel model, string externalUserId, string userDisplayName, string userEmail)
         {
             var transferSenderId = _hashingService.DecodeValue(hashedAccountId);
@@ -636,7 +615,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 });
             }, hashedAccountId, externalUserId);
         }
-
 
         public async Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitNewCommitmentModel(string hashedAccountId, string externalUserId, string transferConnectionCode, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string providerId, string providerName, string cohortRef, SaveStatus saveStatus)
         {
@@ -1162,31 +1140,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         });
 
                     }, model.HashedAccountId, externalUser);
-        }
-
-        public async Task<OrchestratorResponse<TransferCommitmentViewModel>> GetCommitmentDetailsForTransfer(
-            string hashedTransferAccountId, string hashedCommitmentId, string externalUserId)
-        {
-            var accountId = _hashingService.DecodeValue(hashedTransferAccountId);
-            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
-            _logger.Info($"Getting Commitment Details, Transfer Account: {accountId}, CommitmentId: {commitmentId}");
-
-            return await CheckUserAuthorization(async () =>
-            {
-                var data = await _mediator.SendAsync(new GetCommitmentQueryRequest
-                {
-                    AccountId = accountId,
-                    CommitmentId = commitmentId,
-                    CallerType = CallerType.TransferSender
-                });
-
-                var viewModel = _commitmentMapper.MapToTransferCommitmentViewModel(data.Commitment);
-
-                return new OrchestratorResponse<TransferCommitmentViewModel>
-                {
-                    Data = viewModel
-                };
-            }, hashedTransferAccountId, externalUserId);
         }
 
         public async Task<OrchestratorResponse<TransferRequestViewModel>> GetTransferRequestDetails(
