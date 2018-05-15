@@ -24,7 +24,7 @@
                         @if (!Model.Data.HasSignedTheAgreement)
                         {
                             <li>
-                                You've signed an <a href="@Url.Action("Index", "EmployerAgreement")" target="_blank">apprenticeship agreement</a> with the Education and Skills Funding Agency
+                                You've signed an <a href="@Url.ExternalMyaUrlAction("agreements")" target="_blank">apprenticeship agreement</a> with the Education and Skills Funding Agency
                             </li>
                         }
                         @if (Model.Data.NotReadyForApproval)

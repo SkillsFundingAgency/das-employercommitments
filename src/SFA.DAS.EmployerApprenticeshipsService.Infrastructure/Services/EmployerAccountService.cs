@@ -37,7 +37,15 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
                     Name=legalEntityViewModel.Name,
                     RegisteredAddress = legalEntityViewModel.Address,
                     Source =  legalEntityViewModel.SourceNumeric,
-                    AgreementStatus = (EmployerAgreementStatus)legalEntityViewModel.AgreementStatus,
+                    Agreements = 
+                        legalEntityViewModel.Agreements.Select(agreementSource => new Agreement
+                        {
+                            Id  = agreementSource.Id,
+                            SignedDate = agreementSource.SignedDate,
+                            SignedByName = agreementSource.SignedByName,
+                            Status = (EmployerAgreementStatus) agreementSource.Status,
+                            TemplateVersionNumber = agreementSource.TemplateVersionNumber
+                        }).ToList(),
                     Code = legalEntityViewModel.Code,
                     Id = legalEntityViewModel.LegalEntityId
                 });

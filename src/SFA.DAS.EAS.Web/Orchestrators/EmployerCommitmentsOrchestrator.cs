@@ -526,7 +526,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     var legalEntity =
                         await GetLegalEntityByCode(hashedAccountId, externalUserId, response.Commitment.LegalEntityId);
 
-                    var hasSigned = legalEntity.AgreementStatus == EmployerAgreementStatus.Signed;
+                    var hasSigned = HasSignedAgreement(legalEntity, response.Commitment.TransferSender!=null);
 
                     var overlaps = await _mediator.SendAsync(
                         new GetOverlappingApprenticeshipsQueryRequest
@@ -1102,8 +1102,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 var legalEntity = await GetLegalEntityByCode(hashedAccountId, userId, legalEntityCode);
 
-                var hasSigned = legalEntity.AgreementStatus == EmployerAgreementStatus.Signed;
-
+                var hasSigned = HasSignedAgreement(legalEntity, !string.IsNullOrWhiteSpace(transferConnectionCode));
+                
                 response.Data = new LegalEntitySignedAgreementViewModel
                 {
                     HashedAccountId = hashedAccountId,
@@ -1366,6 +1366,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             if (commitment.TransferSender == null && commitment.AgreementStatus == AgreementStatus.BothAgreed)
                 throw new InvalidStateException("Invalid commitment state - agreement status is BothAgreed");
+        }
+
+        private static bool HasSignedAgreement(LegalEntity legalEntity, bool isTransfer)
+        {
+            if (isTransfer)
+            {
+                return legalEntity.Agreements.Any(a =>
+                    a.Status == EmployerAgreementStatus.Signed && a.TemplateVersionNumber == 2);
+            }
+
+            return legalEntity.Agreements.Any(a =>
+                    a.Status == EmployerAgreementStatus.Signed &&
+                    (a.TemplateVersionNumber == 1 || a.TemplateVersionNumber == 2));
         }
     }
 }
