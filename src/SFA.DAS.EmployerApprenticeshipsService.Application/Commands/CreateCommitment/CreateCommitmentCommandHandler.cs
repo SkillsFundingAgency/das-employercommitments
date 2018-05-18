@@ -25,8 +25,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
 
         private readonly EmployerCommitmentsServiceConfiguration _configuration;
 
-        private readonly IHashingService _hashingService;
-
         private readonly IProviderEmailLookupService _providerEmailLookupService;
 
         public CreateCommitmentCommandHandler(
@@ -34,19 +32,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
             IMediator mediator,
             ILog logger,
             EmployerCommitmentsServiceConfiguration configuration,
-            IHashingService hashingService,
             IProviderEmailLookupService providerEmailLookupService)
         {
-            if (commitmentApi == null)
-                throw new ArgumentNullException(nameof(commitmentApi));
-            if (mediator == null)
-                throw new ArgumentNullException(nameof(mediator));
-
             _commitmentApi = commitmentApi;
             _mediator = mediator;
             _logger = logger;
             _configuration = configuration;
-            _hashingService = hashingService;
             _providerEmailLookupService = providerEmailLookupService;
         }
 
@@ -91,14 +82,17 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
                 Email = new Email
                 {
                     RecipientsAddress = emailAddress,
-                    TemplateId = "CreateCommitmentNotification",
+                    TemplateId = commitment.TransferSender != null
+                        ? "CreateTransferCommitmentNotification"
+                        : "CreateCommitmentNotification",
                     ReplyToAddress = "noreply@sfa.gov.uk",
-                    Subject = $"<new Cohort created> {commitment.Reference}",
+                    Subject = "x",
                     SystemId = "x",
                     Tokens = new Dictionary<string, string> {
                         { "cohort_reference", commitment.Reference },
                         { "employer_name", commitment.LegalEntityName },
-                        { "ukprn", commitment.ProviderId.ToString() }
+                        { "ukprn", commitment.ProviderId.ToString() },
+                        { "type", "review" }
                     }
                 }
             };

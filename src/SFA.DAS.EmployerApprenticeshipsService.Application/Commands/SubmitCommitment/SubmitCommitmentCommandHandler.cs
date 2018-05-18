@@ -105,19 +105,25 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment
 
         private SendNotificationCommand BuildNotificationCommand(string email, CommitmentView commitment, LastAction action, string userDisplayName)
         {
+            var template = commitment.TransferSender != null
+                ? "ProviderTransferCommitmentNotification"
+                    : commitment.AgreementStatus == AgreementStatus.NotAgreed
+                        ? "ProviderCommitmentNotification"
+                        : "ProviderCohortApproved";
+
             return new SendNotificationCommand
             {
                 Email = new Email
                 {
                     RecipientsAddress = email,
-                    TemplateId = commitment.AgreementStatus == AgreementStatus.NotAgreed ? "ProviderCommitmentNotification" : "ProviderCohortApproved",
+                    TemplateId = template,
                     ReplyToAddress = "noreply@sfa.gov.uk",
                     Subject = "x",
                     SystemId = "x",
                     Tokens = new Dictionary<string, string> {
                         { "type", action == LastAction.Approve ? "approval" : "review" },
                         { "cohort_reference", commitment.Reference },
-                        { "first_name",  userDisplayName}
+                        { "employer_name",  commitment.LegalEntityName}
                     }
                 }
             };
