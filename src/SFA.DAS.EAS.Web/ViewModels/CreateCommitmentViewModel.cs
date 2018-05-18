@@ -23,8 +23,15 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         [Required(ErrorMessage = "Choose an option")]
         public string TransferConnectionCode { get; set; }
 
-        public IEnumerable<TransferConnection> TransferConnections { get; set; }
+        public IEnumerable<TransferConnectionViewModel> TransferConnections { get; set; }
     }
+
+    public sealed class TransferConnectionViewModel
+    {
+        public string TransferConnectionCode { get; set; }
+        public string TransferConnectionName { get; set; }
+    }
+
 
     [Validator(typeof(SelectProviderViewModelValidator))]
     public sealed class SelectProviderViewModel

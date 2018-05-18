@@ -37,6 +37,7 @@
     <None Include="Configuration\ServiceDefinition.Release.csdef" />
     <None Include="Configuration\ServiceDefinition.Cloud.csdef" />
     <ServiceConfiguration Include="ServiceConfiguration.Release.cscfg" />
+    <ServiceConfiguration Include="ServiceConfiguration.MO.cscfg" />
     <ServiceConfiguration Include="ServiceConfiguration.PreProd.cscfg" />
     <ServiceConfiguration Include="ServiceConfiguration.Local.cscfg" />
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
@@ -50,6 +51,9 @@
     <DiagnosticsConfiguration Include="SFA.DAS.EmployerCommitments.WebContent\diagnostics.wadcfgx" />
   </ItemGroup>
   <ItemGroup>
+    <PublishProfile Include="Profiles\das-at-employercommitments-cs (stage).azurePubxml" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.EAS.Web\SFA.DAS.EmployerCommitments.Web.csproj">
       <Name>SFA.DAS.EmployerCommitments.Web</Name>
       <Project>{65db60b1-80f0-432c-926e-7a6dd02a5645}</Project>
@@ -57,9 +61,6 @@
       <RoleType>Web</RoleType>
       <RoleName>SFA.DAS.EmployerCommitments.Web</RoleName>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PublishProfile Include="Profiles\das-at-employercommitments-cs (stage).azurePubxml" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>

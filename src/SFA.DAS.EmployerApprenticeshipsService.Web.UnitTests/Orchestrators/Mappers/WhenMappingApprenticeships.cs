@@ -25,7 +25,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             var log = new Mock<ILog>();
             var validator = new Mock<IAcademicYearValidator>();
 
-            _mapper = new ApprenticeshipMapper(hashingService.Object, dateTime.Object, mediator.Object, log.Object, validator.Object);
+            _mapper = new ApprenticeshipMapper(hashingService.Object, dateTime.Object, mediator.Object, log.Object,
+                validator.Object, Mock.Of<IAcademicYearDateProvider>());
         }
 
         [Test]

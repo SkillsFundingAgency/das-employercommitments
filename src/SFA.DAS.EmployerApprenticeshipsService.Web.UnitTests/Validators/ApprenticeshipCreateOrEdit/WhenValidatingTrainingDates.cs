@@ -81,6 +81,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             result.IsValid.Should().BeTrue();
         }
 
+        [Ignore("Unclear whether test asserts correct behaviour: see task DPP-1348")]
         [Test]
         public void ShouldFailValidationForPlanedEndDateWithTodaysDate()
         {

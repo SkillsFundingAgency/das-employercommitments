@@ -14,11 +14,14 @@
       <Setting name="LoggingRedisKey" value="__LoggingRedisKey__" />
       <Setting name="TokenCertificateThumbprint" value="__TokenCertificateThumbprint__" />
       <Setting name="MyaBaseUrl" value="__MyaBaseUrl__" />
+      <Setting name="PsrBaseUrl" value="__PsrBaseUrl__" />
       <Setting name="CommitmentsRoutePrefix" value="__CommitmentsRoutePrefix__" />
       <Setting name="CurrentTime" value="" />
       <Setting name="UseAccountApiTransfersStub" value="__UseAccountApiTransfersStub__" />
       <Setting name="AccountApiTransfersStubRecordCount" value="__AccountApiTransfersStubRecordCount__" />
       <Setting name="FeatureToggle.Transfers" value="__FeatureToggle.Transfers__" />
+      <Setting name="FeatureToggle.PublicSectorReporting" value="__FeatureToggle.PublicSectorReporting__" />
+            <Setting name="FeatureToggle.TransfersRejectOption" value="__FeatureToggle.TransfersRejectOption__" />
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="WebSslCert" thumbprint="BF55F64F778FC5F4E4EEBAE6493E37464B3E2AD7" thumbprintAlgorithm="sha1" />

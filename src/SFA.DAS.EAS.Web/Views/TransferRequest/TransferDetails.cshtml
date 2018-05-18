@@ -1,0 +1,156 @@
+﻿@using SFA.DAS.EmployerCommitments.Web
+@using SFA.DAS.EmployerCommitments.Web.Extensions
+@using SFA.DAS.EmployerCommitments.Web.ViewModels
+
+@{
+    ViewBag.Title = "Transfer request details";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageID = "approve-transfer-cohort";
+}
+
+@model OrchestratorResponse<TransferRequestViewModel>
+
+
+
+<div class="grid-row">
+    <div class="column-full">
+        @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
+    </div>
+</div>
+
+<h1 class="heading-xlarge">@ViewBag.Title</h1>
+
+<div class="grid-row">
+    <div class="column-full">
+        <hr class="hr-top" />
+        <div class="column-one-third">
+            Account Name
+        </div>
+        <div class="column-two-thirds">
+            @Model.Data.LegalEntityName
+        </div>
+    </div>
+    <div class="column-full">
+        <hr class="hr-top" />
+        <div class="column-one-third">
+            Receiving Employer Account Id
+        </div>
+        <div class="column-two-thirds">
+            @Model.Data.PublicHashedTransferReceiverAccountId
+        </div>
+    </div>
+    <div class="column-full">
+        <hr class="hr-top" />
+        <div class="column-one-third">
+            Cohort Reference
+        </div>
+        <div class="column-half">
+            @Model.Data.HashedCohortReference
+        </div>
+    </div>
+    <div class="column-full">
+        <hr class="hr-top" />
+        <div class="column-one-third">
+            Status
+        </div>
+        <div class="column-two-thirds">
+            @Model.Data.TransferApprovalStatusDesc
+        </div>
+    </div>
+    <div class="column-full">
+        <hr class="hr-top" />
+        <div class="column-one-third">
+            Total Cost
+        </div>
+        <div class="column-two-thirds">
+            @($"£{Model.Data.TotalCost:n0}")
+        </div>
+    </div>
+    <div class="column-full">
+        <hr class="hr-top" />
+        <div class="column-one-third">
+            Training
+        </div>
+        <div class="column-two-thirds">
+            @foreach (var item in Model.Data.TrainingList)
+            {
+                <p>@item.SummaryDescription</p>
+            }
+        </div>
+        @if (Model.Data.PendingApproval)
+        {
+            <hr class="hr-bottom" />
+        }
+    </div>
+    @if (!Model.Data.PendingApproval)
+    {
+        <div class="column-full">
+            <hr class="hr-top" />
+            <div class="column-one-third">
+                @Model.Data.TransferApprovalStatusDesc By
+            </div>
+            <div class="column-two-thirds">
+                @Model.Data.TransferApprovalSetBy
+            </div>
+        </div>
+        <div class="column-full">
+            <hr class="hr-top" />
+            <div class="column-one-third">
+                @Model.Data.TransferApprovalStatusDesc On
+            </div>
+            <div class="column-two-thirds">
+                @($"{Model.Data.TransferApprovalSetOn:dd MMM yyyy}")
+            </div>
+        </div>
+        <div class="column-full">
+            <hr class="hr-bottom" />
+        </div>
+    }
+</div>
+
+@if (Model.Data.PendingApproval)
+{
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <form method="POST" action="@Url.Action("TransferApproval")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
+
+                <fieldset role="radiogroup" aria-required="true" class="approve-transfer">
+                    <div class="form-error-group form-group @Html.AddClassIfPropertyInError("ApprovalConfirmed", "error")">
+                        <h2 class="heading-medium" for="">Do you want to approve this transfer request?</h2>
+                        <div>
+                            @Html.ValidationMessage("ApprovalConfirmed", "Please choose an option", new { id = "error-message-ApprovalConfirmed" })
+                        </div>
+                        <label class="block-label selection-button-radio" for="ApprovalConfirmed-True">
+                            @Html.RadioButton("ApprovalConfirmed", "True", new { id = "ApprovalConfirmed-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
+                            Yes, approve the request
+                        </label>
+                        @if (Model.Data.EnableRejection)
+                        {
+                            <label class="block-label selection-button-radio" for="ApprovalConfirmed-False">
+                                @Html.RadioButton("ApprovalConfirmed", "False", new { id = "ApprovalConfirmed-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
+                                No, reject the request
+                            </label>
+                        }
+                    </div>
+                </fieldset>
+                <button type="submit" class="button" id="submit-transfer-connection">Continue</button>
+                <a class="button text-link" href="@Url.ExternalMyaUrlAction("transfers")" title="continue">Cancel</a>
+
+                @Html.AntiForgeryToken()
+                @Html.Hidden("TransferReceiverName", Model.Data.LegalEntityName)
+                @Html.Hidden("HashedCohortReference", Model.Data.HashedCohortReference)
+            </form>
+        </div>
+    </div>
+}
+@section breadcrumb {
+    <div class="breadcrumbs">
+        <a href="@Url.ExternalMyaUrlAction("transfers")">Back to Transfers</a>
+    </div>
+}
+
+@section gaDataLayer {
+    <script>
+        sfa.dataLayer.vpv = '/accounts/apprentices/legalEntity/create/choose-organisation';
+    </script>
+}

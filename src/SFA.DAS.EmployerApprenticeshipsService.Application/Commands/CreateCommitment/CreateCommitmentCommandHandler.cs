@@ -82,7 +82,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
                 Email = new Email
                 {
                     RecipientsAddress = emailAddress,
-                    TemplateId = commitment.TransferSenderId.HasValue
+                    TemplateId = commitment.TransferSender != null
                         ? "CreateTransferCommitmentNotification"
                         : "CreateCommitmentNotification",
                     ReplyToAddress = "noreply@sfa.gov.uk",

@@ -20,10 +20,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     [CommitmentsRoutePrefix("accounts/{hashedAccountId}/apprentices/manage")]
     public class EmployerManageApprenticesController : BaseController
     {
-        private readonly EmployerManageApprenticeshipsOrchestrator _orchestrator;
+        private readonly IEmployerManageApprenticeshipsOrchestrator _orchestrator;
 
         public EmployerManageApprenticesController(
-            EmployerManageApprenticeshipsOrchestrator orchestrator,
+            IEmployerManageApprenticeshipsOrchestrator orchestrator,
             IOwinWrapper owinWrapper,
             IMultiVariantTestingService multiVariantTestingService,
             ICookieStorageService<FlashMessageViewModel> flashMessage)
@@ -84,6 +84,46 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             var response = await _orchestrator.GetChangeStatusChoiceNavigation(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
 
             return View(response);
+        }
+
+        [HttpGet]
+        [Route("{hashedApprenticeshipId}/details/editstopdate", Name = "EditStopDateOption")]
+        [OutputCache(CacheProfile = "NoCache")]
+        public async Task<ActionResult> EditStopDate(string hashedAccountId, string hashedApprenticeshipId)
+        {
+            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+                return View("AccessDenied");
+
+            var response = await _orchestrator.GetEditApprenticeshipStopDateViewModel(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
+
+            return View(response);
+        }
+
+        [HttpPost]
+        [Route("{hashedApprenticeshipId}/details/editstopdate", Name = "PostEditStopDate")]
+        public async Task<ActionResult> UpdateApprenticeshipStopDate(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date")] EditApprenticeshipStopDateViewModel model)
+        {
+            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+                return View("AccessDenied");
+
+            var userId = OwinWrapper.GetClaimValue(@"sub");
+
+            if (ModelState.IsValid)
+            {
+                await _orchestrator.UpdateStopDate(
+                    hashedAccountId,
+                    hashedApprenticeshipId,
+                    model,
+                    userId, OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
+
+                SetOkayMessage("New stop date confirmed.");
+
+                return RedirectToRoute("OnProgrammeApprenticeshipDetails");
+            }
+
+            var viewmodel = await _orchestrator.GetEditApprenticeshipStopDateViewModel(hashedAccountId, hashedApprenticeshipId, userId);
+
+            return View("editstopdate", new OrchestratorResponse<EditApprenticeshipStopDateViewModel> { Data = viewmodel.Data });
         }
 
         [HttpPost]
@@ -171,7 +211,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return View(response);
         }
 
-       
+
         [HttpPost]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/confirm", Name = "PostStatusChangeConfirmation")]
         public async Task<ActionResult> StatusChangeConfirmation(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date,Confirm")] ChangeStatusViewModel model)
@@ -492,6 +532,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 ErrorMessages = errorDictionary,
                 Severity = FlashMessageSeverityLevel.Error
             };
+        }
+
+        private void AddErrorMessageToModelState(Dictionary<string, string> errorDictionary)
+        {
+            if (errorDictionary == null) return;
+
+            foreach (var keyValuePair in errorDictionary)
+            {
+                ModelState.AddModelError(keyValuePair.Key, keyValuePair.Value);
+            }
         }
 
         private static string GetStatusMessage(ChangeStatusType? model)

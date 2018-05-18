@@ -5,6 +5,7 @@ using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.SendNotification;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.NLog.Logger;
@@ -104,7 +105,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment
 
         private SendNotificationCommand BuildNotificationCommand(string email, CommitmentView commitment, LastAction action, string userDisplayName)
         {
-            var template = commitment.TransferSenderId.HasValue
+            var template = commitment.TransferSender != null
                 ? "ProviderTransferCommitmentNotification"
                     : commitment.AgreementStatus == AgreementStatus.NotAgreed
                         ? "ProviderCommitmentNotification"

@@ -89,7 +89,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Decorators
             return await _inner.GetResource<T>(uri);
         }
 
-        public async Task<ICollection<TransferConnectionViewModel>> GetTransferConnections(string accountId)
+        public Task<ICollection<TransferConnectionViewModel>> GetTransferConnections(string accountId)
         {
             var result = new List<TransferConnectionViewModel>();
 
@@ -103,13 +103,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Decorators
                     {
                         FundingEmployerAccountId = i,
                         FundingEmployerAccountName = $"Test Transfer Connection {i}",
-                        FundingEmployerHashedAccountId = _hashingService.HashValue(i),
-                        TransferConnectionId = i
+                        FundingEmployerHashedAccountId = _hashingService.HashValue(i)
                     });
                 }
             }
 
-            return result;
+            return Task.FromResult((ICollection<TransferConnectionViewModel>)result);
         }
     }
 }

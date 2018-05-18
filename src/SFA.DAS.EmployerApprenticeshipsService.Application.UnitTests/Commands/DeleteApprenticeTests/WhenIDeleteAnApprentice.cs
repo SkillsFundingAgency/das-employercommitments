@@ -5,6 +5,7 @@ using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteApprentice;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.DeleteApprenticeTests

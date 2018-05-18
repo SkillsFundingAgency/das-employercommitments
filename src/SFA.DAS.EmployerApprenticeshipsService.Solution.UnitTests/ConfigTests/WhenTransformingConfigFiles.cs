@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerCommitments.Solution.UnitTests.ConfigTests
             var excludedPaths = new[] { "obj", "bin", "vs", "package", "tool", "test" };
 
             _excludedSettingNames = new[] { "webpages:Version", "LogLevel", "idaAudience", "idaTenant", "TokenCertificateThumbprint", "DeclarationsEnabled", "CurrentTime", "MyaBaseUrl" };
-            _allowedConfigValues = new[] { "0", "1", "2", "3", "UseDevelopmentStorage=true", "LOCAL", "true", "false", "localhost", "Endpoint=sb://[your namespace].servicebus.windows.net;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=[your secret]", "commitments" };
+            _allowedConfigValues = new[] { "0", "1", "2", "3", "UseDevelopmentStorage=true", "LOCAL", "true", "false", "localhost", "Endpoint=sb://[your namespace].servicebus.windows.net;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=[your secret]", "commitments", "https://at-reporting.manage-apprenticeships.sfa.bis.gov.uk" };
 
             var path = new FileInfo(Assembly.GetCallingAssembly().Location).Directory.Parent.Parent.Parent;
 

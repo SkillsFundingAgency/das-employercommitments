@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using FeatureToggle;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.Common.Domain.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections;
-using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 
@@ -20,6 +17,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         private SubmitCommitmentViewModel _viewModel;
         private CreateCommitmentCommandResponse _sendAsyncResponse;
         private GetAccountTransferConnectionsResponse _getTransferConnectionsResponse;
+        private List<TransferConnectionViewModel> _transferConnections;
         const long UnhashedAccountId = 123;
         private const string TransferConnectionCode = "TC999";
         private const long TransferSenderId = 999;
@@ -31,9 +29,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             _sendAsyncResponse = new CreateCommitmentCommandResponse { CommitmentId = 123 };
             _getTransferConnectionsResponse = new GetAccountTransferConnectionsResponse
             {
-                TransferConnections = new List<TransferConnection> { new TransferConnection { AccountName = TransferConnectionName, HashedAccountId = TransferConnectionCode } }
+                TransferConnections = new List<TransferConnection> { new TransferConnection { AccountName = TransferConnectionName, AccountId = TransferSenderId } }
             };
 
+            _transferConnections = new List<TransferConnectionViewModel>{ new TransferConnectionViewModel { TransferConnectionCode = "TC999", TransferConnectionName = "TCName" }};
+            
             MockMediator.Setup(x => x.SendAsync(It.IsAny<CreateCommitmentCommand>())).ReturnsAsync(_sendAsyncResponse);
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountTransferConnectionsRequest>())).ReturnsAsync(_getTransferConnectionsResponse);
 
@@ -51,8 +51,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 TransferConnectionCode = null
             };
 
+            MockCommitmentMapper.Setup(x => x.MapToTransferConnectionsViewModel(It.IsAny<List<TransferConnection>>()))
+                .Returns(_transferConnections);
+
             MockHashingService.Setup(x => x.DecodeValue(_viewModel.HashedAccountId)).Returns(UnhashedAccountId);
-            MockHashingService.Setup(x => x.DecodeValue(TransferConnectionCode)).Returns(TransferSenderId);
+            MockPublicHashingService.Setup(x => x.DecodeValue(TransferConnectionCode)).Returns(TransferSenderId);
         }
 
         [Test]
@@ -85,6 +88,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 Times.Once);
             MockHashingService.Verify(x=>x.DecodeValue(It.IsAny<string>()), Times.Once());
         }
+
+
 
         [Test]
         public async Task ShouldMapPropertiesToCommandWithATransferConnection()
