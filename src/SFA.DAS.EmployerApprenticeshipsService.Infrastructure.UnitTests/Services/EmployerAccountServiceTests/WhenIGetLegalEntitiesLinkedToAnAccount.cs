@@ -4,6 +4,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EAS.Account.Api.Types;
+using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
 using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 
 namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.EmployerAccountServiceTests
@@ -50,7 +51,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Employer
             _accountApiClient.Setup(x => x.GetLegalEntity(ExpectedAccountId, It.IsAny<long>()))
                 .ReturnsAsync(new LegalEntityViewModel
                 {
-                    AgreementStatus = EmployerAgreementStatus.Pending,
+                    Agreements = new List<AgreementViewModel>()
                 });
 
             //Act
