@@ -771,6 +771,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                     {
                         acknowledgementContent.WhatHappensNext.Add(
                             "Once the training provider approves the cohort a transfer request will be sent to the funding employer to review.");
+                        acknowledgementContent.WhatHappensNext.Add(
+                            "You’ll receive a notification once the funding employer approves or rejects the transfer request and can view the progress of a request in the with transfer sending employers section."
+                        );
                     }
                     break;
                 }

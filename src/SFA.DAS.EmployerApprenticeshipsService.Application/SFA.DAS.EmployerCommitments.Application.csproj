@@ -231,9 +231,6 @@
     <Compile Include="Queries\GetAccountTransferConnections\GetAccountTransferConnectionsRequest.cs" />
     <Compile Include="Queries\GetAccountTransferConnections\GetAccountTransferConnectionsResponse.cs" />
     <Compile Include="Queries\GetAccountTransferConnections\GetAccountTransferConnectionsHandler.cs" />
-    <Compile Include="Queries\GetAllApprenticeships\GetAllApprenticeshipsRequest.cs" />
-    <Compile Include="Queries\GetAllApprenticeships\GetAllApprenticeshipsHandler.cs" />
-    <Compile Include="Queries\GetAllApprenticeships\GetAllApprenticeshipsResponse.cs" />
     <Compile Include="Queries\GetApprenticeshipDataLockSummary\GetApprenticeshipDataLockSummaryQueryHandler.cs" />
     <Compile Include="Queries\GetApprenticeshipDataLockSummary\GetApprenticeshipDataLockSummaryQueryRequest.cs" />
     <Compile Include="Queries\GetApprenticeshipDataLockSummary\GetApprenticeshipDataLockSummaryQueryResponse.cs" />
