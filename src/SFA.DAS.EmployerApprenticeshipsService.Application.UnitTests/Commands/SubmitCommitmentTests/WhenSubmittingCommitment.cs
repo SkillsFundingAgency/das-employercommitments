@@ -190,6 +190,34 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
         }
 
         [Test]
+        public async Task ShouldCallSendNotificationCommandForTransferCohortSecondApproval()
+        {
+            const string legalEntityName = "Receiving Employer Ltd";
+            const long providerId = 10000000;
+            SendNotificationCommand arg = null;
+            _validCommand.LastAction = LastAction.Approve;
+            _repositoryCommitment.AgreementStatus = AgreementStatus.ProviderAgreed;
+            _repositoryCommitment.TransferSender = new TransferSender();
+            _repositoryCommitment.LegalEntityName = legalEntityName;
+            _repositoryCommitment.ProviderId = providerId;
+
+            _mockEmailLookup
+                .Setup(x => x.GetEmailsAsync(It.IsAny<long>(), It.IsAny<string>()))
+                .ReturnsAsync(new List<string> { "test@email.com" });
+
+            _mockMediator.Setup(x => x.SendAsync(It.IsAny<SendNotificationCommand>()))
+                .ReturnsAsync(new Unit()).Callback<SendNotificationCommand>(x => arg = x);
+
+            await _handler.Handle(_validCommand);
+
+            _mockMediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()));
+            arg.Email.TemplateId.Should().Be("TransferPendingFinalApproval");
+            arg.Email.Tokens["cohort_reference"].Should().Be(CohortReference);
+            arg.Email.Tokens["receiving_employer"].Should().Be(legalEntityName);
+            arg.Email.Tokens["ukprn"].Should().Be(providerId.ToString());
+        }
+
+        [Test]
         public async Task ShouldCallSendNotificationCommandOncePerEmailAddress()
         {
             _validCommand.LastAction = LastAction.Amend;
