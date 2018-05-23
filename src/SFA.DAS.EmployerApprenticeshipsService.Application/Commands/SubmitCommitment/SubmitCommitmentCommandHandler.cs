@@ -101,8 +101,9 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment
                     templateId = "ProviderCommitmentNotification";
                     tokens["type"] = message.LastAction == LastAction.Approve ? "approval" : "review";
                     break;
-                case AgreementStatus.ProviderAgreed when commitment.TransferSender != null:
+                case AgreementStatus.ProviderAgreed when commitment.TransferSender != null && message.LastAction == LastAction.Approve:
                     templateId = "TransferPendingFinalApproval";
+                    tokens["ukprn"] = commitment.ProviderId.ToString();
                     break;
                 default:
                     templateId = "ProviderCohortApproved";
