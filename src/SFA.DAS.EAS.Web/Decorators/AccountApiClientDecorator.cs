@@ -4,16 +4,19 @@ using System.Threading.Tasks;
 using Microsoft.Azure;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EAS.Account.Api.Types;
+using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Web.Decorators
 {
     public class AccountApiClientDecorator : IAccountApiClient
     {
         private readonly IAccountApiClient _inner;
+        private readonly IHashingService _hashingService;
 
-        public AccountApiClientDecorator(IAccountApiClient inner)
+        public AccountApiClientDecorator(IAccountApiClient inner, IHashingService hashingService)
         {
             _inner = inner;
+            _hashingService = hashingService;
         }
 
         public async Task<AccountDetailViewModel> GetAccount(string hashedAccountId)
@@ -86,7 +89,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Decorators
             return await _inner.GetResource<T>(uri);
         }
 
-        public async Task<ICollection<TransferConnectionViewModel>> GetTransferConnections(string accountId)
+        public Task<ICollection<TransferConnectionViewModel>> GetTransferConnections(string accountId)
         {
             var result = new List<TransferConnectionViewModel>();
 
@@ -100,13 +103,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Decorators
                     {
                         FundingEmployerAccountId = i,
                         FundingEmployerAccountName = $"Test Transfer Connection {i}",
-                        FundingEmployerHashedAccountId = $"HASHED_ID_{i}",
-                        TransferConnectionId = i
+                        FundingEmployerHashedAccountId = _hashingService.HashValue(i)
                     });
                 }
             }
 
-            return result;
+            return Task.FromResult((ICollection<TransferConnectionViewModel>)result);
         }
     }
 }

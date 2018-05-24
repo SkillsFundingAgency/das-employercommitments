@@ -47,6 +47,8 @@
                 @Html.Hidden("ULN", Model.Data.Apprenticeship.ULN)
                 @Html.Hidden("AgreementStatus", Model.Data.Apprenticeship.AgreementStatus)
                 @Html.Hidden("ProviderRef", Model.Data.Apprenticeship.ProviderRef)
+                @Html.Hidden("IsPaidForByTransfer", Model.Data.Apprenticeship.IsPaidForByTransfer)
+                @Html.Hidden("IsInTransferRejectedCohort", Model.Data.Apprenticeship.IsInTransferRejectedCohort)
 
                 <button type="submit" class="button" aria-label="Add" id="submit-create-apprentice">Add</button>
                 <a class="button text-link" href="@Url.Action("Details", new { hashedAccountId = Model.Data.Apprenticeship.HashedAccountId, hashedCommitmentId = Model.Data.Apprenticeship.HashedCommitmentId })" aria-label="Cancel">Cancel</a>

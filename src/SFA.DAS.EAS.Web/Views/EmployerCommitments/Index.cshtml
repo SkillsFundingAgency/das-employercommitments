@@ -1,4 +1,4 @@
-﻿@using SFA.DAS.EmployerCommitments.Web
+@using SFA.DAS.EmployerCommitments.Web
 @using SFA.DAS.EmployerCommitments.Web.Extensions
 @using SFA.DAS.EmployerCommitments.Web.ViewModels
 
@@ -28,10 +28,11 @@
                 </div>
                 <div class="column-half ">
                     <h2 class="heading-medium"><a href="@Url.Action("YourCohorts")">Your cohorts</a></h2>
-                    <p class="rj-home-spacer">Review, edit, approve and add more apprentices to cohorts you’ve already started.</p>
+                    <p class="rj-home-spacer">Review, edit, approve and add more apprentices to cohorts you've already started.</p>
                     <hr />
                 </div>
-
+            </div>
+            <div class="grid-row">
                 <div class="column-half">
                     <h2 class="heading-medium">
                         <a href="@Url.Action("ListAll", "EmployerManageApprentices")">Manage your apprentices</a>
@@ -39,7 +40,10 @@
                     <p class="rj-home-spacer">
                         View approved apprentices, update details of existing apprentices or stop and pause payments to training providers.
                     </p>
-                    <hr />
+                    @if (!Model.Data.ShowPublicSectorReportingLink)
+                    {
+                        <hr />
+                    }
                 </div>
                 @if (Model.Data.ShowSetPaymentPriorityLink)
                 {
@@ -50,10 +54,28 @@
                         <p class="rj-home-spacer">
                             View and change the order in which your providers are paid from your available funds.
                         </p>
-                        <hr />
+                        @if (!Model.Data.ShowPublicSectorReportingLink)
+                        {
+                            <hr />
+                        }
                     </div>
                 }
             </div>
+                
+            @if (Model.Data.ShowPublicSectorReportingLink)
+            {
+                <hr class="hr-double" />
+                <div class="grid-row">
+                    <div class="column-half">
+                        <h2 class="heading-medium">
+                            <a href="@Url.ExternalPsrUrlAction("home")">Report public sector apprenticeship target</a>
+                        </h2>
+                        <p class="rj-home-spacer">
+                            Submit data on your progress towards the public sector apprenticeship target
+                        </p>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </form>
@@ -61,7 +83,7 @@
 @section breadcrumb {
     <div class="breadcrumbs">
         <ol role="navigation">
-            <li><a href="@Url.ExternalUrlAction("teams")">Home</a></li>
+            <li><a href="@Url.ExternalMyaUrlAction("teams")">Home</a></li>
             <li>Apprentices</li>
         </ol>
     </div>

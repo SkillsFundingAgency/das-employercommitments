@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
+using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.DataLock;
 using SFA.DAS.Commitments.Api.Types.ProviderPayment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
@@ -13,9 +14,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
     {
         Task<Apprenticeship> MapFrom(ApprenticeshipViewModel viewModel);
 
-        ApprenticeshipDetailsViewModel MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship);
+        Task<ApprenticeshipDetailsViewModel> MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship, bool disableUlnReuseCheck=false);
 
-        ApprenticeshipViewModel MapToApprenticeshipViewModel(Apprenticeship apprenticeship);
+        ApprenticeshipViewModel MapToApprenticeshipViewModel(Apprenticeship apprenticeship, CommitmentView commitment);
 
         Task<UpdateApprenticeshipViewModel> CompareAndMapToApprenticeshipViewModel(Apprenticeship original, ApprenticeshipViewModel edited);
 
@@ -30,5 +31,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         IList<PriceChange> MapPriceChanges(IEnumerable<DataLockStatus> dataLockWithOnlyPriceMismatch, List<PriceHistory> history);
 
         Task<IEnumerable<CourseChange>> MapCourseChanges(IEnumerable<DataLockStatus> dataLocks, Apprenticeship apprenticeship);
+
+        EditApprenticeshipStopDateViewModel MapToEditApprenticeshipStopDateViewModel(Apprenticeship apprenticeship);
     }
 }

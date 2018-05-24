@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SFA.DAS.EmployerCommitments.Web.Enums;
+using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 {
@@ -24,5 +24,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public Dictionary<string, string> Warnings { get; set; }
         public bool IsReadOnly { get; set; }
         public Dictionary<string, string> Errors { get; set; }
+        public string PageTitle { get; set; }
+        public bool HideDeleteButton { get; set; }
     }
 }

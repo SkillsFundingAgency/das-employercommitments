@@ -1,10 +1,11 @@
 using System;
-
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-
+using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
+using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
@@ -12,7 +13,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
     [TestFixture]
     public class WhenMappingApprenticeshipViewModel : ApprenticeshipMapperBase
     {
-
         private DateTime _now;
 
         [SetUp]
@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void ShouldNotHaveLockedStatusIfNoDataLocksSuccesFound()
         {
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1), HasHadDataLockSuccess = false };
-            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, new CommitmentView());
             var n = MockDateTime.Object.Now;
 
             n.Should().Be(_now);
@@ -39,13 +39,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             viewModel.HasStarted.Should().BeTrue();
         }
 
-
         [Test]
         public void ShouldHaveLockedStatusIfAtLeastOneDataLocksSuccesFound()
         {
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-1), HasHadDataLockSuccess = true };
-
-            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, new CommitmentView());
 
             viewModel.IsLockedForUpdate.Should().BeTrue();
             viewModel.HasStarted.Should().BeTrue();
@@ -58,11 +56,42 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             AcademicYearValidator.Setup(m => m.Validate(It.IsAny<DateTime>())).Returns(AcademicYearValidationResult.NotWithinFundingPeriod);
 
             var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(-5), HasHadDataLockSuccess = false };
-            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, new CommitmentView());
 
             viewModel.IsLockedForUpdate.Should().BeTrue();
             viewModel.HasStarted.Should().BeTrue();
         }
+
+        [Test]
+        public void ShouldHaveLockedStatusIfApprovedTransferFundedWithSuccessfulIlrSubmissionAndCourseNotYetStarted()
+        {
+            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(3), HasHadDataLockSuccess = true };
+            var commitment = new CommitmentView {TransferSender = new TransferSender {TransferApprovalStatus = TransferApprovalStatus.Approved}};
+
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
+
+            viewModel.IsLockedForUpdate.Should().BeTrue();
+        }
+
+        [Test]
+        public void ShouldHaveTransferFlagSetIfCommitmentHasTransferSender()
+        {
+            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(+1), HasHadDataLockSuccess = false };
+            var commitment = new CommitmentView { TransferSender = new TransferSender { Id = 123 } };
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
+
+            viewModel.IsPaidForByTransfer.Should().BeTrue();
+        }
+
+        [Test]
+        public void ShouldNotHaveITransferFlagSetIfCommitmentHasNoTransferSender()
+        {
+            var apprenticeship = new Apprenticeship { StartDate = _now.AddMonths(+1), HasHadDataLockSuccess = false };
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, new CommitmentView());
+
+            viewModel.IsPaidForByTransfer.Should().BeFalse();
+        }
+
 
         [Test]
         public void ThenULNIsMapped()
@@ -71,7 +100,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             var apprenticeship = new Apprenticeship { ULN = uln };
 
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
 
             Assert.AreEqual(uln, viewModel.ULN);
         }
@@ -83,19 +112,74 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             var apprenticeship = new Apprenticeship { StopDate = expectedStopDate };
 
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
 
             Assert.AreEqual(expectedStopDate, viewModel.StopDate);
         }
 
+        [TestCase(TransferApprovalStatus.Rejected, true)]
+        [TestCase(TransferApprovalStatus.Pending, false)]
+        public void ThenCohortTransferRejectionIsIndicated(TransferApprovalStatus status, bool expectRejectionIndicated)
+        {
+            var apprenticeship = new Apprenticeship();
+            var commitment = new CommitmentView
+            {
+                TransferSender = new TransferSender
+                {
+                    TransferApprovalStatus = status
+                }
+            };
+
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
+
+            Assert.AreEqual(expectRejectionIndicated, viewModel.IsInTransferRejectedCohort);
+        }
+
+        /// <remarks>
+        /// trainingStarted should have no material affect, so could be excluded, but i think there is some value in testing it
+        /// </remarks>
+        [TestCase(true, false, true, true, TransferApprovalStatus.Approved)]
+        [TestCase(false, true, true, true, TransferApprovalStatus.Approved)]
+        [TestCase(false, false, true, true, TransferApprovalStatus.Pending)]
+        [TestCase(false, true, true, true, TransferApprovalStatus.Pending)]
+        [TestCase(false, false, true, true, TransferApprovalStatus.Rejected)]
+        [TestCase(false, true, true, true, TransferApprovalStatus.Rejected)]
+        [TestCase(false, false, false, true, null)]
+        [TestCase(false, true, false, true, null)]
+        [TestCase(true, false, true, false, TransferApprovalStatus.Approved)]
+        [TestCase(false, true, true, false, TransferApprovalStatus.Approved)]
+        [TestCase(false, false, true, false, TransferApprovalStatus.Pending)]
+        [TestCase(false, true, true, false, TransferApprovalStatus.Pending)]
+        [TestCase(false, false, true, false, TransferApprovalStatus.Rejected)]
+        [TestCase(false, true, true, false, TransferApprovalStatus.Rejected)]
+        [TestCase(false, false, false, false, null)]
+        [TestCase(false, true, false, false, null)]
+        public void ThenIsUpdateLockedForStartDateAndCourseShouldBeSetCorrectly(
+            bool expected, bool dataLockSuccess, bool transferSender, bool trainingStarted, TransferApprovalStatus? transferApprovalStatus)
+        {
+            var apprenticeship = new Apprenticeship {
+                HasHadDataLockSuccess = dataLockSuccess,
+                StartDate = _now.AddMonths(trainingStarted ? -1 : 1)
+            };
+
+            var commitment = new CommitmentView
+            {
+                TransferSender = transferSender ? new TransferSender { TransferApprovalStatus = transferApprovalStatus } : null
+            };
+
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
+
+            Assert.AreEqual(expected, viewModel.IsUpdateLockedForStartDateAndCourse);
+        }
+
         [Test]
-        public void ThenEndpointAssessorNameIsMapped()
+        public async Task ThenEndpointAssessorNameIsMapped()
         {
             const string endpointAssessorName = "Bad Assess";
 
             var apprenticeship = new Apprenticeship { EndpointAssessorName = endpointAssessorName };
 
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = await Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
 
             Assert.AreEqual(endpointAssessorName, viewModel.EndpointAssessorName);
         }

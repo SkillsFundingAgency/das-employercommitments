@@ -12,18 +12,20 @@ using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeshipUpdat
 using SFA.DAS.EmployerCommitments.Application.Commands.ReviewApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UndoApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStatus;
+using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStopDate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateProviderPaymentPriority;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
 using SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDate;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
-using SFA.DAS.EmployerCommitments.Web.Exceptions;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.Validators;
@@ -35,7 +37,7 @@ using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
-    public sealed class EmployerManageApprenticeshipsOrchestrator : CommitmentsBaseOrchestrator
+    public sealed class EmployerManageApprenticeshipsOrchestrator : CommitmentsBaseOrchestrator, IEmployerManageApprenticeshipsOrchestrator
     {
         private readonly IMediator _mediator;
         private readonly IHashingService _hashingService;
@@ -66,21 +68,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IAcademicYearValidator academicYearValidator)
             : base(mediator, hashingService, logger)
         {
-            if (mediator == null)
-                throw new ArgumentNullException(nameof(mediator));
-            if (hashingService == null)
-                throw new ArgumentNullException(nameof(hashingService));
-            if (apprenticeshipMapper == null)
-                throw new ArgumentNullException(nameof(apprenticeshipMapper));
-            if (currentDateTime == null)
-                throw new ArgumentNullException(nameof(currentDateTime));
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-            if (approvedApprenticeshipValidator == null)
-                throw new ArgumentNullException(nameof(approvedApprenticeshipValidator));
-            if (apprenticeshipFiltersMapper == null)
-                throw new ArgumentNullException(nameof(apprenticeshipFiltersMapper));
-
             _mediator = mediator;
             _hashingService = hashingService;
             _apprenticeshipMapper = apprenticeshipMapper;
@@ -116,7 +103,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var apprenticeships =
                 searchResponse.Apprenticeships
                     .OrderBy(m => m.ApprenticeshipName)
-                    .Select(m => _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(m))
+                    .Select(async m => await _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(m, true))
                     .ToList();
 
                 var filterOptions = _apprenticeshipFiltersMapper.Map(searchResponse.Facets);
@@ -125,7 +112,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var model = new ManageApprenticeshipsViewModel
                 {
                     HashedAccountId = hashedAccountId,
-                    Apprenticeships = apprenticeships,
+                    Apprenticeships = await Task.WhenAll(apprenticeships),
                     Filters = filterOptions,
                     TotalResults = searchResponse.TotalApprenticeships,
                     PageNumber = searchResponse.PageNumber,
@@ -143,6 +130,26 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
+        public async Task<OrchestratorResponse<EditApprenticeshipStopDateViewModel>> GetEditApprenticeshipStopDateViewModel(string hashedAccountId, string hashedApprenticeshipId, string externalUserId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
+
+            _logger.Info(
+                $"Getting On-programme apprenticeships Provider: {accountId}, ApprenticeshipId: {apprenticeshipId}");
+
+            return await CheckUserAuthorization(async () =>
+            {
+                var data = await _mediator.SendAsync(
+                    new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
+
+                var stopDateEditModel =
+                    _apprenticeshipMapper.MapToEditApprenticeshipStopDateViewModel(data.Apprenticeship);
+
+                return new OrchestratorResponse<EditApprenticeshipStopDateViewModel> { Data = stopDateEditModel };
+            }, hashedAccountId, externalUserId);
+        }
+
         public async Task<OrchestratorResponse<ApprenticeshipDetailsViewModel>> GetApprenticeship(string hashedAccountId, string hashedApprenticeshipId, string externalUserId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
@@ -157,7 +164,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
 
                 var detailsViewModel =
-                    _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(data.Apprenticeship);
+                    await _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(data.Apprenticeship);
 
                 detailsViewModel.PendingDataLockRestart = data.Apprenticeship.DataLockCourseTriaged;
                 detailsViewModel.PendingDataLockChange = data.Apprenticeship.DataLockPriceTriaged || data.Apprenticeship.DataLockCourseChangeTriaged;
@@ -179,14 +186,20 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 await AssertApprenticeshipStatus(accountId, apprenticeshipId);
 
-                var data = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
+                var apprenticeshipData = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
                 {
                     AccountId = accountId,
                     ApprenticeshipId = apprenticeshipId
                 });
 
-                AssertApprenticeshipIsEditable(data.Apprenticeship);
-                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(data.Apprenticeship);
+                var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                {
+                    AccountId = accountId,
+                    CommitmentId = apprenticeshipData.Apprenticeship.CommitmentId
+                });
+
+                AssertApprenticeshipIsEditable(apprenticeshipData.Apprenticeship);
+                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(apprenticeshipData.Apprenticeship, commitmentData.Commitment);
 
                 apprenticeship.HashedAccountId = hashedAccountId;
 
@@ -195,7 +208,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ExtendedApprenticeshipViewModel
                     {
                         Apprenticeship = apprenticeship,
-                        ApprenticeshipProgrammes = await GetTrainingProgrammes()
+                        ApprenticeshipProgrammes = await GetTrainingProgrammes(true)
                     }
                 };
             }, hashedAccountId, externalUserId);
@@ -262,7 +275,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         throw new InvalidStateException("Attempting to update an already updated Apprenticeship");
                     }
 
-                    var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(apprenticeshipResult.Apprenticeship);
+                    var apprenticeship = await _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(apprenticeshipResult.Apprenticeship);
                     viewModel.OriginalApprenticeship = apprenticeship;
                     viewModel.HashedAccountId = hashedAccountId;
                     viewModel.HashedApprenticeshipId = hashedApprenticeshipId;
@@ -492,7 +505,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 if (notResuming) return result;
 
                 result.Data.ChangeStatusViewModel.PauseDate = new DateTimeViewModel(data.Apprenticeship.PauseDate, 90);
-                
+
 
                 if (data.Apprenticeship.IsWaitingToStart(_currentDateTime))
                 {
@@ -510,12 +523,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 result.Data.ChangeStatusViewModel.DateOfChange = new DateTimeViewModel(_academicYearDateProvider.CurrentAcademicYearStartDate, 90);
 
-             
+
                 return result;
 
             }, hashedAccountId, externalUserId);
         }
-
 
         public async Task UpdateStatus(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusViewModel model, string externalUserId, string userName, string userEmail)
         {
@@ -553,6 +565,37 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
+        public async Task UpdateStopDate(string hashedAccountId, string hashedApprenticeshipId, EditApprenticeshipStopDateViewModel model, string externalUserId, string userName, string userEmail)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
+
+            _logger.Info($"Updating Apprenticeship stop date. AccountId: {accountId}, ApprenticeshipId: {apprenticeshipId}");
+
+            await CheckUserAuthorization(async () =>
+            {
+                var data =
+                    await
+                        _mediator.SendAsync(new GetApprenticeshipQueryRequest
+                        {
+                            AccountId = accountId,
+                            ApprenticeshipId = apprenticeshipId
+                        });
+
+                await _mediator.SendAsync(new UpdateApprenticeshipStopDateCommand
+                {
+                    UserId = externalUserId,
+                    ApprenticeshipId = apprenticeshipId,
+                    EmployerAccountId = accountId,
+                    NewStopDate = model.NewStopDate.DateTime.Value,
+                    UserEmailAddress = userEmail,
+                    UserDisplayName = userName,
+                    CommitmentId = data.Apprenticeship.CommitmentId
+                });
+
+            }, hashedAccountId, externalUserId);
+        }
+
         private void CheckApprenticeshipStateValidForChange(Apprenticeship apprentice)
         {
             if (!IsActiveOrPaused(apprentice))
@@ -566,9 +609,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         {
             return apprenticeship.PaymentStatus != PaymentStatus.Withdrawn ||
                    apprenticeship.PaymentStatus != PaymentStatus.Completed;
-
         }
-
 
         private DateTimeViewModel DetermineChangeDate(ChangeStatusType changeType, Apprenticeship apprenticeship, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange)
         {
@@ -630,7 +671,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     AccountId = accountId,
                     ApprenticeshipId = apprenticeshipId
                 });
-            var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(apprenticeshipResult.Apprenticeship);
+            var apprenticeship = await _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(apprenticeshipResult.Apprenticeship);
             mappedModel.OriginalApprenticeship = apprenticeship;
             mappedModel.HashedAccountId = hashedAccountId;
             mappedModel.HashedApprenticeshipId = hashedApprenticeshipId;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -89,6 +90,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                 .Cascade(CascadeMode.StopOnFirstFailure)
                 .NotNull().WithMessage(_validationText.LearnStartDate01.Text).WithErrorCode(_validationText.LearnStartDate01.ErrorCode)
                 .Must(ValidateDateWithoutDay).WithMessage(_validationText.LearnStartDate01.Text).WithErrorCode(_validationText.LearnStartDate01.ErrorCode)
+                .Must(StartDateForTransferNotBeforeMay2018).WithMessage(_validationText.LearnStartDate06.Text).WithErrorCode(_validationText.LearnStartDate06.ErrorCode)
                 .Must(NotBeBeforeMay2017).WithMessage(_validationText.LearnStartDate02.Text).WithErrorCode(_validationText.LearnStartDate02.ErrorCode)
                 .Must(StartDateWithinAYearOfTheEndOfTheCurrentTeachingYear).WithMessage(_validationText.LearnStartDate05.Text).WithErrorCode(_validationText.LearnStartDate05.ErrorCode);
         }
@@ -143,6 +145,23 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         private bool StartDateWithinAYearOfTheEndOfTheCurrentTeachingYear(DateTimeViewModel startDate)
         {
             return startDate.DateTime.Value <= _academicYear.CurrentAcademicYearEndDate.AddYears(1);
+        }
+
+        private bool StartDateForTransferNotBeforeMay2018(ApprenticeshipViewModel viewModel, DateTimeViewModel date)
+        {
+            if (!viewModel.IsPaidForByTransfer || date.DateTime >= new DateTime(2018, 5, 1))
+            {
+                return true;
+            }
+
+            //Add alternative detail error message to fake property
+            if (!viewModel.ErrorDictionary.ContainsKey("_StartDateTransfersMinDateAltDetailMessage"))
+            {
+                viewModel.ErrorDictionary.Add("_StartDateTransfersMinDateAltDetailMessage",
+                    "The start date can't be earlier than May 2018");
+            }
+
+            return false;
         }
 
         private bool BeGreaterThenStartDate(ApprenticeshipViewModel viewModel, DateTimeViewModel date)

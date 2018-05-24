@@ -1,0 +1,60 @@
+﻿@using SFA.DAS.EmployerCommitments.Web.Extensions
+@model SFA.DAS.EmployerCommitments.Web.ViewModels.TransferConfirmationViewModel
+
+@{
+    ViewBag.Title = $"Transfer request {Model.TransferApprovalStatus}";
+    ViewBag.Section = "";
+    ViewBag.PageID = "transfer-confirmation";
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
+    </div>
+</div>
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <div class="success-summary">
+            <h1 class="heading-medium">@ViewBag.Title</h1>
+            <p>You have @Model.TransferApprovalStatus a transfer request from @Model.TransferReceiverName</p>
+        </div>
+    </div>
+</div>
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <form method="POST" action="@Url.Action("TransferConfirmation")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
+
+            <fieldset role="radiogroup" aria-required="true" class="approve-transfer">
+                <div class="form-error-group form-group @Html.AddClassIfPropertyInError("UrlAddress", "error")">
+                    <h2 class="heading-medium" for="">What next?</h2>
+                    <div>
+                        @Html.ValidationMessage("UrlAddress", "Please choose an option", new { id = "error-message-UrlAddress" })
+                    </div>
+                    <label class="block-label selection-button-radio" for="UrlAddress-Transfers">
+                        @Html.RadioButton("UrlAddress", Url.ExternalMyaUrlAction("transfers"), new { id = "UrlAddress-Transfers", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Transfers')" })
+                        Go to the transfers dashboard
+                    </label>
+                    <label class="block-label selection-button-radio" for="UrlAddress-Home">
+                        @Html.RadioButton("UrlAddress", Url.ExternalMyaUrlAction("teams"), new { id = "UrlAddress-Home", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Home')" })
+                        Go to the homepage
+                    </label>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="button" id="submit-transfer-connection">Continue</button>
+            @Html.AntiForgeryToken()
+            @Html.Hidden("TransferReceiverName", Model.TransferReceiverName)
+            @Html.Hidden("TransferApprovalStatus", Model.TransferApprovalStatus)
+
+
+        </form>
+    </div>
+</div>
+
+@section breadcrumb {
+    <div class="breadcrumbs">
+        <a href="@Url.Action("TransferDetails")" aria-label="Back to apprentice details" class="back-link">Back</a>
+    </div>
+}

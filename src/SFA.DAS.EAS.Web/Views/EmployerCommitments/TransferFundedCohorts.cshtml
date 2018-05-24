@@ -1,0 +1,72 @@
+﻿@using SFA.DAS.EmployerCommitments.Web.ViewModels
+@model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<TransferFundedCohortsViewModel>
+
+@{
+    ViewBag.Title = "With transfer sending employers";
+    ViewBag.Section = "apprentices";
+    ViewBag.PageId = "transfer-funded-cohorts";
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-xlarge">With transfer sending employers</h1>
+
+        @{ var commitmentsCount = Model.Data.Commitments.Count(); }
+        <p class="dynamic-heading">You have <strong>@commitmentsCount</strong> cohort@(commitmentsCount > 1?"s":"") to be paid via a transfer</p>
+
+        <table class="tableResponsive to-be-sent-list">
+            <thead>
+                <tr>
+                    <th>Sending employer</th>
+                    <th>Training provider</th>
+                    <th>Reference</th>
+                    <th>Transfer status</th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var commitment in Model.Data.Commitments)
+                {
+                <tr>
+                    <td>
+                        @commitment.SendingEmployer
+                    </td>
+                    <td>
+                        @commitment.ProviderName
+                    </td>
+                    <td>
+                        @commitment.HashedCommitmentId
+                    </td>
+                    <td>
+                        @commitment.TransferApprovalStatus
+                    </td>
+                    <td>
+                        @switch (commitment.ShowLink)
+                        {
+                            case ShowLink.Details:
+                                <a href="@Url.Action("Details", new {commitment.HashedCommitmentId})" title="View cohort" aria-label="View cohort">Details</a>
+                                break;
+                            case ShowLink.Edit:
+                                <a href="@Url.Action("Details", new {commitment.HashedCommitmentId})" title="Edit cohort" aria-label="Edit cohort">Edit</a>
+                                break;
+                        }
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section breadcrumb {
+    <div class="breadcrumbs">
+        <a href="@Url.Action("YourCohorts", "EmployerCommitments")" aria-label="Back to Apprentices" class="back-link">Back to Apprentices</a>
+    </div>
+}
+
+@section gaDataLayer {
+    <script>
+        sfa.dataLayer.vpv = '/accounts/apprentices/cohorts/transfer-funded-cohorts';
+    </script>
+}

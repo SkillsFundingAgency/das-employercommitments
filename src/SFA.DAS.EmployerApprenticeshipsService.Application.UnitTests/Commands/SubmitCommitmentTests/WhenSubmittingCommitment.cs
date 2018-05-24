@@ -10,6 +10,7 @@ using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.SendNotification;
 using SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.NLog.Logger;
@@ -53,11 +54,24 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
         }
 
         [Test]
-        public async Task ThenTheCommitmentApiShouldBeCalled()
+        public async Task ThenIfTheEmployerIsAmendingTheCommitmentTheCommitmentShouldBePatched()
         {
             await _handler.Handle(_validCommand);
 
             _mockCommitmentApi.Verify(x => x.PatchEmployerCommitment(It.IsAny<long>(), It.IsAny<long>(), It.IsAny<CommitmentSubmission>()));
+        }
+
+        [Test]
+        public async Task ThenIfTheEmployerIsApprovingTheCommitmentTheCommitmentShouldBeApproved()
+        {
+            _validCommand.LastAction = LastAction.Approve;
+
+            await _handler.Handle(_validCommand);
+
+            _mockCommitmentApi.Verify(x => x.ApproveCohort(_validCommand.EmployerAccountId, _validCommand.CommitmentId,
+                It.Is<CommitmentSubmission>(y =>
+                    y.UserId == _validCommand.UserId && y.Message == _validCommand.Message && y.LastUpdatedByInfo.EmailAddress == _validCommand.UserEmailAddress &&
+                    y.LastUpdatedByInfo.Name == _validCommand.UserDisplayName)));
         }
 
         [Test]

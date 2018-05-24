@@ -81,6 +81,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             result.IsValid.Should().BeTrue();
         }
 
+        [Ignore("Unclear whether test asserts correct behaviour: see task DPP-1348")]
         [Test]
         public void ShouldFailValidationForPlanedEndDateWithTodaysDate()
         {
@@ -128,5 +129,16 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             result.IsValid.Should().BeTrue();
         }
 
+        [Test]
+        public void ShouldFailValidationIfTransferStartDateIsBeforeMay2018()
+        {
+            ValidModel.IsPaidForByTransfer = true;
+            ValidModel.StartDate = new DateTimeViewModel(1, 4, 2018);
+
+            var result = Validator.Validate(ValidModel);
+
+            result.IsValid.Should().BeFalse();
+            result.Errors[0].ErrorMessage.Should().Be("Apprentices funded through a transfer can't start earlier than May 2018");
+        }
     }
 }

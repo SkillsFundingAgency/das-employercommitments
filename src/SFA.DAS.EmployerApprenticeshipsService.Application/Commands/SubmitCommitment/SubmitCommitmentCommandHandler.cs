@@ -5,6 +5,7 @@ using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.SendNotification;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.NLog.Logger;
@@ -63,7 +64,14 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment
                 Message = message.Message
             };
 
-            await _commitmentApi.PatchEmployerCommitment(message.EmployerAccountId, message.CommitmentId, submission);
+            if (message.LastAction != LastAction.Approve)
+            {
+                await _commitmentApi.PatchEmployerCommitment(message.EmployerAccountId, message.CommitmentId, submission);
+            }
+            else
+            {
+                await _commitmentApi.ApproveCohort(message.EmployerAccountId, message.CommitmentId, submission);
+            }
 
             if (message.LastAction != LastAction.None)
             {

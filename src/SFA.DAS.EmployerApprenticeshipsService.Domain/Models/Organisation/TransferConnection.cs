@@ -3,6 +3,6 @@
     public class TransferConnection
     {
         public string AccountName { get; set; }
-        public string HashedAccountId { get; set; }
+        public long AccountId { get; set; }
     }
 }

@@ -104,7 +104,7 @@ namespace SFA.DAS.EmployerCommitments.Application
             return new ProvidersView
             {
                 CreatedDate = DateTime.UtcNow,
-                Provider = new Domain.Models.ApprenticeshipProvider.Provider()
+                Provider = new EmployerCommitments.Domain.Models.ApprenticeshipProvider.Provider
                 {
                     Ukprn = provider.Ukprn,
                     ProviderName = provider.ProviderName,

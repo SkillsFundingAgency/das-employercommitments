@@ -3,6 +3,7 @@
     public class LegalEntitySignedAgreementViewModel
     {
         public string HashedAccountId { get; set; }
+        public string TransferConnectionCode { get; set; }
         public string LegalEntityCode { get; set; }
         public string CohortRef { get; set; }
         public bool HasSignedAgreement { get; set; }

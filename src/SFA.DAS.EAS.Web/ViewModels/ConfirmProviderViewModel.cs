@@ -7,6 +7,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
     {
         public string CohortRef { get; set; }
         public string HashedAccountId { get; set; }
+        public string TransferConnectionCode { get; set; }
         public string LegalEntityCode { get; set; }
         public string LegalEntityName { get; set; }
         public int ProviderId { get; set; }

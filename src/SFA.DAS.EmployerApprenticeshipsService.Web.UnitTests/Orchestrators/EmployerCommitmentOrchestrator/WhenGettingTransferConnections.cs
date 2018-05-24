@@ -29,6 +29,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             {
                 TransferConnections = new List<TransferConnection> { new TransferConnection() }
             };
+            MockCommitmentMapper.Setup(x => x.MapToTransferConnectionsViewModel(It.IsAny<List<TransferConnection>>()))
+                .Returns(new List<TransferConnectionViewModel> {new TransferConnectionViewModel()});
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetAccountTransferConnectionsRequest>())).ReturnsAsync(_sendAsyncResponse);
         }
 
@@ -39,7 +41,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             _mockFeatureToggle.Setup(x => x.FeatureEnabled).Returns(false);
 
             //Act
-            var list = await EmployerCommitmentOrchestrator.GetTransferringEntities(HashedAccountId, UserId);
+            var list = await EmployerCommitmentOrchestrator.GetTransferConnections(HashedAccountId, UserId);
 
             //Assert
             Assert.IsEmpty(list.Data.TransferConnections);
@@ -53,7 +55,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             _mockFeatureToggle.Setup(x => x.FeatureEnabled).Returns(true);
 
             //Act
-            var list = await EmployerCommitmentOrchestrator.GetTransferringEntities(HashedAccountId, UserId);
+            var list = await EmployerCommitmentOrchestrator.GetTransferConnections(HashedAccountId, UserId);
 
             //Assert
             Assert.IsNotEmpty(list.Data.TransferConnections);

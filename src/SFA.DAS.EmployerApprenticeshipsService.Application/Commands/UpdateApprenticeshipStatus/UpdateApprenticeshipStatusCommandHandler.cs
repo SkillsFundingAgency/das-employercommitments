@@ -5,6 +5,7 @@ using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Validation;
@@ -16,7 +17,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
 {
     public sealed class UpdateApprenticeshipStatusCommandHandler : AsyncRequestHandler<UpdateApprenticeshipStatusCommand>
     {
-        private IEmployerCommitmentApi _commitmentsApi;
+        private readonly IEmployerCommitmentApi _commitmentsApi;
         private readonly IValidator<UpdateApprenticeshipStatusCommand> _validator;
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IMediator _mediator;

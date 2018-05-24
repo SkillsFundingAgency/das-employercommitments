@@ -21,30 +21,31 @@
                         <span class="form-label-bold">Which organisation is named on the contract with the training provider for the apprentices you’d like to add?</span>
                         @Html.ValidationMessage("LegalEntityCode", "Please choose an option", new { id = "error-message-LegalEntityCode" })
                     </legend>
-  
+
                     @foreach (var entity in Model.Data.LegalEntities)
-                    {
-                        <label class="block-label selection-button-radio" for="LegalEntityCode-@entity.Code">
-                        @Html.RadioButton("LegalEntityCode", @entity.Code, new { @id = "LegalEntityCode-" + entity.Code, dataOptionName=$"{entity.Name}", onclick=$"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{entity.Name}')" })
-                            @entity.Name
-                        </label>
-                    }
-               </fieldset>
+            {
+                <label class="block-label selection-button-radio" for="LegalEntityCode-@entity.Code">
+                    @Html.RadioButton("LegalEntityCode", @entity.Code, new { @id = "LegalEntityCode-" + entity.Code, dataOptionName = $"{entity.Name}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{entity.Name}')" })
+                    @entity.Name
+                </label>
+    }
+                </fieldset>
                 <details id="service-help">
                     <summary><span class="summary">What is a contract for services?</span></summary>
                     <div class="panel panel-border-narrow">
                         <p>
-                           A contract for services is a formal agreement between a buyer and a supplier.
+                            A contract for services is a formal agreement between a buyer and a supplier.
                         </p>
 
                         <p>
-                           In this case, the contract is between the organisation that's buying apprenticeship training for their apprentices and the training provider that's training the apprentices.
+                            In this case, the contract is between the organisation that's buying apprenticeship training for their apprentices and the training provider that's training the apprentices.
                         </p>
                         <p>If you're an employer-provider, for example, you won't need a contract for services as your organisation is both the buyer and the supplier.</p>
                     </div>
                 </details>
 
             </div>
+            @Html.Hidden("TransferConnectionCode", Model.Data.TransferConnectionCode)
             @Html.Hidden("CohortRef", Model.Data.CohortRef)
             <button type="submit" class="button" id="submit-legal-entity">Continue</button>
         </div>

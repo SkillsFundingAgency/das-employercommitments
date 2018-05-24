@@ -6,10 +6,10 @@ using MediatR;
 
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.ResolveRequestedChanges;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetPriceHistoryQueryRequest;
-using SFA.DAS.EmployerCommitments.Web.Exceptions;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.HashingService;
@@ -59,7 +59,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     var apprenticeship = await _mediator.SendAsync(
                         new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
 
-                    var programms = await GetTrainingProgrammes();
+                    var programms = await GetTrainingProgrammes(true);
                     var currentProgram = programms.Single(m => m.Id == apprenticeship.Apprenticeship.TrainingCode);
                     var newProgram = programms.Single(m => m.Id == dataLock.IlrTrainingCourseCode);
 

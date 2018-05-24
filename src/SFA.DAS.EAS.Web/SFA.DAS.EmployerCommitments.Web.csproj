@@ -39,6 +39,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -47,6 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
@@ -191,11 +193,11 @@
     <Reference Include="SFA.DAS.Audit.Types, Version=1.0.0.20553, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Audit.Client.1.0.0.20553\lib\net45\SFA.DAS.Audit.Types.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=2.0.0.51156, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.2.0.0.51156\lib\net45\SFA.DAS.Commitments.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=2.1.213.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.2.1.213\lib\net45\SFA.DAS.Commitments.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=2.0.0.59488, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.2.0.0.59488\lib\net45\SFA.DAS.Commitments.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=2.1.213.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.2.1.213\lib\net45\SFA.DAS.Commitments.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Common.Domain, Version=1.3.0.44308, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.3.0.44308\lib\net45\SFA.DAS.Common.Domain.dll</HintPath>
@@ -212,20 +214,20 @@
     <Reference Include="SFA.DAS.CookieService, Version=1.0.0.27423, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.CookieService.1.0.0.27423\lib\net45\SFA.DAS.CookieService.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.EAS.Account.Api.Client, Version=1.1.0.54309, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.1.0.54309\lib\net45\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.EAS.Account.Api.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.3.505\lib\net45\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.EAS.Account.Api.Types, Version=1.1.0.54309, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.1.0.54309\lib\net45\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.EAS.Account.Api.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.3.505\lib\net45\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.EmployerUsers.WebClientComponents, Version=1.0.0.29302, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.EmployerUsers.WebClientComponents.1.0.0.29302\lib\net45\SFA.DAS.EmployerUsers.WebClientComponents.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Events.Api.Client, Version=1.20.0.26497, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Events.Api.Client.1.20.0.26497\lib\net45\SFA.DAS.Events.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.Events.Api.Client, Version=2.0.0.57745, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Events.Api.Client.2.0.0.57745\lib\net45\SFA.DAS.Events.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Events.Api.Types, Version=1.20.0.26497, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Events.Api.Types.1.20.0.26497\lib\net45\SFA.DAS.Events.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.Events.Api.Types, Version=2.0.0.57745, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Events.Api.Types.2.0.0.57745\lib\net45\SFA.DAS.Events.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.HashingService, Version=1.0.0.42526, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.HashingService.1.0.0.42526\lib\net45\SFA.DAS.HashingService.dll</HintPath>
@@ -330,8 +332,8 @@
     <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Http.4.3.0\lib\net46\System.Net.Http.dll</HintPath>
+    <Reference Include="System.Net.Http, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.3\lib\net46\System.Net.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -372,6 +374,11 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Spatial, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.7.0\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -436,14 +443,20 @@
     <Compile Include="Authentication\OwinWrapper.cs" />
     <Compile Include="Controllers\AccessDeniedController.cs" />
     <Compile Include="Controllers\DataLockController.cs" />
+    <Compile Include="Controllers\BaseEmployerController.cs" />
+    <Compile Include="Controllers\TransferRequestController.cs" />
+    <Compile Include="Controllers\TransfersController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Decorators\AccountApiClientDecorator.cs" />
+    <Compile Include="PublicHashingService\IPublicHashingService.cs" />
+    <Compile Include="PublicHashingService\PublicHashingService.cs" />
     <Compile Include="DependencyResolution\StructureMapValidatorFactory.cs" />
     <Compile Include="DependencyResolution\ValidationRegistry.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Extensions\ValidationResultExtensions.cs" />
     <Compile Include="Orchestrators\DataLockOrchestrator.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestrator.cs" />
+    <Compile Include="Orchestrators\IEmployerManageApprenticeshipsOrchestrator.cs" />
     <Compile Include="Orchestrators\Mappers\ApprenticeshipFiltersMapper.cs" />
     <Compile Include="Orchestrators\Mappers\IApprenticeshipFiltersMapper.cs" />
     <Compile Include="Plumbing\GoogleAnalytics.cs" />
@@ -451,8 +464,16 @@
     <Compile Include="Plumbing\Mvc\GoogleTagManagerFilterAttribute.cs" />
     <Compile Include="Validators\ChangeStatusViewModelValidator.cs" />
     <Compile Include="Validators\DataLockStatusViewModelViewModelValidator.cs" />
+    <Compile Include="Validators\EditStopDateViewModelValidator.cs" />
+    <Compile Include="Validators\TransferConfirmationViewModelValidator.cs" />
+    <Compile Include="Validators\TransferApprovalConfirmationViewModelValidator.cs" />
     <Compile Include="Validators\ProviderPriorityReOrderListValidator.cs" />
     <Compile Include="ViewModels\CommitmentsIndexViewModel.cs" />
+    <Compile Include="ViewModels\TransferRequestViewModel.cs" />
+    <Compile Include="ViewModels\TransferConfirmationViewModel.cs" />
+    <Compile Include="ViewModels\TransferApprovalConfirmationViewModel.cs" />
+    <Compile Include="ViewModels\TrainingCourseSummaryViewModel.cs" />
+    <Compile Include="ViewModels\TransferCommitmentViewModel.cs" />
     <Compile Include="ViewModels\CoreDetailsViewModel.cs" />
     <Compile Include="ViewModels\GoogleAnalyicsDetailsViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IPaginationViewModel.cs" />
@@ -460,6 +481,7 @@
     <Compile Include="ViewModels\ManageApprenticeships\ChangeStatusChoiceViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\CourseChange.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\DataLockStatusViewModel.cs" />
+    <Compile Include="ViewModels\ManageApprenticeships\EditApprenticeshipStopDateViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PaymentOrderViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PriceChange.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PriceHistoryViewModel.cs" />
@@ -476,7 +498,6 @@
     <Compile Include="DependencyResolution\IoC.cs" />
     <Compile Include="DependencyResolution\StructureMapDependencyScope.cs" />
     <Compile Include="DependencyResolution\StructureMapScopeModule.cs" />
-    <Compile Include="Exceptions\InvalidStateException.cs" />
     <Compile Include="Exceptions\InvalidStateExceptionFilter.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\DecimalExtensions.cs" />
@@ -512,6 +533,8 @@
     <Compile Include="ViewModels\NotificationSettingsViewModel.cs" />
     <Compile Include="ViewModels\ProviderPriorityReOrderViewModel.cs" />
     <Compile Include="ViewModels\SummaryUnsubscribeViewModel.cs" />
+    <Compile Include="ViewModels\TransferFundedCohortsListItemViewModel.cs" />
+    <Compile Include="ViewModels\TransferFundedCohortsViewModel.cs" />
     <Compile Include="ViewModels\YourCohortsViewModel.cs" />
     <Compile Include="ViewModels\AcknowledgementViewModel.cs" />
     <Compile Include="ViewModels\ApprenticeshipListItemViewModel.cs" />
@@ -528,14 +551,12 @@
     <Compile Include="ViewModels\PrivacyViewModel.cs" />
     <Compile Include="ViewModels\CreateCommitmentViewModel.cs" />
     <Compile Include="ViewModels\ExtendedApprenticeshipViewModel.cs" />
-    <Compile Include="Enums\RequestStatus.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="ViewModels\SignInUserViewModel.cs" />
     <Compile Include="ViewModels\FlashMessageViewModel.cs" />
     <Compile Include="ViewModels\ApproveApprenticeshipModel.cs" />
     <Compile Include="ViewModels\ApproveApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\SubmitCommitmentViewModel.cs" />
-    <Compile Include="ViewModels\SubmitCommitmenViewModel.cs" />
     <Compile Include="ViewModels\SystemDetailsViewModel.cs" />
     <Compile Include="ViewModels\DateTimeViewModel.cs" />
     <Compile Include="Extensions\SaveStatusExtension.cs" />
@@ -543,9 +564,7 @@
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\UserInvitationsViewModel.cs" />
     <Compile Include="OrchestratorResponse.cs" />
-    <Compile Include="Orchestrators\CommitmentStatusCalculator.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentsOrchestrator.cs" />
-    <Compile Include="Orchestrators\ICommitmentStatusCalculator.cs" />
     <Compile Include="Plumbing\Mvc\LogAndHandleErrorAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -597,10 +616,20 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ConfirmChanges.cshtml</DependentUpon>
     </Compile>
+    <Compile Include="Views\EmployerManageApprentices\Details.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Details.cshtml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EmployerManageApprentices\EditStartedApprenticeship.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EditStartedApprenticeship.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EmployerManageApprentices\EditStopDate.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditStopDate.cshtml</DependentUpon>
     </Compile>
     <Compile Include="Views\EmployerManageApprentices\ListAll.generated.cs">
       <AutoGen>True</AutoGen>
@@ -653,6 +682,11 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>_CoreDetail.generated.cs</LastGenOutput>
     </Content>
+    <Content Include="Views\Transfers\TransferConfirmation.cshtml" />
+    <Content Include="Views\Transfers\TransferDetails.cshtml" />
+    <Content Include="Views\TransferRequest\TransferDetails.cshtml" />
+    <Content Include="Views\TransferRequest\TransferConfirmation.cshtml" />
+    <Content Include="Views\TransferRequest\TransferDetailsForReceiver.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="comt-assets\css\external-links\external-link-24x24.png" />
@@ -1061,7 +1095,10 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ListAll.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Views\EmployerManageApprentices\Details.cshtml" />
+    <Content Include="Views\EmployerManageApprentices\Details.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Details.generated.cs</LastGenOutput>
+    </Content>
     <Content Include="Views\EmployerCommitments\YourCohorts.cshtml" />
     <Content Include="Views\EmployerCommitments\DeleteApprenticeshipConfirmation.cshtml" />
     <Content Include="Views\EmployerCommitments\RequestList.cshtml" />
@@ -1129,6 +1166,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EmployerCommitments\SelectTransferConnection.cshtml" />
+    <Content Include="Views\EmployerManageApprentices\EditStopDate.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>EditStopDate.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\EmployerCommitments\TransferFundedCohorts.cshtml" />
     <None Include="Views\razorgenerator.directives" />
   </ItemGroup>
   <ItemGroup>
@@ -1163,8 +1205,6 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="..\packages\Microsoft.Web.WebJobs.Publish.1.0.11\tools\webjobs.targets" Condition="Exists('..\packages\Microsoft.Web.WebJobs.Publish.1.0.11\tools\webjobs.targets')" />
-  <Import Project="..\packages\Microsoft.Web.WebJobs.Publish.1.0.12\tools\webjobs.targets" Condition="Exists('..\packages\Microsoft.Web.WebJobs.Publish.1.0.12\tools\webjobs.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>

@@ -8,13 +8,16 @@ using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
-using SFA.DAS.EmployerCommitments.Application;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteApprentice;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment;
+using SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeship;
+using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
+using SFA.DAS.EmployerCommitments.Application.Exceptions;
+using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountLegalEntities;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetAccountTransferConnections;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
@@ -24,22 +27,21 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticesh
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProvider;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetTransferRequest;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipProvider;
 using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
 using SFA.DAS.EmployerCommitments.Web.Enums;
-using SFA.DAS.EmployerCommitments.Web.Exceptions;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.NLog.Logger;
 
 using OrganisationType = SFA.DAS.Common.Domain.Types.OrganisationType;
-using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
-using SFA.DAS.EmployerCommitments.Web.Validators;
+using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
 using SFA.DAS.HashingService;
+using CallerType = SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment.CallerType;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
@@ -47,36 +49,29 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
     {
         private readonly IMediator _mediator;
         private readonly IHashingService _hashingService;
+        private readonly IPublicHashingService _publicHashingService;
         private readonly ILog _logger;
-        private readonly ICommitmentStatusCalculator _statusCalculator;
 
         private readonly Func<int, string> _addPluralizationSuffix = i => i > 1 ? "s" : "";
         private readonly IApprenticeshipMapper _apprenticeshipMapper;
         private readonly ICommitmentMapper _commitmentMapper;
-        private readonly IAcademicYearValidator _academicYearValidator;
-        private readonly IAcademicYearDateProvider _academicYearDateProvider;
-
-        private readonly IApprenticeshipViewModelValidator _apprenticeshipValidation;
-
         private readonly IFeatureToggleService _featureToggleService;
 
         public EmployerCommitmentsOrchestrator(
             IMediator mediator,
             IHashingService hashingService,
-            ICommitmentStatusCalculator statusCalculator,
+            IPublicHashingService publicHashingService,
             IApprenticeshipMapper apprenticeshipMapper,
             ICommitmentMapper commitmentMapper,
             ILog logger,
-            IApprenticeshipViewModelValidator apprenticeshipValidation,
             IFeatureToggleService featureToggleService) : base(mediator, hashingService, logger)
         {
             _mediator = mediator;
             _hashingService = hashingService;
-            _statusCalculator = statusCalculator;
+            _publicHashingService = publicHashingService;
             _apprenticeshipMapper = apprenticeshipMapper;
             _commitmentMapper = commitmentMapper;
             _logger = logger;
-            _apprenticeshipValidation = apprenticeshipValidation;
             _featureToggleService = featureToggleService;
         }
 
@@ -92,7 +87,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     Data = new CommitmentsIndexViewModel
                     {
-                        ShowSetPaymentPriorityLink = response.Data != null && response.Data.Count > 1
+                        ShowSetPaymentPriorityLink = response.Data != null && response.Data.Count > 1,
+                        ShowPublicSectorReportingLink = _featureToggleService.Get<PublicSectorReporting>().FeatureEnabled
                     }
                 };
             }, hashedAccountId, externalUserId);
@@ -113,7 +109,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<SelectProviderViewModel>> GetProviderSearch(string hashedAccountId, string externalUserId, string legalEntityCode, string cohortRef)
+        public async Task<OrchestratorResponse<SelectProviderViewModel>> GetProviderSearch(string hashedAccountId,
+            string externalUserId, string transferConnectionCode, string legalEntityCode, string cohortRef)
         {
             return await CheckUserAuthorization(() =>
             {
@@ -122,6 +119,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Status = HttpStatusCode.OK,
                     Data = new SelectProviderViewModel
                     {
+                        TransferConnectionCode = transferConnectionCode,
                         LegalEntityCode = legalEntityCode,
                         CohortRef = cohortRef
                     }
@@ -129,7 +127,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<SelectLegalEntityViewModel>> GetLegalEntities(string hashedAccountId, string cohortRef, string externalUserId)
+        public async Task<OrchestratorResponse<SelectLegalEntityViewModel>> GetLegalEntities(string hashedAccountId, string transferConnectionCode, string cohortRef, string externalUserId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             _logger.Info($"Getting list of Legal Entities for Account: {accountId}");
@@ -147,6 +145,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     Data = new SelectLegalEntityViewModel
                     {
+                        TransferConnectionCode = transferConnectionCode,
                         CohortRef = string.IsNullOrWhiteSpace(cohortRef) ? CreateReference() : cohortRef,
                         LegalEntities = legalEntities.LegalEntities
                     }
@@ -154,54 +153,60 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<SelectTransferConnectionViewModel>> GetTransferringEntities(string hashedAccountId, string externalUserId)
+        public async Task<OrchestratorResponse<SelectTransferConnectionViewModel>> GetTransferConnections(
+            string hashedAccountId, string externalUserId)
         {
-
             if (!_featureToggleService.Get<Transfers>().FeatureEnabled)
             {
                 return new OrchestratorResponse<SelectTransferConnectionViewModel>
                 {
                     Data = new SelectTransferConnectionViewModel
                     {
-                        TransferConnections = new List<TransferConnection>()
+                        TransferConnections = new List<TransferConnectionViewModel>()
                     }
                 };
             }
 
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            _logger.Info($"Getting list of Transferring Entities for Account: {accountId}");
-
             return await CheckUserAuthorization(async () =>
             {
-                var response = await _mediator.SendAsync(new GetAccountTransferConnectionsRequest
-                {
-                    HashedAccountId = hashedAccountId,
-                    UserId = externalUserId
-                });
+                var response = await GetTransferConnectionsNoAuthorizationCheck(hashedAccountId, externalUserId);
 
                 return new OrchestratorResponse<SelectTransferConnectionViewModel>
                 {
                     Data = new SelectTransferConnectionViewModel
                     {
-                        TransferConnections = response.TransferConnections
+                        TransferConnections = _commitmentMapper.MapToTransferConnectionsViewModel(response.TransferConnections)
                     }
                 };
             }, hashedAccountId, externalUserId);
         }
 
+        private Task<GetAccountTransferConnectionsResponse> GetTransferConnectionsNoAuthorizationCheck(string hashedAccountId, string externalUserId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            _logger.Info($"Getting list of Transferring Entities for Account: {accountId}");
+
+            return _mediator.SendAsync(new GetAccountTransferConnectionsRequest
+            {
+                HashedAccountId = hashedAccountId,
+                UserId = externalUserId
+            });
+        }
+
         public async Task<OrchestratorResponse<ConfirmProviderViewModel>> GetProvider(string hashedAccountId, string externalUserId, SelectProviderViewModel model)
         {
             var providerId = int.Parse(model.ProviderId);
-
-            return await GetProvider(hashedAccountId, externalUserId, providerId, model.LegalEntityCode, model.CohortRef);
+            return await GetProvider(hashedAccountId, externalUserId, providerId, model.TransferConnectionCode,  model.LegalEntityCode, model.CohortRef);
         }
 
         public async Task<OrchestratorResponse<ConfirmProviderViewModel>> GetProvider(string hashedAccountId, string externalUserId, ConfirmProviderViewModel model)
         {
-            return await GetProvider(hashedAccountId, externalUserId, model.ProviderId, model.LegalEntityCode, model.CohortRef);
+            return await GetProvider(hashedAccountId, externalUserId, model.ProviderId, model.TransferConnectionCode, model.LegalEntityCode, model.CohortRef);
         }
 
-        private Task<OrchestratorResponse<ConfirmProviderViewModel>> GetProvider(string hashedAccountId, string externalUserId, int providerId, string legalEntityCode, string cohortRef)
+        private Task<OrchestratorResponse<ConfirmProviderViewModel>> GetProvider(string hashedAccountId,
+            string externalUserId, int providerId, string transferConnectionCode, string legalEntityCode,
+            string cohortRef)
         {
             _logger.Info($"Getting Provider Details, Provider: {providerId}");
 
@@ -214,6 +219,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ConfirmProviderViewModel
                     {
                         HashedAccountId = hashedAccountId,
+                        TransferConnectionCode = transferConnectionCode,
                         LegalEntityCode = legalEntityCode,
                         ProviderId = providerId,
                         Provider = provider,
@@ -233,7 +239,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             return response.ProvidersView?.Provider;
         }
 
-        public async Task<OrchestratorResponse<CreateCommitmentViewModel>> CreateSummary(string hashedAccountId, string legalEntityCode, string providerId, string cohortRef, string externalUserId)
+        public async Task<OrchestratorResponse<CreateCommitmentViewModel>> CreateSummary(string hashedAccountId,
+            string transferConnectionCode, string legalEntityCode, string providerId, string cohortRef,
+            string externalUserId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             _logger.Info($"Getting Commitment Summary Model for Account: {accountId}, LegalEntity: {legalEntityCode}, Provider: {providerId}");
@@ -243,13 +251,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var provider = await ProviderSearch(int.Parse(providerId));
 
                 var legalEntities = await GetActiveLegalEntities(hashedAccountId, externalUserId);
-                var legalEntity = legalEntities.LegalEntities.Single(x => x.Code.Equals(legalEntityCode, StringComparison.InvariantCultureIgnoreCase));
+                var legalEntity = legalEntities.LegalEntities.Single(x =>
+                    x.Code.Equals(legalEntityCode, StringComparison.InvariantCultureIgnoreCase));
 
                 return new OrchestratorResponse<CreateCommitmentViewModel>
                 {
                     Data = new CreateCommitmentViewModel
                     {
                         HashedAccountId = hashedAccountId,
+                        TransferConnectionCode = transferConnectionCode,
                         LegalEntityCode = legalEntityCode,
                         LegalEntityName = legalEntity.Name,
                         LegalEntityAddress = legalEntity.RegisteredAddress,
@@ -269,12 +279,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
+                (long? transferSenderId, string transferSenderName) = await GetTransferConnectionInfo(model.HashedAccountId, model.TransferConnectionCode, externalUserId);
+
                 var response = await _mediator.SendAsync(new CreateCommitmentCommand
                 {
                     Commitment = new Commitment
                     {
                         Reference = model.CohortRef,
                         EmployerAccountId = accountId,
+                        TransferSenderId = transferSenderId,
+                        TransferSenderName = transferSenderName,
                         LegalEntityId = model.LegalEntityCode,
                         LegalEntityName = model.LegalEntityName,
                         LegalEntityAddress = model.LegalEntityAddress,
@@ -296,13 +310,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, model.HashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<string>> CreateProviderAssignedCommitment(SubmitCommitmenViewModel model, string externalUserId, string userDisplayName, string userEmail)
+        public async Task<OrchestratorResponse<string>> CreateProviderAssignedCommitment(SubmitCommitmentViewModel model, string externalUserId, string userDisplayName, string userEmail)
         {
             var accountId = _hashingService.DecodeValue(model.HashedAccountId);
             _logger.Info($"Creating Provider assigned Commitment. AccountId: {accountId}, Provider: {model.ProviderId}");
 
             return await CheckUserAuthorization(async () =>
             {
+                (long? transferSenderId, string transferSenderName) = await GetTransferConnectionInfo(model.HashedAccountId, model.TransferConnectionCode, externalUserId);
+
                 var response = await _mediator.SendAsync(new CreateCommitmentCommand
                 {
                     Message = model.Message,
@@ -310,6 +326,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     {
                         Reference = model.CohortRef,
                         EmployerAccountId = accountId,
+                        TransferSenderId = transferSenderId,
+                        TransferSenderName = transferSenderName,
                         LegalEntityId = model.LegalEntityCode,
                         LegalEntityName = model.LegalEntityName,
                         LegalEntityAddress = model.LegalEntityAddress,
@@ -339,12 +357,20 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                await AssertCommitmentStatus(commitmentId, accountId);
+                var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                {
+                    AccountId = accountId,
+                    CommitmentId = commitmentId
+                });
+
+                CheckCommitmentIsVisibleToEmployer(commitmentData.Commitment);
 
                 var apprenticeship = new ApprenticeshipViewModel
                 {
                     HashedAccountId = hashedAccountId,
                     HashedCommitmentId = hashedCommitmentId,
+                    IsPaidForByTransfer = commitmentData.Commitment.TransferSender != null,
+                    IsInTransferRejectedCohort = commitmentData.Commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Rejected
                 };
 
                 return new OrchestratorResponse<ExtendedApprenticeshipViewModel>
@@ -352,7 +378,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ExtendedApprenticeshipViewModel
                     {
                         Apprenticeship = apprenticeship,
-                        ApprenticeshipProgrammes = await GetTrainingProgrammes()
+                        ApprenticeshipProgrammes = await GetTrainingProgrammes(commitmentData.Commitment.TransferSender == null)
                     }
                 };
             }, hashedAccountId, externalUserId);
@@ -366,7 +392,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             await CheckUserAuthorization(async () =>
             {
-                await AssertCommitmentStatus(commitmentId, accountId);
+                await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
 
                 await _mediator.SendAsync(new CreateApprenticeshipCommand
                 {
@@ -388,22 +414,28 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                await AssertCommitmentStatus(commitmentId, accountId);
-
-                var data = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
+                var apprenticeshipData = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
                 {
                     AccountId = accountId,
                     ApprenticeshipId = apprenticeshipId
                 });
 
-                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(data.Apprenticeship);
+                var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                {
+                    AccountId = accountId,
+                    CommitmentId = apprenticeshipData.Apprenticeship.CommitmentId
+                });
+
+                CheckCommitmentIsVisibleToEmployer(commitmentData.Commitment);
+
+                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(apprenticeshipData.Apprenticeship, commitmentData.Commitment);
 
                 apprenticeship.HashedAccountId = hashedAccountId;
 
                 var overlaps = await _mediator.SendAsync(
                     new GetOverlappingApprenticeshipsQueryRequest
                     {
-                        Apprenticeship = new[] { data.Apprenticeship }
+                        Apprenticeship = new[] { apprenticeshipData.Apprenticeship }
                     });
 
                 return new OrchestratorResponse<ExtendedApprenticeshipViewModel>
@@ -411,7 +443,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new ExtendedApprenticeshipViewModel
                     {
                         Apprenticeship = apprenticeship,
-                        ApprenticeshipProgrammes = await GetTrainingProgrammes(),
+                        ApprenticeshipProgrammes = await GetTrainingProgrammes(commitmentData.Commitment.TransferSender == null),
                         ValidationErrors = _apprenticeshipMapper.MapOverlappingErrors(overlaps)
                     }
                 };
@@ -428,13 +460,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                var data = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
+                var apprenticeshipData = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
                 {
                     AccountId = accountId,
                     ApprenticeshipId = apprenticeshipId
                 });
 
-                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(data.Apprenticeship);
+                var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                {
+                    AccountId = accountId,
+                    CommitmentId = apprenticeshipData.Apprenticeship.CommitmentId
+                });
+
+                var apprenticeship = _apprenticeshipMapper.MapToApprenticeshipViewModel(apprenticeshipData.Apprenticeship, commitmentData.Commitment);
 
                 apprenticeship.HashedAccountId = hashedAccountId;
 
@@ -454,7 +492,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             await CheckUserAuthorization(async () =>
             {
-                await AssertCommitmentStatus(commitmentId, accountId);
+                await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
 
                 await _mediator.SendAsync(new UpdateApprenticeshipCommand
                 {
@@ -483,14 +521,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         CommitmentId = commitmentId
                     });
 
-                    AssertCommitmentStatus(response.Commitment, EditStatus.EmployerOnly);
-                    AssertCommitmentStatus(response.Commitment, AgreementStatus.EmployerAgreed,
-                        AgreementStatus.ProviderAgreed, AgreementStatus.NotAgreed);
+                    CheckCommitmentIsVisibleToEmployer(response.Commitment);
 
                     var legalEntity =
                         await GetLegalEntityByCode(hashedAccountId, externalUserId, response.Commitment.LegalEntityId);
 
-                    var hasSigned = legalEntity.AgreementStatus == EmployerAgreementStatus.Signed;
+                    var hasSigned = HasSignedAgreement(legalEntity, response.Commitment.TransferSender!=null);
 
                     var overlaps = await _mediator.SendAsync(
                         new GetOverlappingApprenticeshipsQueryRequest
@@ -561,7 +597,48 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitNewCommitmentModel(string hashedAccountId, string externalUserId, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string providerId, string providerName, string cohortRef, SaveStatus saveStatus)
+        public async Task SetTransferApprovalStatus(string hashedAccountId, string hashedCommitmentId, TransferApprovalConfirmationViewModel model, string externalUserId, string userDisplayName, string userEmail)
+        {
+            var transferSenderId = _hashingService.DecodeValue(hashedAccountId);
+            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
+            _logger.Info($"Transfer Approval Confirmation: Sender Account: {transferSenderId}, CommitmentId: {commitmentId}, Approving {model.ApprovalConfirmed}");
+
+            await CheckUserAuthorization(async () =>
+            {
+                await _mediator.SendAsync(new TransferApprovalCommand
+                {
+                    CommitmentId = commitmentId,
+                    TransferSenderId = transferSenderId,
+                    TransferStatus = model.ApprovalConfirmed == true ? TransferApprovalStatus.Approved : TransferApprovalStatus.Rejected,
+                    UserEmail = userEmail,
+                    UserName = userDisplayName
+                });
+            }, hashedAccountId, externalUserId);
+        }
+
+        public async Task SetTransferRequestApprovalStatus(string hashedAccountId, string hashedCommitmentId, string hashedTransferRequestId, TransferApprovalConfirmationViewModel model, string externalUserId, string userDisplayName, string userEmail)
+        {
+            var transferSenderId = _hashingService.DecodeValue(hashedAccountId);
+            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
+            var transferRequestId = _hashingService.DecodeValue(hashedTransferRequestId);
+            _logger.Info($"Transfer Approval Confirmation: Sender Account: {transferSenderId}, CommitmentId: {commitmentId}, Approving {model.ApprovalConfirmed}");
+
+            await CheckUserAuthorization(async () =>
+            {
+                await _mediator.SendAsync(new TransferApprovalCommand
+                {
+                    CommitmentId = commitmentId,
+                    TransferSenderId = transferSenderId,
+                    TransferRequestId = transferRequestId,
+                    TransferStatus = model.ApprovalConfirmed == true ? TransferApprovalStatus.Approved : TransferApprovalStatus.Rejected,
+                    UserEmail = userEmail,
+                    UserName = userDisplayName
+                });
+            }, hashedAccountId, externalUserId);
+        }
+
+
+        public async Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitNewCommitmentModel(string hashedAccountId, string externalUserId, string transferConnectionCode, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string providerId, string providerName, string cohortRef, SaveStatus saveStatus)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             _logger.Info($"Getting Submit New Commitment ViewModel, Account: {accountId}");
@@ -573,11 +650,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new SubmitCommitmentViewModel
                     {
                         HashedAccountId = hashedAccountId,
+                        TransferConnectionCode = transferConnectionCode,
                         LegalEntityCode = legalEntityCode,
                         LegalEntityName = legalEntityName,
                         LegalEntityAddress = legalEntityAddress,
                         LegalEntitySource = legalEntitySource,
-                        ProviderId = long.Parse(providerId),
+                        ProviderId = providerId,
                         ProviderName = providerName,
                         CohortRef = cohortRef,
                         SaveStatus = saveStatus
@@ -600,9 +678,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     CommitmentId = _hashingService.DecodeValue(hashedCommitmentId)
                 });
 
-                AssertCommitmentStatus(data.Commitment, EditStatus.EmployerOnly);
-                AssertCommitmentStatus(data.Commitment, AgreementStatus.EmployerAgreed, AgreementStatus.ProviderAgreed, AgreementStatus.NotAgreed);
-
+                CheckCommitmentIsVisibleToEmployer(data.Commitment);
                 var commitment = _commitmentMapper.MapToCommitmentViewModel(data.Commitment);
 
                 return new OrchestratorResponse<SubmitCommitmentViewModel>
@@ -618,7 +694,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task SubmitCommitment(SubmitCommitmenViewModel model, string externalUserId, string userDisplayName, string userEmail)
+        public async Task SubmitCommitment(SubmitCommitmentViewModel model, string externalUserId, string userDisplayName, string userEmail)
         {
             await CheckUserAuthorization(async () =>
             {
@@ -669,7 +745,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         HashedCommitmentId = hashedCommitmentId,
                         ProviderName = data.Commitment.ProviderName,
                         LegalEntityName = data.Commitment.LegalEntityName,
-                        Message = GetLatestMessage(data.Commitment.Messages, false)?.Message
+                        Message = GetLatestMessage(data.Commitment.Messages, false)?.Message,
+                        IsTransfer = data.Commitment.TransferSender != null
                     }
                 };
             }, hashedAccountId, externalUserId);
@@ -682,21 +759,20 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                var data = await _mediator.SendAsync(new GetCommitmentsQuery
-                {
-                    AccountId = accountId
-                });
+                var commitmentStatuses = (await GetAllCommitments(accountId)).Select(c => c.GetStatus()).ToArray();
 
-                var commitmentStatuses = data.Commitments
-                    .Select(m => _statusCalculator.GetStatus(
-                        m.EditStatus,
-                        m.ApprenticeshipCount,
-                        m.LastAction,
-                        m.AgreementStatus))
-                    .ToList();
+                //todo: call into commitments api or db to get counts, seems excessive to fetch all cohorts data just to count
 
                 return new OrchestratorResponse<YourCohortsViewModel>
                 {
+                    // The count of transfer funded cohorts in the bingo box doesn't actually
+                    // refer to all transfer funded cohorts, but rather to just those
+                    // transfer funded cohorts that are with the sender for approval
+                    // or have been rejected by the sender.
+                    // Transfer funded cohorts that are with the receiver or provider
+                    // after having been rejected by the sender (and edited by the receiver)
+                    // are counted as Draft cohorts instead.
+
                     Data = new YourCohortsViewModel
                     {
                         DraftCount = commitmentStatuses.Count(m =>
@@ -707,7 +783,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         WithProviderCount = commitmentStatuses.Count(m =>
                              m == RequestStatus.WithProviderForApproval
                           || m == RequestStatus.SentToProvider
-                          || m == RequestStatus.SentForReview)
+                          || m == RequestStatus.SentForReview),
+                        TransferFundedCohortsCount = _featureToggleService.Get<Transfers>().FeatureEnabled
+                            ? commitmentStatuses.Count(m => 
+                                m == RequestStatus.WithSenderForApproval
+                                || m == RequestStatus.RejectedBySender) : (int?)null
                     }
                 };
 
@@ -721,7 +801,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
                 {
-                    var commitments = (await GetAll(accountId, RequestStatus.NewRequest)).ToList();
+                    var commitments = (await GetAllCommitmentsOfStatus(accountId,
+                        RequestStatus.NewRequest)).ToArray();
 
                     return new OrchestratorResponse<CommitmentListViewModel>
                     {
@@ -732,7 +813,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             PageTitle = "Draft cohorts",
                             PageId = "draft-cohorts",
                             PageHeading = "Draft cohorts",
-                            PageHeading2 = $"You have <strong>{commitments.Count}</strong> cohort{_addPluralizationSuffix(commitments.ToList().Count)} waiting to be sent to a training provider:",
+                            PageHeading2 = $"You have <strong>{commitments.Length}</strong> cohort{_addPluralizationSuffix(commitments.Length)} waiting to be sent to a training provider:",
                         }
                     };
 
@@ -746,11 +827,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                var readyForReview = (await GetAll(accountId, RequestStatus.ReadyForReview)).ToList();
-                var readyForApproval = (await GetAll(accountId, RequestStatus.ReadyForApproval)).ToList();
-                var commitments = readyForReview
-                    .Concat(readyForApproval)
-                    .ToList();
+                var commitments = (await GetAllCommitmentsOfStatus(accountId,
+                    RequestStatus.ReadyForReview, RequestStatus.ReadyForApproval)).ToArray();
 
                 return new OrchestratorResponse<CommitmentListViewModel>
                 {
@@ -761,8 +839,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         PageTitle = "Cohorts for review",
                         PageId = "ready-for-review",
                         PageHeading = "Cohorts for review",
-                        PageHeading2 = $"You have <strong>{commitments.Count}</strong> cohort{_addPluralizationSuffix(commitments.ToList().Count)} ready for review:",
-
+                        PageHeading2 = $"You have <strong>{commitments.Length}</strong> cohort{_addPluralizationSuffix(commitments.Length)} ready for review:"
                     }
                 };
 
@@ -776,14 +853,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             return await CheckUserAuthorization(async () =>
             {
-                var withProviderForApproval = await GetAll(accountId, RequestStatus.WithProviderForApproval);
-                var sentForReview = await GetAll(accountId, RequestStatus.SentForReview);
-                var sentToProvider = await GetAll(accountId, RequestStatus.SentToProvider);
-
-                var commitments = withProviderForApproval
-                                  .Concat(sentForReview)
-                                  .Concat(sentToProvider)
-                                  .ToList();
+                var commitments = (await GetAllCommitmentsOfStatus(accountId, 
+                    RequestStatus.WithProviderForApproval,
+                    RequestStatus.SentForReview,
+                    RequestStatus.SentToProvider)).ToArray();
 
                 return new OrchestratorResponse<CommitmentListViewModel>
                 {
@@ -794,14 +867,40 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         PageTitle = "Cohorts with training providers",
                         PageId = "with-the-provider",
                         PageHeading = "Cohorts with training providers",
-                        PageHeading2 = $"You have <strong>{commitments.Count}</strong> cohort{_addPluralizationSuffix(commitments.ToList().Count)} with training providers for them to add apprentices, or review and approve details:"
+                        PageHeading2 = $"You have <strong>{commitments.Length}</strong> cohort{_addPluralizationSuffix(commitments.Length)} with training providers for them to add apprentices, or review and approve details:"
                     }
                 };
 
             }, hashedAccountId, externalUserId);
         }
 
-        private async Task<IEnumerable<CommitmentListItem>> GetAll(long accountId, RequestStatus requestStatus)
+        public async Task<OrchestratorResponse<TransferFundedCohortsViewModel>> GetAllTransferFunded(string hashedAccountId, string externalUserId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            _logger.Info($"Getting your transfer-funded cohorts for Account: {accountId}");
+
+            return await CheckUserAuthorization(async () =>
+            {
+                var transferFundedCommitments = await GetAllCommitmentsOfStatus(accountId,
+                    RequestStatus.WithSenderForApproval, RequestStatus.RejectedBySender);
+
+                return new OrchestratorResponse<TransferFundedCohortsViewModel>
+                {
+                    Data = new TransferFundedCohortsViewModel
+                    {
+                        Commitments = MapFrom(transferFundedCommitments)
+                    }
+                };
+
+            }, hashedAccountId, externalUserId);
+        }
+
+        private async Task<IEnumerable<CommitmentListItem>> GetAllCommitmentsOfStatus(long accountId, params RequestStatus[] statuses)
+        {
+            return (await GetAllCommitments(accountId)).Where(c => statuses.Contains(c.GetStatus()));
+        }
+
+        private async Task<IEnumerable<CommitmentListItem>> GetAllCommitments(long accountId)
         {
             _logger.Info($"Getting all Commitments for Account: {accountId}");
 
@@ -809,9 +908,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 AccountId = accountId
             });
-            return data.Commitments.Where(
-                            m => _statusCalculator.GetStatus(m.EditStatus, m.ApprenticeshipCount, m.LastAction, m.AgreementStatus)
-                                    == requestStatus);
+            return data.Commitments;
         }
 
         public async Task<OrchestratorResponse<CommitmentDetailsViewModel>> GetCommitmentDetails(string hashedAccountId, string hashedCommitmentId, string externalUserId)
@@ -828,7 +925,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     CommitmentId = commitmentId
                 });
 
-                AssertCommitmentStatus(data.Commitment, AgreementStatus.EmployerAgreed, AgreementStatus.ProviderAgreed, AgreementStatus.NotAgreed);
+                CheckCommitmentIsVisibleToEmployer(data.Commitment);
 
                 var overlappingApprenticeships = await _mediator.SendAsync(
                    new GetOverlappingApprenticeshipsQueryRequest
@@ -839,7 +936,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var apprenticships = data.Commitment.Apprenticeships?.Select(
                     a => MapToApprenticeshipListItem(a, overlappingApprenticeships)).ToList() ?? new List<ApprenticeshipListItemViewModel>(0);
 
-                var trainingProgrammes = await GetTrainingProgrammes();
+                var trainingProgrammes = await GetTrainingProgrammes(data.Commitment.TransferSender == null);
                 var apprenticeshipGroups = new List<ApprenticeshipListItemGroupViewModel>();
 
                 var errors = new Dictionary<string, string>();
@@ -866,21 +963,24 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         errors.Add($"{apprenticeshipListGroup.GroupId}", $"Overlapping training dates{trainingTitle}");
                     }
                     
-
                     if (apprenticeshipListGroup.ApprenticeshipsOverFundingLimit > 0)
                     {
                         warnings.Add(apprenticeshipListGroup.GroupId, $"Cost for {apprenticeshipListGroup.TrainingProgramme.Title}");
                     }
-
                 }
-                
+
+                var pageTitle = data.Commitment.EditStatus == EditStatus.EmployerOnly
+                                || data.Commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Pending
+                                    ? "Review your cohort"
+                                    : "View your cohort";
+
                 var viewModel = new CommitmentDetailsViewModel
                 {
                     HashedId = _hashingService.HashValue(data.Commitment.Id),
                     Name = data.Commitment.Reference,
                     LegalEntityName = data.Commitment.LegalEntityName,
                     ProviderName = data.Commitment.ProviderName,
-                    Status = _statusCalculator.GetStatus(data.Commitment.EditStatus, data.Commitment.Apprenticeships.Count, data.Commitment.LastAction, data.Commitment.AgreementStatus),
+                    Status = data.Commitment.GetStatus(),
                     HasApprenticeships = apprenticships.Count > 0,
                     Apprenticeships = apprenticships,
                     ShowApproveOnlyOption = data.Commitment.AgreementStatus == AgreementStatus.ProviderAgreed,
@@ -889,7 +989,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     HasOverlappingErrors = apprenticeshipGroups.Any(m => m.ShowOverlapError),
                     IsReadOnly = data.Commitment.EditStatus != EditStatus.EmployerOnly,
                     Warnings = warnings,
-                    Errors = errors
+                    Errors = errors,
+                    PageTitle = pageTitle,
+                    HideDeleteButton = data.Commitment.TransferSender?.Id != null
                 };
 
                 return new OrchestratorResponse<CommitmentDetailsViewModel>
@@ -913,8 +1015,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             CommitmentId = commitmentId
                         });
 
-                        AssertCommitmentStatus(commitmentData.Commitment, EditStatus.EmployerOnly);
-                        AssertCommitmentStatus(commitmentData.Commitment, AgreementStatus.EmployerAgreed, AgreementStatus.ProviderAgreed, AgreementStatus.NotAgreed);
+                        CheckCommitmentIsVisibleToEmployer(commitmentData.Commitment);
 
                         Func<string, string> textOrDefault = txt => !string.IsNullOrEmpty(txt) ? txt : "without training course details";
                         var programmeSummary = commitmentData.Commitment.Apprenticeships
@@ -970,7 +1071,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     ApprenticeshipId = apprenticeshipId
                 });
 
-                await AssertCommitmentStatus(commitmentId, accountId);
+                await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
 
                 return new OrchestratorResponse<DeleteApprenticeshipConfirmationViewModel>
                 {
@@ -985,35 +1086,29 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 };
 
             }, hashedAccountId, externalUserId);
-
         }
-
 
         public async Task<bool> AnyCohortsForCurrentStatus(string hashedAccountId, params RequestStatus[] requestStatusFromSession)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var data = new List<CommitmentListItem>();
-            foreach (var status in requestStatusFromSession)
-            {
-                var d = (await GetAll(accountId, status)).ToList();
-                data.AddRange(d);
-            }
-            return data.Any();
+            var allCommitments = await GetAllCommitments(accountId);
+            return allCommitments.Any(c => requestStatusFromSession.Contains(c.GetStatus()));
         }
 
-        public async Task<OrchestratorResponse<LegalEntitySignedAgreementViewModel>> GetLegalEntitySignedAgreementViewModel(string hashedAccountId, string legalEntityCode, string cohortRef, string userId)
+        public async Task<OrchestratorResponse<LegalEntitySignedAgreementViewModel>> GetLegalEntitySignedAgreementViewModel(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string cohortRef, string userId)
         {
             var response = new OrchestratorResponse<LegalEntitySignedAgreementViewModel>();
             try
             {
                 var legalEntity = await GetLegalEntityByCode(hashedAccountId, userId, legalEntityCode);
 
-                var hasSigned = legalEntity.AgreementStatus == EmployerAgreementStatus.Signed;
-
+                var hasSigned = HasSignedAgreement(legalEntity, !string.IsNullOrWhiteSpace(transferConnectionCode));
+                
                 response.Data = new LegalEntitySignedAgreementViewModel
                 {
                     HashedAccountId = hashedAccountId,
                     LegalEntityCode = legalEntityCode,
+                    TransferConnectionCode = transferConnectionCode,
                     CohortRef = cohortRef,
                     HasSignedAgreement = hasSigned,
                     LegalEntityName = legalEntity.Name ?? string.Empty
@@ -1031,10 +1126,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Status = HttpStatusCode.BadRequest
                 };
             }
-
         }
-
-
 
         public async Task<Dictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship)
         {
@@ -1044,10 +1136,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Apprenticeship = new List<Apprenticeship> { await _apprenticeshipMapper.MapFrom(apprenticeship) }
                 });
 
-            var result = _apprenticeshipMapper.MapOverlappingErrors(overlappingErrors);
-
-           
-            return result;
+            return _apprenticeshipMapper.MapOverlappingErrors(overlappingErrors);
         }
 
         public async Task DeleteApprenticeship(DeleteApprenticeshipConfirmationViewModel model, string externalUser, string userName, string userEmail)
@@ -1075,6 +1164,74 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     }, model.HashedAccountId, externalUser);
         }
 
+        public async Task<OrchestratorResponse<TransferCommitmentViewModel>> GetCommitmentDetailsForTransfer(
+            string hashedTransferAccountId, string hashedCommitmentId, string externalUserId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedTransferAccountId);
+            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
+            _logger.Info($"Getting Commitment Details, Transfer Account: {accountId}, CommitmentId: {commitmentId}");
+
+            return await CheckUserAuthorization(async () =>
+            {
+                var data = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                {
+                    AccountId = accountId,
+                    CommitmentId = commitmentId,
+                    CallerType = CallerType.TransferSender
+                });
+
+                var viewModel = _commitmentMapper.MapToTransferCommitmentViewModel(data.Commitment);
+
+                return new OrchestratorResponse<TransferCommitmentViewModel>
+                {
+                    Data = viewModel
+                };
+            }, hashedTransferAccountId, externalUserId);
+        }
+
+        public async Task<OrchestratorResponse<TransferRequestViewModel>> GetTransferRequestDetails(
+            string hashedTransferAccountId, Application.Queries.GetTransferRequest.CallerType callerType, string hashedTransferRequestId, string externalUserId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedTransferAccountId);
+            var transferRequestId = _hashingService.DecodeValue(hashedTransferRequestId);
+            _logger.Info($"Getting TransferRequest Details, Transfer Account: {accountId}, TransferRequestId: {transferRequestId}");
+
+            return await CheckUserAuthorization(async () =>
+            {
+                var data = await _mediator.SendAsync(new GetTransferRequestQueryRequest
+                {
+                    AccountId = accountId,
+                    TransferRequestId = transferRequestId,
+                    CallerType = callerType
+                });
+
+                var viewModel = _commitmentMapper.MapToTransferRequestViewModel(data.TransferRequest);
+
+                return new OrchestratorResponse<TransferRequestViewModel>
+                {
+                    Data = viewModel
+                };
+            }, hashedTransferAccountId, externalUserId);
+        }
+
+        private async Task<(long?, string)> GetTransferConnectionInfo(string hashedAccountId, string transferConnectionCode, string externalUserId)
+        {
+            string transferSenderName = null;
+            long? transferSenderId = null;
+
+            if (!string.IsNullOrEmpty(transferConnectionCode))
+            {
+                var data = await GetTransferConnectionsNoAuthorizationCheck(hashedAccountId, externalUserId);
+                var transferConnections = _commitmentMapper.MapToTransferConnectionsViewModel(data.TransferConnections);
+
+                var transferConnection = transferConnections.Single(x =>
+                    x.TransferConnectionCode.Equals(transferConnectionCode, StringComparison.InvariantCultureIgnoreCase));
+                transferSenderId = _publicHashingService.DecodeValue(transferConnectionCode);
+                transferSenderName = transferConnection.TransferConnectionName;
+            }
+
+            return (transferSenderId, transferSenderName);
+        }
         private static string CreateReference()
         {
             return Guid.NewGuid().ToString().ToUpper();
@@ -1124,11 +1281,22 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             };
         }
 
-        private IEnumerable<CommitmentListItemViewModel> MapFrom(List<CommitmentListItem> commitments, bool showEmployer)
+        private IEnumerable<CommitmentListItemViewModel> MapFrom(IEnumerable<CommitmentListItem> commitments, bool showEmployer)
         {
-            var commitmentsList = commitments.Select(m => MapFrom(m, GetLatestMessage(m.Messages, showEmployer)?.Message));
+            return commitments.Select(m => MapFrom(m, GetLatestMessage(m.Messages, showEmployer)?.Message));
+        }
 
-            return commitmentsList;
+        private IEnumerable<TransferFundedCohortsListItemViewModel> MapFrom(IEnumerable<CommitmentListItem> commitments)
+        {
+            //todo: throw if TransferApprovalStatus == Approved?
+            return commitments.Select(c => new TransferFundedCohortsListItemViewModel
+            {
+                HashedCommitmentId = _hashingService.HashValue(c.Id),
+                SendingEmployer = c.TransferSenderName,
+                ProviderName = c.ProviderName,
+                TransferApprovalStatus = c.TransferApprovalStatus,
+                ShowLink = c.TransferApprovalStatus == TransferApprovalStatus.Rejected ? ShowLink.Edit : ShowLink.Details,
+            });
         }
 
         private MessageView GetLatestMessage(IEnumerable<MessageView> messages, bool showEmployer)
@@ -1144,11 +1312,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 Name = commitment.Reference,
                 LegalEntityName = commitment.LegalEntityName,
                 ProviderName = commitment.ProviderName,
-                Status = _statusCalculator.GetStatus(commitment.EditStatus, commitment.ApprenticeshipCount, commitment.LastAction, commitment.AgreementStatus),
+                Status = commitment.GetStatus(),
                 LatestMessage = latestMessage
             };
         }
-
 
         private ApprenticeshipListItemViewModel MapToApprenticeshipListItem(Apprenticeship apprenticeship, GetOverlappingApprenticeshipsQueryResponse overlappingApprenticeships)
         {
@@ -1168,43 +1335,50 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             };
         }
 
-        private async Task<List<ITrainingProgramme>> GetTrainingProgrammes()
-        {
-            var programmes = await _mediator.SendAsync(new GetTrainingProgrammesQueryRequest());
 
-            return programmes.TrainingProgrammes;
-        }
-
-        private static void AssertCommitmentStatus(
-            CommitmentView commitment,
-            params AgreementStatus[] allowedAgreementStatuses)
-        {
-            if (commitment == null)
-                throw new InvalidStateException("Null commitment");
-
-            if (!allowedAgreementStatuses.Contains(commitment.AgreementStatus))
-                throw new InvalidStateException($"Invalid commitment state (agreement status is {commitment.AgreementStatus}, expected {string.Join(",", allowedAgreementStatuses)}), CommitmentId: {commitment.Id}");
-        }
-
-        private async Task AssertCommitmentStatus(long commitmentId, long accountId)
+        private async Task CheckCommitmentIsVisibleToEmployer(long commitmentId, long accountId)
         {
             var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
             {
                 AccountId = accountId,
                 CommitmentId = commitmentId
             });
-            AssertCommitmentStatus(commitmentData.Commitment, EditStatus.EmployerOnly);
-            AssertCommitmentStatus(commitmentData.Commitment, AgreementStatus.EmployerAgreed, AgreementStatus.ProviderAgreed, AgreementStatus.NotAgreed);
+            CheckCommitmentIsVisibleToEmployer(commitmentData.Commitment);
         }
 
-        private static void AssertCommitmentStatus(CommitmentView commitment, params EditStatus[] allowedEditStatuses)
+        private static void CheckCommitmentIsVisibleToEmployer(CommitmentView commitment)
         {
+            //what are we trying to achieve here? we don't really want to assert the state of the commitment generally
+            //we are trying to assert that the commitment is in the right state for the employer user to view it
+            //(editability is something else)
+
+            //a commitment can be viewed by an employer user if:
+            // a) for non-transfer cohort, the agreement status is not BothAgreed
+            // b) for a transfer cohort:
+            //    i) the transfer approval status is not Approved (the agreement status can be anything)
+            // this is the definition of "right of the line" for respective cases, thus not visible to user.
+
             if (commitment == null)
                 throw new InvalidStateException("Null commitment");
 
-            if (!allowedEditStatuses.Contains(commitment.EditStatus))
-                throw new InvalidStateException($"Invalid commitment state (edit status is {commitment.EditStatus}, expected {string.Join(",", allowedEditStatuses)}), CommitmentId: {commitment.Id}");
+            if(commitment.TransferSender != null && commitment.TransferSender.TransferApprovalStatus == TransferApprovalStatus.Approved)
+                throw new InvalidStateException("Invalid commitment state - approved by transfer sender");
+
+            if (commitment.TransferSender == null && commitment.AgreementStatus == AgreementStatus.BothAgreed)
+                throw new InvalidStateException("Invalid commitment state - agreement status is BothAgreed");
         }
 
+        private static bool HasSignedAgreement(LegalEntity legalEntity, bool isTransfer)
+        {
+            if (isTransfer)
+            {
+                return legalEntity.Agreements.Any(a =>
+                    a.Status == EmployerAgreementStatus.Signed && a.TemplateVersionNumber == 2);
+            }
+
+            return legalEntity.Agreements.Any(a =>
+                    a.Status == EmployerAgreementStatus.Signed &&
+                    (a.TemplateVersionNumber == 1 || a.TemplateVersionNumber == 2));
+        }
     }
 }
