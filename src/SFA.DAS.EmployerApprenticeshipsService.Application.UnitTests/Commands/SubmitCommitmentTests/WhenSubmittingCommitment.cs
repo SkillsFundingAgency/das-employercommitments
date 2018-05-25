@@ -169,6 +169,34 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
         public async Task ShouldCallSendNotificationCommandForTransferCohortFirstApproval()
         {
             const string legalEntityName = "Receiving Employer Ltd";
+
+            const string template =
+                @"Cohort ((cohort_reference)) is ready to review. ((receiving_employer)) has chosen to use funds transferred from another employer to pay for the training in this cohort.
+
+What you need to know about cohorts funded through transfers
+
+You and the employer will approve the cohort as usual. The cohort will then be sent to the employer who is transferring the funds for final approval. Once the cohort has been approved you will be able to view and manage the apprentices
+To review cohort ((cohort_reference)) you will need to sign in to your apprenticeship service account at https://providers.apprenticeships.sfa.bis.gov.uk.
+
+This is an automated message. Please don’t reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
+            string expectedEmailBody = $@"Cohort {CohortReference} is ready to review. {legalEntityName} has chosen to use funds transferred from another employer to pay for the training in this cohort.
+
+What you need to know about cohorts funded through transfers
+
+You and the employer will approve the cohort as usual. The cohort will then be sent to the employer who is transferring the funds for final approval. Once the cohort has been approved you will be able to view and manage the apprentices
+To review cohort {CohortReference} you will need to sign in to your apprenticeship service account at https://providers.apprenticeships.sfa.bis.gov.uk.
+
+This is an automated message. Please don’t reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
             SendNotificationCommand arg = null;
             _validCommand.LastAction = LastAction.Approve;
             _repositoryCommitment.TransferSender = new TransferSender();
@@ -187,6 +215,10 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
             arg.Email.TemplateId.Should().Be("TransferProviderCommitmentNotification");
             arg.Email.Tokens["cohort_reference"].Should().Be(CohortReference);
             arg.Email.Tokens["receiving_employer"].Should().Be(legalEntityName);
+
+            var emailBody = PopulateTemplate(template, arg.Email.Tokens);
+            TestContext.WriteLine(emailBody);
+            Assert.AreEqual(expectedEmailBody, emailBody);
         }
 
         [Test]
@@ -215,6 +247,16 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
             arg.Email.Tokens["cohort_reference"].Should().Be(CohortReference);
             arg.Email.Tokens["receiving_employer"].Should().Be(legalEntityName);
             arg.Email.Tokens["ukprn"].Should().Be(providerId.ToString());
+        }
+
+        private string PopulateTemplate(string template, Dictionary<string, string> tokens)
+        {
+            foreach (var token in tokens)
+            {
+                template = template.Replace($"(({token.Key}))", token.Value);
+            }
+
+            return template;
         }
 
         [Test]
