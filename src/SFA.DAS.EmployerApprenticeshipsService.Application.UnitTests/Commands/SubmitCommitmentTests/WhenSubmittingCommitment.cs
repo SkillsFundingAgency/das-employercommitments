@@ -226,6 +226,35 @@ Apprenticeship service team";
         {
             const string legalEntityName = "Receiving Employer Ltd";
             const long providerId = 10000000;
+
+            const string template = @"((receiving_employer)) has approved cohort ((cohort_reference)).
+
+What happens next?
+ A transfer request has been sent to the sending employer for approval. You will receive a notification once the sending employer approves or rejects the request.
+
+To view cohort ((cohort_reference)) and its progress, follow the link below.
+https://providers.apprenticeships.sfa.bis.gov.uk/((ukprn))/Apprentices/Cohorts
+ 
+This is an automated message. Please do not reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
+            string expectedEmailBody = $@"{legalEntityName} has approved cohort {CohortReference}.
+
+What happens next?
+ A transfer request has been sent to the sending employer for approval. You will receive a notification once the sending employer approves or rejects the request.
+
+To view cohort {CohortReference} and its progress, follow the link below.
+https://providers.apprenticeships.sfa.bis.gov.uk/{providerId}/Apprentices/Cohorts
+ 
+This is an automated message. Please do not reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
             SendNotificationCommand arg = null;
             _validCommand.LastAction = LastAction.Approve;
             _repositoryCommitment.AgreementStatus = AgreementStatus.ProviderAgreed;
@@ -247,6 +276,10 @@ Apprenticeship service team";
             arg.Email.Tokens["cohort_reference"].Should().Be(CohortReference);
             arg.Email.Tokens["receiving_employer"].Should().Be(legalEntityName);
             arg.Email.Tokens["ukprn"].Should().Be(providerId.ToString());
+
+            var emailBody = PopulateTemplate(template, arg.Email.Tokens);
+            TestContext.WriteLine(emailBody);
+            Assert.AreEqual(expectedEmailBody, emailBody);
         }
 
         private string PopulateTemplate(string template, Dictionary<string, string> tokens)
