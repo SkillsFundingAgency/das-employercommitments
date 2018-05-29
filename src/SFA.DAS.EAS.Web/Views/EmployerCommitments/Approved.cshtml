@@ -39,10 +39,20 @@
 
 
         <h2 class="heading-medium">What happens next?</h2>
-        <p id="changeMainCopy">
-            Your cohort has been approved. To view or update apprentice details or stop payments for any apprentices in this cohort you will need to 
-            <a href="@Url.Action("ListAll" ,"EmployerManageApprentices")">manage your apprentices</a>
-        </p>
+        @if (Model.Data.IsTransfer && Model.Data.IsSecondApproval)
+        {
+            <ul class="list-bullet">
+                <li>You will receive a notification once the sending employer approves or rejects the transfer request. You can view the progress of a request from the 'With transfer sending employers' status screen.</li>
+                <li>Once the transfer request is approved, you'll be able to view and manage the apprentices.</li>
+            </ul>
+        }
+        else
+        {
+            <p id="changeMainCopy">
+                Your cohort has been approved. To view or update apprentice details or stop payments for any apprentices in this cohort you will need to 
+                <a href="@Url.Action("ListAll" ,"EmployerManageApprentices")">manage your apprentices</a>
+            </p>
+        }
 
         @if (!string.IsNullOrEmpty(Model.Data.BackLink?.Url))
         {

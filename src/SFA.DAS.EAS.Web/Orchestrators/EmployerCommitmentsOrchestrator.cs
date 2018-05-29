@@ -746,7 +746,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         ProviderName = data.Commitment.ProviderName,
                         LegalEntityName = data.Commitment.LegalEntityName,
                         Message = GetLatestMessage(data.Commitment.Messages, false)?.Message,
-                        IsTransfer = data.Commitment.TransferSender != null
+                        IsTransfer = data.Commitment.TransferSender != null,
+                        IsSecondApproval = data.Commitment.AgreementStatus == AgreementStatus.BothAgreed
+                                           //&& data.Commitment.LastAction == LastAction.Approve
                     }
                 };
             }, hashedAccountId, externalUserId);
