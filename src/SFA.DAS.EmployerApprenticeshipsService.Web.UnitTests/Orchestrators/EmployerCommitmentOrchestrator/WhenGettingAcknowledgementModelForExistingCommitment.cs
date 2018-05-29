@@ -30,8 +30,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             Assert.IsFalse(result.Data.IsTransfer);
         }
 
-        [Test]
         [TestCase(AgreementStatus.BothAgreed, true)]
+        [TestCase(AgreementStatus.EmployerAgreed, false)]
+        [TestCase(AgreementStatus.ProviderAgreed, false)]
+        [TestCase(AgreementStatus.NotAgreed, false)]
         public async Task ThenIsSecondApprovalShouldBeSetCorrectly(AgreementStatus agreementStatus, bool expectedIsSecondApproval)
         {
             CommitmentView.AgreementStatus = agreementStatus;
