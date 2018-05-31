@@ -4,7 +4,6 @@ using FeatureToggle;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types;
-using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
@@ -15,19 +14,14 @@ using SFA.DAS.HashingService;
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.CommitmentMapperTests
 {
     [TestFixture]
-    public class WhenMappingToTransferCommitmentViewModel
+    public class WhenMappingToTransferRequestViewModel
     {
         private CommitmentMapper _sut;
         private Mock<IHashingService> _hashingService;
         private Mock<IPublicHashingService> _publicHashingService;
         private Mock<IFeatureToggleService> _featureToggleService;
         private Mock<IFeatureToggle> _featureToggle;
-        private CommitmentView _commitmentView;
         private TransferRequest _transferRequest;
-        private const long EmployerAccountId = 123;
-        private const long TransferSenderId = 1000;
-        private const long CommitmentId = 233;
-
 
         [SetUp]
         public void Arrange()
@@ -36,42 +30,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
             _hashingService.Setup(x => x.HashValue(It.IsAny<long>())).Returns((long p) => $"PRI{p}");
             _publicHashingService = new Mock<IPublicHashingService>();
             _publicHashingService.Setup(x => x.HashValue(It.IsAny<long>())).Returns((long p) => $"PUB{p}");
-
-            _commitmentView = new CommitmentView
-            {
-                Id = CommitmentId,
-                EmployerAccountId = EmployerAccountId,
-                LegalEntityName = "LegalEntityName",
-                TransferSender = new TransferSender
-                {
-                    Id = TransferSenderId,
-                    Name = "Sender 1000",
-                    TransferApprovalStatus = TransferApprovalStatus.Approved,
-                    TransferApprovalSetBy = "tester",
-                    TransferApprovalSetOn = new DateTime(2018, 3, 1)
-                },
-                Apprenticeships = new List<Apprenticeship>
-                {
-                    new Apprenticeship
-                    {
-                        TrainingCode = "ABC",
-                        TrainingName = "Name",
-                        Cost = 100
-                    },
-                    new Apprenticeship
-                    {
-                        TrainingCode = "ABC",
-                        TrainingName = "Name",
-                        Cost = 200
-                    },
-                    new Apprenticeship
-                    {
-                        TrainingCode = "ABC2",
-                        TrainingName = "Name2",
-                        Cost = 1000
-                    },
-                }
-            };
 
             _transferRequest = new TransferRequest
             {
@@ -110,33 +68,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
         [TestCase(TransferApprovalStatus.Approved, "Approved")]
         [TestCase(TransferApprovalStatus.Rejected, "Rejected")]
         [TestCase(TransferApprovalStatus.Pending, "Pending")]
-        public void ThenMappingACommitmentWithAppenticesMapsFieldsCorrectly(TransferApprovalStatus status, string statusDescription)
-        {
-            _commitmentView.TransferSender.TransferApprovalStatus = status;
-            var result = _sut.MapToTransferCommitmentViewModel(_commitmentView);
-            Assert.AreEqual($"PRI{TransferSenderId}", result.HashedTransferSenderAccountId);
-            Assert.AreEqual($"PUB{TransferSenderId}", result.PublicHashedTransferSenderAccountId);
-            Assert.AreEqual($"PRI{EmployerAccountId}", result.HashedTransferReceiverAccountId);
-            Assert.AreEqual($"PUB{EmployerAccountId}", result.PublicHashedTransferReceiverAccountId);
-            Assert.AreEqual($"PRI{CommitmentId}", result.HashedCohortReference);
-            Assert.AreEqual("LegalEntityName", result.LegalEntityName);
-            Assert.AreEqual(1300m, result.TotalCost);
-            Assert.AreEqual(2, result.TrainingList.Count);
-            Assert.AreEqual("Name", result.TrainingList[0].CourseTitle);
-            Assert.AreEqual(2, result.TrainingList[0].ApprenticeshipCount);
-            Assert.AreEqual("Name (2 Apprentices)", result.TrainingList[0].SummaryDescription);
-            Assert.AreEqual("Name2", result.TrainingList[1].CourseTitle);
-            Assert.AreEqual(1, result.TrainingList[1].ApprenticeshipCount);
-            Assert.AreEqual("Name2 (1 Apprentice)", result.TrainingList[1].SummaryDescription);
-            Assert.AreEqual(statusDescription, result.TransferApprovalStatusDesc);
-            Assert.AreEqual("tester", result.TransferApprovalSetBy);
-            Assert.AreEqual(_commitmentView.TransferSender.TransferApprovalSetOn, result.TransferApprovalSetOn);
-
-        }
-
-        [TestCase(TransferApprovalStatus.Approved, "Approved")]
-        [TestCase(TransferApprovalStatus.Rejected, "Rejected")]
-        [TestCase(TransferApprovalStatus.Pending, "Pending")]
         public void ThenMappingATransferRequestWithAppenticesMapsFieldsCorrectly(TransferApprovalStatus status, string statusDescription)
         {
             _transferRequest.Status = status;
@@ -157,29 +88,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
             Assert.AreEqual("Course2 (21 Apprentices)", result.TrainingList[1].SummaryDescription);
             Assert.AreEqual(statusDescription, result.TransferApprovalStatusDesc);
             Assert.AreEqual("tester", result.TransferApprovalSetBy);
-            Assert.AreEqual(_commitmentView.TransferSender.TransferApprovalSetOn, result.TransferApprovalSetOn);
-
-        }
-
-
-        [Test]
-        public void ThenMappingACommitmentWithNoAppenticesProducesAnEmptyApprenticeSummary()
-        {
-            _commitmentView.Apprenticeships = null;
-            var result = _sut.MapToTransferCommitmentViewModel(_commitmentView);
-            Assert.AreEqual(0, result.TrainingList.Count);
-        }
-
-        [TestCase(true, true)]
-        [TestCase(false, false)]
-        public void ThenRejectionEnabledIfFeatureToggledOn(bool featureToggleEnabled, bool expectEnabled)
-        {
-            //Arrange
-            _featureToggle.Setup(x => x.FeatureEnabled).Returns(featureToggleEnabled);
-
-            //Assert
-            var result = _sut.MapToTransferCommitmentViewModel(_commitmentView);
-            Assert.AreEqual(expectEnabled, result.EnableRejection);
+            Assert.AreEqual(new DateTime(2018, 3, 1), result.TransferApprovalSetOn);
         }
 
         [TestCase(true, true)]
@@ -193,6 +102,5 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
             var result = _sut.MapToTransferRequestViewModel(_transferRequest);
             Assert.AreEqual(expectEnabled, result.EnableRejection);
         }
-
     }
 }
