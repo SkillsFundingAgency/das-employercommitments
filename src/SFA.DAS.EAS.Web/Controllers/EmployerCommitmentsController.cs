@@ -174,8 +174,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (response.Data.LegalEntities == null || !response.Data.LegalEntities.Any())
                 throw new InvalidStateException($"No legal entities associated with account {hashedAccountId}");
 
-            var availableLegalEntities = response.Data.LegalEntities.Where(le => le.Agreements != null
-                && le.Agreements.Any(a => a.Status == EmployerAgreementStatus.Pending || a.Status == EmployerAgreementStatus.Signed));
+            //var availableLegalEntities = response.Data.LegalEntities.Where(le => le.Agreements != null
+            //    && le.Agreements.Any(a => a.Status == EmployerAgreementStatus.Pending || a.Status == EmployerAgreementStatus.Signed));
+            var availableLegalEntities = response.Data.LegalEntities;
 
             if (availableLegalEntities.Count() == 1)
             {
@@ -184,6 +185,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 var hasSigned = EmployerCommitmentsOrchestrator.HasSignedAgreement(
                     autoSelectLegalEntity, !string.IsNullOrWhiteSpace(transferConnectionCode));
 
+                //todo: check response.Data.TransferConnectionCode or transferConnectionCode
                 if (hasSigned)
                 {
                     return RedirectToAction("SearchProvider", new SelectLegalEntityViewModel
@@ -196,10 +198,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 }
                 else
                 {
-                    var agreement = await EmployerCommitmentsOrchestrator.GetLegalEntitySignedAgreementViewModel(hashedAccountId,
-                        response.Data.TransferConnectionCode, autoSelectLegalEntity.Code, response.Data.CohortRef, OwinWrapper.GetClaimValue(@"sub"));
-
-                    return RedirectToAction("AgreementNotSigned", agreement.Data);
+                    return RedirectToAction("AgreementNotSigned", new LegalEntitySignedAgreementViewModel
+                    {
+                        HashedAccountId = hashedAccountId,
+                        LegalEntityCode = autoSelectLegalEntity.Code,
+                        TransferConnectionCode = response.Data.TransferConnectionCode,
+                        CohortRef = response.Data.CohortRef,
+                        HasSignedAgreement = false,
+                        LegalEntityName = autoSelectLegalEntity.Name ?? string.Empty
+                    });
                 }
             }
 
