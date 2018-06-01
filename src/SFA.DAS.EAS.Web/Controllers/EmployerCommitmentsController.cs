@@ -173,12 +173,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 .GetLegalEntities(hashedAccountId, transferConnectionCode, cohortRef, OwinWrapper.GetClaimValue(@"sub"));
 
             //todo: move to orchestrator
-            //todo: can we use TransferConnectionCode? if not will need to fetch commitment
-            //var requiredTemplateVersionNumber = response.Data.TransferConnectionCode != null ? 2 : 1;
-
-            //var availableLegalEntities = response.Data.LegalEntities.Where(
-            //    le => le.Agreements.Any(a => a.Status == EmployerAgreementStatus.Signed
-            //                            && a.TemplateVersionNumber == requiredTemplateVersionNumber));
 
             var availableLegalEntities = response.Data.LegalEntities.Where(
                 le => le.Agreements.Any(a => a.Status == EmployerAgreementStatus.Signed));
@@ -192,14 +186,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                     LegalEntityCode = availableLegalEntities.First().Code,
                     LegalEntities = availableLegalEntities
                 });
-
-                //return RedirectToAction("SetLegalEntity", 
-                //    new { hashedAccountId, selectedLegalEntity = new SelectLegalEntityViewModel {
-                //    TransferConnectionCode = response.Data.TransferConnectionCode,
-                //    CohortRef = cohortRef,
-                //    LegalEntityCode = availableLegalEntities.First().Code,
-                //    LegalEntities = availableLegalEntities
-                //    } });
             }
 
             return View(response);
