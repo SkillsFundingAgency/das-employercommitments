@@ -174,8 +174,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (response.Data.LegalEntities == null || !response.Data.LegalEntities.Any())
                 throw new InvalidStateException($"No legal entities associated with account {hashedAccountId}");
 
-            //var availableLegalEntities = response.Data.LegalEntities.Where(le => le.Agreements != null
-            //    && le.Agreements.Any(a => a.Status == EmployerAgreementStatus.Pending || a.Status == EmployerAgreementStatus.Signed));
             var availableLegalEntities = response.Data.LegalEntities;
 
             if (availableLegalEntities.Count() == 1)
@@ -185,12 +183,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 var hasSigned = EmployerCommitmentsOrchestrator.HasSignedAgreement(
                     autoSelectLegalEntity, !string.IsNullOrWhiteSpace(transferConnectionCode));
 
-                //todo: check response.Data.TransferConnectionCode or transferConnectionCode
                 if (hasSigned)
                 {
                     return RedirectToAction("SearchProvider", new SelectLegalEntityViewModel
                     {
-                        TransferConnectionCode = response.Data.TransferConnectionCode,
+                        TransferConnectionCode = transferConnectionCode,
                         CohortRef = response.Data.CohortRef,
                         LegalEntityCode = autoSelectLegalEntity.Code,
                         // no need to store LegalEntities, as the property is only read in the SelectLegalEntity view, which we're now skipping
@@ -202,7 +199,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                     {
                         HashedAccountId = hashedAccountId,
                         LegalEntityCode = autoSelectLegalEntity.Code,
-                        TransferConnectionCode = response.Data.TransferConnectionCode,
+                        TransferConnectionCode = transferConnectionCode,
                         CohortRef = response.Data.CohortRef,
                         HasSignedAgreement = false,
                         LegalEntityName = autoSelectLegalEntity.Name ?? string.Empty
