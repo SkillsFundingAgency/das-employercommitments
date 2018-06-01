@@ -21,7 +21,6 @@ using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
-
     [Authorize]
     [CommitmentsRoutePrefix("accounts/{hashedaccountId}/apprentices")]
     public class EmployerCommitmentsController : BaseEmployerController
@@ -172,19 +171,36 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             var response = await EmployerCommitmentsOrchestrator
                 .GetLegalEntities(hashedAccountId, transferConnectionCode, cohortRef, OwinWrapper.GetClaimValue(@"sub"));
 
-            var availableLegalEntities = response.Data.LegalEntities.Where(
-                le => le.Agreements.Any(a => a.Status == EmployerAgreementStatus.Signed));
+            if (response.Data.LegalEntities == null || !response.Data.LegalEntities.Any())
+                throw new InvalidStateException($"No legal entities associated with account {hashedAccountId}");
+
+            var availableLegalEntities = response.Data.LegalEntities.Where(le => le.Agreements != null
+                && le.Agreements.Any(a => a.Status == EmployerAgreementStatus.Pending || a.Status == EmployerAgreementStatus.Signed));
 
             if (availableLegalEntities.Count() == 1)
             {
-                return RedirectToAction("SearchProvider", new SelectLegalEntityViewModel
+                var autoSelectLegalEntity = availableLegalEntities.First();
+
+                var hasSigned = EmployerCommitmentsOrchestrator.HasSignedAgreement(
+                    autoSelectLegalEntity, !string.IsNullOrWhiteSpace(transferConnectionCode));
+
+                if (hasSigned)
                 {
-                    TransferConnectionCode = response.Data.TransferConnectionCode,
-                    CohortRef = response.Data.CohortRef,
-                    LegalEntityCode = availableLegalEntities.First().Code,
-                    // no need to store the legal entities, as the property is only read in the SelectLegalEntity view, which we're now skipping
-                    //LegalEntities = availableLegalEntities or response.Data.LegalEntities
-                });
+                    return RedirectToAction("SearchProvider", new SelectLegalEntityViewModel
+                    {
+                        TransferConnectionCode = response.Data.TransferConnectionCode,
+                        CohortRef = response.Data.CohortRef,
+                        LegalEntityCode = autoSelectLegalEntity.Code,
+                        // no need to store LegalEntities, as the property is only read in the SelectLegalEntity view, which we're now skipping
+                    });
+                }
+                else
+                {
+                    var agreement = await EmployerCommitmentsOrchestrator.GetLegalEntitySignedAgreementViewModel(hashedAccountId,
+                        response.Data.TransferConnectionCode, autoSelectLegalEntity.Code, response.Data.CohortRef, OwinWrapper.GetClaimValue(@"sub"));
+
+                    return RedirectToAction("AgreementNotSigned", agreement.Data);
+                }
             }
 
             return View(response);
