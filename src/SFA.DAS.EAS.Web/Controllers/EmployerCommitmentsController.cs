@@ -8,6 +8,7 @@ using FluentValidation.Mvc;
 using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
 using SFA.DAS.EmployerCommitments.Domain.Models.UserProfile;
 using SFA.DAS.EmployerCommitments.Web.Authentication;
 using SFA.DAS.EmployerCommitments.Web.Enums;
@@ -170,6 +171,36 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             var response = await EmployerCommitmentsOrchestrator
                 .GetLegalEntities(hashedAccountId, transferConnectionCode, cohortRef, OwinWrapper.GetClaimValue(@"sub"));
+
+            //todo: move to orchestrator
+            //todo: can we use TransferConnectionCode? if not will need to fetch commitment
+            //var requiredTemplateVersionNumber = response.Data.TransferConnectionCode != null ? 2 : 1;
+
+            //var availableLegalEntities = response.Data.LegalEntities.Where(
+            //    le => le.Agreements.Any(a => a.Status == EmployerAgreementStatus.Signed
+            //                            && a.TemplateVersionNumber == requiredTemplateVersionNumber));
+
+            var availableLegalEntities = response.Data.LegalEntities.Where(
+                le => le.Agreements.Any(a => a.Status == EmployerAgreementStatus.Signed));
+
+            if (availableLegalEntities.Count() == 1)
+            {
+                return RedirectToAction("SearchProvider", new SelectLegalEntityViewModel
+                {
+                    TransferConnectionCode = response.Data.TransferConnectionCode,
+                    CohortRef = response.Data.CohortRef,
+                    LegalEntityCode = availableLegalEntities.First().Code,
+                    LegalEntities = availableLegalEntities
+                });
+
+                //return RedirectToAction("SetLegalEntity", 
+                //    new { hashedAccountId, selectedLegalEntity = new SelectLegalEntityViewModel {
+                //    TransferConnectionCode = response.Data.TransferConnectionCode,
+                //    CohortRef = cohortRef,
+                //    LegalEntityCode = availableLegalEntities.First().Code,
+                //    LegalEntities = availableLegalEntities
+                //    } });
+            }
 
             return View(response);
         }
