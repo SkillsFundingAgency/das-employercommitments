@@ -172,8 +172,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             var response = await EmployerCommitmentsOrchestrator
                 .GetLegalEntities(hashedAccountId, transferConnectionCode, cohortRef, OwinWrapper.GetClaimValue(@"sub"));
 
-            //todo: move to orchestrator
-
             var availableLegalEntities = response.Data.LegalEntities.Where(
                 le => le.Agreements.Any(a => a.Status == EmployerAgreementStatus.Signed));
 
@@ -184,7 +182,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                     TransferConnectionCode = response.Data.TransferConnectionCode,
                     CohortRef = response.Data.CohortRef,
                     LegalEntityCode = availableLegalEntities.First().Code,
-                    LegalEntities = availableLegalEntities
+                    // no need to store the legal entities, as the property is only read in the SelectLegalEntity view, which we're now skipping
+                    //LegalEntities = availableLegalEntities or response.Data.LegalEntities
                 });
             }
 

@@ -26,7 +26,6 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitments;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProvider;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTransferRequest;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipProvider;
