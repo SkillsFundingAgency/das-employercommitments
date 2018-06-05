@@ -8,7 +8,6 @@ using FluentValidation.Mvc;
 using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
 using SFA.DAS.EmployerCommitments.Domain.Models.UserProfile;
 using SFA.DAS.EmployerCommitments.Web.Authentication;
 using SFA.DAS.EmployerCommitments.Web.Enums;
@@ -174,40 +173,34 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (response.Data.LegalEntities == null || !response.Data.LegalEntities.Any())
                 throw new InvalidStateException($"No legal entities associated with account {hashedAccountId}");
 
-            var availableLegalEntities = response.Data.LegalEntities;
+            if (response.Data.LegalEntities.Count() > 1)
+                return View(response);
 
-            if (availableLegalEntities.Count() == 1)
+            var autoSelectLegalEntity = response.Data.LegalEntities.First();
+
+            var hasSigned = EmployerCommitmentsOrchestrator.HasSignedAgreement(
+                autoSelectLegalEntity, !string.IsNullOrWhiteSpace(transferConnectionCode));
+
+            if (hasSigned)
             {
-                var autoSelectLegalEntity = availableLegalEntities.First();
-
-                var hasSigned = EmployerCommitmentsOrchestrator.HasSignedAgreement(
-                    autoSelectLegalEntity, !string.IsNullOrWhiteSpace(transferConnectionCode));
-
-                if (hasSigned)
+                return RedirectToAction("SearchProvider", new SelectLegalEntityViewModel
                 {
-                    return RedirectToAction("SearchProvider", new SelectLegalEntityViewModel
-                    {
-                        TransferConnectionCode = transferConnectionCode,
-                        CohortRef = response.Data.CohortRef,
-                        LegalEntityCode = autoSelectLegalEntity.Code,
-                        // no need to store LegalEntities, as the property is only read in the SelectLegalEntity view, which we're now skipping
-                    });
-                }
-                else
-                {
-                    return RedirectToAction("AgreementNotSigned", new LegalEntitySignedAgreementViewModel
-                    {
-                        HashedAccountId = hashedAccountId,
-                        LegalEntityCode = autoSelectLegalEntity.Code,
-                        TransferConnectionCode = transferConnectionCode,
-                        CohortRef = response.Data.CohortRef,
-                        HasSignedAgreement = false,
-                        LegalEntityName = autoSelectLegalEntity.Name ?? string.Empty
-                    });
-                }
+                    TransferConnectionCode = transferConnectionCode,
+                    CohortRef = response.Data.CohortRef,
+                    LegalEntityCode = autoSelectLegalEntity.Code,
+                    // no need to store LegalEntities, as the property is only read in the SelectLegalEntity view, which we're now skipping
+                });
             }
 
-            return View(response);
+            return RedirectToAction("AgreementNotSigned", new LegalEntitySignedAgreementViewModel
+            {
+                HashedAccountId = hashedAccountId,
+                LegalEntityCode = autoSelectLegalEntity.Code,
+                TransferConnectionCode = transferConnectionCode,
+                CohortRef = response.Data.CohortRef,
+                HasSignedAgreement = false,
+                LegalEntityName = autoSelectLegalEntity.Name ?? string.Empty
+            });
         }
 
         [HttpPost]
@@ -228,13 +221,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 selectedLegalEntity.TransferConnectionCode, selectedLegalEntity.LegalEntityCode, selectedLegalEntity.CohortRef, OwinWrapper.GetClaimValue(@"sub"));
 
             if (agreement.Data.HasSignedAgreement)
-            {
                 return RedirectToAction("SearchProvider", selectedLegalEntity);
-            }
-            else
-            {
-                return RedirectToAction("AgreementNotSigned", agreement.Data);
-            }
+
+            return RedirectToAction("AgreementNotSigned", agreement.Data);
         }
 
         [HttpGet]
@@ -822,7 +811,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return acknowledgementContent;
         }
 
-    [HttpGet]
+        [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/Apprenticeships/{hashedApprenticeshipId}/Delete")]
         public async Task<ActionResult> DeleteApprenticeshipConfirmation(string hashedAccountId, string hashedCommitmentId, string hashedApprenticeshipId)
@@ -930,6 +919,5 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                     return Url.Action("YourCohorts", new { hashedAccountId });
             }
         }
-
     }
 }
