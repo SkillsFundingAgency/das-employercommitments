@@ -10,15 +10,14 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
-
     public abstract class BaseEmployerController : BaseController
     {
-        protected readonly EmployerCommitmentsOrchestrator EmployerCommitmentsOrchestrator;
+        protected readonly IEmployerCommitmentsOrchestrator EmployerCommitmentsOrchestrator;
 
         private const string LastCohortPageCookieKey = "sfa-das-employerapprenticeshipsservice-lastCohortPage";
         private readonly ICookieStorageService<string> _lastCohortCookieStorageService;
 
-        protected BaseEmployerController(EmployerCommitmentsOrchestrator employerCommitmentsOrchestrator, IOwinWrapper owinWrapper,
+        protected BaseEmployerController(IEmployerCommitmentsOrchestrator employerCommitmentsOrchestrator, IOwinWrapper owinWrapper,
             IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage, 
             ICookieStorageService<string> lastCohortCookieStorageService)
             : base(owinWrapper, multiVariantTestingService, flashMessage)
