@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
@@ -23,6 +22,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
         private EmployerCommitmentsController _controller;
 
         private const string HashedAccountId = "12345";
+        private const string NonTransferTransferConnectionCode = "";
 
         [SetUp]
         public void Setup()
@@ -70,9 +70,19 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
             Assert.ThrowsAsync<InvalidStateException>(() => _controller.SelectLegalEntity(HashedAccountId, transferConnectionCode));
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public async Task SingleLegalEntityThenX(bool isTransfer)
+        //todo: switch to enum/bool
+        [TestCase(true, EmployerAgreementStatus.Signed, 1, "AgreementNotSigned")]
+        [TestCase(true, EmployerAgreementStatus.Signed, 2, "SearchProvider")]
+        [TestCase(true, EmployerAgreementStatus.Pending, 0, "AgreementNotSigned")]
+        [TestCase(true, EmployerAgreementStatus.Expired, 0, "AgreementNotSigned")]
+        [TestCase(true, EmployerAgreementStatus.Removed, 0, "AgreementNotSigned")]
+        [TestCase(true, EmployerAgreementStatus.Superseded, 0, "AgreementNotSigned")]
+        [TestCase(false, EmployerAgreementStatus.Signed, 1, "SearchProvider")]
+        [TestCase(false, EmployerAgreementStatus.Pending, 1, "AgreementNotSigned")]
+        [TestCase(false, EmployerAgreementStatus.Expired, 1, "AgreementNotSigned")]
+        [TestCase(false, EmployerAgreementStatus.Removed, 1, "AgreementNotSigned")]
+        [TestCase(false, EmployerAgreementStatus.Expired, 1, "AgreementNotSigned")]
+        public async Task SingleLegalEntityThenX(bool isTransfer, EmployerAgreementStatus status, int templateVersionNumber, string expectedAction)
         {
             var transferConnectionCode = GetTransferConnectionCode(isTransfer);
 
@@ -80,18 +90,40 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
             {
                 Data = new SelectLegalEntityViewModel
                 {
-                    LegalEntities = new[] {new LegalEntity()}
+                    LegalEntities = new[] { new LegalEntity
+                    {
+                        Agreements = new List<Agreement> {new Agreement
+                        {
+                            Status = status,
+                            TemplateVersionNumber = templateVersionNumber
+                        }}
+                    }}
                 }
             };
             _orchestrator.Setup(o => o.GetLegalEntities(HashedAccountId, transferConnectionCode, "", null))
                 .ReturnsAsync(response);
 
-            await _controller.SelectLegalEntity(HashedAccountId, transferConnectionCode);
+            var result = await _controller.SelectLegalEntity(HashedAccountId, transferConnectionCode);
+//todo: model
+            AssertRedirectAction(result, expectedAction);
         }
 
         private string GetTransferConnectionCode(bool isTransfer)
         {
             return isTransfer ? "TCODE" : string.Empty;
+        }
+
+        private void AssertRedirectAction(ActionResult actionResult, string expectedAction, string expectedController = null)
+        {
+            var result = actionResult as RedirectToRouteResult;
+
+            Assert.NotNull(result, "Not a redirect result");
+            Assert.IsFalse(result.Permanent);
+            Assert.AreEqual(expectedAction, result.RouteValues["Action"]);
+            if (expectedController == null)
+                Assert.IsFalse(result.RouteValues.ContainsKey("Controller"));
+            else
+                Assert.AreEqual(expectedController, result.RouteValues["Controller"]);
         }
     }
 }

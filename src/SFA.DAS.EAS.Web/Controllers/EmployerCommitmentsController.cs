@@ -25,9 +25,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     public class EmployerCommitmentsController : BaseEmployerController
     {
 
-        public EmployerCommitmentsController(IEmployerCommitmentsOrchestrator employerCommitmentsOrchestrator, IOwinWrapper owinWrapper,
+        public EmployerCommitmentsController(IEmployerCommitmentsOrchestrator orchestrator, IOwinWrapper owinWrapper,
             IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage, ICookieStorageService<string> lastCohortCookieStorageService)
-            : base(employerCommitmentsOrchestrator, owinWrapper, multiVariantTestingService, flashMessage, lastCohortCookieStorageService)
+            : base(orchestrator, owinWrapper, multiVariantTestingService, flashMessage, lastCohortCookieStorageService)
         {
         }
 
@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             ViewBag.HashedAccountId = hashedAccountId;
 
-            var response = await EmployerCommitmentsOrchestrator.GetIndexViewModel(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+            var response = await Orchestrator.GetIndexViewModel(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
             SetFlashMessageOnModel(response);
 
             return View(response);
@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model = await EmployerCommitmentsOrchestrator.GetYourCohorts(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+            var model = await Orchestrator.GetYourCohorts(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
 
             SetFlashMessageOnModel(model);
             return View(model);
@@ -65,7 +65,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model = await EmployerCommitmentsOrchestrator.GetAllDraft(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+            var model = await Orchestrator.GetAllDraft(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
             SetFlashMessageOnModel(model);
             SaveRequestStatusInCookie(RequestStatus.NewRequest);
             return View("RequestList", model);
@@ -78,7 +78,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor ))
                 return View("AccessDenied");
 
-            var model = await EmployerCommitmentsOrchestrator.GetAllReadyForReview(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+            var model = await Orchestrator.GetAllReadyForReview(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
             SetFlashMessageOnModel(model);
             SaveRequestStatusInCookie(RequestStatus.ReadyForReview);
             return View("RequestList", model);
@@ -93,7 +93,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             SaveRequestStatusInCookie(RequestStatus.WithProviderForApproval);
 
-            var model = await EmployerCommitmentsOrchestrator.GetAllWithProvider(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+            var model = await Orchestrator.GetAllWithProvider(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
             return View("RequestList", model);
         }
 
@@ -109,7 +109,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             // also, subsequent transfer stories will need to check for this status when they GetRequestStatusFromCookie()
             SaveRequestStatusInCookie(RequestStatus.WithSenderForApproval);
 
-            var model = await EmployerCommitmentsOrchestrator.GetAllTransferFunded(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+            var model = await Orchestrator.GetAllTransferFunded(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
             return View("TransferFundedCohorts", model);
         }
 
@@ -118,7 +118,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         public async Task<ActionResult> Inform(string hashedAccountId)
         {
             SaveRequestStatusInCookie(RequestStatus.None);
-            var response = await EmployerCommitmentsOrchestrator.GetInform(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+            var response = await Orchestrator.GetInform(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
 
             return View(response);
         }
@@ -130,7 +130,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var response = await EmployerCommitmentsOrchestrator
+            var response = await Orchestrator
                 .GetTransferConnections(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
 
             if (response.Data.TransferConnections.Any())
@@ -147,7 +147,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var response = await EmployerCommitmentsOrchestrator.GetTransferConnections(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+                var response = await Orchestrator.GetTransferConnections(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
                 return View("SelectTransferConnection", response);
             }
 
@@ -167,8 +167,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var response = await EmployerCommitmentsOrchestrator
-                .GetLegalEntities(hashedAccountId, transferConnectionCode, cohortRef, OwinWrapper.GetClaimValue(@"sub"));
+            var response = await Orchestrator.GetLegalEntities(hashedAccountId, transferConnectionCode, cohortRef, OwinWrapper.GetClaimValue(@"sub"));
 
             if (response.Data.LegalEntities == null || !response.Data.LegalEntities.Any())
                 throw new InvalidStateException($"No legal entities associated with account {hashedAccountId}");
@@ -210,14 +209,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var response = await EmployerCommitmentsOrchestrator.GetLegalEntities(hashedAccountId,
+                var response = await Orchestrator.GetLegalEntities(hashedAccountId,
                     selectedLegalEntity.TransferConnectionCode, selectedLegalEntity.CohortRef,
                     OwinWrapper.GetClaimValue(@"sub"));
 
                 return View("SelectLegalEntity", response);
             }
 
-            var agreement = await EmployerCommitmentsOrchestrator.GetLegalEntitySignedAgreementViewModel(hashedAccountId,
+            var agreement = await Orchestrator.GetLegalEntitySignedAgreementViewModel(hashedAccountId,
                 selectedLegalEntity.TransferConnectionCode, selectedLegalEntity.LegalEntityCode, selectedLegalEntity.CohortRef, OwinWrapper.GetClaimValue(@"sub"));
 
             if (agreement.Data.HasSignedAgreement)
@@ -238,7 +237,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return RedirectToAction("Inform", new {hashedAccountId});
             }
 
-            var response = await EmployerCommitmentsOrchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), transferConnectionCode, legalEntityCode, cohortRef);
+            var response = await Orchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), transferConnectionCode, legalEntityCode, cohortRef);
 
             return View(response);
         }
@@ -250,16 +249,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var defaultViewModel = await EmployerCommitmentsOrchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel.TransferConnectionCode, viewModel.LegalEntityCode, viewModel.CohortRef);
+                var defaultViewModel = await Orchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel.TransferConnectionCode, viewModel.LegalEntityCode, viewModel.CohortRef);
                 
                 return View("SearchProvider", defaultViewModel);
             }
 
-            var response = await EmployerCommitmentsOrchestrator.GetProvider(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel);
+            var response = await Orchestrator.GetProvider(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel);
 
             if (response.Data.Provider == null)
             {
-                var defaultViewModel = await EmployerCommitmentsOrchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel.TransferConnectionCode, viewModel.LegalEntityCode, viewModel.CohortRef);
+                var defaultViewModel = await Orchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel.TransferConnectionCode, viewModel.LegalEntityCode, viewModel.CohortRef);
                 defaultViewModel.Data.NotFound = true;
 
                 RevalidateModel(defaultViewModel);
@@ -298,7 +297,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             {
                 if (viewModelModel.Confirmation == null)
                 {
-                    var response = await EmployerCommitmentsOrchestrator.GetProvider(hashedAccountId,
+                    var response = await Orchestrator.GetProvider(hashedAccountId,
                         OwinWrapper.GetClaimValue(@"sub"), viewModelModel);
 
                     return View("SelectProvider", response);
@@ -319,7 +318,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return RedirectToAction("ChoosePath",
                 new
                 {
-                    hashedAccountId = hashedAccountId,
+                    hashedAccountId,
                     transferConnectionCode = viewModelModel.TransferConnectionCode,
                     legalEntityCode = viewModelModel.LegalEntityCode,
                     providerId = viewModelModel.ProviderId,
@@ -341,7 +340,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return RedirectToAction("Inform", new { hashedAccountId });
             }
 
-            var model = await EmployerCommitmentsOrchestrator.CreateSummary(hashedAccountId, transferConnectionCode, legalEntityCode, providerId, cohortRef, OwinWrapper.GetClaimValue(@"sub"));
+            var model = await Orchestrator.CreateSummary(hashedAccountId, transferConnectionCode, legalEntityCode, providerId, cohortRef, OwinWrapper.GetClaimValue(@"sub"));
 
             return View(model);
         }
@@ -353,7 +352,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var model = await EmployerCommitmentsOrchestrator.CreateSummary(viewModel.HashedAccountId,
+                var model = await Orchestrator.CreateSummary(viewModel.HashedAccountId,
                     viewModel.TransferConnectionCode, viewModel.LegalEntityCode, viewModel.ProviderId.ToString(),
                     viewModel.CohortRef, OwinWrapper.GetClaimValue(@"sub"));
 
@@ -367,8 +366,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 var userId = OwinWrapper.GetClaimValue(@"sub");
 
                 var response =
-                    await EmployerCommitmentsOrchestrator.CreateEmployerAssignedCommitment(viewModel, userId,
-                        userDisplayName, userEmail);
+                    await Orchestrator.CreateEmployerAssignedCommitment(viewModel, userId, userDisplayName, userEmail);
 
                 return RedirectToAction("Details", new {hashedCommitmentId = response.Data});
             }
@@ -397,7 +395,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model = await EmployerCommitmentsOrchestrator.GetCommitmentDetails(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
+            var model = await Orchestrator.GetCommitmentDetails(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
             
             model.Data.BackLinkUrl = GetReturnToListUrl(hashedAccountId);
             SetFlashMessageOnModel(model);
@@ -414,7 +412,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model = await EmployerCommitmentsOrchestrator.GetDeleteCommitmentModel(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
+            var model = await Orchestrator.GetDeleteCommitmentModel(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
 
             return View(model);
         }
@@ -427,7 +425,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var model = await EmployerCommitmentsOrchestrator
+                var model = await Orchestrator
                     .GetDeleteCommitmentModel(viewModel.HashedAccountId, viewModel.HashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
 
                 return View(model);
@@ -438,7 +436,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return RedirectToAction("Details", new { viewModel.HashedAccountId, viewModel.HashedCommitmentId } );
             }
 
-            await EmployerCommitmentsOrchestrator
+            await Orchestrator
                 .DeleteCommitment(viewModel.HashedAccountId, viewModel.HashedCommitmentId, OwinWrapper.GetClaimValue("sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
 
             var flashmessage = new FlashMessageViewModel
@@ -450,7 +448,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             AddFlashMessageToCookie(flashmessage);
             
             var anyCohortWithCurrentStatus = 
-                await EmployerCommitmentsOrchestrator.AnyCohortsForCurrentStatus(viewModel.HashedAccountId, GetRequestStatusFromCookie());
+                await Orchestrator.AnyCohortsForCurrentStatus(viewModel.HashedAccountId, GetRequestStatusFromCookie());
 
             if(!anyCohortWithCurrentStatus)
                 return RedirectToAction("YourCohorts", new { viewModel.HashedAccountId });
@@ -473,7 +471,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var response = await EmployerCommitmentsOrchestrator.GetSkeletonApprenticeshipDetails(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId);
+            var response = await Orchestrator.GetSkeletonApprenticeshipDetails(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId);
 
             return View(response);
         }
@@ -488,7 +486,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 apprenticeship.AddErrorsFromModelState(ModelState);
             }
 
-            var validatorResult = await EmployerCommitmentsOrchestrator.ValidateApprenticeship(apprenticeship);
+            var validatorResult = await Orchestrator.ValidateApprenticeship(apprenticeship);
             if (validatorResult.Any())
             {
                 apprenticeship.AddErrorsFromDictionary(validatorResult);
@@ -501,7 +499,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             try
             {
-                await EmployerCommitmentsOrchestrator.CreateApprenticeship(apprenticeship, OwinWrapper.GetClaimValue(@"sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
+                await Orchestrator.CreateApprenticeship(apprenticeship, OwinWrapper.GetClaimValue(@"sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
                     OwinWrapper.GetClaimValue(DasClaimTypes.Email));
             }
             catch (InvalidRequestException ex)
@@ -530,7 +528,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model = await EmployerCommitmentsOrchestrator.GetApprenticeship(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId, hashedApprenticeshipId);
+            var model = await Orchestrator.GetApprenticeship(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId, hashedApprenticeshipId);
             AddErrorsToModelState(model.Data.ValidationErrors);
             return View("EditApprenticeshipEntry", model);
         }
@@ -543,7 +541,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model = await EmployerCommitmentsOrchestrator.GetApprenticeshipViewModel(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId, hashedApprenticeshipId);
+            var model = await Orchestrator.GetApprenticeshipViewModel(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId, hashedApprenticeshipId);
             return View("ViewApprenticeshipEntry", model);
         }
 
@@ -557,7 +555,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 apprenticeship.AddErrorsFromModelState(ModelState);
             }
 
-            var validatorResult = await EmployerCommitmentsOrchestrator.ValidateApprenticeship(apprenticeship);
+            var validatorResult = await Orchestrator.ValidateApprenticeship(apprenticeship);
             if (validatorResult.Any())
             {
                 apprenticeship.AddErrorsFromDictionary(validatorResult);
@@ -570,7 +568,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             try
             {
-                await EmployerCommitmentsOrchestrator.UpdateApprenticeship(apprenticeship, OwinWrapper.GetClaimValue(@"sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
+                await Orchestrator.UpdateApprenticeship(apprenticeship, OwinWrapper.GetClaimValue(@"sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
             }
             catch (InvalidRequestException ex)
             {
@@ -598,7 +596,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var response = await EmployerCommitmentsOrchestrator.GetFinishEditingViewModel(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId);
+            var response = await Orchestrator.GetFinishEditingViewModel(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId);
 
             return View(response);
         }
@@ -610,7 +608,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var response = await EmployerCommitmentsOrchestrator.GetFinishEditingViewModel(viewModel.HashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel.HashedCommitmentId);
+                var response = await Orchestrator.GetFinishEditingViewModel(viewModel.HashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel.HashedCommitmentId);
                 return View(response);
             }
 
@@ -625,7 +623,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 var userDisplayName = OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName);
                 var userEmail = OwinWrapper.GetClaimValue(DasClaimTypes.Email);
                 var userId = OwinWrapper.GetClaimValue(@"sub");
-                await EmployerCommitmentsOrchestrator.ApproveCommitment(viewModel.HashedAccountId, userId, userDisplayName, userEmail, viewModel.HashedCommitmentId, viewModel.SaveStatus);
+                await Orchestrator.ApproveCommitment(viewModel.HashedAccountId, userId, userDisplayName, userEmail, viewModel.HashedCommitmentId, viewModel.SaveStatus);
 
                 return RedirectToAction("Approved",
                     new { viewModel.HashedAccountId, viewModel.HashedCommitmentId });
@@ -649,12 +647,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model = await EmployerCommitmentsOrchestrator.GetAcknowledgementModelForExistingCommitment(
+            var model = await Orchestrator.GetAcknowledgementModelForExistingCommitment(
                 hashedAccountId,
                 hashedCommitmentId,
                 OwinWrapper.GetClaimValue(@"sub"));
 
-            var currentStatusCohortAny = await EmployerCommitmentsOrchestrator
+            var currentStatusCohortAny = await Orchestrator
                 .AnyCohortsForCurrentStatus(hashedAccountId, RequestStatus.ReadyForApproval);
             model.Data.BackLink = currentStatusCohortAny
                 ? new LinkViewModel { Text = "Return to view cohorts", Url = Url.Action("ReadyForReview", new { hashedAccountId }) }
@@ -671,7 +669,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var response = await EmployerCommitmentsOrchestrator.GetSubmitCommitmentModel(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId, saveStatus);
+            var response = await Orchestrator.GetSubmitCommitmentModel(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId, saveStatus);
             return View("SubmitCommitmentEntry", response);
         }
 
@@ -684,7 +682,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             var userEmail = OwinWrapper.GetClaimValue(DasClaimTypes.Email);
             var userId = OwinWrapper.GetClaimValue(@"sub");
 
-            await EmployerCommitmentsOrchestrator.SubmitCommitment(model, userId, userDisplayName, userEmail);
+            await Orchestrator.SubmitCommitment(model, userId, userDisplayName, userEmail);
 
             return RedirectToAction("AcknowledgementExisting", new { hashedCommitmentId = model.HashedCommitmentId, model.SaveStatus });
         }
@@ -708,7 +706,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return RedirectToAction("Inform", new { hashedAccountId });
             }
 
-            var response = await EmployerCommitmentsOrchestrator.GetSubmitNewCommitmentModel
+            var response = await Orchestrator.GetSubmitNewCommitmentModel
                 (hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), transferConnectionCode, legalEntityCode, legalEntityName, legalEntityAddress, legalEntitySource, providerId, providerName, cohortRef, saveStatus.Value);
 
             return View("SubmitCommitmentEntry", response);
@@ -723,7 +721,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             var userEmail = OwinWrapper.GetClaimValue(DasClaimTypes.Email);
             var userId = OwinWrapper.GetClaimValue(@"sub");
 
-            var response = await EmployerCommitmentsOrchestrator.CreateProviderAssignedCommitment(model, userId, userDisplayName, userEmail);
+            var response = await Orchestrator.CreateProviderAssignedCommitment(model, userId, userDisplayName, userEmail);
 
             return RedirectToAction("AcknowledgementNew", new { hashedAccountId = model.HashedAccountId, hashedCommitmentId = response.Data });
         }
@@ -735,7 +733,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var response = await EmployerCommitmentsOrchestrator
+            var response = await Orchestrator
                 .GetAcknowledgementModelForExistingCommitment(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
 
             response.Data.Content = GetAcknowledgementContent(SaveStatus.Save, response.Data.IsTransfer);
@@ -750,18 +748,18 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var response = await EmployerCommitmentsOrchestrator
+            var response = await Orchestrator
                 .GetAcknowledgementModelForExistingCommitment(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
 
             var status = GetRequestStatusFromCookie();
             bool anyCohortsLeft;
             if (status == RequestStatus.ReadyForReview)
             {
-                anyCohortsLeft = await EmployerCommitmentsOrchestrator.AnyCohortsForCurrentStatus(hashedAccountId, RequestStatus.ReadyForApproval, status);
+                anyCohortsLeft = await Orchestrator.AnyCohortsForCurrentStatus(hashedAccountId, RequestStatus.ReadyForApproval, status);
             }
             else
             {
-                anyCohortsLeft= await EmployerCommitmentsOrchestrator.AnyCohortsForCurrentStatus(hashedAccountId, status);
+                anyCohortsLeft= await Orchestrator.AnyCohortsForCurrentStatus(hashedAccountId, status);
             }
             var returnToCohortsList = 
                    status != RequestStatus.None 
@@ -821,7 +819,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return View("AccessDenied");
             }
 
-            var response = await EmployerCommitmentsOrchestrator.GetDeleteApprenticeshipViewModel(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId, hashedApprenticeshipId);
+            var response = await Orchestrator.GetDeleteApprenticeshipViewModel(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId, hashedApprenticeshipId);
 
             return View(response);
         }
@@ -833,14 +831,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var errorResponse = await EmployerCommitmentsOrchestrator.GetDeleteApprenticeshipViewModel(viewModel.HashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel.HashedCommitmentId, viewModel.HashedApprenticeshipId);
+                var errorResponse = await Orchestrator.GetDeleteApprenticeshipViewModel(viewModel.HashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel.HashedCommitmentId, viewModel.HashedApprenticeshipId);
 
                 return View(errorResponse);
             }
 
             if (viewModel.DeleteConfirmed.HasValue && viewModel.DeleteConfirmed.Value)
             {
-                await EmployerCommitmentsOrchestrator.DeleteApprenticeship(viewModel, OwinWrapper.GetClaimValue(@"sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
+                await Orchestrator.DeleteApprenticeship(viewModel, OwinWrapper.GetClaimValue(@"sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
 
                 var flashMessage = new FlashMessageViewModel { Severity = FlashMessageSeverityLevel.Okay, Message = string.Format($"Apprentice record for {viewModel.ApprenticeshipName} deleted") };
                 AddFlashMessageToCookie(flashMessage);
@@ -853,7 +851,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         private async Task<ActionResult> RedisplayCreateApprenticeshipView(ApprenticeshipViewModel apprenticeship)
         {
-            var response = await EmployerCommitmentsOrchestrator.GetSkeletonApprenticeshipDetails(apprenticeship.HashedAccountId, OwinWrapper.GetClaimValue(@"sub"), apprenticeship.HashedCommitmentId);
+            var response = await Orchestrator.GetSkeletonApprenticeshipDetails(apprenticeship.HashedAccountId, OwinWrapper.GetClaimValue(@"sub"), apprenticeship.HashedCommitmentId);
             response.Data.Apprenticeship = apprenticeship;
 
             if (response.Data.Apprenticeship.ErrorDictionary.Any())
@@ -872,7 +870,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         private async Task<ActionResult> RedisplayEditApprenticeshipView(ApprenticeshipViewModel apprenticeship)
         {
-            var response = await EmployerCommitmentsOrchestrator.GetSkeletonApprenticeshipDetails(apprenticeship.HashedAccountId, OwinWrapper.GetClaimValue(@"sub"), apprenticeship.HashedCommitmentId);
+            var response = await Orchestrator.GetSkeletonApprenticeshipDetails(apprenticeship.HashedAccountId, OwinWrapper.GetClaimValue(@"sub"), apprenticeship.HashedCommitmentId);
             response.Data.Apprenticeship = apprenticeship;
 
             if (response.Data.Apprenticeship.ErrorDictionary.Any())

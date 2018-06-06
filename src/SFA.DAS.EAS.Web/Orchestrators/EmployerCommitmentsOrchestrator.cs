@@ -1367,7 +1367,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 throw new InvalidStateException("Invalid commitment state - agreement status is BothAgreed");
         }
 
-        public bool HasSignedAgreement(LegalEntity legalEntity, bool isTransfer)
+        public static bool HasSignedAgreement(LegalEntity legalEntity, bool isTransfer)
         {
             if (isTransfer)
             {

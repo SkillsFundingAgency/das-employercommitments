@@ -12,17 +12,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
     public abstract class BaseEmployerController : BaseController
     {
-        protected readonly IEmployerCommitmentsOrchestrator EmployerCommitmentsOrchestrator;
+        protected readonly IEmployerCommitmentsOrchestrator Orchestrator;
 
         private const string LastCohortPageCookieKey = "sfa-das-employerapprenticeshipsservice-lastCohortPage";
         private readonly ICookieStorageService<string> _lastCohortCookieStorageService;
 
-        protected BaseEmployerController(IEmployerCommitmentsOrchestrator employerCommitmentsOrchestrator, IOwinWrapper owinWrapper,
+        protected BaseEmployerController(IEmployerCommitmentsOrchestrator orchestrator, IOwinWrapper owinWrapper,
             IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage, 
             ICookieStorageService<string> lastCohortCookieStorageService)
             : base(owinWrapper, multiVariantTestingService, flashMessage)
         {
-            EmployerCommitmentsOrchestrator = employerCommitmentsOrchestrator;
+            Orchestrator = orchestrator;
             _lastCohortCookieStorageService = lastCohortCookieStorageService;
         }
 
@@ -63,7 +63,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         protected async Task<bool> IsUserRoleAuthorized(string hashedAccountId, params Role[] roles)
         {
-            return await EmployerCommitmentsOrchestrator.AuthorizeRole(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), roles);
+            return await Orchestrator.AuthorizeRole(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), roles);
         }
 
         protected void SetErrorMessage(OrchestratorResponse orchestratorResponse, Dictionary<string, string> errorDictionary)

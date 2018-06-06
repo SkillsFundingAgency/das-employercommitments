@@ -125,8 +125,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             string hashedTransferAccountId, Application.Queries.GetTransferRequest.CallerType callerType,
             string hashedTransferRequestId, string externalUserId);
 
-        bool HasSignedAgreement(LegalEntity legalEntity, bool isTransfer);
-
         //todo: probably belongs in a base inerface
         Task<bool> AuthorizeRole(string hashedAccountId, string externalUserId, Role[] roles);
     }
