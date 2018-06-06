@@ -91,7 +91,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
         [TestCase(false, EmployerAgreementStatus.Expired, 1, ExpectedAction.AgreementNotSigned)]
         [TestCase(false, EmployerAgreementStatus.Removed, 1, ExpectedAction.AgreementNotSigned)]
         [TestCase(false, EmployerAgreementStatus.Expired, 1, ExpectedAction.AgreementNotSigned)]
-        public async Task SingleLegalEntityThenX(bool isTransfer, EmployerAgreementStatus status, int templateVersionNumber, ExpectedAction expectedAction )
+        public async Task WithSingleLegalEntityThenRedirectsCorrectly(bool isTransfer, EmployerAgreementStatus status, int templateVersionNumber, ExpectedAction expectedAction )
         {
             var transferConnectionCode = GetTransferConnectionCode(isTransfer);
 
@@ -133,9 +133,38 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
             AssertRedirectAction(result, expectedAction.ToString(), expectedRouteValues: expectedRouteValues);
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task WithMoreThanOneLegalEntityThenShowsExpectedView(bool isTransfer)
+        {
+            var transferConnectionCode = GetTransferConnectionCode(isTransfer);
+
+            var response = new OrchestratorResponse<SelectLegalEntityViewModel>
+            {
+                Data = new SelectLegalEntityViewModel
+                {
+                    LegalEntities = new[] { new LegalEntity(), new LegalEntity() }
+                }
+            };
+            _orchestrator.Setup(o => o.GetLegalEntities(HashedAccountId, transferConnectionCode, CohortRefParam, null))
+                .ReturnsAsync(response);
+
+            var result = await _controller.SelectLegalEntity(HashedAccountId, transferConnectionCode);
+
+            AssertViewResult(result);
+        }
+
         private string GetTransferConnectionCode(bool isTransfer)
         {
             return isTransfer ? "TCODE" : string.Empty;
+        }
+
+        private void AssertViewResult(ActionResult actionResult, string expectedViewName = "")
+        {
+            var result = actionResult as ViewResult;
+
+            Assert.NotNull(result, "Not a view result");
+            Assert.AreEqual(expectedViewName, result.ViewName);
         }
 
         private void AssertRedirectAction(ActionResult actionResult,
