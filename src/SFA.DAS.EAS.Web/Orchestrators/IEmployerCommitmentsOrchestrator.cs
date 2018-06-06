@@ -60,10 +60,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         Task ApproveCommitment(string hashedAccountId, string externalUserId, string userDisplayName, string userEmail,
             string hashedCommitmentId, SaveStatus saveStatus);
 
-        Task SetTransferApprovalStatus(string hashedAccountId, string hashedCommitmentId,
-            TransferApprovalConfirmationViewModel model, string externalUserId, string userDisplayName,
-            string userEmail);
-
         Task SetTransferRequestApprovalStatus(string hashedAccountId, string hashedCommitmentId,
             string hashedTransferRequestId, TransferApprovalConfirmationViewModel model, string externalUserId,
             string userDisplayName, string userEmail);
@@ -117,9 +113,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         Task DeleteApprenticeship(DeleteApprenticeshipConfirmationViewModel model, string externalUser, string userName,
             string userEmail);
-
-        Task<OrchestratorResponse<TransferCommitmentViewModel>> GetCommitmentDetailsForTransfer(
-            string hashedTransferAccountId, string hashedCommitmentId, string externalUserId);
 
         Task<OrchestratorResponse<TransferRequestViewModel>> GetTransferRequestDetails(
             string hashedTransferAccountId, Application.Queries.GetTransferRequest.CallerType callerType,
