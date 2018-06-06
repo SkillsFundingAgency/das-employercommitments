@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -22,6 +23,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
         private EmployerCommitmentsController _controller;
 
         private const string HashedAccountId = "12345";
+        private const string LegalEntityCode = "LCODE";
+        private const string LegalEntityName = "LNAME";
+        private const string CohortRefParam = "";
+        private const string CohortRefViewModel = "ViewModelCohortReef";
 
         [SetUp]
         public void Setup()
@@ -44,7 +49,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
             {
                 Data = new SelectLegalEntityViewModel()
             };
-            _orchestrator.Setup(o => o.GetLegalEntities(HashedAccountId, transferConnectionCode, "", null))
+            _orchestrator.Setup(o => o.GetLegalEntities(HashedAccountId, transferConnectionCode, CohortRefParam, null))
                 .ReturnsAsync(response);
 
             Assert.ThrowsAsync<InvalidStateException>(() => _controller.SelectLegalEntity(HashedAccountId, transferConnectionCode));
@@ -63,7 +68,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
                     LegalEntities = Enumerable.Empty<LegalEntity>()
                 }
             };
-            _orchestrator.Setup(o => o.GetLegalEntities(HashedAccountId, transferConnectionCode, "", null))
+            _orchestrator.Setup(o => o.GetLegalEntities(HashedAccountId, transferConnectionCode, CohortRefParam, null))
                 .ReturnsAsync(response);
 
             Assert.ThrowsAsync<InvalidStateException>(() => _controller.SelectLegalEntity(HashedAccountId, transferConnectionCode));
@@ -100,16 +105,32 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
                         {
                             Status = status,
                             TemplateVersionNumber = templateVersionNumber
-                        }}
-                    }}
+                        }},
+                        Code = LegalEntityCode,
+                        Name = LegalEntityName
+                    }},
+                    CohortRef = CohortRefViewModel
                 }
             };
-            _orchestrator.Setup(o => o.GetLegalEntities(HashedAccountId, transferConnectionCode, "", null))
+            _orchestrator.Setup(o => o.GetLegalEntities(HashedAccountId, transferConnectionCode, CohortRefParam, null))
                 .ReturnsAsync(response);
 
             var result = await _controller.SelectLegalEntity(HashedAccountId, transferConnectionCode);
-//todo: model
-            AssertRedirectAction(result, expectedAction.ToString());
+
+            object expectedRouteValues;
+            switch (expectedAction)
+            {
+                case ExpectedAction.AgreementNotSigned:
+                    expectedRouteValues = new { TransferConnectionCode = transferConnectionCode, HashedAccountId, LegalEntityCode, CohortRef = CohortRefViewModel, HasSignedAgreement = false, LegalEntityName };
+                    break;
+                case ExpectedAction.SearchProvider:
+                    expectedRouteValues = new { TransferConnectionCode = transferConnectionCode, LegalEntityCode, CohortRef = CohortRefViewModel };
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
+            AssertRedirectAction(result, expectedAction.ToString(), expectedRouteValues: expectedRouteValues);
         }
 
         private string GetTransferConnectionCode(bool isTransfer)
@@ -117,7 +138,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
             return isTransfer ? "TCODE" : string.Empty;
         }
 
-        private void AssertRedirectAction(ActionResult actionResult, string expectedAction, string expectedController = null)
+        private void AssertRedirectAction(ActionResult actionResult,
+            string expectedAction, string expectedController = null, object expectedRouteValues = null)
         {
             var result = actionResult as RedirectToRouteResult;
 
@@ -128,6 +150,12 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
                 Assert.IsFalse(result.RouteValues.ContainsKey("Controller"));
             else
                 Assert.AreEqual(expectedController, result.RouteValues["Controller"]);
+
+            if (expectedRouteValues == null)
+                return;
+
+            var expectedRouteValueDictionarySubset = expectedRouteValues.GetType().GetProperties().Select(v => new KeyValuePair<string,object>(v.Name, v.GetValue(expectedRouteValues)));
+            CollectionAssert.IsSubsetOf(expectedRouteValueDictionarySubset, result.RouteValues);
         }
     }
 }
