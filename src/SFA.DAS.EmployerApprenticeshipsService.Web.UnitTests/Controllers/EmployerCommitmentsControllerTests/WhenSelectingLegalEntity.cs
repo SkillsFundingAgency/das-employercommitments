@@ -22,7 +22,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
         private EmployerCommitmentsController _controller;
 
         private const string HashedAccountId = "12345";
-        private const string NonTransferTransferConnectionCode = "";
 
         [SetUp]
         public void Setup()
@@ -70,19 +69,24 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
             Assert.ThrowsAsync<InvalidStateException>(() => _controller.SelectLegalEntity(HashedAccountId, transferConnectionCode));
         }
 
-        //todo: switch to enum/bool
-        [TestCase(true, EmployerAgreementStatus.Signed, 1, "AgreementNotSigned")]
-        [TestCase(true, EmployerAgreementStatus.Signed, 2, "SearchProvider")]
-        [TestCase(true, EmployerAgreementStatus.Pending, 0, "AgreementNotSigned")]
-        [TestCase(true, EmployerAgreementStatus.Expired, 0, "AgreementNotSigned")]
-        [TestCase(true, EmployerAgreementStatus.Removed, 0, "AgreementNotSigned")]
-        [TestCase(true, EmployerAgreementStatus.Superseded, 0, "AgreementNotSigned")]
-        [TestCase(false, EmployerAgreementStatus.Signed, 1, "SearchProvider")]
-        [TestCase(false, EmployerAgreementStatus.Pending, 1, "AgreementNotSigned")]
-        [TestCase(false, EmployerAgreementStatus.Expired, 1, "AgreementNotSigned")]
-        [TestCase(false, EmployerAgreementStatus.Removed, 1, "AgreementNotSigned")]
-        [TestCase(false, EmployerAgreementStatus.Expired, 1, "AgreementNotSigned")]
-        public async Task SingleLegalEntityThenX(bool isTransfer, EmployerAgreementStatus status, int templateVersionNumber, string expectedAction)
+        public enum ExpectedAction
+        {
+            AgreementNotSigned,
+            SearchProvider
+        }
+
+        [TestCase(true, EmployerAgreementStatus.Signed, 1, ExpectedAction.AgreementNotSigned)]
+        [TestCase(true, EmployerAgreementStatus.Signed, 2, ExpectedAction.SearchProvider)]
+        [TestCase(true, EmployerAgreementStatus.Pending, 0, ExpectedAction.AgreementNotSigned)]
+        [TestCase(true, EmployerAgreementStatus.Expired, 0, ExpectedAction.AgreementNotSigned)]
+        [TestCase(true, EmployerAgreementStatus.Removed, 0, ExpectedAction.AgreementNotSigned)]
+        [TestCase(true, EmployerAgreementStatus.Superseded, 0, ExpectedAction.AgreementNotSigned)]
+        [TestCase(false, EmployerAgreementStatus.Signed, 1, ExpectedAction.SearchProvider)]
+        [TestCase(false, EmployerAgreementStatus.Pending, 1, ExpectedAction.AgreementNotSigned)]
+        [TestCase(false, EmployerAgreementStatus.Expired, 1, ExpectedAction.AgreementNotSigned)]
+        [TestCase(false, EmployerAgreementStatus.Removed, 1, ExpectedAction.AgreementNotSigned)]
+        [TestCase(false, EmployerAgreementStatus.Expired, 1, ExpectedAction.AgreementNotSigned)]
+        public async Task SingleLegalEntityThenX(bool isTransfer, EmployerAgreementStatus status, int templateVersionNumber, ExpectedAction expectedAction )
         {
             var transferConnectionCode = GetTransferConnectionCode(isTransfer);
 
@@ -105,7 +109,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
 
             var result = await _controller.SelectLegalEntity(HashedAccountId, transferConnectionCode);
 //todo: model
-            AssertRedirectAction(result, expectedAction);
+            AssertRedirectAction(result, expectedAction.ToString());
         }
 
         private string GetTransferConnectionCode(bool isTransfer)
