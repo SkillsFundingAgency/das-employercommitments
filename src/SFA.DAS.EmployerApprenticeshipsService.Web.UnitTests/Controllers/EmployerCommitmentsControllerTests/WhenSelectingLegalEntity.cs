@@ -23,7 +23,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
         private EmployerCommitmentsController _controller;
 
         private const string HashedAccountId = "12345";
-        private const string NonTransferTransferConnectionCode = "";
 
         [SetUp]
         public void Setup()
@@ -36,22 +35,28 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
                 Mock.Of<ICookieStorageService<FlashMessageViewModel>>(), Mock.Of<ICookieStorageService<string>>());
         }
 
-        [Test]
-        public void WithNullLegalEntitiesThenShouldThrowInvalidStateException()
+        [TestCase(true)]
+        [TestCase(false)]
+        public void WithNullLegalEntitiesThenShouldThrowInvalidStateException(bool isTransfer)
         {
+            var transferConnectionCode = GetTransferConnectionCode(isTransfer);
+
             var response = new OrchestratorResponse<SelectLegalEntityViewModel>
             {
                 Data = new SelectLegalEntityViewModel()
             };
-            _orchestrator.Setup(o => o.GetLegalEntities(HashedAccountId, NonTransferTransferConnectionCode, "", null))
+            _orchestrator.Setup(o => o.GetLegalEntities(HashedAccountId, transferConnectionCode, "", null))
                 .ReturnsAsync(response);
 
-            Assert.ThrowsAsync<InvalidStateException>(() => _controller.SelectLegalEntity(HashedAccountId, NonTransferTransferConnectionCode));
+            Assert.ThrowsAsync<InvalidStateException>(() => _controller.SelectLegalEntity(HashedAccountId, transferConnectionCode));
         }
 
-        [Test]
-        public void WithEmptyLegalEntitiesThenShouldThrowInvalidStateException()
+        [TestCase(true)]
+        [TestCase(false)]
+        public void WithEmptyLegalEntitiesThenShouldThrowInvalidStateException(bool isTransfer)
         {
+            var transferConnectionCode = GetTransferConnectionCode(isTransfer);
+
             var response = new OrchestratorResponse<SelectLegalEntityViewModel>
             {
                 Data = new SelectLegalEntityViewModel
@@ -59,15 +64,18 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
                     LegalEntities = Enumerable.Empty<LegalEntity>()
                 }
             };
-            _orchestrator.Setup(o => o.GetLegalEntities(HashedAccountId, NonTransferTransferConnectionCode, "", null))
+            _orchestrator.Setup(o => o.GetLegalEntities(HashedAccountId, transferConnectionCode, "", null))
                 .ReturnsAsync(response);
 
-            Assert.ThrowsAsync<InvalidStateException>(() => _controller.SelectLegalEntity(HashedAccountId, NonTransferTransferConnectionCode));
+            Assert.ThrowsAsync<InvalidStateException>(() => _controller.SelectLegalEntity(HashedAccountId, transferConnectionCode));
         }
 
-        [Test]
-        public async Task NonTransferWithSingleLegalEntityThenX()
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task SingleLegalEntityThenX(bool isTransfer)
         {
+            var transferConnectionCode = GetTransferConnectionCode(isTransfer);
+
             var response = new OrchestratorResponse<SelectLegalEntityViewModel>
             {
                 Data = new SelectLegalEntityViewModel
@@ -75,10 +83,15 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
                     LegalEntities = new[] {new LegalEntity()}
                 }
             };
-            _orchestrator.Setup(o => o.GetLegalEntities(HashedAccountId, NonTransferTransferConnectionCode, "", null))
+            _orchestrator.Setup(o => o.GetLegalEntities(HashedAccountId, transferConnectionCode, "", null))
                 .ReturnsAsync(response);
 
-            await _controller.SelectLegalEntity(HashedAccountId, NonTransferTransferConnectionCode);
+            await _controller.SelectLegalEntity(HashedAccountId, transferConnectionCode);
+        }
+
+        private string GetTransferConnectionCode(bool isTransfer)
+        {
+            return isTransfer ? "TCODE" : string.Empty;
         }
     }
 }
