@@ -51,8 +51,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators.Messages
             new ValidationMessage("The end date is not valid", "LearnPlanEndDate_01");
         public ValidationMessage LearnPlanEndDate02 =>
             new ValidationMessage("The end date must not be on or before the start date", "LearnPlanEndDate_02");
-        public ValidationMessage LearnPlanEndDate03 =>
-            new ValidationMessage("The end date must not be in the past", "LearnPlanEndDate_03");
         public ValidationMessage LearnStartDate05 =>
            new ValidationMessage("The start date must be no later than one year after the end of the current teaching year", "LearnStartDate_05");
 

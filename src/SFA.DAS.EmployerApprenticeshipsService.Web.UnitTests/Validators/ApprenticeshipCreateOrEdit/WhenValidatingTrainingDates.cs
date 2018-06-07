@@ -56,7 +56,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
         [TestCase(5, 9, -1, "The end date is not valid")]
         [TestCase(0, 0, 0, "The end date is not valid")]
         [TestCase(1, 18, 2121, "The end date is not valid")]
-        [TestCase(5, 9, 1998, "The end date must not be in the past")]
         public void ShouldFailValidationForPlanedEndDate(int? day, int? month, int? year, string expected)
         {
 
