@@ -445,7 +445,6 @@
     <Compile Include="Controllers\DataLockController.cs" />
     <Compile Include="Controllers\BaseEmployerController.cs" />
     <Compile Include="Controllers\TransferRequestController.cs" />
-    <Compile Include="Controllers\TransfersController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Decorators\AccountApiClientDecorator.cs" />
     <Compile Include="PublicHashingService\IPublicHashingService.cs" />
@@ -473,7 +472,6 @@
     <Compile Include="ViewModels\TransferConfirmationViewModel.cs" />
     <Compile Include="ViewModels\TransferApprovalConfirmationViewModel.cs" />
     <Compile Include="ViewModels\TrainingCourseSummaryViewModel.cs" />
-    <Compile Include="ViewModels\TransferCommitmentViewModel.cs" />
     <Compile Include="ViewModels\CoreDetailsViewModel.cs" />
     <Compile Include="ViewModels\GoogleAnalyicsDetailsViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IPaginationViewModel.cs" />
@@ -682,8 +680,6 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>_CoreDetail.generated.cs</LastGenOutput>
     </Content>
-    <Content Include="Views\Transfers\TransferConfirmation.cshtml" />
-    <Content Include="Views\Transfers\TransferDetails.cshtml" />
     <Content Include="Views\TransferRequest\TransferDetails.cshtml" />
     <Content Include="Views\TransferRequest\TransferConfirmation.cshtml" />
     <Content Include="Views\TransferRequest\TransferDetailsForReceiver.cshtml" />

@@ -95,6 +95,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             //if not already disabled, check if uln has been reused. disable param is a short term workaround due to mapper reuse in search result page
             if (result.CanEditStopDate && !disableUlnReuseCheck)
             {
+                //todo: we're returning apprenticeship++, but we could just fetch a simple count
                 var apprenticeshipsResponse = await _mediator.SendAsync(new GetApprenticeshipsByUlnRequest
                 {
                     AccountId = apprenticeship.EmployerAccountId,
