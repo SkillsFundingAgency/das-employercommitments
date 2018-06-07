@@ -1,6 +1,5 @@
 ﻿using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
-using System;
 
 namespace SFA.DAS.EmployerCommitments.Web.Validators.Messages
 {
@@ -15,9 +14,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators.Messages
 
         public ValidationMessage AcademicYearStartDate01 =>
              new ValidationMessage($"The earliest start date you can use is { _academicYear.CurrentAcademicYearStartDate.ToGdsFormatShortMonthWithoutDay()}", "AcademicYear_01");
-
-        public ValidationMessage CohortRef01 { get { throw new NotImplementedException(); } }
-        public ValidationMessage CohortRef02 { get { throw new NotImplementedException(); } }
 
         public ValidationMessage Uln01 =>
             new ValidationMessage("You must enter a 10-digit unique learner number", "ULN_01");
@@ -61,23 +57,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators.Messages
 
         public ValidationMessage EmployerRef01 =>
             new ValidationMessage("The Reference must be 20 characters or fewer", "EmployerRef_01");
-
-        public ValidationMessage EPAOrgID01 { get { throw new NotImplementedException(); } }
-        public ValidationMessage EPAOrgID02 { get { throw new NotImplementedException(); } }
-
-        public ValidationMessage FworkCode01 { get { throw new NotImplementedException(); } }
-        public ValidationMessage FworkCode02 { get { throw new NotImplementedException(); } }
-        public ValidationMessage FworkCode03 { get { throw new NotImplementedException(); } }
-
-        public ValidationMessage ProgType01 { get { throw new NotImplementedException(); } }
-        public ValidationMessage ProgType02 { get { throw new NotImplementedException(); } }
-        public ValidationMessage PwayCode01 { get { throw new NotImplementedException(); } }
-        public ValidationMessage PwayCode02 { get { throw new NotImplementedException(); } }
-        public ValidationMessage PwayCode03 { get { throw new NotImplementedException(); } }
-
-        public ValidationMessage StdCode01 { get { throw new NotImplementedException(); } }
-        public ValidationMessage StdCode02 { get { throw new NotImplementedException(); } }
-        public ValidationMessage StdCode03 { get { throw new NotImplementedException(); } }
 
         public ValidationMessage TrainingCode01 =>
             new ValidationMessage("Training course can't be empty", "DefaultErrorCode");
