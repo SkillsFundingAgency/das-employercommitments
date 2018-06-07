@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
+using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 
@@ -182,6 +183,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             var viewModel = await Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
 
             Assert.AreEqual(endpointAssessorName, viewModel.EndpointAssessorName);
+        }
+
+        [TestCase(TrainingType.Standard)]
+        [TestCase(TrainingType.Framework)]
+        public async Task ThenTrainingTypeIsMapped(TrainingType trainingType)
+        {
+            var apprenticeship = new Apprenticeship { TrainingType = trainingType };
+
+            var viewModel = await Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+
+            Assert.AreEqual(trainingType, viewModel.TrainingType);
         }
     }
 }

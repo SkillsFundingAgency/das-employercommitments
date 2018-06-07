@@ -22,6 +22,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public DateTime? StopDate { get; set; }
 
+        public TrainingType TrainingType { get; set; }
+
         public string TrainingName { get; set; }
 
         public decimal? Cost { get; set; }

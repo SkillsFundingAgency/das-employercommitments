@@ -89,9 +89,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                             && new []{ PaymentStatus.Active, PaymentStatus.Paused  }.Contains(apprenticeship.PaymentStatus),
                 CanEditStatus = !(new List<PaymentStatus> { PaymentStatus.Completed, PaymentStatus.Withdrawn }).Contains(apprenticeship.PaymentStatus),
                 CanEditStopDate = (apprenticeship.PaymentStatus == PaymentStatus.Withdrawn && apprenticeship.StartDate != apprenticeship.StopDate),
-                EndpointAssessorName = apprenticeship.EndpointAssessorName
+                EndpointAssessorName = apprenticeship.EndpointAssessorName,
+                TrainingType = apprenticeship.TrainingType
             };
-
+            
             //if not already disabled, check if uln has been reused. disable param is a short term workaround due to mapper reuse in search result page
             if (result.CanEditStopDate && !disableUlnReuseCheck)
             {
