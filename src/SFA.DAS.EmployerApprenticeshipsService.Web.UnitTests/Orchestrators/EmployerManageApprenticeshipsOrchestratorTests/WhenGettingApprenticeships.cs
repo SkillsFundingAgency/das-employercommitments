@@ -4,7 +4,6 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
-using SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
@@ -13,11 +12,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
     public class WhenGettingApprenticeships : ManageApprenticeshipsOrchestratorTestBase
     {
         [SetUp]
-        public void Setup()
+        public new void Setup()
         {
-        
-        
-        
             MockMediator.Setup(x => x.SendAsync(It.IsAny<ApprenticeshipSearchQueryRequest>()))
                 .ReturnsAsync(new ApprenticeshipSearchQueryResponse
                 {
@@ -33,7 +29,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             ApprenticeshipFiltersMapper.Setup(
                 x => x.Map(It.IsAny<Facets>()))
                 .Returns(new ApprenticeshipFiltersViewModel());
-            
         }
 
         [Test]

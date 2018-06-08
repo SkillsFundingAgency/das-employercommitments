@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using FluentValidation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
@@ -11,18 +9,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
     public class ApprenticeshipCoreValidator : AbstractValidator<ApprenticeshipViewModel>
     {
         protected static readonly Func<string, int, bool> LengthLessThanFunc = (str, length) => (str?.Length ?? length) < length;
-        protected static readonly Func<DateTime?, bool, bool> CheckIfNotNull = (dt, b) => dt == null || b;
-        protected static readonly Func<string, int, bool> HaveNumberOfDigitsFewerThan = (str, length) => { return (str?.Count(char.IsDigit) ?? 0) < length; };
         private readonly IApprenticeshipValidationErrorText _validationText;
-        private readonly ICurrentDateTime _currentDateTime;
         private readonly IAcademicYearDateProvider _academicYear;
 
         public ApprenticeshipCoreValidator(IApprenticeshipValidationErrorText validationText,
-                                            ICurrentDateTime currentDateTime,
                                             IAcademicYearDateProvider academicYear)
         {
             _validationText = validationText;
-            _currentDateTime = currentDateTime;
             _academicYear = academicYear;
 
             ValidateFirstName();

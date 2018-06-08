@@ -26,7 +26,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             var academicYearProvider = new AcademicYearDateProvider(CurrentDateTime.Object);
             Validator = new ApprenticeshipViewModelValidator(
                 new WebApprenticeshipValidationText(academicYearProvider), 
-                CurrentDateTime.Object, 
                 academicYearProvider, 
                 new AcademicYearValidator(CurrentDateTime.Object, academicYearProvider));
 
