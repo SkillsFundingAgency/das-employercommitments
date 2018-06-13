@@ -2,8 +2,10 @@
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
+using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateApprenticeshipTests
 {
@@ -12,11 +14,18 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateAppre
     {
         private CreateApprenticeshipCommand _validCommand;
         private CreateApprenticeshipCommandHandler _handler;
+        private Mock<IEmployerCommitmentApi> _commitmentApi;
 
         [SetUp]
         public void Setup()
         {
-            _handler = new CreateApprenticeshipCommandHandler(Mock.Of<IEmployerCommitmentApi>());
+            _commitmentApi = new Mock<IEmployerCommitmentApi>();
+            _commitmentApi.Setup(x => x.GetEmployerCommitment(It.IsAny<long>(), It.IsAny<long>()))
+                .ReturnsAsync(new CommitmentView());
+
+            _handler = new CreateApprenticeshipCommandHandler(_commitmentApi.Object,
+                Mock.Of<IProviderEmailNotificationService>());
+
             _validCommand = new CreateApprenticeshipCommand
             {
                 AccountId = 123,
