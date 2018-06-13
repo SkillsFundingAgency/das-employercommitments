@@ -27,6 +27,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
         private Mock<IProviderEmailLookupService> _mockEmailLookup;
         private CommitmentView _repositoryCommitment;
 
+        private const string CohortReference = "COREF";
+
         [SetUp]
         public void Setup()
         {
@@ -35,7 +37,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
             {
                 ProviderId = 456L,
                 EmployerAccountId = 12L,
-                AgreementStatus = AgreementStatus.NotAgreed
+                AgreementStatus = AgreementStatus.NotAgreed,
+                Reference = CohortReference
             };
 
             _mockCommitmentApi = new Mock<IEmployerCommitmentApi>();
@@ -80,7 +83,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
             _validCommand.LastAction = LastAction.None;
             await _handler.Handle(_validCommand);
 
-
             _mockEmailLookup.Verify(x => x.GetEmailsAsync(It.IsAny<long>(), It.IsAny<string>()), Times.Never);
         }
 
@@ -118,6 +120,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
 
             _mockMediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()));
             arg.Email.TemplateId.Should().Be("ProviderCommitmentNotification");
+            arg.Email.Tokens["cohort_reference"].Should().Be(CohortReference);
             arg.Email.Tokens["type"].Should().Be("review");
         }
 
@@ -138,6 +141,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
 
             _mockMediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()));
             arg.Email.TemplateId.Should().Be("ProviderCommitmentNotification");
+            arg.Email.Tokens["cohort_reference"].Should().Be(CohortReference);
             arg.Email.Tokens["type"].Should().Be("approval");
         }
 
@@ -159,7 +163,30 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
 
             _mockMediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()));
             arg.Email.TemplateId.Should().Be("ProviderCohortApproved");
-            arg.Email.Tokens["type"].Should().Be("approval");
+        }
+
+        [Test]
+        public async Task ShouldCallSendNotificationCommandForTransferCohortFirstApproval()
+        {
+            const string legalEntityName = "Receiving Employer Ltd";
+            SendNotificationCommand arg = null;
+            _validCommand.LastAction = LastAction.Approve;
+            _repositoryCommitment.TransferSender = new TransferSender();
+            _repositoryCommitment.LegalEntityName = legalEntityName;
+
+            _mockEmailLookup
+                .Setup(x => x.GetEmailsAsync(It.IsAny<long>(), It.IsAny<string>()))
+                .ReturnsAsync(new List<string> { "test@email.com" });
+
+            _mockMediator.Setup(x => x.SendAsync(It.IsAny<SendNotificationCommand>()))
+                .ReturnsAsync(new Unit()).Callback<SendNotificationCommand>(x => arg = x);
+
+            await _handler.Handle(_validCommand);
+
+            _mockMediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()));
+            arg.Email.TemplateId.Should().Be("TransferProviderCommitmentNotification");
+            arg.Email.Tokens["cohort_reference"].Should().Be(CohortReference);
+            arg.Email.Tokens["receiving_employer"].Should().Be(legalEntityName);
         }
 
         [Test]
