@@ -19,7 +19,7 @@ using SFA.DAS.HashingService;
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
     [TestFixture]
-    public class WhenValidateingApprenticeshipUpdate  : ManageApprenticeshipsOrchestratorTestBase
+    public class WhenValidatingApprenticeshipUpdate  : ManageApprenticeshipsOrchestratorTestBase
     {
         public Mock<IValidateApprovedApprenticeship> mockValidator;
         private Mock<IApprenticeshipMapper> mockMapper;
@@ -29,9 +29,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         public void SetUp()
         {
             mockValidator = new Mock<IValidateApprovedApprenticeship>();
-            mockMapper = new Mock<IApprenticeshipMapper>();
-            mockMapper.Setup(m => m.MapOverlappingErrors(It.IsAny<GetOverlappingApprenticeshipsQueryResponse>()))
+            mockValidator.Setup(m => m.MapOverlappingErrors(It.IsAny<GetOverlappingApprenticeshipsQueryResponse>()))
                 .Returns(new Dictionary<string, string>());
+            mockMapper = new Mock<IApprenticeshipMapper>();
 
             mockValidator.Setup(m => m.ValidateToDictionary(It.IsAny<ApprenticeshipViewModel>()))
                 .Returns(new Dictionary<string, string>());
@@ -68,10 +68,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             await Orchestrator.ValidateApprenticeship(viewModel, updateModel);
             
             MockMediator.Verify(m => m.SendAsync(It.IsAny<GetOverlappingApprenticeshipsQueryRequest>()), Times.Once, failMessage: "Should call");
-            mockMapper.Verify(m => m.MapOverlappingErrors(It.IsAny<GetOverlappingApprenticeshipsQueryResponse>()), Times.Once, failMessage: "Should verify overlapping apprenticeship");
+            mockValidator.Verify(m => m.MapOverlappingErrors(It.IsAny<GetOverlappingApprenticeshipsQueryResponse>()), Times.Once, failMessage: "Should verify overlapping apprenticeship");
             mockValidator.Verify(m => m.ValidateToDictionary(It.IsAny<ApprenticeshipViewModel>()), Times.Once, failMessage: "Should validate apprenticeship");
             mockValidator.Verify(m => m.ValidateAcademicYear(It.IsAny<UpdateApprenticeshipViewModel>()), Times.Once, failMessage: "Should validate academic year");
-
         }
     }
 }

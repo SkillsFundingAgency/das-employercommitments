@@ -16,6 +16,7 @@ using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.HashingService;
+using SFA.DAS.EmployerCommitments.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
 {
@@ -44,6 +45,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 _mediator.Object,
                 hashingService.Object,
                 Mock.Of<IPublicHashingService>(),
+                Mock.Of<IApprenticeshipCoreValidator>(),
                 Mock.Of<IApprenticeshipMapper>(), 
                 Mock.Of<ICommitmentMapper>(),
                 logger.Object,

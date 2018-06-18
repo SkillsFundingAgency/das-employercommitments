@@ -40,6 +40,7 @@ using OrganisationType = SFA.DAS.Common.Domain.Types.OrganisationType;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
 using SFA.DAS.HashingService;
+using SFA.DAS.EmployerCommitments.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
@@ -51,6 +52,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly ILog _logger;
 
         private readonly Func<int, string> _addPluralizationSuffix = i => i > 1 ? "s" : "";
+        private readonly IApprenticeshipCoreValidator _apprenticeshipCoreValidator;
         private readonly IApprenticeshipMapper _apprenticeshipMapper;
         private readonly ICommitmentMapper _commitmentMapper;
         private readonly IFeatureToggleService _featureToggleService;
@@ -59,6 +61,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IMediator mediator,
             IHashingService hashingService,
             IPublicHashingService publicHashingService,
+            IApprenticeshipCoreValidator apprenticeshipCoreValidator,
             IApprenticeshipMapper apprenticeshipMapper,
             ICommitmentMapper commitmentMapper,
             ILog logger,
@@ -67,6 +70,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _mediator = mediator;
             _hashingService = hashingService;
             _publicHashingService = publicHashingService;
+            _apprenticeshipCoreValidator = apprenticeshipCoreValidator;
             _apprenticeshipMapper = apprenticeshipMapper;
             _commitmentMapper = commitmentMapper;
             _logger = logger;
@@ -442,7 +446,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     {
                         Apprenticeship = apprenticeship,
                         ApprenticeshipProgrammes = await GetTrainingProgrammes(commitmentData.Commitment.TransferSender == null),
-                        ValidationErrors = _apprenticeshipMapper.MapOverlappingErrors(overlaps)
+                        ValidationErrors = _apprenticeshipCoreValidator.MapOverlappingErrors(overlaps)
                     }
                 };
             }, hashedAccountId, externalUserId);
@@ -1114,7 +1118,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Apprenticeship = new List<Apprenticeship> { await _apprenticeshipMapper.MapFrom(apprenticeship) }
                 });
 
-            return _apprenticeshipMapper.MapOverlappingErrors(overlappingErrors);
+            return _apprenticeshipCoreValidator.MapOverlappingErrors(overlappingErrors);
         }
 
         public async Task DeleteApprenticeship(DeleteApprenticeshipConfirmationViewModel model, string externalUser, string userName, string userEmail)

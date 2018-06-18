@@ -10,9 +10,7 @@ using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.Commitments.Api.Types.ProviderPayment;
-using SFA.DAS.Commitments.Api.Types.Validation.Types;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipsByUln;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
@@ -95,6 +93,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             if (result.CanEditStopDate && !disableUlnReuseCheck)
             {
                 //todo: we're returning apprenticeship++, but we could just fetch a simple count
+                //todo: should this be using the validation api?
+                //todo: can we remove this? if stop date can only shorten the apprenticeship and not extend it, then
+                // we don't need to check if theres a potential overlap?? as was valid when approved (i.e. no overlap)
                 var apprenticeshipsResponse = await _mediator.SendAsync(new GetApprenticeshipsByUlnRequest
                 {
                     AccountId = apprenticeship.EmployerAccountId,
@@ -194,43 +195,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
                     _logger.Warn($"Apprentice training course has expired. TrainingName: {viewModel.TrainingName}, TrainingCode: {viewModel.TrainingCode}, Employer Ref: {viewModel.EmployerRef}, ApprenticeshipId: {apprenticeship.Id}, Apprenticeship ULN: {viewModel.ULN}");
                 }
-               
             }
 
             return apprenticeship;
-        }
-
-        public Dictionary<string, string> MapOverlappingErrors(GetOverlappingApprenticeshipsQueryResponse overlappingErrors)
-        {
-            var dict = new Dictionary<string, string>();
-            const string startText = "The start date is not valid";
-            const string endText = "The end date is not valid";
-
-            const string startDateKey = "StartDateOverlap";
-            const string endDateKey = "EndDateOverlap";
-
-
-            foreach (var item in overlappingErrors.GetFirstOverlappingApprenticeships())
-            {
-                switch (item.ValidationFailReason)
-                {
-                    case ValidationFailReason.OverlappingStartDate:
-                        dict.AddIfNotExists(startDateKey, startText);
-                        break;
-                    case ValidationFailReason.OverlappingEndDate:
-                        dict.AddIfNotExists(endDateKey, endText);
-                        break;
-                    case ValidationFailReason.DateEmbrace:
-                        dict.AddIfNotExists(startDateKey, startText);
-                        dict.AddIfNotExists(endDateKey, endText);
-                        break;
-                    case ValidationFailReason.DateWithin:
-                        dict.AddIfNotExists(startDateKey, startText);
-                        dict.AddIfNotExists(endDateKey, endText);
-                        break;
-                }
-            }
-            return dict;
         }
 
         public ApprenticeshipUpdate MapFrom(UpdateApprenticeshipViewModel viewModel)

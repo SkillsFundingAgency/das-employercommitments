@@ -317,13 +317,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         Apprenticeship = new List<Apprenticeship> { await _apprenticeshipMapper.MapFrom(apprenticeship) }
                     });
 
-            var result = _apprenticeshipMapper
-                .MapOverlappingErrors(overlappingErrors)
-                .ToDictionary(overlap => overlap.Key, overlap => overlap.Value);
+            var result = _approvedApprenticeshipValidator.MapOverlappingErrors(overlappingErrors);
 
             foreach (var error in _approvedApprenticeshipValidator.ValidateToDictionary(apprenticeship))
             {
-                result.Add(error.Key, error.Value);
+                result.AddIfNotExists(error.Key, error.Value);
             }
 
             foreach (var error in _approvedApprenticeshipValidator.ValidateAcademicYear(updatedModel))

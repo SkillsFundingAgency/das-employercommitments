@@ -80,8 +80,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string StartDateTransfersMinDate => GetErrorMessage("_StartDateTransfersMinDateAltDetailMessage");
         public string EndDateError => GetErrorMessage(nameof(EndDate));
         public string CostError => GetErrorMessage(nameof(Cost));
-        public string StartDateOverlapError => GetErrorMessage("StartDateOverlap");
-        public string EndDateOverlapError => GetErrorMessage("EndDateOverlap");
         public string EmployerRefError => GetErrorMessage(nameof(EmployerRef));
         public string TrainingCodeError => GetErrorMessage(nameof(TrainingCode));
         public bool IsLockedForUpdate { get; set; }

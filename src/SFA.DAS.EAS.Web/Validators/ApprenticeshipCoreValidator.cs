@@ -1,12 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentValidation;
+using SFA.DAS.Commitments.Api.Types.Validation.Types;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
+using SFA.DAS.EmployerCommitments.Web.Extensions;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 
 namespace SFA.DAS.EmployerCommitments.Web.Validators
 {
-    public class ApprenticeshipCoreValidator : AbstractValidator<ApprenticeshipViewModel>
+    //todo: move to own file
+    //public interface IApprenticeshipCoreValidator : IValidator<ApprenticeshipViewModel>
+    public interface IApprenticeshipCoreValidator
+    {
+        Dictionary<string, string> MapOverlappingErrors(GetOverlappingApprenticeshipsQueryResponse overlappingErrors);
+    }
+
+    public class ApprenticeshipCoreValidator : AbstractValidator<ApprenticeshipViewModel>, IApprenticeshipCoreValidator
     {
         protected static readonly Func<string, int, bool> LengthLessThanFunc = (str, length) => (str?.Length ?? length) < length;
         private readonly IApprenticeshipValidationErrorText _validationText;
@@ -106,6 +117,36 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                 .NotEmpty().WithMessage(_validationText.TrainingPrice01.Text).WithErrorCode(_validationText.TrainingPrice01.ErrorCode)
                 .Matches("^([1-9]{1}([0-9]{1,2})?)+(,[0-9]{3})*$|^[1-9]{1}[0-9]*$").WithMessage(_validationText.TrainingPrice01.Text).WithErrorCode(_validationText.TrainingPrice01.ErrorCode)
                 .Must(m => decimal.TryParse(m, out parsed) && parsed <= 100000).WithMessage(_validationText.TrainingPrice02.Text).WithErrorCode(_validationText.TrainingPrice02.ErrorCode);
+        }
+
+        public Dictionary<string, string> MapOverlappingErrors(GetOverlappingApprenticeshipsQueryResponse overlappingErrors)
+        {
+            const string startDateKey = "StartDate";
+            const string endDateKey = "EndDate";
+
+            var dict = new Dictionary<string, string>();
+
+            foreach (var item in overlappingErrors.GetFirstOverlappingApprenticeships())
+            {
+                switch (item.ValidationFailReason)
+                {
+                    case ValidationFailReason.OverlappingStartDate:
+                        dict.AddIfNotExists(startDateKey, _validationText.LearnStartDateOverlap.Text);
+                        break;
+                    case ValidationFailReason.OverlappingEndDate:
+                        dict.AddIfNotExists(endDateKey, _validationText.LearnPlanEndDateOverlap.Text);
+                        break;
+                    case ValidationFailReason.DateEmbrace:
+                        dict.AddIfNotExists(startDateKey, _validationText.LearnStartDateOverlap.Text);
+                        dict.AddIfNotExists(endDateKey, _validationText.LearnPlanEndDateOverlap.Text);
+                        break;
+                    case ValidationFailReason.DateWithin:
+                        dict.AddIfNotExists(startDateKey, _validationText.LearnStartDateOverlap.Text);
+                        dict.AddIfNotExists(endDateKey, _validationText.LearnPlanEndDateOverlap.Text);
+                        break;
+                }
+            }
+            return dict;
         }
 
         private void ValidateEmployerReference()

@@ -40,15 +40,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators.Messages
             new ValidationMessage("The start date is not valid", "LearnStartDate_01");
         public ValidationMessage LearnStartDate02 =>
             new ValidationMessage("The start date must not be earlier than May 2017", "LearnStartDate_02");
+        public ValidationMessage LearnStartDate05 =>
+            new ValidationMessage("The start date must be no later than one year after the end of the current teaching year", "LearnStartDate_05");
         public ValidationMessage LearnStartDate06 =>
             new ValidationMessage("Apprentices funded through a transfer can't start earlier than May 2018", "LearnStartDate_06");
+        public ValidationMessage LearnStartDateOverlap =>
+            new ValidationMessage("The start date is not valid||The date overlaps with existing training dates for the same apprentice. Please check the date - contact your training provider for help.", "LearnStartDate_Overlap");
 
         public ValidationMessage LearnPlanEndDate01 =>
             new ValidationMessage("The end date is not valid", "LearnPlanEndDate_01");
         public ValidationMessage LearnPlanEndDate02 =>
             new ValidationMessage("The end date must not be on or before the start date", "LearnPlanEndDate_02");
-        public ValidationMessage LearnStartDate05 =>
-           new ValidationMessage("The start date must be no later than one year after the end of the current teaching year", "LearnStartDate_05");
+        public ValidationMessage LearnPlanEndDateOverlap =>
+           new ValidationMessage("The end date is not valid||The date overlaps with existing training dates for the same apprentice. Please check the date - contact your training provider for help.", "LearnPlanEndDate_Overlap");
 
         public ValidationMessage TrainingPrice01 =>
             new ValidationMessage("Enter the total agreed training cost", "TrainingPrice_01");

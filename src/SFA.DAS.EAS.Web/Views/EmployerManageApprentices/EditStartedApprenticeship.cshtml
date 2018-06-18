@@ -1,5 +1,6 @@
 ﻿@using SFA.DAS.EmployerCommitments.Web.ViewModels
 @using SFA.DAS.EmployerCommitments.Web.Extensions
+@using SFA.DAS.EmployerCommitments.Web.Validators.Messages
 
 @model ExtendedApprenticeshipViewModel
 
@@ -127,7 +128,6 @@
         if (!Model.Apprenticeship.IsUpdateLockedForStartDateAndCourse)
         {
             <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError)
-                                                      || !string.IsNullOrEmpty(Model.Apprenticeship.StartDateOverlapError)
                                                       || !string.IsNullOrEmpty(Model.Apprenticeship.StartDateTransfersMinDate) ? "error" : "")">
                 <hr />
 
@@ -138,11 +138,7 @@
 
                     @if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) && string.IsNullOrEmpty(Model.Apprenticeship.StartDateTransfersMinDate))
                     {
-                        <span class="error-message" id="error-message-StartDate">@Model.Apprenticeship.StartDateError</span>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateOverlapError))
-                    {
-                        <span class="error-message" id="error-message-StartDate">The date overlaps with existing training dates for the same apprentice. Please check the date - contact your training provider for help.</span>
+                        <span class="error-message" id="error-message-StartDate">@ValidationMessage.ExtractFieldMessage(Model.Apprenticeship.StartDateError)</span>
                     }
                     @if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateTransfersMinDate))
                     {
@@ -163,7 +159,7 @@
 
             </div>
         }
-        <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.EndDateError) || !string.IsNullOrEmpty(Model.Apprenticeship.EndDateOverlapError) ? "error" : "")">
+        <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.EndDateError) ? "error" : "")">
 
             <span class="form-label-bold">Planned training finish date</span>
             <span class="form-hint">For example, 02 2019</span>
@@ -171,11 +167,7 @@
             <div id="EndDate" class="form-date">
                 @if (!string.IsNullOrEmpty(Model.Apprenticeship.EndDateError))
                 {
-                    <span class="error-message" id="error-message-EndDate">@Model.Apprenticeship.EndDateError</span>
-                }
-                @if (!string.IsNullOrEmpty(Model.Apprenticeship.EndDateOverlapError))
-                {
-                    <span class="error-message" id="error-message-EndDate">The date overlaps with existing training dates for the same apprentice. Please check the date - contact your training provider for help.</span>
+                    <span class="error-message" id="error-message-EndDate">@ValidationMessage.ExtractFieldMessage(Model.Apprenticeship.EndDateError)</span>
                 }
 
                 <div class="form-group form-group-month">
