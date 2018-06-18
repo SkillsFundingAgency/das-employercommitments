@@ -464,6 +464,8 @@
     <Compile Include="Validators\ChangeStatusViewModelValidator.cs" />
     <Compile Include="Validators\DataLockStatusViewModelViewModelValidator.cs" />
     <Compile Include="Validators\EditStopDateViewModelValidator.cs" />
+    <Compile Include="Validators\IApprenticeshipCoreValidator.cs" />
+    <Compile Include="Validators\IValidateApprovedApprenticeship.cs" />
     <Compile Include="Validators\TransferConfirmationViewModelValidator.cs" />
     <Compile Include="Validators\TransferApprovalConfirmationViewModelValidator.cs" />
     <Compile Include="Validators\ProviderPriorityReOrderListValidator.cs" />

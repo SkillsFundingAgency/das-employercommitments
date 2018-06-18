@@ -44,12 +44,4 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
             return dict;
         }
     }
-
-    //todo: move to own file
-    public interface IValidateApprovedApprenticeship : IApprenticeshipCoreValidator
-    {
-        Dictionary<string, string> ValidateToDictionary(ApprenticeshipViewModel instance);
-
-        Dictionary<string, string> ValidateAcademicYear(UpdateApprenticeshipViewModel model);
-    }
 }

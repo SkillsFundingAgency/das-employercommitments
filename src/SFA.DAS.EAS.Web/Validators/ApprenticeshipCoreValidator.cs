@@ -10,13 +10,6 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticesh
 
 namespace SFA.DAS.EmployerCommitments.Web.Validators
 {
-    //todo: move to own file
-    //public interface IApprenticeshipCoreValidator : IValidator<ApprenticeshipViewModel>
-    public interface IApprenticeshipCoreValidator
-    {
-        Dictionary<string, string> MapOverlappingErrors(GetOverlappingApprenticeshipsQueryResponse overlappingErrors);
-    }
-
     public class ApprenticeshipCoreValidator : AbstractValidator<ApprenticeshipViewModel>, IApprenticeshipCoreValidator
     {
         protected static readonly Func<string, int, bool> LengthLessThanFunc = (str, length) => (str?.Length ?? length) < length;
