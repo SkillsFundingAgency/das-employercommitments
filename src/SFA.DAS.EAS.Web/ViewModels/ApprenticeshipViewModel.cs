@@ -77,7 +77,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string LastNameError => GetErrorMessage(nameof(LastName));
         public string DateOfBirthError => GetErrorMessage(nameof(DateOfBirth));
         public string StartDateError => GetErrorMessage(nameof(StartDate));
-        public string StartDateTransfersMinDate => GetErrorMessage("_StartDateTransfersMinDateAltDetailMessage");
         public string EndDateError => GetErrorMessage(nameof(EndDate));
         public string CostError => GetErrorMessage(nameof(Cost));
         public string EmployerRefError => GetErrorMessage(nameof(EmployerRef));

@@ -16,7 +16,7 @@
         ValidationMessage LearnStartDate01 { get; }
         ValidationMessage LearnStartDate02 { get; }
         ValidationMessage LearnStartDate05 { get; }
-        ValidationMessage LearnStartDate06 { get; }
+        ValidationMessage LearnStartDateBeforeTransfersStart { get; }
         ValidationMessage LearnStartDateOverlap { get; }
         ValidationMessage EmployerRef01 { get; }
         ValidationMessage TrainingCode01 { get; }

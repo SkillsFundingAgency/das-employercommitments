@@ -137,7 +137,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             var result = Validator.Validate(ValidModel);
 
             result.IsValid.Should().BeFalse();
-            result.Errors[0].ErrorMessage.Should().Be("Apprentices funded through a transfer can't start earlier than May 2018");
+            result.Errors[0].ErrorMessage.Should().Be("Apprentices funded through a transfer can't start earlier than May 2018||The start date can't be earlier than May 2018.");
         }
     }
 }

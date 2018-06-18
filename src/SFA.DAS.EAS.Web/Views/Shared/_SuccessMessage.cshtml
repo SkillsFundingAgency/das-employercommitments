@@ -40,7 +40,7 @@
                 @if (viewModel.FlashMessage.ErrorMessages.Any())
                 {
                     <ul class="error-summary-list">
-                        @foreach (var errorMessage in viewModel.FlashMessage.ErrorMessages.Where(e => !e.Key.StartsWith("_")))
+                        @foreach (var errorMessage in viewModel.FlashMessage.ErrorMessages)
                         {
                             <li>
                                 <a class="danger" href="#@errorMessage.Key">@ValidationMessage.ExtractBannerMessage(errorMessage.Value)</a>

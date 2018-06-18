@@ -127,8 +127,7 @@
     {
         if (!Model.Apprenticeship.IsUpdateLockedForStartDateAndCourse)
         {
-            <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError)
-                                                      || !string.IsNullOrEmpty(Model.Apprenticeship.StartDateTransfersMinDate) ? "error" : "")">
+            <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) ? "error" : "")">
                 <hr />
 
                 <span class="form-label-bold">Planned training start date</span>
@@ -136,13 +135,9 @@
 
                 <div id="StartDate" class="form-date">
 
-                    @if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) && string.IsNullOrEmpty(Model.Apprenticeship.StartDateTransfersMinDate))
+                    @if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError))
                     {
                         <span class="error-message" id="error-message-StartDate">@ValidationMessage.ExtractFieldMessage(Model.Apprenticeship.StartDateError)</span>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateTransfersMinDate))
-                    {
-                        <span class="error-message" id="error-message-StartDate">@Model.Apprenticeship.StartDateTransfersMinDate</span>
                     }
 
                     <div class="form-group form-group-month">

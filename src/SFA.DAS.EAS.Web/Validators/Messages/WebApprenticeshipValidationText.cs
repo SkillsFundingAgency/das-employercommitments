@@ -42,8 +42,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators.Messages
             new ValidationMessage("The start date must not be earlier than May 2017", "LearnStartDate_02");
         public ValidationMessage LearnStartDate05 =>
             new ValidationMessage("The start date must be no later than one year after the end of the current teaching year", "LearnStartDate_05");
-        public ValidationMessage LearnStartDate06 =>
-            new ValidationMessage("Apprentices funded through a transfer can't start earlier than May 2018", "LearnStartDate_06");
+        public ValidationMessage LearnStartDateBeforeTransfersStart =>
+            new ValidationMessage("Apprentices funded through a transfer can't start earlier than May 2018||The start date can't be earlier than May 2018.", "LearnStartDate_BeforeTransfersStart");
         public ValidationMessage LearnStartDateOverlap =>
             new ValidationMessage("The start date is not valid||The date overlaps with existing training dates for the same apprentice. Please check the date - contact your training provider for help.", "LearnStartDate_Overlap");
 

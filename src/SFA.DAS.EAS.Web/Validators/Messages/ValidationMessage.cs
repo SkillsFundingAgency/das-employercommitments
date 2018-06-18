@@ -12,8 +12,6 @@
 
         public string ErrorCode { get; }
 
-        //todo: same for StartDateTransfersMinDate
-
         public static string ExtractBannerMessage(string errorMessage)
         {
             var seperatorIndex = errorMessage.IndexOf("||");
