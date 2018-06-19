@@ -27,6 +27,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
         private Mock<IProviderEmailLookupService> _mockEmailLookup;
         private CommitmentView _repositoryCommitment;
 
+        private const string CohortReference = "COREF";
+
         [SetUp]
         public void Setup()
         {
@@ -35,7 +37,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
             {
                 ProviderId = 456L,
                 EmployerAccountId = 12L,
-                AgreementStatus = AgreementStatus.NotAgreed
+                AgreementStatus = AgreementStatus.NotAgreed,
+                Reference = CohortReference
             };
 
             _mockCommitmentApi = new Mock<IEmployerCommitmentApi>();
@@ -80,7 +83,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
             _validCommand.LastAction = LastAction.None;
             await _handler.Handle(_validCommand);
 
-
             _mockEmailLookup.Verify(x => x.GetEmailsAsync(It.IsAny<long>(), It.IsAny<string>()), Times.Never);
         }
 
@@ -118,6 +120,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
 
             _mockMediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()));
             arg.Email.TemplateId.Should().Be("ProviderCommitmentNotification");
+            arg.Email.Tokens["cohort_reference"].Should().Be(CohortReference);
             arg.Email.Tokens["type"].Should().Be("review");
         }
 
@@ -138,6 +141,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
 
             _mockMediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()));
             arg.Email.TemplateId.Should().Be("ProviderCommitmentNotification");
+            arg.Email.Tokens["cohort_reference"].Should().Be(CohortReference);
             arg.Email.Tokens["type"].Should().Be("approval");
         }
 
@@ -159,7 +163,133 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
 
             _mockMediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()));
             arg.Email.TemplateId.Should().Be("ProviderCohortApproved");
-            arg.Email.Tokens["type"].Should().Be("approval");
+        }
+
+        [Test]
+        public async Task ShouldCallSendNotificationCommandForTransferCohortFirstApproval()
+        {
+            const string legalEntityName = "Receiving Employer Ltd";
+
+            const string template =
+                @"Cohort ((cohort_reference)) is ready to review. ((receiving_employer)) has chosen to use funds transferred from another employer to pay for the training in this cohort.
+
+What you need to know about cohorts funded through transfers
+
+You and the employer will approve the cohort as usual. The cohort will then be sent to the employer who is transferring the funds for final approval. Once the cohort has been approved you will be able to view and manage the apprentices
+To review cohort ((cohort_reference)) you will need to sign in to your apprenticeship service account at https://providers.apprenticeships.sfa.bis.gov.uk.
+
+This is an automated message. Please don’t reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
+            string expectedEmailBody = $@"Cohort {CohortReference} is ready to review. {legalEntityName} has chosen to use funds transferred from another employer to pay for the training in this cohort.
+
+What you need to know about cohorts funded through transfers
+
+You and the employer will approve the cohort as usual. The cohort will then be sent to the employer who is transferring the funds for final approval. Once the cohort has been approved you will be able to view and manage the apprentices
+To review cohort {CohortReference} you will need to sign in to your apprenticeship service account at https://providers.apprenticeships.sfa.bis.gov.uk.
+
+This is an automated message. Please don’t reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
+            SendNotificationCommand arg = null;
+            _validCommand.LastAction = LastAction.Approve;
+            _repositoryCommitment.TransferSender = new TransferSender();
+            _repositoryCommitment.LegalEntityName = legalEntityName;
+
+            _mockEmailLookup
+                .Setup(x => x.GetEmailsAsync(It.IsAny<long>(), It.IsAny<string>()))
+                .ReturnsAsync(new List<string> { "test@email.com" });
+
+            _mockMediator.Setup(x => x.SendAsync(It.IsAny<SendNotificationCommand>()))
+                .ReturnsAsync(new Unit()).Callback<SendNotificationCommand>(x => arg = x);
+
+            await _handler.Handle(_validCommand);
+
+            _mockMediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()));
+            arg.Email.TemplateId.Should().Be("TransferProviderCommitmentNotification");
+            arg.Email.Tokens["cohort_reference"].Should().Be(CohortReference);
+            arg.Email.Tokens["receiving_employer"].Should().Be(legalEntityName);
+
+            var emailBody = PopulateTemplate(template, arg.Email.Tokens);
+            TestContext.WriteLine(emailBody);
+            Assert.AreEqual(expectedEmailBody, emailBody);
+        }
+
+        [Test]
+        public async Task ShouldCallSendNotificationCommandForTransferCohortSecondApproval()
+        {
+            const string legalEntityName = "Receiving Employer Ltd";
+            const long providerId = 10000000;
+
+            const string template = @"((receiving_employer)) has approved cohort ((cohort_reference)).
+
+What happens next?
+ A transfer request has been sent to the sending employer for approval. You will receive a notification once the sending employer approves or rejects the request.
+
+To view cohort ((cohort_reference)) and its progress, follow the link below.
+https://providers.apprenticeships.sfa.bis.gov.uk/((ukprn))/Apprentices/Cohorts
+ 
+This is an automated message. Please do not reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
+            string expectedEmailBody = $@"{legalEntityName} has approved cohort {CohortReference}.
+
+What happens next?
+ A transfer request has been sent to the sending employer for approval. You will receive a notification once the sending employer approves or rejects the request.
+
+To view cohort {CohortReference} and its progress, follow the link below.
+https://providers.apprenticeships.sfa.bis.gov.uk/{providerId}/Apprentices/Cohorts
+ 
+This is an automated message. Please do not reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
+            SendNotificationCommand arg = null;
+            _validCommand.LastAction = LastAction.Approve;
+            _repositoryCommitment.AgreementStatus = AgreementStatus.ProviderAgreed;
+            _repositoryCommitment.TransferSender = new TransferSender();
+            _repositoryCommitment.LegalEntityName = legalEntityName;
+            _repositoryCommitment.ProviderId = providerId;
+
+            _mockEmailLookup
+                .Setup(x => x.GetEmailsAsync(It.IsAny<long>(), It.IsAny<string>()))
+                .ReturnsAsync(new List<string> { "test@email.com" });
+
+            _mockMediator.Setup(x => x.SendAsync(It.IsAny<SendNotificationCommand>()))
+                .ReturnsAsync(new Unit()).Callback<SendNotificationCommand>(x => arg = x);
+
+            await _handler.Handle(_validCommand);
+
+            _mockMediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()));
+            arg.Email.TemplateId.Should().Be("TransferPendingFinalApproval");
+            arg.Email.Tokens["cohort_reference"].Should().Be(CohortReference);
+            arg.Email.Tokens["receiving_employer"].Should().Be(legalEntityName);
+            arg.Email.Tokens["ukprn"].Should().Be(providerId.ToString());
+
+            var emailBody = PopulateTemplate(template, arg.Email.Tokens);
+            TestContext.WriteLine(emailBody);
+            Assert.AreEqual(expectedEmailBody, emailBody);
+        }
+
+        private string PopulateTemplate(string template, Dictionary<string, string> tokens)
+        {
+            foreach (var token in tokens)
+            {
+                template = template.Replace($"(({token.Key}))", token.Value);
+            }
+
+            return template;
         }
 
         [Test]

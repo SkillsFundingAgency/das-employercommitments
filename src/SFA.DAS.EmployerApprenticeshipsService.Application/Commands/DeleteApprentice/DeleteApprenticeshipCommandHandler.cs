@@ -6,26 +6,23 @@ using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Validation;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.DeleteApprentice
 {
     public sealed class DeleteApprenticeshipCommandHandler : AsyncRequestHandler<DeleteApprenticeshipCommand>
     {
-        private readonly IEmployerCommitmentApi _commitmentsService;
+        private readonly IEmployerCommitmentApi _commitmentsApi;
         private readonly IValidator<DeleteApprenticeshipCommand> _validator;
+        private readonly IProviderEmailNotificationService _providerEmailNotificationService;
 
         public DeleteApprenticeshipCommandHandler(
             IEmployerCommitmentApi commitmentsApi, 
-            IValidator<DeleteApprenticeshipCommand> validator
-            )
+            IValidator<DeleteApprenticeshipCommand> validator, IProviderEmailNotificationService providerEmailNotificationService)
         {
-            if (validator == null)
-                throw new ArgumentNullException(nameof(validator));
-            if (commitmentsApi == null)
-                throw new ArgumentNullException(nameof(commitmentsApi));
-
             _validator = validator;
-            _commitmentsService = commitmentsApi;
+            _providerEmailNotificationService = providerEmailNotificationService;
+            _commitmentsApi = commitmentsApi;
         }
 
         protected override async Task HandleCore(DeleteApprenticeshipCommand message)
@@ -37,8 +34,20 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.DeleteApprentice
                 throw new InvalidRequestException(validationResult.ValidationDictionary);
             }
 
-            await _commitmentsService.DeleteEmployerApprenticeship(message.AccountId, message.ApprenticeshipId,
+            var apprenticeship = await _commitmentsApi.GetEmployerApprenticeship(message.AccountId, message.ApprenticeshipId);
+
+            var commitment = await
+                _commitmentsApi.GetEmployerCommitment(message.AccountId, apprenticeship.CommitmentId);
+
+            await _commitmentsApi.DeleteEmployerApprenticeship(message.AccountId, message.ApprenticeshipId,
                 new DeleteRequest { UserId = message.UserId, LastUpdatedByInfo = new LastUpdateInfo { EmailAddress = message.UserEmailAddress, Name = message.UserDisplayName } });
+
+            if (commitment.TransferSender?.TransferApprovalStatus ==
+                Commitments.Api.Types.TransferApprovalStatus.Rejected)
+            {
+                await _providerEmailNotificationService.SendProviderTransferRejectedCommitmentEditNotification(
+                    commitment);
+            }
         }
     }
 }
