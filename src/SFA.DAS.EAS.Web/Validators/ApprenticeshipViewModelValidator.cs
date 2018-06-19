@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using FluentValidation;
-using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
@@ -12,17 +10,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
     public class ApprenticeshipViewModelValidator : ApprenticeshipCoreValidator, IApprenticeshipViewModelValidator
     {
         private readonly IAcademicYearValidator _academicYearValidator;
-        private readonly ICurrentDateTime _currentDateTime; //todo: remove & tidy this file up again
-
+ 
         public ApprenticeshipViewModelValidator(
             IApprenticeshipValidationErrorText validationText, 
             IAcademicYearDateProvider academicYear, 
             IAcademicYearValidator academicYearValidator,
             ICurrentDateTime currentDateTime)
-            : base(validationText, academicYear)
+            : base(validationText, academicYear, currentDateTime)
         {
             _academicYearValidator = academicYearValidator;
-            _currentDateTime = currentDateTime;
         }
 
         public Dictionary<string, string> ValidateToDictionary(ApprenticeshipViewModel instance)
@@ -77,47 +73,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
             });
         }
 
-        //protected override IRuleBuilderOptions<ApprenticeshipViewModel, DateTimeViewModel> ValidateEndDate()
-        //{
-        //    IRuleBuilderOptions<ApprenticeshipViewModel, DateTimeViewModel> result = null;
-        //    When(x => HasYearOrMonthValueSet(x.EndDate), () =>
-        //    {
-        //        result = base.ValidateEndDate();
-        //        When(IsNotApprovedByBoth, () =>
-        //        {
-        //            result = result.Must(m => m.DateTime > _currentDateTime.Now)
-        //                .WithMessage(_validationText.LearnPlanEndDate03.Text)
-        //                .WithErrorCode(_validationText.LearnPlanEndDate03.ErrorCode);
-        //        });
-        //    });
-        //    return result;
-        //}
-
-        protected override IRuleBuilderOptions<ApprenticeshipViewModel, DateTimeViewModel> ValidateEndDate()
+        protected override void ValidateEndDate()
         {
-            IRuleBuilderOptions<ApprenticeshipViewModel, DateTimeViewModel> result = null;
             When(x => HasYearOrMonthValueSet(x.EndDate), () =>
             {
-                result = base.ValidateEndDate();
+                base.ValidateEndDate();
             });
-
-            //if (result == null)
-            //    return result;
-
-            //result = result.Must(m => m.DateTime > _currentDateTime.Now)
-            //    .WithMessage(_validationText.LearnPlanEndDate03.Text)
-            //    .WithErrorCode(_validationText.LearnPlanEndDate03.ErrorCode)
-            //    .When(IsNotApprovedByBoth);
-
-            return result;
-        }
-
-        private bool IsNotApprovedByBoth(ApprenticeshipViewModel model)
-        {
-            //can't do this agreementstatus not correctly populated in model, would need to fetch apprenticeship!
-            //options:
-            //add hidden input
-            return model.AgreementStatus != AgreementStatus.BothAgreed;
         }
 
         protected override void ValidateCost()

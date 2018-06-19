@@ -73,7 +73,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             Validator = new ApprovedApprenticeshipViewModelValidator(
                 new WebApprenticeshipValidationText(academicYearProvider),
                 academicYearProvider,
-                new AcademicYearValidator(MockDateTime.Object, academicYearProvider));
+                new AcademicYearValidator(MockDateTime.Object, academicYearProvider),
+                MockDateTime.Object);
 
             AcademicYearValidator = new AcademicYearValidator(MockDateTime.Object, academicYearProvider);
 

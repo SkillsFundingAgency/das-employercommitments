@@ -31,7 +31,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprovedApprentic
             Sut = new ApprovedApprenticeshipViewModelValidator(
                 new WebApprenticeshipValidationText(academicYearProvider),
                 academicYearProvider,
-                new AcademicYearValidator(CurrentDateTime.Object, academicYearProvider));
+                new AcademicYearValidator(CurrentDateTime.Object, academicYearProvider),
+                CurrentDateTime.Object);
 
             UpdatedModel = new UpdateApprenticeshipViewModel();
             ValidModel = new  ApprenticeshipViewModel

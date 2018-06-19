@@ -15,11 +15,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         protected static readonly Func<string, int, bool> LengthLessThanFunc = (str, length) => (str?.Length ?? length) < length;
         protected readonly IApprenticeshipValidationErrorText ValidationText;
         private readonly IAcademicYearDateProvider _academicYear;
+        protected readonly ICurrentDateTime CurrentDateTime;
 
         public ApprenticeshipCoreValidator(IApprenticeshipValidationErrorText validationText,
-                                            IAcademicYearDateProvider academicYear)
+                                            IAcademicYearDateProvider academicYear,
+                                            ICurrentDateTime currentDateTime)
         {
             ValidationText = validationText;
+            CurrentDateTime = currentDateTime;
             _academicYear = academicYear;
 
             ValidateFirstName();
@@ -92,10 +95,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                 .Must(StartDateWithinAYearOfTheEndOfTheCurrentTeachingYear).WithMessage(ValidationText.LearnStartDate05.Text).WithErrorCode(ValidationText.LearnStartDate05.ErrorCode);
         }
 
-        //todo: change back to void once checked in (for record)
-        protected virtual IRuleBuilderOptions<ApprenticeshipViewModel, DateTimeViewModel> ValidateEndDate()
+        protected virtual void ValidateEndDate()
         {
-            return RuleFor(x => x.EndDate)
+            RuleFor(x => x.EndDate)
                 .Cascade(CascadeMode.StopOnFirstFailure)
                 .NotNull().WithMessage(ValidationText.LearnPlanEndDate01.Text).WithErrorCode(ValidationText.LearnPlanEndDate01.ErrorCode)
                 .Must(ValidateDateWithoutDay).WithMessage(ValidationText.LearnPlanEndDate01.Text).WithErrorCode(ValidationText.LearnPlanEndDate01.ErrorCode)
@@ -207,9 +209,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         private bool ValidateDateOfBirth(DateTimeViewModel date)
         {
             // Check the day has value as the view model supports just month and year entry
-            if (date.DateTime == null || !date.Day.HasValue) return false;
-
-            return true;
+            return date.DateTime != null && date.Day.HasValue;
         }
     }
 }
