@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
+using FluentValidation;
+using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
@@ -10,17 +11,18 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 {
     public class ApprenticeshipViewModelValidator : ApprenticeshipCoreValidator, IApprenticeshipViewModelValidator
     {
-        private readonly IApprenticeshipValidationErrorText _validationText;
         private readonly IAcademicYearValidator _academicYearValidator;
+        private readonly ICurrentDateTime _currentDateTime; //todo: remove & tidy this file up again
 
         public ApprenticeshipViewModelValidator(
             IApprenticeshipValidationErrorText validationText, 
             IAcademicYearDateProvider academicYear, 
-            IAcademicYearValidator academicYearValidator)
-            :   base(validationText, academicYear)
+            IAcademicYearValidator academicYearValidator,
+            ICurrentDateTime currentDateTime)
+            : base(validationText, academicYear)
         {
-            _validationText = validationText;
             _academicYearValidator = academicYearValidator;
+            _currentDateTime = currentDateTime;
         }
 
         public Dictionary<string, string> ValidateToDictionary(ApprenticeshipViewModel instance)
@@ -37,7 +39,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
             if (model.StartDate?.DateTime != null &&
                 _academicYearValidator.Validate(model.StartDate.DateTime.Value) == AcademicYearValidationResult.NotWithinFundingPeriod)
             {
-                dict.Add($"{nameof(model.StartDate)}", _validationText.AcademicYearStartDate01.Text);
+                dict.Add($"{nameof(model.StartDate)}", ValidationText.AcademicYearStartDate01.Text);
             }
 
             return dict;
@@ -73,15 +75,49 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
             {
                 base.ValidateStartDate();
             });
-
         }
 
-        protected override void ValidateEndDate()
+        //protected override IRuleBuilderOptions<ApprenticeshipViewModel, DateTimeViewModel> ValidateEndDate()
+        //{
+        //    IRuleBuilderOptions<ApprenticeshipViewModel, DateTimeViewModel> result = null;
+        //    When(x => HasYearOrMonthValueSet(x.EndDate), () =>
+        //    {
+        //        result = base.ValidateEndDate();
+        //        When(IsNotApprovedByBoth, () =>
+        //        {
+        //            result = result.Must(m => m.DateTime > _currentDateTime.Now)
+        //                .WithMessage(_validationText.LearnPlanEndDate03.Text)
+        //                .WithErrorCode(_validationText.LearnPlanEndDate03.ErrorCode);
+        //        });
+        //    });
+        //    return result;
+        //}
+
+        protected override IRuleBuilderOptions<ApprenticeshipViewModel, DateTimeViewModel> ValidateEndDate()
         {
+            IRuleBuilderOptions<ApprenticeshipViewModel, DateTimeViewModel> result = null;
             When(x => HasYearOrMonthValueSet(x.EndDate), () =>
             {
-                base.ValidateEndDate();
+                result = base.ValidateEndDate();
             });
+
+            //if (result == null)
+            //    return result;
+
+            //result = result.Must(m => m.DateTime > _currentDateTime.Now)
+            //    .WithMessage(_validationText.LearnPlanEndDate03.Text)
+            //    .WithErrorCode(_validationText.LearnPlanEndDate03.ErrorCode)
+            //    .When(IsNotApprovedByBoth);
+
+            return result;
+        }
+
+        private bool IsNotApprovedByBoth(ApprenticeshipViewModel model)
+        {
+            //can't do this agreementstatus not correctly populated in model, would need to fetch apprenticeship!
+            //options:
+            //add hidden input
+            return model.AgreementStatus != AgreementStatus.BothAgreed;
         }
 
         protected override void ValidateCost()
@@ -94,26 +130,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 
         private bool HasYearOrMonthValueSet(DateTimeViewModel date)
         {
-            if (date == null) return false;
-
-            if (date.Day.HasValue || date.Month.HasValue || date.Year.HasValue) return true;
-
-            return false;
+            //todo: this looks suspiciously like HasAnyValuesSet() below, not year or month!
+            return date != null && (date.Day.HasValue || date.Month.HasValue || date.Year.HasValue);
         }
 
         private bool HasAnyValuesSet(DateTimeViewModel dateOfBirth)
         {
-            if (dateOfBirth == null) return false;
-
-            if (dateOfBirth.Day.HasValue || dateOfBirth.Month.HasValue || dateOfBirth.Year.HasValue) return true;
-
-            return false;
+            return dateOfBirth != null && (dateOfBirth.Day.HasValue || dateOfBirth.Month.HasValue || dateOfBirth.Year.HasValue);
         }
-    }
-
-    public interface IApprenticeshipViewModelValidator
-    {
-        Dictionary<string, string> ValidateToDictionary(ApprenticeshipViewModel instance);
-        Dictionary<string, string> ValidateAcademicYear(ApprenticeshipViewModel model);
     }
 }

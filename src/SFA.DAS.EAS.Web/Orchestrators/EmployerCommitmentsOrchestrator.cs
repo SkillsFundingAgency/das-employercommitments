@@ -1118,7 +1118,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Apprenticeship = new List<Apprenticeship> { await _apprenticeshipMapper.MapFrom(apprenticeship) }
                 });
 
-            return _apprenticeshipCoreValidator.MapOverlappingErrors(overlappingErrors);
+            var errors = _apprenticeshipCoreValidator.MapOverlappingErrors(overlappingErrors);
+
+            var endDateError = _apprenticeshipCoreValidator.CheckEndDateInFuture(apprenticeship.EndDate);
+            if (endDateError != null)
+                errors.AddIfNotExists(endDateError.Value);
+
+            return errors;
         }
 
         public async Task DeleteApprenticeship(DeleteApprenticeshipConfirmationViewModel model, string externalUser, string userName, string userEmail)

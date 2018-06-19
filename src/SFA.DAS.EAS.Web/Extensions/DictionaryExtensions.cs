@@ -9,5 +9,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Extensions
             if (!self.ContainsKey(key))
                 self.Add(key, value);
         }
+
+        public static void AddIfNotExists<T1, T2>(this Dictionary<T1, T2> self, KeyValuePair<T1, T2> keyValuePair)
+        {
+            self.AddIfNotExists(keyValuePair.Key, keyValuePair.Value);
+        }
     }
 }

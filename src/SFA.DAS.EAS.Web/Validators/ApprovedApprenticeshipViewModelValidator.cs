@@ -10,8 +10,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 {
     public class ApprovedApprenticeshipViewModelValidator : ApprenticeshipCoreValidator, IValidateApprovedApprenticeship
     {
-        private readonly IApprenticeshipValidationErrorText _validationText;
-
         private readonly IAcademicYearValidator _academicYearValidator;
 
         public ApprovedApprenticeshipViewModelValidator(
@@ -20,7 +18,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
             IAcademicYearValidator academicYearValidator) 
             : base(validationText, academicYear)
         {
-            _validationText = validationText;
             _academicYearValidator = academicYearValidator;
         }
 
@@ -38,7 +35,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
             if (model.StartDate?.DateTime != null &&
                 _academicYearValidator.Validate(model.StartDate.DateTime.Value) == AcademicYearValidationResult.NotWithinFundingPeriod)
             {
-                dict.Add($"{nameof(model.StartDate)}", _validationText.AcademicYearStartDate01.Text);
+                dict.Add($"{nameof(model.StartDate)}", ValidationText.AcademicYearStartDate01.Text);
             }
 
             return dict;
