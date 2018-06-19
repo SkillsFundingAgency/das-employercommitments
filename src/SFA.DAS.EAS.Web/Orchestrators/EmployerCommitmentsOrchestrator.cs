@@ -724,7 +724,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         ProviderName = data.Commitment.ProviderName,
                         LegalEntityName = data.Commitment.LegalEntityName,
                         Message = GetLatestMessage(data.Commitment.Messages, false)?.Message,
-                        IsTransfer = data.Commitment.TransferSender != null
+                        IsTransfer = data.Commitment.TransferSender != null,
+                        IsSecondApproval = data.Commitment.AgreementStatus == AgreementStatus.BothAgreed
                     }
                 };
             }, hashedAccountId, externalUserId);
@@ -1124,12 +1125,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             await CheckUserAuthorization(async () =>
                     {
-                        await _mediator.SendAsync(new GetApprenticeshipQueryRequest
-                        {
-                            AccountId = accountId,
-                            ApprenticeshipId = apprenticeshipId
-                        });
-
                         await _mediator.SendAsync(new DeleteApprenticeshipCommand
                         {
                             AccountId = accountId,

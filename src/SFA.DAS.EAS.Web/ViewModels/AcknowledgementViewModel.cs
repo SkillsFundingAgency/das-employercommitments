@@ -19,6 +19,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public AcknowledgementContent Content { get; set; }
 
         public bool IsTransfer { get; set; }
+
+        public bool IsSecondApproval { get; set; }
     }
 
     public class LinkViewModel
