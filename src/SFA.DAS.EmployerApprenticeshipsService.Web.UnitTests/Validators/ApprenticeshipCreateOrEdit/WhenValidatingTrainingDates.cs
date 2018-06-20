@@ -66,10 +66,12 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             result.Errors[0].ErrorMessage.Should().Be(expected);
         }
 
+        [TestCase(0, 1)]
+        [TestCase(0, 28)]
         [TestCase(-1, 1)]
         [TestCase(-1, 28)]
         [TestCase(-12, 1)]
-        public void ShouldFailValidationForPlanedEndDateInPast(int monthsToAdd, int currentDay)
+        public void ShouldFailValidationForPlanedEndDateNotInFuture(int monthsToAdd, int currentDay)
         {
             CurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2019, 3, currentDay));
             var endDate = new DateTimeViewModel(CurrentDateTime.Object.Now.AddMonths(monthsToAdd)) {Day = 1};
@@ -81,8 +83,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             result.Value.Value.Should().Be("The end date must not be in the past");
         }
 
-        [TestCase(0, 1)]
-        [TestCase(0, 28)]
         [TestCase(1, 1)]
         [TestCase(12, 1)]
         public void ShouldPassValidationForPlanedEndDateInFuture(int monthsToAdd, int currentDay)
