@@ -149,7 +149,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         {
             const string endDateKey = "EndDate";
 
-            return endDate.DateTime > CurrentDateTime.Now ? (KeyValuePair<string, string>?)null
+            var now = CurrentDateTime.Now;
+            return new DateTime(endDate.Year.Value, endDate.Month.Value, 1) >= new DateTime(now.Year, now.Month, 1) 
+                ? (KeyValuePair<string, string>?)null
                 : new KeyValuePair<string, string>(endDateKey, ValidationText.LearnPlanEndDate03.Text);
         }
 

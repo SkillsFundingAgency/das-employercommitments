@@ -66,16 +66,33 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             result.Errors[0].ErrorMessage.Should().Be(expected);
         }
 
-        [TestCase(5, 9, 1998, "The end date must not be in the past")]
-        public void ShouldFailValidationForPlanedEndDateInPast(int? day, int? month, int? year, string expected)
+        [TestCase(-1, 1)]
+        [TestCase(-1, 28)]
+        [TestCase(-12, 1)]
+        public void ShouldFailValidationForPlanedEndDateInPast(int monthsToAdd, int currentDay)
         {
-            var endDate = new DateTimeViewModel(day, month, year);
+            CurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2019, 3, currentDay));
+            var endDate = new DateTimeViewModel(CurrentDateTime.Object.Now.AddMonths(monthsToAdd)) {Day = 1};
 
             var result = Validator.CheckEndDateInFuture(endDate);
 
             result.HasValue.Should().BeTrue();
             result.Value.Key.Should().Be("EndDate");
             result.Value.Value.Should().Be("The end date must not be in the past");
+        }
+
+        [TestCase(0, 1)]
+        [TestCase(0, 28)]
+        [TestCase(1, 1)]
+        [TestCase(12, 1)]
+        public void ShouldPassValidationForPlanedEndDateInFuture(int monthsToAdd, int currentDay)
+        {
+            CurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2019, 3, currentDay));
+            var endDate = new DateTimeViewModel(CurrentDateTime.Object.Now.AddMonths(monthsToAdd)) { Day = 1 };
+
+            var result = Validator.CheckEndDateInFuture(endDate);
+
+            result.HasValue.Should().BeFalse();
         }
 
         [TestCase(null, null, null)]
@@ -91,22 +108,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             result.IsValid.Should().BeTrue();
         }
 
-        //todo: need to switch this test to new code that now checks this
-        [Ignore("Unclear whether test asserts correct behaviour: see task DPP-1348")]
         [Test]
-        public void ShouldFailValidationForPlanedEndDateWithTodaysDate()
-        {
-            var date = DateTime.Now;
-            ValidModel.EndDate = new DateTimeViewModel(date.Day, date.Month, date.Year);
-
-            var result = Validator.Validate(ValidModel);
-
-            result.IsValid.Should().BeFalse();
-            result.Errors[0].ErrorMessage.Should().Be("The end date must not be in the past");
-        }
-
-        [Test]
-
         public void ShouldFailIfStartDateIsAfterEndDate()
         {
             ValidModel.StartDate = new DateTimeViewModel(CurrentDateTime.Object.Now.AddMonths(1));
