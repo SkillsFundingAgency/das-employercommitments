@@ -95,19 +95,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             result.HasValue.Should().BeFalse();
         }
 
-        [TestCase(null, null, null)]
-        [TestCase(5, 9, 2100)]
-        [TestCase(1, 1, 2023)]
-        [TestCase(null, 9, 2067)]
-        public void ShouldNotFailValidationForPlannedEndDate(int? day, int? month, int? year)
-        {
-            ValidModel.EndDate = new DateTimeViewModel(day, month, year);
-
-            var result = Validator.Validate(ValidModel);
-
-            result.IsValid.Should().BeTrue();
-        }
-
         [Test]
         public void ShouldFailIfStartDateIsAfterEndDate()
         {
