@@ -56,6 +56,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
         [TestCase(5, 9, -1, "The end date is not valid")]
         [TestCase(0, 0, 0, "The end date is not valid")]
         [TestCase(1, 18, 2121, "The end date is not valid")]
+        //todo: need new test to check the moved functionality
+        //[TestCase(5, 9, 1998, "The end date must not be in the past")]
         public void ShouldFailValidationForPlanedEndDate(int? day, int? month, int? year, string expected)
         {
 
@@ -80,6 +82,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             result.IsValid.Should().BeTrue();
         }
 
+        //todo: need to switch this test to new code that now checks this
         [Ignore("Unclear whether test asserts correct behaviour: see task DPP-1348")]
         [Test]
         public void ShouldFailValidationForPlanedEndDateWithTodaysDate()

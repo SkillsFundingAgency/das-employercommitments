@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 
         public Dictionary<string, string> ValidateToDictionary(ApprenticeshipViewModel instance)
         {
-            var result = base.Validate(instance);
+            var result = Validate(instance);
 
             return result.Errors.ToDictionary(a => a.PropertyName, b => b.ErrorMessage);
         }
