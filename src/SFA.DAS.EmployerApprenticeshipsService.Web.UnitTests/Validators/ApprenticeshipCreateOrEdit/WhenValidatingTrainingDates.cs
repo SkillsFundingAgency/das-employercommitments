@@ -56,17 +56,26 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
         [TestCase(5, 9, -1, "The end date is not valid")]
         [TestCase(0, 0, 0, "The end date is not valid")]
         [TestCase(1, 18, 2121, "The end date is not valid")]
-        //todo: need new test to check the moved functionality
-        //[TestCase(5, 9, 1998, "The end date must not be in the past")]
         public void ShouldFailValidationForPlanedEndDate(int? day, int? month, int? year, string expected)
         {
-
             ValidModel.EndDate = new DateTimeViewModel(day, month, year);
 
             var result = Validator.Validate(ValidModel);
 
             result.IsValid.Should().BeFalse();
             result.Errors[0].ErrorMessage.Should().Be(expected);
+        }
+
+        [TestCase(5, 9, 1998, "The end date must not be in the past")]
+        public void ShouldFailValidationForPlanedEndDateInPast(int? day, int? month, int? year, string expected)
+        {
+            var endDate = new DateTimeViewModel(day, month, year);
+
+            var result = Validator.CheckEndDateInFuture(endDate);
+
+            result.HasValue.Should().BeTrue();
+            result.Value.Key.Should().Be("EndDate");
+            result.Value.Value.Should().Be("The end date must not be in the past");
         }
 
         [TestCase(null, null, null)]
