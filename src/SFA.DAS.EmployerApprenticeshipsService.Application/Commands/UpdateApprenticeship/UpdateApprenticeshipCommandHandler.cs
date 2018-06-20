@@ -5,6 +5,7 @@ using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeship
 {
@@ -12,12 +13,13 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeship
     {
         private readonly IEmployerCommitmentApi _commitmentsApi;
         private readonly UpdateApprenticeshipCommandValidator _validator;
+        private readonly IProviderEmailNotificationService _providerEmailNotificationService;
 
-        public UpdateApprenticeshipCommandHandler(IEmployerCommitmentApi commitmentsApi)
+        public UpdateApprenticeshipCommandHandler(IEmployerCommitmentApi commitmentsApi,
+            IProviderEmailNotificationService providerEmailNotificationService)
         {
-            if (commitmentsApi == null)
-                throw new ArgumentNullException(nameof(commitmentsApi));
             _commitmentsApi = commitmentsApi;
+            _providerEmailNotificationService = providerEmailNotificationService;
             _validator = new UpdateApprenticeshipCommandValidator();
         }
 
@@ -28,6 +30,9 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeship
             if (!validationResult.IsValid())
                 throw new InvalidRequestException(validationResult.ValidationDictionary);
 
+            var commitment = await
+                _commitmentsApi.GetEmployerCommitment(message.AccountId, message.Apprenticeship.CommitmentId);
+
             await _commitmentsApi.UpdateEmployerApprenticeship(message.AccountId, message.Apprenticeship.CommitmentId, message.Apprenticeship.Id, 
                 new ApprenticeshipRequest
                     {
@@ -35,6 +40,13 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeship
                         UserId = message.UserId,
                         LastUpdatedByInfo = new LastUpdateInfo { EmailAddress = message.UserEmail, Name = message.UserName }
                     });
+
+            if (commitment.TransferSender?.TransferApprovalStatus ==
+                Commitments.Api.Types.TransferApprovalStatus.Rejected)
+            {
+                await _providerEmailNotificationService.SendProviderTransferRejectedCommitmentEditNotification(
+                    commitment);
+            }
         }
     }
 }
