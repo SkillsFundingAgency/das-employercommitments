@@ -44,7 +44,7 @@ using SFA.DAS.EmployerCommitments.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
-    public sealed class EmployerCommitmentsOrchestrator : CommitmentsBaseOrchestrator
+    public sealed class EmployerCommitmentsOrchestrator : CommitmentsBaseOrchestrator, IEmployerCommitmentsOrchestrator
     {
         private readonly IMediator _mediator;
         private readonly IHashingService _hashingService;
@@ -1326,7 +1326,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 throw new InvalidStateException("Invalid commitment state - agreement status is BothAgreed");
         }
 
-        private static bool HasSignedAgreement(LegalEntity legalEntity, bool isTransfer)
+        public static bool HasSignedAgreement(LegalEntity legalEntity, bool isTransfer)
         {
             if (isTransfer)
             {

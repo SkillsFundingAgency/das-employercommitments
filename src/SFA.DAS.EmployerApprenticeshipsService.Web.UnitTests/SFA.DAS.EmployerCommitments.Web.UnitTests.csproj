@@ -251,6 +251,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RazorGeneratorMvcStart.cs" />
     <Compile Include="Controllers\ControllerTestBase.cs" />
+    <Compile Include="Controllers\EmployerCommitmentsControllerTests\WhenSelectingLegalEntity.cs" />
     <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenGettingEditStopDateDetails.cs" />
     <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenUpdatingApprenticeshipStopDate.cs" />
     <Compile Include="Infrastructure\StructureMapRegistrationTests\WhenAddingLogging.cs" />
