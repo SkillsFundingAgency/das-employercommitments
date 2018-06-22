@@ -62,7 +62,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
                 _mockCurrentDateTime.Object,
                 _validator,
                 _academicYearDateProvider.Object,
-                _academicYearValidator.Object
+                _academicYearValidator.Object,
+                Mock.Of<IProviderEmailNotificationService>()
                 );
         }
 

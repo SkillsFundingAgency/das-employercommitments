@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
-using SFA.DAS.Commitments.Api.Types.Commitment;
-using SFA.DAS.Commitments.Api.Types.Commitment.Types;
+using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Services;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.Notification;
@@ -13,14 +13,14 @@ using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEmailNotificationServiceTests
 {
-    [TestFixture]
-    public class WhenSendingTransferRejectedCommitmentEditEmailNotification
+    public class WhenSendingProviderCommitmentStopNotification
     {
         private ProviderEmailNotificationService _providerEmailNotificationService;
 
         private Mock<IProviderEmailService> _providerEmailService;
+        private Mock<IHashingService> _hashingService;
 
-        private CommitmentView _exampleCommitmentView;
+        private Apprenticeship _exampleApprenticeship;
 
         private EmailMessage _sentEmailMessage;
 
@@ -35,20 +35,27 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
                 .Callback<long, string, EmailMessage>((l, s, m) => _sentEmailMessage = m)
                 .Returns(Task.CompletedTask);
 
-            _providerEmailNotificationService =
-                new ProviderEmailNotificationService(_providerEmailService.Object, Mock.Of<ILog>(), Mock.Of<IHashingService>());
+            _hashingService = new Mock<IHashingService>();
+            _hashingService.Setup(x => x.HashValue(It.IsAny<long>())).Returns("HASH");
 
-            _exampleCommitmentView = new CommitmentView
+            _providerEmailNotificationService =
+                new ProviderEmailNotificationService(_providerEmailService.Object, Mock.Of<ILog>(), _hashingService.Object);
+
+            var payload = new Apprenticeship
             {
-                ProviderId = 1,
-                ProviderLastUpdateInfo = new LastUpdateInfo{ EmailAddress = "LastUpdateEmail" },
+                ProviderId = 123L,
                 LegalEntityName = "Legal Entity Name",
-                Reference = "Cohort Reference"
+                ULN = "1234567890",
+                FirstName = "John",
+                LastName = "Smith",
+                StopDate = new DateTime(2018, 05, 01)
             };
+            _exampleApprenticeship =
+                JsonConvert.DeserializeObject<Apprenticeship>(JsonConvert.SerializeObject(payload));
 
             _act = async () =>
-                await _providerEmailNotificationService.SendProviderTransferRejectedCommitmentEditNotification(
-                    _exampleCommitmentView);
+                await _providerEmailNotificationService.SendProviderApprenticeshipStopNotification(
+                    payload);
         }
 
         [TearDown]
@@ -63,8 +70,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             await _act();
 
             _providerEmailService.Verify(x => x.SendEmailToAllProviderRecipients(
-                It.Is<long>(l => l == _exampleCommitmentView.ProviderId),
-                It.Is<string>((s => s == _exampleCommitmentView.ProviderLastUpdateInfo.EmailAddress)),
+                It.Is<long>(l => l == _exampleApprenticeship.ProviderId),
+                It.Is<string>((s => s == string.Empty)),
                 It.IsAny<EmailMessage>()),
                 Times.Once);
         }
@@ -74,7 +81,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         {
             await _act();
 
-            Assert.AreEqual("ProviderTransferRejectedCommitmentEditNotification", _sentEmailMessage.TemplateId);
+            Assert.AreEqual("ProviderApprenticeshipStopNotification", _sentEmailMessage.TemplateId);
         }
 
         [Test]
@@ -83,11 +90,12 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             await _act();
 
             //Assert
-
             var expectedTokens = new Dictionary<string, string>
             {
-                {"EmployerName", _exampleCommitmentView.LegalEntityName},
-                {"CohortRef", _exampleCommitmentView.Reference}
+                {"Employer", _exampleApprenticeship.LegalEntityName},
+                {"Apprentice", $"{_exampleApprenticeship.FirstName} {_exampleApprenticeship.LastName}"},
+                {"Date", _exampleApprenticeship.StopDate.Value.ToString("dd/MM/yyyy")},
+                {"Url", $"{_exampleApprenticeship.ProviderId}/apprentices/manage/HASH/details" }
             };
 
             CollectionAssert.AreEquivalent(expectedTokens, _sentEmailMessage.Tokens);
