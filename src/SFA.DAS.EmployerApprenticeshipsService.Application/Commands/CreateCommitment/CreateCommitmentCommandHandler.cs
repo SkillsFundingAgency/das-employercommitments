@@ -10,7 +10,6 @@ using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Notifications.Api.Types;
-using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
 {
@@ -18,15 +17,9 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
         IAsyncRequestHandler<CreateCommitmentCommand, CreateCommitmentCommandResponse>
     {
         private readonly IEmployerCommitmentApi _commitmentApi;
-        
         private readonly IMediator _mediator;
-
         private readonly ILog _logger;
-
         private readonly EmployerCommitmentsServiceConfiguration _configuration;
-
-        private readonly IHashingService _hashingService;
-
         private readonly IProviderEmailLookupService _providerEmailLookupService;
 
         public CreateCommitmentCommandHandler(
@@ -34,19 +27,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
             IMediator mediator,
             ILog logger,
             EmployerCommitmentsServiceConfiguration configuration,
-            IHashingService hashingService,
             IProviderEmailLookupService providerEmailLookupService)
         {
-            if (commitmentApi == null)
-                throw new ArgumentNullException(nameof(commitmentApi));
-            if (mediator == null)
-                throw new ArgumentNullException(nameof(mediator));
-
             _commitmentApi = commitmentApi;
             _mediator = mediator;
             _logger = logger;
             _configuration = configuration;
-            _hashingService = hashingService;
             _providerEmailLookupService = providerEmailLookupService;
         }
 

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using MediatR;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
@@ -6,6 +8,9 @@ using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
+using SFA.DAS.EmployerCommitments.Domain.Configuration;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApprovalTests
 {
@@ -13,10 +18,12 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
     public sealed class WhenApprovingOrRejectingATransfer
     {
         private Mock<IEmployerCommitmentApi> _mockCommitmentApi;
+        private Mock<IMediator> _mockMediator;
+        private Mock<IProviderEmailLookupService> _mockEmailLookup;
+
         private CommitmentView _repositoryCommitment;
         private TransferApprovalCommandHandler _sut;
         private TransferApprovalCommand _command;
-
 
         [SetUp]
         public void Setup()
@@ -40,7 +47,15 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
             _mockCommitmentApi.Setup(x => x.GetTransferSenderCommitment(It.IsAny<long>(), It.IsAny<long>()))
                 .ReturnsAsync(_repositoryCommitment);
 
-            _sut = new TransferApprovalCommandHandler(_mockCommitmentApi.Object);
+            _mockMediator = new Mock<IMediator>();
+            var config = new EmployerCommitmentsServiceConfiguration
+            {
+                CommitmentNotification = new CommitmentNotificationConfiguration { SendEmail = true }
+            };
+            _mockEmailLookup = new Mock<IProviderEmailLookupService>();
+            _mockEmailLookup.Setup(m => m.GetEmailsAsync(It.IsAny<long>(), It.IsAny<string>())).ReturnsAsync(new List<string>());
+
+            _sut = new TransferApprovalCommandHandler(_mockCommitmentApi.Object, _mockMediator.Object, config, Mock.Of<ILog>(), _mockEmailLookup.Object);
         }
 
         [Test]

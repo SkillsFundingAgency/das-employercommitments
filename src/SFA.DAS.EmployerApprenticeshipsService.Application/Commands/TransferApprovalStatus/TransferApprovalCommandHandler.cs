@@ -3,17 +3,35 @@ using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Commitment;
+using SFA.DAS.EmployerCommitments.Application.Commands.SendNotification;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
+using SFA.DAS.EmployerCommitments.Domain.Configuration;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.NLog.Logger;
+using SFA.DAS.Notifications.Api.Types;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus
 {
     public sealed class TransferApprovalCommandHandler : AsyncRequestHandler<TransferApprovalCommand>
     {
         private readonly IEmployerCommitmentApi _commitmentsService;
+        private readonly IMediator _mediator;
+        private readonly ILog _logger;
+        private readonly EmployerCommitmentsServiceConfiguration _configuration;
+        private readonly IProviderEmailLookupService _providerEmailLookupService;
 
-        public TransferApprovalCommandHandler(IEmployerCommitmentApi commitmentsApi)
+        public TransferApprovalCommandHandler(
+            IEmployerCommitmentApi commitmentsApi,
+            IMediator mediator,
+            EmployerCommitmentsServiceConfiguration configuration,
+            ILog logger,
+            IProviderEmailLookupService providerEmailLookupService)
         {
             _commitmentsService = commitmentsApi;
+            _mediator = mediator;
+            _configuration = configuration;
+            _logger = logger;
+            _providerEmailLookupService = providerEmailLookupService;
         }
 
         protected override async Task HandleCore(TransferApprovalCommand message)
@@ -57,6 +75,51 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
             {
                 await _commitmentsService.PatchTransferApprovalStatus(message.TransferSenderId, message.CommitmentId, request);
             }
+
+
+        }
+
+        //todo: add logging to above
+
+        //todo:? put his code in a helper?
+        private async Task SendProviderNotification(CommitmentView commitment)
+        {
+            _logger.Info($"Sending notification to provider {commitment.ProviderId} that sender has {commitment.TransferSender.TransferApprovalStatus} cohort {commitment.Id}");
+            var emails = await
+                _providerEmailLookupService.GetEmailsAsync(
+                    commitment.ProviderId.GetValueOrDefault(),
+                    commitment.ProviderLastUpdateInfo?.EmailAddress ?? string.Empty);
+
+            _logger.Info($"{emails.Count} provider found email address/es");
+            if (!_configuration.CommitmentNotification.SendEmail) return;
+
+            foreach (var email in emails)
+            {
+                _logger.Info($"Sending email to {email}");
+                var notificationCommand = BuildNotificationCommand(email, commitment);
+                await _mediator.SendAsync(notificationCommand);
+            }
+        }
+
+        private SendNotificationCommand BuildNotificationCommand(string emailAddress, CommitmentView commitment)
+        {
+            return new SendNotificationCommand
+            {
+                Email = new Email
+                {
+                    RecipientsAddress = emailAddress,
+                    //todo: case sensitive?
+                    TemplateId = $"Sender{commitment.TransferSender.TransferApprovalStatus}CommitmentProviderNotification",
+                    ReplyToAddress = "noreply@sfa.gov.uk",
+                    Subject = $"", //todo: need to ask for this
+                    SystemId = "x",
+                    Tokens = new Dictionary<string, string> {
+                        { "cohort_reference", commitment.Reference }
+                        //{ "employer_name", commitment.LegalEntityName },
+                        //{ "ukprn", commitment.ProviderId.ToString() }
+                    }
+                }
+            };
         }
     }
 }
