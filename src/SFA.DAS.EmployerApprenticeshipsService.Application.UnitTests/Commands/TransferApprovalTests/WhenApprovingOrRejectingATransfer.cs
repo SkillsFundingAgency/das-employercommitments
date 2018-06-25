@@ -18,6 +18,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
     [TestFixture]
     public sealed class WhenApprovingOrRejectingATransfer
     {
+        #region Setup
+
         private Mock<IEmployerCommitmentApi> _mockCommitmentApi;
         private Mock<IMediator> _mockMediator;
         private Mock<IProviderEmailLookupService> _mockEmailLookup;
@@ -62,6 +64,10 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
             _sut = new TransferApprovalCommandHandler(_mockCommitmentApi.Object, _mockMediator.Object, config, Mock.Of<ILog>(), _mockEmailLookup.Object, _hashingService.Object);
         }
 
+        #endregion Setup
+
+        #region Core Functionality
+
         [Test]
         public async Task ThenPatchTransferApprovalInterfaceIsCalledCorrectly()
         {
@@ -105,6 +111,22 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
             Assert.CatchAsync<InvalidRequestException>(async () => await _sut.Handle(_command));
         }
 
+        #endregion Core Functionality
+
+        #region Notifications
+
+        //[TestCase(TransferApprovalStatus.Approved)]
+        //[TestCase(TransferApprovalStatus.Rejected)]
+        //public async Task ThenEmployerIsNotifiedWhenEmailEnabled(TransferApprovalStatus transferApprovalStatus)
+        //{
+        //    _repositoryCommitment.TransferSender.TransferApprovalStatus = transferApprovalStatus;
+
+        //    await _sut.Handle(_command);
+
+        //    _mockMediator.Verify();
+        //}
+
+        #endregion Notifications
     }
 }
 

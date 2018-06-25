@@ -106,7 +106,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
             await SendEmployerNotification(commitment, tokens);
         }
 
-        //todo:? put his code in a helper?
+        //todo:? put this code in a helper? use ProviderEmailService
         private async Task SendProviderNotification(CommitmentView commitment, Dictionary<string, string> tokens)
         {
             _logger.Info($"Sending notification to provider {commitment.ProviderId} that sender has {commitment.TransferSender.TransferApprovalStatus} cohort {commitment.Id}");
