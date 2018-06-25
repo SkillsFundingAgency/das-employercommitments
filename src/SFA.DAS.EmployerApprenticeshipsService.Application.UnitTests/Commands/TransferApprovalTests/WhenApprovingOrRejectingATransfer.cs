@@ -10,6 +10,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.Notification;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
@@ -22,12 +23,13 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
 
         private Mock<IEmployerCommitmentApi> _mockCommitmentApi;
         private Mock<IMediator> _mockMediator;
-        private Mock<IProviderEmailLookupService> _mockEmailLookup;
+        private Mock<IProviderEmailService> _mockProviderEmailService;
         private Mock<IHashingService> _hashingService;
 
         private CommitmentView _repositoryCommitment;
         private TransferApprovalCommandHandler _sut;
         private TransferApprovalCommand _command;
+        private EmailMessage _sentEmailMessage;
 
         [SetUp]
         public void Setup()
@@ -56,12 +58,16 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
             {
                 CommitmentNotification = new CommitmentNotificationConfiguration { SendEmail = true }
             };
-            _mockEmailLookup = new Mock<IProviderEmailLookupService>();
-            _mockEmailLookup.Setup(m => m.GetEmailsAsync(It.IsAny<long>(), It.IsAny<string>())).ReturnsAsync(new List<string>());
+
+            _mockProviderEmailService = new Mock<IProviderEmailService>();
+            _mockProviderEmailService.Setup(x =>
+                    x.SendEmailToAllProviderRecipients(It.IsAny<long>(), It.IsAny<string>(), It.IsAny<EmailMessage>()))
+                .Callback<long, string, EmailMessage>((l, s, m) => _sentEmailMessage = m)
+                .Returns(Task.CompletedTask);
 
             _hashingService = new Mock<IHashingService>();
 
-            _sut = new TransferApprovalCommandHandler(_mockCommitmentApi.Object, _mockMediator.Object, config, Mock.Of<ILog>(), _mockEmailLookup.Object, _hashingService.Object);
+            _sut = new TransferApprovalCommandHandler(_mockCommitmentApi.Object, _mockMediator.Object, config, Mock.Of<ILog>(), _mockProviderEmailService.Object, _hashingService.Object);
         }
 
         #endregion Setup

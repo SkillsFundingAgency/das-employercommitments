@@ -28,7 +28,11 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
         }
         public async Task SendEmailToAllProviderRecipients(long providerId, string lastUpdateEmailAddress, EmailMessage emailMessage)
         {
-            if (!_configuration.CommitmentNotification.SendEmail) return;
+            if (!_configuration.CommitmentNotification.SendEmail)
+            {
+                _logger.Info("Sending email notifications disabled by config.");
+                return;
+            }
 
             var recipients = await _providerEmailLookupService.GetEmailsAsync(providerId,lastUpdateEmailAddress);
 

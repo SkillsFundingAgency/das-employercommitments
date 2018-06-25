@@ -7,6 +7,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.SendNotification;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.Notification;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Notifications.Api.Types;
@@ -19,7 +20,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
         private readonly IMediator _mediator;
         private readonly ILog _logger;
         private readonly EmployerCommitmentsServiceConfiguration _configuration;
-        private readonly IProviderEmailLookupService _providerEmailLookupService;
+        private readonly IProviderEmailService _providerEmailService;
         private readonly IHashingService _hashingService;
 
         public TransferApprovalCommandHandler(
@@ -27,14 +28,14 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
             IMediator mediator,
             EmployerCommitmentsServiceConfiguration configuration,
             ILog logger,
-            IProviderEmailLookupService providerEmailLookupService,
+            IProviderEmailService providerEmailService,
             IHashingService hashingService)
         {
             _commitmentsService = commitmentsApi;
             _mediator = mediator;
             _configuration = configuration;
             _logger = logger;
-            _providerEmailLookupService = providerEmailLookupService;
+            _providerEmailService = providerEmailService;
             _hashingService = hashingService;
         }
 
@@ -83,8 +84,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
             await SendNotifications(commitment);
         }
 
-        //todo: add logging to above
-
         private async Task SendNotifications(CommitmentView commitment)
         {
             if (!_configuration.CommitmentNotification.SendEmail)
@@ -106,30 +105,24 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
             await SendEmployerNotification(commitment, tokens);
         }
 
-        //todo:? put this code in a helper? use ProviderEmailService
         private async Task SendProviderNotification(CommitmentView commitment, Dictionary<string, string> tokens)
         {
             _logger.Info($"Sending notification to provider {commitment.ProviderId} that sender has {commitment.TransferSender.TransferApprovalStatus} cohort {commitment.Id}");
-            var emails = await
-                _providerEmailLookupService.GetEmailsAsync(
-                    commitment.ProviderId.GetValueOrDefault(),
-                    commitment.ProviderLastUpdateInfo?.EmailAddress ?? string.Empty);
 
-            _logger.Info($"Found {emails.Count} provider email address/es");
-
-            foreach (var email in emails)
-            {
-                _logger.Info($"Sending email to {email}");
-                var notificationCommand = BuildNotificationCommand(email, commitment, RecipientType.Provider, tokens);
-                await _mediator.SendAsync(notificationCommand);
-            }
+            await _providerEmailService.SendEmailToAllProviderRecipients(
+                commitment.ProviderId.GetValueOrDefault(),
+                commitment.ProviderLastUpdateInfo?.EmailAddress ?? string.Empty,
+                new EmailMessage
+                {
+                    TemplateId = GenerateTemplateId(commitment.TransferSender.TransferApprovalStatus.Value, RecipientType.Provider),
+                    Tokens = tokens
+                });
         }
 
         private async Task SendEmployerNotification(CommitmentView commitment, Dictionary<string, string> tokens)
         {
-            _logger.Info($"Sending notification to employer {commitment.EmployerAccountId} that sender has {commitment.TransferSender.TransferApprovalStatus} cohort {commitment.Id}");
+            _logger.Info($"Sending email notification to {commitment.EmployerLastUpdateInfo.EmailAddress} of employer id {commitment.EmployerAccountId} that sender has {commitment.TransferSender.TransferApprovalStatus} cohort id {commitment.Id}");
 
-            _logger.Info($"Sending email to {commitment.EmployerLastUpdateInfo.EmailAddress}");
             var notificationCommand = BuildNotificationCommand(commitment.EmployerLastUpdateInfo.EmailAddress, commitment, RecipientType.Employer, tokens);
             await _mediator.SendAsync(notificationCommand);
         }
@@ -150,14 +143,18 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
                 Email = new Email
                 {
                     RecipientsAddress = emailAddress,
-                    //todo: case sensitive? right case anyway
-                    TemplateId = $"Sender{commitment.TransferSender.TransferApprovalStatus}Commitment{recipientType}Notification",
+                    TemplateId = GenerateTemplateId(commitment.TransferSender.TransferApprovalStatus.Value, recipientType),
                     ReplyToAddress = "noreply@sfa.gov.uk",
                     Subject = "",
                     SystemId = "x",
                     Tokens = tokens
                 }
             };
+        }
+
+        private string GenerateTemplateId(Commitments.Api.Types.TransferApprovalStatus transferApprovalStatus, RecipientType recipientType)
+        {
+            return $"Sender{transferApprovalStatus}Commitment{recipientType}Notification";
         }
     }
 }
