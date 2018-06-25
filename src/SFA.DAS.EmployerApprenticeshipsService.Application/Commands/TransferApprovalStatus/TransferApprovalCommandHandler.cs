@@ -7,6 +7,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.SendNotification;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Notifications.Api.Types;
 
@@ -19,19 +20,22 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
         private readonly ILog _logger;
         private readonly EmployerCommitmentsServiceConfiguration _configuration;
         private readonly IProviderEmailLookupService _providerEmailLookupService;
+        private readonly IHashingService _hashingService;
 
         public TransferApprovalCommandHandler(
             IEmployerCommitmentApi commitmentsApi,
             IMediator mediator,
             EmployerCommitmentsServiceConfiguration configuration,
             ILog logger,
-            IProviderEmailLookupService providerEmailLookupService)
+            IProviderEmailLookupService providerEmailLookupService,
+            IHashingService hashingService)
         {
             _commitmentsService = commitmentsApi;
             _mediator = mediator;
             _configuration = configuration;
             _logger = logger;
             _providerEmailLookupService = providerEmailLookupService;
+            _hashingService = hashingService;
         }
 
         protected override async Task HandleCore(TransferApprovalCommand message)
@@ -89,13 +93,21 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
                 return;
             }
 
-            await SendProviderNotification(commitment);
+            var tokens = new Dictionary<string, string>
+            {
+                {"cohort_reference", commitment.Reference},
+                {"ukprn", commitment.ProviderId.ToString()},       // only provider email needs this
+                {"employer_name", commitment.LegalEntityName },    // only employer email needs these...
+                {"sender_name", commitment.TransferSender.Name },
+                {"employer_hashed_account", _hashingService.HashValue(commitment.EmployerAccountId) },
+            };
 
-            await SendEmployerNotification(commitment);
+            await SendProviderNotification(commitment, tokens);
+            await SendEmployerNotification(commitment, tokens);
         }
 
         //todo:? put his code in a helper?
-        private async Task SendProviderNotification(CommitmentView commitment)
+        private async Task SendProviderNotification(CommitmentView commitment, Dictionary<string, string> tokens)
         {
             _logger.Info($"Sending notification to provider {commitment.ProviderId} that sender has {commitment.TransferSender.TransferApprovalStatus} cohort {commitment.Id}");
             var emails = await
@@ -108,17 +120,17 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
             foreach (var email in emails)
             {
                 _logger.Info($"Sending email to {email}");
-                var notificationCommand = BuildNotificationCommand(email, commitment, RecipientType.Provider);
+                var notificationCommand = BuildNotificationCommand(email, commitment, RecipientType.Provider, tokens);
                 await _mediator.SendAsync(notificationCommand);
             }
         }
 
-        private async Task SendEmployerNotification(CommitmentView commitment)
+        private async Task SendEmployerNotification(CommitmentView commitment, Dictionary<string, string> tokens)
         {
             _logger.Info($"Sending notification to employer {commitment.EmployerAccountId} that sender has {commitment.TransferSender.TransferApprovalStatus} cohort {commitment.Id}");
 
             _logger.Info($"Sending email to {commitment.EmployerLastUpdateInfo.EmailAddress}");
-            var notificationCommand = BuildNotificationCommand(commitment.EmployerLastUpdateInfo.EmailAddress, commitment, RecipientType.Employer);
+            var notificationCommand = BuildNotificationCommand(commitment.EmployerLastUpdateInfo.EmailAddress, commitment, RecipientType.Employer, tokens);
             await _mediator.SendAsync(notificationCommand);
         }
 
@@ -128,9 +140,9 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
             Provider
         }
 
-        private SendNotificationCommand BuildNotificationCommand(string emailAddress, CommitmentView commitment, RecipientType recipientType)
+        private SendNotificationCommand BuildNotificationCommand(string emailAddress, CommitmentView commitment, RecipientType recipientType, Dictionary<string, string> tokens)
         {
-            // employer's url: https://localhost:44348/commitments/accounts/((cohort_reference))/apprentices/cohorts/transferFunded
+            // employer's url: https://localhost:44348/commitments/accounts/((employer_hashed_account))/apprentices/cohorts/transferFunded
             // provider's url: https://providers.apprenticeships.sfa.bis.gov.uk/((ukprn))/apprentices/cohorts/transferfunded
 
             return new SendNotificationCommand
@@ -143,10 +155,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
                     ReplyToAddress = "noreply@sfa.gov.uk",
                     Subject = "",
                     SystemId = "x",
-                    Tokens = new Dictionary<string, string> {
-                        { "cohort_reference", commitment.Reference },
-                        { "ukprn", commitment.ProviderId.ToString() }
-                    }
+                    Tokens = tokens
                 }
             };
         }

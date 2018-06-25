@@ -10,6 +10,7 @@ using SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApprovalTests
@@ -20,6 +21,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
         private Mock<IEmployerCommitmentApi> _mockCommitmentApi;
         private Mock<IMediator> _mockMediator;
         private Mock<IProviderEmailLookupService> _mockEmailLookup;
+        private Mock<IHashingService> _hashingService;
 
         private CommitmentView _repositoryCommitment;
         private TransferApprovalCommandHandler _sut;
@@ -55,7 +57,9 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
             _mockEmailLookup = new Mock<IProviderEmailLookupService>();
             _mockEmailLookup.Setup(m => m.GetEmailsAsync(It.IsAny<long>(), It.IsAny<string>())).ReturnsAsync(new List<string>());
 
-            _sut = new TransferApprovalCommandHandler(_mockCommitmentApi.Object, _mockMediator.Object, config, Mock.Of<ILog>(), _mockEmailLookup.Object);
+            _hashingService = new Mock<IHashingService>();
+
+            _sut = new TransferApprovalCommandHandler(_mockCommitmentApi.Object, _mockMediator.Object, config, Mock.Of<ILog>(), _mockEmailLookup.Object, _hashingService.Object);
         }
 
         [Test]
