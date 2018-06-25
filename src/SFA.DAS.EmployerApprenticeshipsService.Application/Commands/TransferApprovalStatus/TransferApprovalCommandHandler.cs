@@ -101,6 +101,9 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
             }
         }
 
+        // employer's url: https://localhost:44348/commitments/accounts/M8NW7J/apprentices/cohorts/transferFunded
+        // provider's url: https://providers.apprenticeships.sfa.bis.gov.uk/10005077/apprentices/cohorts/transferfunded
+
         private SendNotificationCommand BuildNotificationCommand(string emailAddress, CommitmentView commitment)
         {
             return new SendNotificationCommand
@@ -108,15 +111,14 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
                 Email = new Email
                 {
                     RecipientsAddress = emailAddress,
-                    //todo: case sensitive?
+                    //todo: case sensitive? right case anyway
                     TemplateId = $"Sender{commitment.TransferSender.TransferApprovalStatus}CommitmentProviderNotification",
                     ReplyToAddress = "noreply@sfa.gov.uk",
-                    Subject = $"", //todo: need to ask for this
+                    Subject = "",
                     SystemId = "x",
                     Tokens = new Dictionary<string, string> {
-                        { "cohort_reference", commitment.Reference }
-                        //{ "employer_name", commitment.LegalEntityName },
-                        //{ "ukprn", commitment.ProviderId.ToString() }
+                        { "cohort_reference", commitment.Reference },
+                        { "ukprn", commitment.ProviderId.ToString() }
                     }
                 }
             };
