@@ -76,7 +76,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
                 await _commitmentsService.PatchTransferApprovalStatus(message.TransferSenderId, message.CommitmentId, request);
             }
 
-
+            await SendProviderNotification(commitment);
         }
 
         //todo: add logging to above
