@@ -76,10 +76,23 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
                 await _commitmentsService.PatchTransferApprovalStatus(message.TransferSenderId, message.CommitmentId, request);
             }
 
-            await SendProviderNotification(commitment);
+            await SendNotifications(commitment);
         }
 
         //todo: add logging to above
+
+        private async Task SendNotifications(CommitmentView commitment)
+        {
+            if (!_configuration.CommitmentNotification.SendEmail)
+            {
+                _logger.Info("Sending email notifications disabled by config.");
+                return;
+            }
+
+            await SendProviderNotification(commitment);
+
+            await SendEmployerNotification(commitment);
+        }
 
         //todo:? put his code in a helper?
         private async Task SendProviderNotification(CommitmentView commitment)
@@ -90,29 +103,43 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
                     commitment.ProviderId.GetValueOrDefault(),
                     commitment.ProviderLastUpdateInfo?.EmailAddress ?? string.Empty);
 
-            _logger.Info($"{emails.Count} provider found email address/es");
-            if (!_configuration.CommitmentNotification.SendEmail) return;
+            _logger.Info($"Found {emails.Count} provider email address/es");
 
             foreach (var email in emails)
             {
                 _logger.Info($"Sending email to {email}");
-                var notificationCommand = BuildNotificationCommand(email, commitment);
+                var notificationCommand = BuildNotificationCommand(email, commitment, RecipientType.Provider);
                 await _mediator.SendAsync(notificationCommand);
             }
         }
 
-        // employer's url: https://localhost:44348/commitments/accounts/M8NW7J/apprentices/cohorts/transferFunded
-        // provider's url: https://providers.apprenticeships.sfa.bis.gov.uk/10005077/apprentices/cohorts/transferfunded
-
-        private SendNotificationCommand BuildNotificationCommand(string emailAddress, CommitmentView commitment)
+        private async Task SendEmployerNotification(CommitmentView commitment)
         {
+            _logger.Info($"Sending notification to employer {commitment.EmployerAccountId} that sender has {commitment.TransferSender.TransferApprovalStatus} cohort {commitment.Id}");
+
+            _logger.Info($"Sending email to {commitment.EmployerLastUpdateInfo.EmailAddress}");
+            var notificationCommand = BuildNotificationCommand(commitment.EmployerLastUpdateInfo.EmailAddress, commitment, RecipientType.Employer);
+            await _mediator.SendAsync(notificationCommand);
+        }
+
+        private enum RecipientType
+        {
+            Employer,
+            Provider
+        }
+
+        private SendNotificationCommand BuildNotificationCommand(string emailAddress, CommitmentView commitment, RecipientType recipientType)
+        {
+            // employer's url: https://localhost:44348/commitments/accounts/((cohort_reference))/apprentices/cohorts/transferFunded
+            // provider's url: https://providers.apprenticeships.sfa.bis.gov.uk/((ukprn))/apprentices/cohorts/transferfunded
+
             return new SendNotificationCommand
             {
                 Email = new Email
                 {
                     RecipientsAddress = emailAddress,
                     //todo: case sensitive? right case anyway
-                    TemplateId = $"Sender{commitment.TransferSender.TransferApprovalStatus}CommitmentProviderNotification",
+                    TemplateId = $"Sender{commitment.TransferSender.TransferApprovalStatus}Commitment{recipientType}Notification",
                     ReplyToAddress = "noreply@sfa.gov.uk",
                     Subject = "",
                     SystemId = "x",
