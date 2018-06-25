@@ -81,10 +81,10 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
                 await _commitmentsService.PatchTransferApprovalStatus(message.TransferSenderId, message.CommitmentId, request);
             }
 
-            await SendNotifications(commitment);
+            await SendNotifications(commitment, message.TransferStatus);
         }
 
-        private async Task SendNotifications(CommitmentView commitment)
+        private async Task SendNotifications(CommitmentView commitment, Commitments.Api.Types.TransferApprovalStatus newTransferApprovalStatus)
         {
             if (!_configuration.CommitmentNotification.SendEmail)
             {
@@ -94,18 +94,18 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
 
             var tokens = new Dictionary<string, string>
             {
-                {"cohort_reference", commitment.Reference},
+                {"cohort_reference", commitment.Reference}, //todo: already hashed?
                 {"ukprn", commitment.ProviderId.ToString()},       // only provider email needs this
                 {"employer_name", commitment.LegalEntityName },    // only employer email needs these...
                 {"sender_name", commitment.TransferSender.Name },
                 {"employer_hashed_account", _hashingService.HashValue(commitment.EmployerAccountId) },
             };
 
-            await SendProviderNotification(commitment, tokens);
-            await SendEmployerNotification(commitment, tokens);
+            await SendProviderNotification(commitment, newTransferApprovalStatus, tokens);
+            await SendEmployerNotification(commitment, newTransferApprovalStatus, tokens);
         }
 
-        private async Task SendProviderNotification(CommitmentView commitment, Dictionary<string, string> tokens)
+        private async Task SendProviderNotification(CommitmentView commitment, Commitments.Api.Types.TransferApprovalStatus newTransferApprovalStatus, Dictionary<string, string> tokens)
         {
             _logger.Info($"Sending notification to provider {commitment.ProviderId} that sender has {commitment.TransferSender.TransferApprovalStatus} cohort {commitment.Id}");
 
@@ -114,16 +114,16 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
                 commitment.ProviderLastUpdateInfo?.EmailAddress ?? string.Empty,
                 new EmailMessage
                 {
-                    TemplateId = GenerateTemplateId(commitment.TransferSender.TransferApprovalStatus.Value, RecipientType.Provider),
+                    TemplateId = GenerateTemplateId(newTransferApprovalStatus, RecipientType.Provider),
                     Tokens = tokens
                 });
         }
 
-        private async Task SendEmployerNotification(CommitmentView commitment, Dictionary<string, string> tokens)
+        private async Task SendEmployerNotification(CommitmentView commitment, Commitments.Api.Types.TransferApprovalStatus newTransferApprovalStatus, Dictionary<string, string> tokens)
         {
             _logger.Info($"Sending email notification to {commitment.EmployerLastUpdateInfo.EmailAddress} of employer id {commitment.EmployerAccountId} that sender has {commitment.TransferSender.TransferApprovalStatus} cohort id {commitment.Id}");
 
-            var notificationCommand = BuildNotificationCommand(commitment.EmployerLastUpdateInfo.EmailAddress, commitment, RecipientType.Employer, tokens);
+            var notificationCommand = BuildNotificationCommand(commitment.EmployerLastUpdateInfo.EmailAddress, newTransferApprovalStatus, RecipientType.Employer, tokens);
             await _mediator.SendAsync(notificationCommand);
         }
 
@@ -133,7 +133,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
             Provider
         }
 
-        private SendNotificationCommand BuildNotificationCommand(string emailAddress, CommitmentView commitment, RecipientType recipientType, Dictionary<string, string> tokens)
+        private SendNotificationCommand BuildNotificationCommand(string emailAddress, Commitments.Api.Types.TransferApprovalStatus transferApprovalStatus, RecipientType recipientType, Dictionary<string, string> tokens)
         {
             // employer's url: https://localhost:44348/commitments/accounts/((employer_hashed_account))/apprentices/cohorts/transferFunded
             // provider's url: https://providers.apprenticeships.sfa.bis.gov.uk/((ukprn))/apprentices/cohorts/transferfunded
@@ -143,7 +143,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
                 Email = new Email
                 {
                     RecipientsAddress = emailAddress,
-                    TemplateId = GenerateTemplateId(commitment.TransferSender.TransferApprovalStatus.Value, recipientType),
+                    TemplateId = GenerateTemplateId(transferApprovalStatus, recipientType),
                     ReplyToAddress = "noreply@sfa.gov.uk",
                     Subject = "",
                     SystemId = "x",

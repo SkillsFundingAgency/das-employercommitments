@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MediatR;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
+using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
@@ -20,6 +20,15 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
     public sealed class WhenApprovingOrRejectingATransfer
     {
         #region Setup
+
+        private const long ProviderId = 987654321L;
+        private const string ProviderLastUpdatedByEmail = "providerbob@example.com";
+        private const string CommitmentReference = "COMREF";
+
+        private const string EmployerApprovedTemplateId = "SenderApprovedCommitmentEmployerNotification";
+        private const string EmployerRejectedTemplateId = "SenderRejectedCommitmentEmployerNotification";
+        private const string ProviderApprovedTemplateId = "SenderApprovedCommitmentProviderNotification";
+        private const string ProviderRejectedTemplateId = "SenderRejectedCommitmentProviderNotification";
 
         private Mock<IEmployerCommitmentApi> _mockCommitmentApi;
         private Mock<IMediator> _mockMediator;
@@ -42,6 +51,9 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
             };
             _repositoryCommitment = new CommitmentView
             {
+                Reference = CommitmentReference,
+                ProviderId = ProviderId,
+                ProviderLastUpdateInfo = new LastUpdateInfo { EmailAddress = ProviderLastUpdatedByEmail },
                 TransferSender = new TransferSender
                 {
                     Id = _command.TransferSenderId,
@@ -101,7 +113,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
                     p.UserEmail == _command.UserEmail && p.UserName == _command.UserName)));
         }
 
-
         [Test]
         public void ThenThrowErrorIfTranferSenderDoesNotMatchTransferSenderOnCommitment()
         {
@@ -121,16 +132,34 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
 
         #region Notifications
 
-        //[TestCase(TransferApprovalStatus.Approved)]
-        //[TestCase(TransferApprovalStatus.Rejected)]
-        //public async Task ThenEmployerIsNotifiedWhenEmailEnabled(TransferApprovalStatus transferApprovalStatus)
-        //{
-        //    _repositoryCommitment.TransferSender.TransferApprovalStatus = transferApprovalStatus;
+        [TestCase(TransferApprovalStatus.Approved, ProviderApprovedTemplateId)]
+        [TestCase(TransferApprovalStatus.Rejected, ProviderRejectedTemplateId)]
+        public async Task ThenProviderIsNotifiedWhenEmailEnabled(TransferApprovalStatus transferApprovalStatus, string expectedTemplateId)
+        {
+            _command.TransferStatus = transferApprovalStatus;
 
-        //    await _sut.Handle(_command);
+            await _sut.Handle(_command);
 
-        //    _mockMediator.Verify();
-        //}
+            _mockProviderEmailService.Verify(x => x.SendEmailToAllProviderRecipients(
+                    It.Is<long>(l => l == ProviderId),
+                    It.Is<string>(s => s == ProviderLastUpdatedByEmail),
+                    It.IsAny<EmailMessage>()),
+                Times.Once);
+
+            Assert.AreEqual(_sentEmailMessage.TemplateId, expectedTemplateId);
+
+            // we pass more tokens than are required for any individual email (an implementation detail),
+            // which means we don't want to test for the presence of all the tokens we actually pass (e.g. with CollectionAssert)
+            // we only want to check for the tokens that are necessary
+
+            const string cohortReferenceToken = "cohort_reference";
+            const string ukprnToken = "ukprn";
+
+            Assert.IsTrue(_sentEmailMessage.Tokens.ContainsKey(cohortReferenceToken));
+            Assert.AreEqual(CommitmentReference, _sentEmailMessage.Tokens[cohortReferenceToken]);
+            Assert.IsTrue(_sentEmailMessage.Tokens.ContainsKey(ukprnToken));
+            Assert.AreEqual($"{ProviderId}", _sentEmailMessage.Tokens[ukprnToken]);
+        }
 
         #endregion Notifications
     }
