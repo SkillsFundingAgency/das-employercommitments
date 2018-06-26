@@ -5,6 +5,7 @@ using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
+using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.EmployerCommitments.Application.Services;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.Notification;
@@ -22,7 +23,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         private Mock<IHashingService> _hashingService;
 
         private Apprenticeship _exampleApprenticeship;
-        private readonly DateTime _exampleNewStopDate = new DateTime(2018, 05, 01);
+        private DateTime _exampleNewStopDate;
 
         private EmailMessage _sentEmailMessage;
 
@@ -50,10 +51,15 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
                 ULN = "1234567890",
                 FirstName = "John",
                 LastName = "Smith",
+                PaymentStatus = PaymentStatus.Withdrawn,
                 StopDate = new DateTime(2018, 05, 01)
             };
+
+            //Keep a copy of the payload to assert against, to guard against handler modifications
             _exampleApprenticeship =
                 JsonConvert.DeserializeObject<Apprenticeship>(JsonConvert.SerializeObject(payload));
+
+            _exampleNewStopDate = new DateTime(2018, 04, 01);
 
             _act = async () =>
                 await _providerEmailNotificationService.SendProviderApprenticeshipStopEditNotification(
@@ -94,11 +100,11 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             //Assert
             var expectedTokens = new Dictionary<string, string>
             {
-                {"Employer", _exampleApprenticeship.LegalEntityName},
-                {"Apprentice", $"{_exampleApprenticeship.FirstName} {_exampleApprenticeship.LastName}"},
-                {"OldDate", _exampleApprenticeship.StopDate.Value.ToString("dd/MM/yyyy")},
-                {"NewDate", _exampleNewStopDate.ToString("dd/MM/yyyy")},
-                {"Url", $"{_exampleApprenticeship.ProviderId}/apprentices/manage/HASH/details" }
+                {"EMPLOYER", _exampleApprenticeship.LegalEntityName},
+                {"APPRENTICE", $"{_exampleApprenticeship.FirstName} {_exampleApprenticeship.LastName}"},
+                {"OLDDATE", _exampleApprenticeship.StopDate.Value.ToString("dd/MM/yyyy")},
+                {"NEWDATE", _exampleNewStopDate.ToString("dd/MM/yyyy")},
+                {"URL", $"{_exampleApprenticeship.ProviderId}/apprentices/manage/HASH/details" }
             };
 
             CollectionAssert.AreEquivalent(expectedTokens, _sentEmailMessage.Tokens);

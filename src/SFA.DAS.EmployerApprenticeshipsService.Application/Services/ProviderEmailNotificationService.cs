@@ -67,9 +67,25 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
 
         public async Task SendProviderApprenticeshipStopEditNotification(Apprenticeship apprenticeship, DateTime newStopDate)
         {
-            //throw new System.NotImplementedException();
+            var emailMessage = new EmailMessage
+            {
+                TemplateId = "ProviderApprenticeshipStopEditNotification",
+                Tokens = new Dictionary<string, string>
+                {
+                    {"EMPLOYER", apprenticeship.LegalEntityName},
+                    {"APPRENTICE", apprenticeship.ApprenticeshipName },
+                    {"OLDDATE", apprenticeship.StopDate.Value.ToString("dd/MM/yyyy") },
+                    {"NEWDATE", newStopDate.ToString("dd/MM/yyyy") },
+                    {"URL", $"{apprenticeship.ProviderId}/apprentices/manage/{_hashingService.HashValue(apprenticeship.Id)}/details" }
+                }
+            };
 
-            await _providerEmailService.SendEmailToAllProviderRecipients(1, "", "");
+            _logger.Info($"Sending email to all provider recipients for Provider {apprenticeship.ProviderId}, template {emailMessage.TemplateId}");
+
+            await _providerEmailService.SendEmailToAllProviderRecipients(
+                apprenticeship.ProviderId,
+                string.Empty,
+                emailMessage);
         }
     }
 }
