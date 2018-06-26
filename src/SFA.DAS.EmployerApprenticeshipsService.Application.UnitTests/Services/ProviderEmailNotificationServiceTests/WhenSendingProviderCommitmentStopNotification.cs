@@ -50,6 +50,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
                 LastName = "Smith",
                 StopDate = new DateTime(2018, 05, 01)
             };
+
+            //Keep a copy of the payload to assert against, to guard against handler modifications
             _exampleApprenticeship =
                 JsonConvert.DeserializeObject<Apprenticeship>(JsonConvert.SerializeObject(payload));
 
@@ -92,10 +94,10 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             //Assert
             var expectedTokens = new Dictionary<string, string>
             {
-                {"Employer", _exampleApprenticeship.LegalEntityName},
-                {"Apprentice", $"{_exampleApprenticeship.FirstName} {_exampleApprenticeship.LastName}"},
-                {"Date", _exampleApprenticeship.StopDate.Value.ToString("dd/MM/yyyy")},
-                {"Url", $"{_exampleApprenticeship.ProviderId}/apprentices/manage/HASH/details" }
+                {"EMPLOYER", _exampleApprenticeship.LegalEntityName},
+                {"APPRENTICE", $"{_exampleApprenticeship.FirstName} {_exampleApprenticeship.LastName}"},
+                {"DATE", _exampleApprenticeship.StopDate.Value.ToString("dd/MM/yyyy")},
+                {"URL", $"{_exampleApprenticeship.ProviderId}/apprentices/manage/HASH/details" }
             };
 
             CollectionAssert.AreEquivalent(expectedTokens, _sentEmailMessage.Tokens);
