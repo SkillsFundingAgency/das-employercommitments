@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using FluentValidation.Attributes;
+﻿using FluentValidation.Attributes;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.EmployerCommitments.Web.Validators;
@@ -23,8 +22,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 
         public DateTimeViewModel DateOfBirth { get; set; } = new DateTimeViewModel(0);
 
-        public string DateOfBirthDayError => GetErrorMessage("DateOfBirth.Day");
-
         public string NINumber { get; set; }
 
         public string ApprenticeshipName => $"{FirstName} {LastName}";
@@ -39,23 +36,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 
         public DateTimeViewModel StartDate { get; set; }
 
-        public string StartMonthName
-        {
-            get
-            {
-                return StartDate?.Month != null ? CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(StartDate.Month.Value) : string.Empty;
-            }
-        }
-
         public DateTimeViewModel EndDate { get; set; }
-
-        public string EndMonthName
-        {
-            get
-            {
-                return EndDate?.Month != null ? CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(EndDate.Month.Value) : string.Empty;
-            }
-        }
 
         public string EmployerRef { get; set; }
 
@@ -67,11 +48,10 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 
         public bool HasStarted { get; set; }
 
-        public bool IsInFirstCalendarMonthOfTraining { get; set; }
-
         public bool IsPaidForByTransfer { get; set; }
 
         public bool IsUpdateLockedForStartDateAndCourse { get; set; }
+        public bool IsUpdateAllowedForEndDate { get; set; }
 
         public string FirstNameError => GetErrorMessage(nameof(FirstName));
         public string LastNameError => GetErrorMessage(nameof(LastName));

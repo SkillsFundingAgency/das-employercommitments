@@ -16,7 +16,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerManageApprenti
         {
             var model = new ExtendedApprenticeshipViewModel
             {
-                Apprenticeship = new ApprenticeshipViewModel {ULN = Uln},
+                Apprenticeship = new ApprenticeshipViewModel { ULN = Uln, IsUpdateAllowedForEndDate = true },
                 ApprenticeshipProgrammes = new List<ITrainingProgramme>(),
                 ValidationErrors = new Dictionary<string, string>()
             };

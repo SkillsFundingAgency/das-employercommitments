@@ -130,6 +130,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Approved
                     && !apprenticeship.HasHadDataLockSuccess;
 
+            //var isUpdateAllowedForEndDate = !isLockedForUpdate ||
+            //    (apprenticeship.HasHadDataLockSuccess && !isStartDateInFuture);
+
+            // we always disable if start date is in the future, as the validation rule that disallows setting end date to > current month
+            // means any date entered would be before the start date (which is also disallowed)
+            var isUpdateAllowedForEndDate = !isStartDateInFuture && (!isLockedForUpdate || apprenticeship.HasHadDataLockSuccess);
+
             return new ApprenticeshipViewModel
             {
                 HashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id),
@@ -155,7 +162,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 IsLockedForUpdate = isLockedForUpdate,
                 IsPaidForByTransfer = commitment.TransferSender != null,
                 IsInTransferRejectedCohort = commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Rejected,
-                IsUpdateLockedForStartDateAndCourse = isUpdateLockedForStartDateAndCourse
+                IsUpdateLockedForStartDateAndCourse = isUpdateLockedForStartDateAndCourse,
+                IsUpdateAllowedForEndDate = isUpdateAllowedForEndDate
             };
         }
 

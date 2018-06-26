@@ -179,13 +179,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
 
-            _logger.Info(
-                $"Getting Approved Apprenticeship for Editing, Account: {accountId}, ApprenticeshipId: {apprenticeshipId}");
+            _logger.Info($"Getting Approved Apprenticeship for Editing, Account: {accountId}, ApprenticeshipId: {apprenticeshipId}");
 
             return await CheckUserAuthorization(async () =>
             {
                 await AssertApprenticeshipStatus(accountId, apprenticeshipId);
 
+                //todo: whenall
                 var apprenticeshipData = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
                 {
                     AccountId = accountId,

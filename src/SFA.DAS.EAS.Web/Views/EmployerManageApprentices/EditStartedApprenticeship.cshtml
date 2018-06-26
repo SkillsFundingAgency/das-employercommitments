@@ -112,7 +112,36 @@
         @Html.Hidden("StartDate.Month", Model.Apprenticeship.StartDate.Month)
         @Html.Hidden("StartDate.Year", Model.Apprenticeship.StartDate.Year)
     }
-    @if (Model.Apprenticeship.IsLockedForUpdate)
+    else
+    {
+        <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) ? "error" : "")">
+            <hr />
+
+            <span class="form-label-bold">Planned training start date</span>
+            <span class="form-hint">For example, 09 2017</span>
+
+            <div id="StartDate" class="form-date">
+
+                @if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError))
+                {
+                    <span class="error-message" id="error-message-StartDate">@ValidationMessage.ExtractFieldMessage(Model.Apprenticeship.StartDateError)</span>
+                }
+
+                <div class="form-group form-group-month">
+                    <label for="StartDate.Month">Month</label>
+
+                    @Html.TextBox("StartDate.Month", Model.Apprenticeship.StartDate.Month, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "StartDate.Month" })
+
+                </div>
+                <div class="form-group form-group-year">
+                    <label for="StartDate.Year">Year</label>
+                    @Html.TextBox("StartDate.Year", Model.Apprenticeship.StartDate.Year, new { @class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "StartDate.Year" })
+                </div>
+            </div>
+
+        </div>
+    }
+    @if (!Model.Apprenticeship.IsUpdateAllowedForEndDate)
     {
         <div class="form-error-group form-group">
             <hr />
@@ -125,35 +154,6 @@
     }
     else
     {
-        if (!Model.Apprenticeship.IsUpdateLockedForStartDateAndCourse)
-        {
-            <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) ? "error" : "")">
-                <hr />
-
-                <span class="form-label-bold">Planned training start date</span>
-                <span class="form-hint">For example, 09 2017</span>
-
-                <div id="StartDate" class="form-date">
-
-                    @if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError))
-                    {
-                        <span class="error-message" id="error-message-StartDate">@ValidationMessage.ExtractFieldMessage(Model.Apprenticeship.StartDateError)</span>
-                    }
-
-                    <div class="form-group form-group-month">
-                        <label for="StartDate.Month">Month</label>
-
-                        @Html.TextBox("StartDate.Month", Model.Apprenticeship.StartDate.Month, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "StartDate.Month" })
-
-                    </div>
-                    <div class="form-group form-group-year">
-                        <label for="StartDate.Year">Year</label>
-                        @Html.TextBox("StartDate.Year", Model.Apprenticeship.StartDate.Year, new { @class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "StartDate.Year" })
-                    </div>
-                </div>
-
-            </div>
-        }
         <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.EndDateError) ? "error" : "")">
 
             <span class="form-label-bold">Planned training finish date</span>

@@ -417,8 +417,107 @@ Write(Html.Hidden("StartDate.Year", Model.Apprenticeship.StartDate.Year));
 
                                                                        
 }
+else
+{
 
- if (Model.Apprenticeship.IsLockedForUpdate)
+WriteLiteral("    <div");
+
+WriteAttribute("class", Tuple.Create(" class=\"", 5872), Tuple.Create("\"", 5984)
+, Tuple.Create(Tuple.Create("", 5880), Tuple.Create("form-error-group", 5880), true)
+, Tuple.Create(Tuple.Create(" ", 5896), Tuple.Create("form-group", 5897), true)
+, Tuple.Create(Tuple.Create(" ", 5907), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) ? "error" : ""
+, 5908), false)
+);
+
+WriteLiteral(">\r\n        <hr />\r\n\r\n        <span");
+
+WriteLiteral(" class=\"form-label-bold\"");
+
+WriteLiteral(">Planned training start date</span>\r\n\r\n");
+
+        
+         if (Model.Apprenticeship.IsPaidForByTransfer)
+        {
+
+WriteLiteral("            <span");
+
+WriteLiteral(" class=\"form-hint\"");
+
+WriteLiteral(">Choose a date on or after May 2018. For example, 05 2018</span>\r\n");
+
+        }
+        else
+        {
+
+WriteLiteral("            <span");
+
+WriteLiteral(" class=\"form-hint\"");
+
+WriteLiteral(">For example, 09 2017</span>\r\n");
+
+        }
+
+WriteLiteral("\r\n        <div");
+
+WriteLiteral(" id=\"StartDate\"");
+
+WriteLiteral(" class=\"form-date\"");
+
+WriteLiteral(">\r\n\r\n");
+
+            
+             if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError))
+            {
+
+WriteLiteral("                <span");
+
+WriteLiteral(" class=\"error-message\"");
+
+WriteLiteral(" id=\"error-message-StartDate\"");
+
+WriteLiteral(">");
+
+                                                                    Write(ValidationMessage.ExtractFieldMessage(Model.Apprenticeship.StartDateError));
+
+WriteLiteral("</span>\r\n");
+
+            }
+
+WriteLiteral("\r\n            <div");
+
+WriteLiteral(" class=\"form-group form-group-month\"");
+
+WriteLiteral(">\r\n                <label");
+
+WriteLiteral(" for=\"StartDate.Month\"");
+
+WriteLiteral(">Month</label>\r\n\r\n");
+
+WriteLiteral("                ");
+
+           Write(Html.TextBox("StartDate.Month", Model.Apprenticeship.StartDate.Month, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "StartDate.Month" }));
+
+WriteLiteral("\r\n\r\n            </div>\r\n            <div");
+
+WriteLiteral(" class=\"form-group form-group-year\"");
+
+WriteLiteral(">\r\n                <label");
+
+WriteLiteral(" for=\"StartDate.Year\"");
+
+WriteLiteral(">Year</label>\r\n");
+
+WriteLiteral("                ");
+
+           Write(Html.TextBox("StartDate.Year", Model.Apprenticeship.StartDate.Year, new { @class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "StartDate.Year" }));
+
+WriteLiteral("\r\n            </div>\r\n        </div>\r\n\r\n    </div>\r\n");
+
+}
+
+WriteLiteral("\r\n");
+
+ if (!Model.Apprenticeship.IsUpdateAllowedForEndDate)
 {
 
 WriteLiteral("    <div");
@@ -451,111 +550,14 @@ Write(Html.Hidden("EndDate.Year", Model.Apprenticeship.EndDate.Year));
 }
 else
 {
-    if (!Model.Apprenticeship.IsUpdateLockedForStartDateAndCourse)
-    {
 
-WriteLiteral("        <div");
+WriteLiteral("   <div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 6396), Tuple.Create("\"", 6508)
-, Tuple.Create(Tuple.Create("", 6404), Tuple.Create("form-error-group", 6404), true)
-, Tuple.Create(Tuple.Create(" ", 6420), Tuple.Create("form-group", 6421), true)
-, Tuple.Create(Tuple.Create(" ", 6431), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError) ? "error" : ""
-, 6432), false)
-);
-
-WriteLiteral(">\r\n            <hr />\r\n\r\n            <span");
-
-WriteLiteral(" class=\"form-label-bold\"");
-
-WriteLiteral(">Planned training start date</span>\r\n\r\n");
-
-            
-             if (Model.Apprenticeship.IsPaidForByTransfer)
-            {
-
-WriteLiteral("                <span");
-
-WriteLiteral(" class=\"form-hint\"");
-
-WriteLiteral(">Choose a date on or after May 2018. For example, 05 2018</span>\r\n");
-
-            }
-            else
-            {
-
-WriteLiteral("                <span");
-
-WriteLiteral(" class=\"form-hint\"");
-
-WriteLiteral(">For example, 09 2017</span>\r\n");
-
-            }
-
-WriteLiteral("\r\n            <div");
-
-WriteLiteral(" id=\"StartDate\"");
-
-WriteLiteral(" class=\"form-date\"");
-
-WriteLiteral(">\r\n\r\n");
-
-                
-                 if (!string.IsNullOrEmpty(Model.Apprenticeship.StartDateError))
-                {
-
-WriteLiteral("                    <span");
-
-WriteLiteral(" class=\"error-message\"");
-
-WriteLiteral(" id=\"error-message-StartDate\"");
-
-WriteLiteral(">");
-
-                                                                        Write(ValidationMessage.ExtractFieldMessage(Model.Apprenticeship.StartDateError));
-
-WriteLiteral("</span>\r\n");
-
-                }
-
-WriteLiteral("\r\n                <div");
-
-WriteLiteral(" class=\"form-group form-group-month\"");
-
-WriteLiteral(">\r\n                    <label");
-
-WriteLiteral(" for=\"StartDate.Month\"");
-
-WriteLiteral(">Month</label>\r\n\r\n");
-
-WriteLiteral("                    ");
-
-               Write(Html.TextBox("StartDate.Month", Model.Apprenticeship.StartDate.Month, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "StartDate.Month" }));
-
-WriteLiteral("\r\n\r\n                </div>\r\n                <div");
-
-WriteLiteral(" class=\"form-group form-group-year\"");
-
-WriteLiteral(">\r\n                    <label");
-
-WriteLiteral(" for=\"StartDate.Year\"");
-
-WriteLiteral(">Year</label>\r\n");
-
-WriteLiteral("                    ");
-
-               Write(Html.TextBox("StartDate.Year", Model.Apprenticeship.StartDate.Year, new { @class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "StartDate.Year" }));
-
-WriteLiteral("\r\n                </div>\r\n            </div>\r\n\r\n        </div>\r\n");
-
-    }
-
-WriteLiteral("    <div");
-
-WriteAttribute("class", Tuple.Create(" class=\"", 8079), Tuple.Create("\"", 8189)
-, Tuple.Create(Tuple.Create("", 8087), Tuple.Create("form-error-group", 8087), true)
-, Tuple.Create(Tuple.Create(" ", 8103), Tuple.Create("form-group", 8104), true)
-, Tuple.Create(Tuple.Create(" ", 8114), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EndDateError) ? "error" : ""
-, 8115), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 7915), Tuple.Create("\"", 8025)
+, Tuple.Create(Tuple.Create("", 7923), Tuple.Create("form-error-group", 7923), true)
+, Tuple.Create(Tuple.Create(" ", 7939), Tuple.Create("form-group", 7940), true)
+, Tuple.Create(Tuple.Create(" ", 7950), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EndDateError) ? "error" : ""
+, 7951), false)
 );
 
 WriteLiteral(">\r\n\r\n        <span");
@@ -626,11 +628,11 @@ WriteLiteral("\r\n            </div>\r\n        </div>\r\n    </div>\r\n");
 
 WriteLiteral("\r\n<div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 9471), Tuple.Create("\"", 9578)
-, Tuple.Create(Tuple.Create("", 9479), Tuple.Create("form-error-group", 9479), true)
-, Tuple.Create(Tuple.Create(" ", 9495), Tuple.Create("form-group", 9496), true)
-, Tuple.Create(Tuple.Create(" ", 9506), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.CostError) ? "error" : ""
-, 9507), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 9307), Tuple.Create("\"", 9414)
+, Tuple.Create(Tuple.Create("", 9315), Tuple.Create("form-error-group", 9315), true)
+, Tuple.Create(Tuple.Create(" ", 9331), Tuple.Create("form-group", 9332), true)
+, Tuple.Create(Tuple.Create(" ", 9342), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.CostError) ? "error" : ""
+, 9343), false)
 );
 
 WriteLiteral(">\r\n    <hr />\r\n\r\n");
@@ -738,11 +740,11 @@ WriteLiteral(">£ </span>");
 
 WriteLiteral("\r\n</div>\r\n\r\n<div");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 11114), Tuple.Create("\"", 11224)
-, Tuple.Create(Tuple.Create("", 11122), Tuple.Create("form-group", 11122), true)
-, Tuple.Create(Tuple.Create(" ", 11132), Tuple.Create("optional-ref", 11133), true)
-, Tuple.Create(Tuple.Create(" ", 11145), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EmployerRefError) ? "error" : ""
-, 11146), false)
+WriteAttribute("class", Tuple.Create(" class=\"", 10950), Tuple.Create("\"", 11060)
+, Tuple.Create(Tuple.Create("", 10958), Tuple.Create("form-group", 10958), true)
+, Tuple.Create(Tuple.Create(" ", 10968), Tuple.Create("optional-ref", 10969), true)
+, Tuple.Create(Tuple.Create(" ", 10981), Tuple.Create<System.Object, System.Int32>(!string.IsNullOrEmpty(Model.Apprenticeship.EmployerRefError) ? "error" : ""
+, 10982), false)
 );
 
 WriteLiteral(">\r\n    <hr />\r\n");
