@@ -15,10 +15,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     [CommitmentsRoutePrefix("accounts/{hashedaccountId}")]
     public class TransferRequestController : BaseEmployerController
     {
-        public TransferRequestController(EmployerCommitmentsOrchestrator employerCommitmentsOrchestrator, IOwinWrapper owinWrapper,
+        public TransferRequestController(EmployerCommitmentsOrchestrator orchestrator, IOwinWrapper owinWrapper,
             IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage, 
             ICookieStorageService<string> lastCohortCookieStorageService)
-            : base(employerCommitmentsOrchestrator, owinWrapper, multiVariantTestingService, flashMessage, lastCohortCookieStorageService)
+            : base(orchestrator, owinWrapper, multiVariantTestingService, flashMessage, lastCohortCookieStorageService)
         {
         }
 
@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model = await EmployerCommitmentsOrchestrator.GetTransferRequestDetails(hashedAccountId, CallerType.TransferSender, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
+            var model = await Orchestrator.GetTransferRequestDetails(hashedAccountId, CallerType.TransferSender, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
 
             return View(model);
         }
@@ -43,7 +43,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model = await EmployerCommitmentsOrchestrator.GetTransferRequestDetails(hashedAccountId, CallerType.TransferReceiver, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
+            var model = await Orchestrator.GetTransferRequestDetails(hashedAccountId, CallerType.TransferReceiver, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
 
             return View(model);
         }
@@ -57,11 +57,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var model = await EmployerCommitmentsOrchestrator.GetTransferRequestDetails(hashedAccountId, CallerType.TransferSender, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
+                var model = await Orchestrator.GetTransferRequestDetails(hashedAccountId, CallerType.TransferSender, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
 
                 return View("TransferDetails", model);
             }
-            await EmployerCommitmentsOrchestrator.SetTransferRequestApprovalStatus(hashedAccountId, viewModel.HashedCohortReference, hashedTransferRequestId, viewModel, OwinWrapper.GetClaimValue(@"sub"),
+            await Orchestrator.SetTransferRequestApprovalStatus(hashedAccountId, viewModel.HashedCohortReference, hashedTransferRequestId, viewModel, OwinWrapper.GetClaimValue(@"sub"),
                 OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
                 OwinWrapper.GetClaimValue(DasClaimTypes.Email));
 
