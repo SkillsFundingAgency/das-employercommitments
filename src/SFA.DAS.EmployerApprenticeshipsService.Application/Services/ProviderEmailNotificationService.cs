@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
@@ -62,6 +63,13 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 apprenticeship.ProviderId,
                 string.Empty,
                 emailMessage);
+        }
+
+        public async Task SendProviderApprenticeshipStopEditNotification(Apprenticeship apprenticeship, DateTime newStopDate)
+        {
+            //throw new System.NotImplementedException();
+
+            await _providerEmailService.SendEmailToAllProviderRecipients(1, "", "");
         }
     }
 }
