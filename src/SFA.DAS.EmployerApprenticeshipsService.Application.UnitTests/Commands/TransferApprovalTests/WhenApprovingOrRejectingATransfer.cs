@@ -144,7 +144,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
             _command.TransferStatus = transferApprovalStatus;
 
             EmailMessage sentEmailMessage = null;
-
             _mockProviderEmailService.Setup(x =>
                     x.SendEmailToAllProviderRecipients(It.IsAny<long>(), It.IsAny<string>(), It.IsAny<EmailMessage>()))
                 .Callback<long, string, EmailMessage>((l, s, m) => sentEmailMessage = m)
@@ -213,6 +212,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
             Assert.IsTrue(actualTokens.ContainsKey(tokenName));
             Assert.AreEqual(expectedValue, actualTokens[tokenName]);
         }
+
+        //todo: unit test template substitution
 
         #endregion Notifications
     }

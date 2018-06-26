@@ -105,6 +105,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
             await SendEmployerNotification(commitment, newTransferApprovalStatus, tokens);
         }
 
+        //todo: move some into ProviderEmailNotificationService.cs?
         private async Task SendProviderNotification(CommitmentView commitment, Commitments.Api.Types.TransferApprovalStatus newTransferApprovalStatus, Dictionary<string, string> tokens)
         {
             _logger.Info($"Sending notification to provider {commitment.ProviderId} that sender has {commitment.TransferSender.TransferApprovalStatus} cohort {commitment.Id}");
