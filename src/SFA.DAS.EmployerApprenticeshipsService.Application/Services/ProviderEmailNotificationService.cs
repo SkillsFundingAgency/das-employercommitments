@@ -49,10 +49,10 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 TemplateId = "ProviderApprenticeshipStopNotification",
                 Tokens = new Dictionary<string, string>
                 {
-                    {"Employer", apprenticeship.LegalEntityName},
-                    {"Apprentice", apprenticeship.ApprenticeshipName },
-                    {"Date", apprenticeship.StopDate.Value.ToString("dd/MM/yyyy") },
-                    {"Url", $"{apprenticeship.ProviderId}/apprentices/manage/{_hashingService.HashValue(apprenticeship.Id)}/details" }
+                    {"EMPLOYER", apprenticeship.LegalEntityName},
+                    {"APPRENTICE", apprenticeship.ApprenticeshipName },
+                    {"DATE", apprenticeship.StopDate.Value.ToString("dd/MM/yyyy") },
+                    {"URL", $"{apprenticeship.ProviderId}/apprentices/manage/{_hashingService.HashValue(apprenticeship.Id)}/details" }
                 }
             };
 

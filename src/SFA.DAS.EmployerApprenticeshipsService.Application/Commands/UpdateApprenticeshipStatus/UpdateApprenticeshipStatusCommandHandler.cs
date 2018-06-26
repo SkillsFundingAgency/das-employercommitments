@@ -61,8 +61,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
 
             await _commitmentsApi.PatchEmployerApprenticeship(command.EmployerAccountId, command.ApprenticeshipId, apprenticeshipSubmission);
 
-            var apprenticeship = await _commitmentsApi.GetEmployerApprenticeship(command.EmployerAccountId, command.ApprenticeshipId);
-            await _providerEmailNotificationService.SendProviderApprenticeshipStopNotification(apprenticeship);
+            if (command.ChangeType == ChangeStatusType.Stop)
+            {
+                var apprenticeship = await _commitmentsApi.GetEmployerApprenticeship(command.EmployerAccountId, command.ApprenticeshipId);
+                await _providerEmailNotificationService.SendProviderApprenticeshipStopNotification(apprenticeship);
+
+            }
         }
 
         private async Task ValidateDateOfChange(UpdateApprenticeshipStatusCommand command, Validation.ValidationResult validationResult)
