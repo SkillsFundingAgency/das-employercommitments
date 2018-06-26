@@ -58,16 +58,11 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
 
             _mockCommitmentApi = new Mock<IEmployerCommitmentApi>();
             _mockCommitmentApi.Setup(x => x.GetEmployerCommitment(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(new CommitmentView { ProviderId = 456L });
-            _mockMediator = new Mock<IMediator>();
-
-            //todo: can this mediator call be removed?
-            var apprenticeshipGetResponse = new GetApprenticeshipQueryResponse { Apprenticeship = _testApprenticeship };
-            _mockMediator.Setup(x => x.SendAsync(It.IsAny<GetApprenticeshipQueryRequest>())).ReturnsAsync(apprenticeshipGetResponse);
-            _mockCurrentDateTime = new Mock<ICurrentDateTime>();
-            _mockCurrentDateTime.SetupGet(x => x.Now).Returns(DateTime.UtcNow);
-
             _mockCommitmentApi.Setup(x => x.GetEmployerApprenticeship(It.IsAny<long>(), It.IsAny<long>()))
                 .ReturnsAsync(_testApprenticeship);
+
+            _mockCurrentDateTime = new Mock<ICurrentDateTime>();
+            _mockCurrentDateTime.SetupGet(x => x.Now).Returns(DateTime.UtcNow);
 
             _academicYearDateProvider = new Mock<IAcademicYearDateProvider>();
             _academicYearDateProvider.Setup(x => x.CurrentAcademicYearStartDate).Returns(new DateTime(2016, 8, 1));
@@ -81,7 +76,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
 
             _handler = new UpdateApprenticeshipStopDateCommandHandler(
                 _mockCommitmentApi.Object,
-                _mockMediator.Object,
                 _mockCurrentDateTime.Object,
                 _validator,
                 _academicYearDateProvider.Object,
