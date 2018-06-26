@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using MediatR;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
@@ -29,34 +30,54 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
         private Apprenticeship _testApprenticeship;
         private Mock<IAcademicYearDateProvider> _academicYearDateProvider;
         private Mock<IAcademicYearValidator> _academicYearValidator;
+        private Mock<IProviderEmailNotificationService> _providerEmailNotificationService;
+        private DateTime _newStopDate;
 
         [SetUp]
         public void Setup()
         {
+            _newStopDate = DateTime.UtcNow.AddMonths(-2).Date;
+
             _validCommand = new UpdateApprenticeshipStopDateCommand
             {
                 EmployerAccountId = 12L,
                 ApprenticeshipId = 4L,
                 UserId = "externalUserId",
-                NewStopDate = new DateTime(2018, 01, 01),
+                NewStopDate = _newStopDate,
                 CommitmentId = 123
             };
 
-            _testApprenticeship = new Apprenticeship { StartDate = DateTime.UtcNow.AddMonths(-2).Date };
+            _testApprenticeship = new Apprenticeship
+            {
+                Id = 4L,
+                FirstName = "TEST",
+                LastName = "APPRENTICE",
+                StartDate = DateTime.UtcNow.AddMonths(-2).Date,
+                StopDate = DateTime.UtcNow.AddMonths(6).Date
+            };
 
             _mockCommitmentApi = new Mock<IEmployerCommitmentApi>();
             _mockCommitmentApi.Setup(x => x.GetEmployerCommitment(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(new CommitmentView { ProviderId = 456L });
             _mockMediator = new Mock<IMediator>();
 
+            //todo: can this mediator call be removed?
             var apprenticeshipGetResponse = new GetApprenticeshipQueryResponse { Apprenticeship = _testApprenticeship };
             _mockMediator.Setup(x => x.SendAsync(It.IsAny<GetApprenticeshipQueryRequest>())).ReturnsAsync(apprenticeshipGetResponse);
             _mockCurrentDateTime = new Mock<ICurrentDateTime>();
             _mockCurrentDateTime.SetupGet(x => x.Now).Returns(DateTime.UtcNow);
 
+            _mockCommitmentApi.Setup(x => x.GetEmployerApprenticeship(It.IsAny<long>(), It.IsAny<long>()))
+                .ReturnsAsync(_testApprenticeship);
+
             _academicYearDateProvider = new Mock<IAcademicYearDateProvider>();
             _academicYearDateProvider.Setup(x => x.CurrentAcademicYearStartDate).Returns(new DateTime(2016, 8, 1));
 
             _academicYearValidator = new Mock<IAcademicYearValidator>();
+
+            _providerEmailNotificationService = new Mock<IProviderEmailNotificationService>();
+            _providerEmailNotificationService.Setup(x =>
+                x.SendProviderApprenticeshipStopEditNotification(It.IsAny<Apprenticeship>(), It.IsAny<DateTime>()))
+                .Returns(Task.CompletedTask);
 
             _handler = new UpdateApprenticeshipStopDateCommandHandler(
                 _mockCommitmentApi.Object,
@@ -64,7 +85,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
                 _mockCurrentDateTime.Object,
                 _validator,
                 _academicYearDateProvider.Object,
-                _academicYearValidator.Object
+                _academicYearValidator.Object,
+                _providerEmailNotificationService.Object
                 );
         }
 
@@ -129,6 +151,20 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
             Func<Task> act = async () => await _handler.Handle(_validCommand);
 
             act.ShouldThrow<InvalidRequestException>().Where(x => x.ErrorMessages.Values.Contains("Date cannot be earlier than training start date"));
+        }
+
+        [Test]
+        public async Task ShouldSendProviderApprenticeshipStopEditNotification()
+        {
+            await _handler.Handle(_validCommand);
+
+            _providerEmailNotificationService.Verify(x => x.SendProviderApprenticeshipStopEditNotification(
+                It.Is<Apprenticeship>(a => a.Id == _testApprenticeship.Id
+                                           && a.StopDate == _testApprenticeship.StopDate
+                                           && a.FirstName == _testApprenticeship.FirstName
+                                           && a.LastName == _testApprenticeship.LastName
+                                           ),
+                It.Is<DateTime>(d => d == _newStopDate)),Times.Once);
         }
     }
 }

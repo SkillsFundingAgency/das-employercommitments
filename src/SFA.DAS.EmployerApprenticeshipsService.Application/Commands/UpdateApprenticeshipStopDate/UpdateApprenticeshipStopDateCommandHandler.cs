@@ -20,8 +20,15 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
         private readonly IMediator _mediator;
         private readonly IAcademicYearDateProvider _academicYearDateProvider;
         private readonly IAcademicYearValidator _academicYearValidator;
+        private readonly IProviderEmailNotificationService _providerEmailNotificationService;
 
-        public UpdateApprenticeshipStopDateCommandHandler(IEmployerCommitmentApi commitmentsApi, IMediator mediator, ICurrentDateTime currentDateTime, IValidator<UpdateApprenticeshipStopDateCommand> validator, IAcademicYearDateProvider academicYearDateProvider, IAcademicYearValidator academicYearValidator)
+        public UpdateApprenticeshipStopDateCommandHandler(IEmployerCommitmentApi commitmentsApi,
+            IMediator mediator,
+            ICurrentDateTime currentDateTime,
+            IValidator<UpdateApprenticeshipStopDateCommand> validator,
+            IAcademicYearDateProvider academicYearDateProvider,
+            IAcademicYearValidator academicYearValidator,
+            IProviderEmailNotificationService providerEmailNotificationService)
         {
             _commitmentsApi = commitmentsApi;
             _mediator = mediator;
@@ -29,6 +36,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
             _validator = validator;
             _academicYearDateProvider = academicYearDateProvider;
             _academicYearValidator = academicYearValidator;
+            _providerEmailNotificationService = providerEmailNotificationService;
         }
 
         protected override async Task HandleCore(UpdateApprenticeshipStopDateCommand command)
@@ -48,6 +56,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
             await ValidateNewStopDate(command, validationResult);
 
             await _commitmentsApi.PutApprenticeshipStopDate(command.EmployerAccountId, command.CommitmentId, command.ApprenticeshipId, stopDate);
+
+            /////
+            var apprenticeship = await
+                _commitmentsApi.GetEmployerApprenticeship(command.EmployerAccountId, command.ApprenticeshipId);
+            await _providerEmailNotificationService.SendProviderApprenticeshipStopEditNotification(apprenticeship,
+                command.NewStopDate);
         }
 
         private async Task ValidateNewStopDate(UpdateApprenticeshipStopDateCommand command,
