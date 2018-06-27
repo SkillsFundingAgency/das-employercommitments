@@ -130,10 +130,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Approved
                     && !apprenticeship.HasHadDataLockSuccess;
 
-            //var isUpdateAllowedForEndDate = !isLockedForUpdate ||
-            //    (apprenticeship.HasHadDataLockSuccess && !isStartDateInFuture);
-
-            // we always disable if start date is in the future, as the validation rule that disallows setting end date to > current month
+            // if editing post-approvl, we always disable if start date is in the future,
+            // as the validation rule that disallows setting end date to > current month
             // means any date entered would be before the start date (which is also disallowed)
             //todo: can sender edit?
             var isEndDateLockedForUpdate = commitment.AgreementStatus != AgreementStatus.BothAgreed
