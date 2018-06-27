@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
@@ -37,11 +36,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
             IHashingService hashingService,
             IProviderEmailLookupService providerEmailLookupService)
         {
-            if (commitmentApi == null)
-                throw new ArgumentNullException(nameof(commitmentApi));
-            if (mediator == null)
-                throw new ArgumentNullException(nameof(mediator));
-
             _commitmentApi = commitmentApi;
             _mediator = mediator;
             _logger = logger;
