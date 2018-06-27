@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
@@ -52,6 +53,29 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                     {"EMPLOYER", apprenticeship.LegalEntityName},
                     {"APPRENTICE", apprenticeship.ApprenticeshipName },
                     {"DATE", apprenticeship.StopDate.Value.ToString("dd/MM/yyyy") },
+                    {"URL", $"{apprenticeship.ProviderId}/apprentices/manage/{_hashingService.HashValue(apprenticeship.Id)}/details" }
+                }
+            };
+
+            _logger.Info($"Sending email to all provider recipients for Provider {apprenticeship.ProviderId}, template {emailMessage.TemplateId}");
+
+            await _providerEmailService.SendEmailToAllProviderRecipients(
+                apprenticeship.ProviderId,
+                string.Empty,
+                emailMessage);
+        }
+
+        public async Task SendProviderApprenticeshipStopEditNotification(Apprenticeship apprenticeship, DateTime newStopDate)
+        {
+            var emailMessage = new EmailMessage
+            {
+                TemplateId = "ProviderApprenticeshipStopEditNotification",
+                Tokens = new Dictionary<string, string>
+                {
+                    {"EMPLOYER", apprenticeship.LegalEntityName},
+                    {"APPRENTICE", apprenticeship.ApprenticeshipName },
+                    {"OLDDATE", apprenticeship.StopDate.Value.ToString("dd/MM/yyyy") },
+                    {"NEWDATE", newStopDate.ToString("dd/MM/yyyy") },
                     {"URL", $"{apprenticeship.ProviderId}/apprentices/manage/{_hashingService.HashValue(apprenticeship.Id)}/details" }
                 }
             };
