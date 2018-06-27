@@ -9,5 +9,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         Dictionary<string, string> ValidateToDictionary(ApprenticeshipViewModel instance);
 
         Dictionary<string, string> ValidateAcademicYear(UpdateApprenticeshipViewModel model);
+
+        Dictionary<string, string> ValidateApprovedEndDate(UpdateApprenticeshipViewModel instance);
     }
 }

@@ -27,13 +27,14 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views
 
             var parsedContent = doc.ToAngleSharp();
 
+            var partial = GetPartial(parsedContent, cssTag);
             if (string.IsNullOrEmpty(expectedValue))
             {
-                GetPartial(parsedContent, cssTag).Should().BeEmpty();
+                partial.Should().BeEmpty();
             }
             else
             {
-                GetPartial(parsedContent, cssTag).Should().Contain(expectedValue);
+                partial.Should().Contain(expectedValue);
             }
         }
     }

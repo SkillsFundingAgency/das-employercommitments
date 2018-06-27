@@ -135,7 +135,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
             // we always disable if start date is in the future, as the validation rule that disallows setting end date to > current month
             // means any date entered would be before the start date (which is also disallowed)
-            var isUpdateAllowedForEndDate = !isStartDateInFuture && (!isLockedForUpdate || apprenticeship.HasHadDataLockSuccess);
+            //todo: can sender edit?
+            var isEndDateLockedForUpdate = commitment.AgreementStatus != AgreementStatus.BothAgreed
+                ? isLockedForUpdate
+                : isStartDateInFuture || (isLockedForUpdate && !apprenticeship.HasHadDataLockSuccess);
 
             return new ApprenticeshipViewModel
             {
@@ -163,7 +166,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 IsPaidForByTransfer = commitment.TransferSender != null,
                 IsInTransferRejectedCohort = commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Rejected,
                 IsUpdateLockedForStartDateAndCourse = isUpdateLockedForStartDateAndCourse,
-                IsUpdateAllowedForEndDate = isUpdateAllowedForEndDate
+                IsEndDateLockedForUpdate = isEndDateLockedForUpdate
             };
         }
 

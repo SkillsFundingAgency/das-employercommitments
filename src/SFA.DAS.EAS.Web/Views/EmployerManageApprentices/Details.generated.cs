@@ -55,15 +55,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Views.EmployerManageApprentices
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "apprentices-detail";
 
-WriteLiteral("\n<div");
+WriteLiteral("\r\n<div");
 
 WriteLiteral(" class=\"grid-row\"");
 
-WriteLiteral(">\n    <div");
+WriteLiteral(">\r\n    <div");
 
 WriteLiteral(" class=\"column-two-thirds\"");
 
-WriteLiteral(">\n        <h1");
+WriteLiteral(">\r\n        <h1");
 
 WriteLiteral(" class=\"heading-xlarge\"");
 
@@ -77,7 +77,7 @@ WriteLiteral(" ");
 
                                                                      Write(Model.Data.LastName);
 
-WriteLiteral("</h1>\n\n");
+WriteLiteral("</h1>\r\n\r\n");
 
         
          if (Model.Data.PendingChanges == PendingChanges.ReadyForApproval)
@@ -87,20 +87,20 @@ WriteLiteral("            <div");
 
 WriteLiteral(" class=\"panel panel-border-wide alert-default\"");
 
-WriteLiteral(">\n                <h3");
+WriteLiteral(">\r\n                <h3");
 
 WriteLiteral(" class=\"heading-small\"");
 
-WriteLiteral(">Changes for review</h3>\n                <p>\n                    There are change" +
-"s to this apprentice\'s details that you need to review.\n                </p>\n   " +
-"             <p>\n                    <a");
+WriteLiteral(">Changes for review</h3>\r\n                <p>\r\n                    There are chan" +
+"ges to this apprentice\'s details that you need to review.\r\n                </p>\r" +
+"\n                <p>\r\n                    <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 949), Tuple.Create("\"", 986)
-, Tuple.Create(Tuple.Create("", 956), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("ReviewChanges")
-, 956), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 971), Tuple.Create("\"", 1008)
+, Tuple.Create(Tuple.Create("", 978), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("ReviewChanges")
+, 978), false)
 );
 
-WriteLiteral(">Review changes</a>\n                </p>\n            </div>\n");
+WriteLiteral(">Review changes</a>\r\n                </p>\r\n            </div>\r\n");
 
         }
         else if (Model.Data.PendingChanges == PendingChanges.WaitingForApproval)
@@ -110,24 +110,24 @@ WriteLiteral("            <div");
 
 WriteLiteral(" class=\"panel panel-border-wide\"");
 
-WriteLiteral(">\n                <h3");
+WriteLiteral(">\r\n                <h3");
 
 WriteLiteral(" class=\"heading-small\"");
 
-WriteLiteral(">Changes pending</h3>\n                <p>\n                    There are changes t" +
-"o this apprentice\'s details that are waiting for approval by the training provid" +
-"er.\n                <p>\n                    <a");
+WriteLiteral(">Changes pending</h3>\r\n                <p>\r\n                    There are changes" +
+" to this apprentice\'s details that are waiting for approval by the training prov" +
+"ider.\r\n                <p>\r\n                    <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 1446), Tuple.Create("\"", 1510)
-, Tuple.Create(Tuple.Create("", 1453), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("ViewChanges", "EmployerManageApprentices")
-, 1453), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 1479), Tuple.Create("\"", 1543)
+, Tuple.Create(Tuple.Create("", 1486), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("ViewChanges", "EmployerManageApprentices")
+, 1486), false)
 );
 
-WriteLiteral(">View changes</a>\n                </p>\n                </p>\n            </div>\n");
+WriteLiteral(">View changes</a>\r\n                </p>\r\n            </div>\r\n");
 
         }
 
-WriteLiteral("\n\n");
+WriteLiteral("\r\n");
 
         
          if (Model.Data.PendingDataLockRestart)
@@ -137,7 +137,7 @@ WriteLiteral("            <div");
 
 WriteLiteral(" class=\"panel panel-border-wide\"");
 
-WriteLiteral(">\n                <h3");
+WriteLiteral(">\r\n                <h3");
 
 WriteLiteral(" class=\"heading-small\"");
 
@@ -150,16 +150,16 @@ WriteLiteral(@">
                 </p>
                 <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 2051), Tuple.Create("\"", 2089)
-, Tuple.Create(Tuple.Create("", 2058), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("RequestRestart")
-, 2058), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 2077), Tuple.Create("\"", 2115)
+, Tuple.Create(Tuple.Create("", 2084), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("RequestRestart")
+, 2084), false)
 );
 
 WriteLiteral(" aria-label=\"View details\"");
 
 WriteLiteral(" class=\"\"");
 
-WriteLiteral(">View details</a>\n            </div>\n");
+WriteLiteral(">View details</a>\r\n            </div>\r\n");
 
         }
 
@@ -172,46 +172,47 @@ WriteLiteral("            <div");
 
 WriteLiteral(" class=\"panel panel-border-wide\"");
 
-WriteLiteral(">\n                <h3>\n                    Changes for review\n                </h" +
-"3>\n                <p>\n                    There are changes to this apprentice\'" +
-"s details that you need to review.\n                </p>\n                <a");
+WriteLiteral(">\r\n                <h3>\r\n                    Changes for review\r\n                " +
+"</h3>\r\n                <p>\r\n                    There are changes to this appren" +
+"tice\'s details that you need to review.\r\n                </p>\r\n                <" +
+"a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 2512), Tuple.Create("\"", 2550)
-, Tuple.Create(Tuple.Create("", 2519), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("RequestChanges")
-, 2519), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 2550), Tuple.Create("\"", 2588)
+, Tuple.Create(Tuple.Create("", 2557), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("RequestChanges")
+, 2557), false)
 );
 
 WriteLiteral(" aria-label=\"View details\"");
 
 WriteLiteral(" class=\"\"");
 
-WriteLiteral(">Review changes</a>\n            </div>\n");
+WriteLiteral(">Review changes</a>\r\n            </div>\r\n");
 
         }
 
-WriteLiteral("\n        <h2");
+WriteLiteral("\r\n        <h2");
 
 WriteLiteral(" class=\"heading-medium visually-hidden\"");
 
-WriteLiteral(">Apprentice status</h2>\n        <table");
+WriteLiteral(">Apprentice status</h2>\r\n        <table");
 
 WriteLiteral(" id=\"app-status\"");
 
 WriteLiteral(" class=\"details-list\"");
 
-WriteLiteral(">\n            <tbody>\n            <tr>\n                <th");
+WriteLiteral(">\r\n            <tbody>\r\n            <tr>\r\n                <th");
 
 WriteLiteral(" scope=\"row\"");
 
-WriteLiteral(">Status</th>\n                <td>");
+WriteLiteral(">Status</th>\r\n                <td>");
 
                Write(Model.Data.Status);
 
-WriteLiteral("</td>\n                <td");
+WriteLiteral("</td>\r\n                <td");
 
 WriteLiteral(" id=\"editStatusLink\"");
 
-WriteLiteral(">\n");
+WriteLiteral(">\r\n");
 
                     
                      if (Model.Data.CanEditStatus)
@@ -222,21 +223,21 @@ WriteLiteral(">\n");
                                                                                   ;
                     }
 
-WriteLiteral("                </td>\n            </tr>\n");
+WriteLiteral("                </td>\r\n            </tr>\r\n");
 
             
              if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)
             {
 
-WriteLiteral("                <tr>\n                    <th");
+WriteLiteral("                <tr>\r\n                    <th");
 
 WriteLiteral(" scope=\"row\"");
 
-WriteLiteral(">Stop applies from</th>\n                    <td");
+WriteLiteral(">Stop applies from</th>\r\n                    <td");
 
 WriteLiteral(" id=\"stopDate\"");
 
-WriteLiteral(">\n");
+WriteLiteral(">\r\n");
 
                         
                          if (Model.Data.StopDate.HasValue)
@@ -247,47 +248,64 @@ WriteLiteral(">\n");
                                                                     
                         }
 
-WriteLiteral("                    </td>\n                    <td");
+WriteLiteral("                    </td>\r\n                    \r\n");
+
+                    
+                     if (Model.Data.CanEditStopDate)
+                    {
+
+WriteLiteral("                        <td");
 
 WriteLiteral(" id=\"editStopDateLink\"");
 
 WriteLiteral(">");
 
-                                         Write(Html.RouteLink("Edit stop date", "EditStopDateOption"));
+                                             Write(Html.RouteLink("Edit stop date", "EditStopDateOption"));
 
-WriteLiteral("</td>\n                </tr>\n");
+WriteLiteral("</td>\r\n");
+
+                    }
+                    else
+                    {
+
+WriteLiteral("                        <td></td>\r\n");
+
+                    }
+
+WriteLiteral("                </tr>\r\n");
 
             }
 
-WriteLiteral("            </tbody>\n        </table>\n\n        <h2");
+WriteLiteral("            </tbody>\r\n        </table>\r\n\r\n        <h2");
 
 WriteLiteral(" class=\"heading-medium\"");
 
-WriteLiteral(">Overview</h2>\n        <table");
+WriteLiteral(">Overview</h2>\r\n        <table");
 
 WriteLiteral(" class=\"details-list\"");
 
-WriteLiteral(">\n            <tbody>\n                <tr>\n                    <th");
+WriteLiteral(">\r\n            <tbody>\r\n                <tr>\r\n                    <th");
 
 WriteLiteral(" scope=\"row\"");
 
-WriteLiteral(">Training provider</th>\n                    <td>");
+WriteLiteral(">Training provider</th>\r\n                    <td>");
 
                    Write(Model.Data.ProviderName);
 
-WriteLiteral("</td>\n                </tr>\n                <tr>\n                    <th");
+WriteLiteral("</td>\r\n                </tr>\r\n                <tr>\r\n                    <th");
 
 WriteLiteral(" scope=\"row\"");
 
-WriteLiteral(">Cohort reference</th>\n                    <td>");
+WriteLiteral(">Cohort reference</th>\r\n                    <td>");
 
                    Write(Model.Data.CohortReference);
 
-WriteLiteral("</td>\n                </tr>\n            </tbody>\n        </table>\n\n        <h2");
+WriteLiteral("</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n\r\n        <" +
+"h2");
 
 WriteLiteral(" class=\"heading-medium\"");
 
-WriteLiteral(">\n            Apprentice\n");
+WriteLiteral(">\r\n            Apprentice\r\n");
 
             
              if (Model.Data.EnableEdit)
@@ -295,26 +313,26 @@ WriteLiteral(">\n            Apprentice\n");
 
 WriteLiteral("                <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 4329), Tuple.Create("\"", 4371)
-, Tuple.Create(Tuple.Create("", 4336), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("EditApprenticeship")
-, 4336), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 4651), Tuple.Create("\"", 4693)
+, Tuple.Create(Tuple.Create("", 4658), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("EditApprenticeship")
+, 4658), false)
 );
 
 WriteLiteral(" class=\"float-right\"");
 
-WriteLiteral(">Edit</a>\n");
+WriteLiteral(">Edit</a>\r\n");
 
             }
 
-WriteLiteral("        </h2>\n        <table");
+WriteLiteral("        </h2>\r\n        <table");
 
 WriteLiteral(" class=\"details-list\"");
 
-WriteLiteral(">\n            <tbody>\n                <tr>\n                    <th");
+WriteLiteral(">\r\n            <tbody>\r\n                <tr>\r\n                    <th");
 
 WriteLiteral(" scope=\"row\"");
 
-WriteLiteral(">Name</th>\n                    <td>");
+WriteLiteral(">Name</th>\r\n                    <td>");
 
                    Write(Model.Data.FirstName);
 
@@ -322,19 +340,19 @@ WriteLiteral(" ");
 
                                          Write(Model.Data.LastName);
 
-WriteLiteral("</td>\n                </tr>\n                <tr>\n                    <th");
+WriteLiteral("</td>\r\n                </tr>\r\n                <tr>\r\n                    <th");
 
 WriteLiteral(" scope=\"row\"");
 
-WriteLiteral(">Unique learner number</th>\n                    <td>");
+WriteLiteral(">Unique learner number</th>\r\n                    <td>");
 
                    Write(Model.Data.ULN);
 
-WriteLiteral("</td>\n                </tr>\n                <tr>\n                    <th");
+WriteLiteral("</td>\r\n                </tr>\r\n                <tr>\r\n                    <th");
 
 WriteLiteral(" scope=\"row\"");
 
-WriteLiteral(">Date of birth</th>\n                    <td>\n");
+WriteLiteral(">Date of birth</th>\r\n                    <td>\r\n");
 
                         
                          if (Model.Data.DateOfBirth.HasValue)
@@ -345,22 +363,22 @@ WriteLiteral(">Date of birth</th>\n                    <td>\n");
                                                                        
                         }
 
-WriteLiteral("                    </td>\n                </tr>\n                <tr>\n            " +
-"        <th");
+WriteLiteral("                    </td>\r\n                </tr>\r\n                <tr>\r\n         " +
+"           <th");
 
 WriteLiteral(" scope=\"row\"");
 
-WriteLiteral(">Apprenticeship training course </th>\n                    <td>");
+WriteLiteral(">Apprenticeship training course </th>\r\n                    <td>");
 
                    Write(Model.Data.TrainingName);
 
-WriteLiteral(" </td>\n                </tr>\n                ");
+WriteLiteral(" </td>\r\n                </tr>\r\n                ");
 
-WriteLiteral("\n                <tr>\n                    <th");
+WriteLiteral("\r\n                <tr>\r\n                    <th");
 
 WriteLiteral(" scope=\"row\"");
 
-WriteLiteral(">Training start date </th>\n                    <td>\n");
+WriteLiteral(">Training start date </th>\r\n                    <td>\r\n");
 
                         
                          if (@Model.Data.StartDate.HasValue)
@@ -371,12 +389,12 @@ WriteLiteral(">Training start date </th>\n                    <td>\n");
                                                                      
                         }
 
-WriteLiteral("                    </td>\n                </tr>\n                <tr>\n            " +
-"        <th");
+WriteLiteral("                    </td>\r\n                </tr>\r\n                <tr>\r\n         " +
+"           <th");
 
 WriteLiteral(" scope=\"row\"");
 
-WriteLiteral(">Training end date </th>\n                    <td>\n");
+WriteLiteral(">Training end date </th>\r\n                    <td>\r\n");
 
                         
                          if (Model.Data.EndDate.HasValue)
@@ -387,55 +405,55 @@ WriteLiteral(">Training end date </th>\n                    <td>\n");
                                                                    
                         }
 
-WriteLiteral("                    </td>\n                </tr>\n                <tr>\n            " +
-"        <th");
+WriteLiteral("                    </td>\r\n                </tr>\r\n                <tr>\r\n         " +
+"           <th");
 
 WriteLiteral(" scope=\"row\"");
 
-WriteLiteral(">Total cost of training </th>\n                    <td>");
+WriteLiteral(">Total cost of training </th>\r\n                    <td>");
 
                    Write(FormatCost(Model.Data.Cost));
 
-WriteLiteral(" </td>\n                </tr>\n                <tr>\n                    <th");
+WriteLiteral(" </td>\r\n                </tr>\r\n                <tr>\r\n                    <th");
 
 WriteLiteral(" scope=\"row\"");
 
-WriteLiteral(">Reference </th>\n                    <td>");
+WriteLiteral(">Reference </th>\r\n                    <td>");
 
                    Write(Model.Data.EmployerReference);
 
-WriteLiteral("</td>\n                </tr>\n            </tbody>\n        </table>\n\n    </div>\n</d" +
-"iv>\n\n");
+WriteLiteral("</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n\r\n    </div" +
+">\r\n</div>\r\n\r\n");
 
 DefineSection("breadcrumb", () => {
 
-WriteLiteral("\n    <div");
+WriteLiteral("\r\n    <div");
 
 WriteLiteral(" class=\"breadcrumbs\"");
 
-WriteLiteral(">\n        <a");
+WriteLiteral(">\r\n        <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 6583), Tuple.Create("\"", 6641)
-, Tuple.Create(Tuple.Create("", 6590), Tuple.Create<System.Object, System.Int32>(Url.Action("ListAll", "EmployerManageApprentices")
-, 6590), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 6969), Tuple.Create("\"", 7027)
+, Tuple.Create(Tuple.Create("", 6976), Tuple.Create<System.Object, System.Int32>(Url.Action("ListAll", "EmployerManageApprentices")
+, 6976), false)
 );
 
 WriteLiteral(" aria-label=\"Back to manage your apprentices\"");
 
 WriteLiteral(" class=\"back-link\"");
 
-WriteLiteral(">Back to manage your apprentices</a>\n    </div>\n");
+WriteLiteral(">Back to manage your apprentices</a>\r\n    </div>\r\n");
 
 });
 
-WriteLiteral("\n");
+WriteLiteral("\r\n");
 
-WriteLiteral("\n");
+WriteLiteral("\r\n");
 
 DefineSection("gaDataLayer", () => {
 
-WriteLiteral("\n    <script>\n        sfa.dataLayer.vpv = \'/accounts/apprentices/manage/apprentic" +
-"e-details\';\n    </script>\n");
+WriteLiteral("\r\n    <script>\r\n        sfa.dataLayer.vpv = \'/accounts/apprentices/manage/apprent" +
+"ice-details\';\r\n    </script>\r\n");
 
 });
 

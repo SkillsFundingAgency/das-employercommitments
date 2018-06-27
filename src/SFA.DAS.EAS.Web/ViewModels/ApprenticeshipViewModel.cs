@@ -51,7 +51,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public bool IsPaidForByTransfer { get; set; }
 
         public bool IsUpdateLockedForStartDateAndCourse { get; set; }
-        public bool IsUpdateAllowedForEndDate { get; set; }
+        public bool IsEndDateLockedForUpdate { get; set; }
 
         public string FirstNameError => GetErrorMessage(nameof(FirstName));
         public string LastNameError => GetErrorMessage(nameof(LastName));

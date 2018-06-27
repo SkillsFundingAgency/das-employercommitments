@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.Shared
         {
             var model = new ExtendedApprenticeshipViewModel
             {
-                Apprenticeship = new ApprenticeshipViewModel { ULN = Uln, IsUpdateAllowedForEndDate = true },
+                Apprenticeship = new ApprenticeshipViewModel { ULN = Uln },
                 ApprenticeshipProgrammes = new List<ITrainingProgramme>(),
                 ValidationErrors = new Dictionary<string, string>()
             };
@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.Shared
         {
             var model = new ExtendedApprenticeshipViewModel
             {
-                Apprenticeship = new ApprenticeshipViewModel { ULN = string.Empty, IsUpdateAllowedForEndDate = true },
+                Apprenticeship = new ApprenticeshipViewModel { ULN = string.Empty },
                 ApprenticeshipProgrammes = new List<ITrainingProgramme>(),
                 ValidationErrors = new Dictionary<string, string>()
             };

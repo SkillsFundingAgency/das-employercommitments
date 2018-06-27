@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
@@ -37,6 +38,32 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                 _academicYearValidator.Validate(model.StartDate.DateTime.Value) == AcademicYearValidationResult.NotWithinFundingPeriod)
             {
                 dict.Add($"{nameof(model.StartDate)}", ValidationText.AcademicYearStartDate01.Text);
+            }
+
+            return dict;
+        }
+
+        //note: once an apprenticeship has been approved, the end date logically changes from the planned end date to the actual end date
+        public Dictionary<string, string> ValidateApprovedEndDate(UpdateApprenticeshipViewModel updatedApprenticeship)
+        {
+            var dict = new Dictionary<string, string>();
+
+            if (updatedApprenticeship.EndDate != null)
+            {
+                //todo: helper for year and month only
+                var now = CurrentDateTime.Now;
+                if (new DateTime(updatedApprenticeship.EndDate.Year.Value, updatedApprenticeship.EndDate.Month.Value, 1) > new DateTime(now.Year, now.Month, 1))
+                    //todo: new text
+                    dict.Add($"{nameof(updatedApprenticeship.EndDate)}", ValidationText.EndDateBeforeOrIsCurrentMonth.Text);
+
+                // we could else, but we return all failures and let consumer decide to stop on first or not
+                // we don't let setting the end date to the original end date pass validation (even though it is valid)
+                // because setting it to what it was originally won't count as a change
+                //todo: should original date refer to the last date pre-approval, or this, which is the last end date set (even after approval)
+                // like this, they could set the end date earlier than the original, but then couldn't move it back to the original!
+                // i.e. each push back after approval is undoable
+                //if (new DateTime(updatedApprenticeship.EndDate.Year.Value, updatedApprenticeship.EndDate.Month.Value, 1) >= new DateTime(updatedApprenticeship.OriginalApprenticeship.EndDate.Value.Year, updatedApprenticeship.OriginalApprenticeship.EndDate.Value.Month, 1))
+                //    dict.Add($"{nameof(updatedApprenticeship.EndDate)}", ValidationText.EndDateBeforeOriginalEndDate.Text);
             }
 
             return dict;
