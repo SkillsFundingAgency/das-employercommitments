@@ -27,7 +27,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
         private UpdateApprenticeshipStatusCommand _validCommand;
         private Mock<IAcademicYearDateProvider> _academicYearDateProvider;
         private Mock<IAcademicYearValidator> _academicYearValidator;
-        private Mock<IProviderEmailNotificationService> _providerEmailNotificationService;
 
         [SetUp]
         public void Setup()
@@ -57,18 +56,13 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
             _academicYearDateProvider = new Mock<IAcademicYearDateProvider>();
             _academicYearValidator = new Mock<IAcademicYearValidator>();
 
-            _providerEmailNotificationService = new Mock<IProviderEmailNotificationService>();
-            _providerEmailNotificationService.Setup(x =>
-                x.SendProviderApprenticeshipStopNotification(It.IsAny<Apprenticeship>())).Returns(Task.CompletedTask);
-
             _handler = new UpdateApprenticeshipStatusCommandHandler(
                 _mockCommitmentApi.Object,
                 _mockMediator.Object,
                 _mockCurrentDateTime.Object,
                 _validator,
                 _academicYearDateProvider.Object,
-                _academicYearValidator.Object,
-                _providerEmailNotificationService.Object
+                _academicYearValidator.Object
                 );
         }
 
@@ -84,24 +78,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
                 _validCommand.EmployerAccountId, _validCommand.ApprenticeshipId,
                 It.Is<ApprenticeshipSubmission>(
                     y => y.PaymentStatus == expectedStatus && y.LastUpdatedByInfo.Name == _validCommand.UserDisplayName && y.LastUpdatedByInfo.EmailAddress == _validCommand.UserEmailAddress)));
-        }
-
-        [TestCase(ChangeStatusType.Stop, true)]
-        [TestCase(ChangeStatusType.Pause, false)]
-        [TestCase(ChangeStatusType.Resume, false)]
-        public async Task ThenIfStoppingSendProviderApprenticeshipStopNotification(ChangeStatusType type, bool expectSendNotification)
-        {
-            //Arrange
-            _validCommand.ChangeType = type;
-
-            //Act
-            await _handler.Handle(_validCommand);
-
-            //Assert
-            _providerEmailNotificationService.Verify(
-                x => x.SendProviderApprenticeshipStopNotification(It.IsAny<Apprenticeship>()),
-                Times.Exactly(expectSendNotification ? 1 : 0)
-                );
         }
 
         [Test]
