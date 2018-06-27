@@ -57,8 +57,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators.Messages
            new ValidationMessage("The end date is not valid||The date overlaps with existing training dates for the same apprentice. Please check the date - contact your training provider for help.", "LearnPlanEndDate_Overlap");
         public ValidationMessage EndDateBeforeOrIsCurrentMonth =>
             new ValidationMessage("The end date must be this month or earlier", "LearnPlanEndDate_BeforeOrIsCurrentMonth");
-        //public ValidationMessage EndDateBeforeOriginalEndDate =>
-        //    new ValidationMessage("The end date must be before the original end date", "LearnPlanEndDate_BeforeOriginalEndDate");
 
         public ValidationMessage TrainingPrice01 =>
             new ValidationMessage("Enter the total agreed training cost", "TrainingPrice_01");

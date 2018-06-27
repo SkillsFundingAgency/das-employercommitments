@@ -15,7 +15,6 @@
         ValidationMessage LearnPlanEndDate03 { get; }
         ValidationMessage LearnPlanEndDateOverlap { get; }
         ValidationMessage EndDateBeforeOrIsCurrentMonth { get; }
-        //ValidationMessage EndDateBeforeOriginalEndDate { get; }
         ValidationMessage LearnStartDate01 { get; }
         ValidationMessage LearnStartDate02 { get; }
         ValidationMessage LearnStartDate05 { get; }

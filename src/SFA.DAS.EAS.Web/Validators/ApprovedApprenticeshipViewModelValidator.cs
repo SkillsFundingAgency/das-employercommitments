@@ -55,15 +55,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                 if (new DateTime(updatedApprenticeship.EndDate.Year.Value, updatedApprenticeship.EndDate.Month.Value, 1) > new DateTime(now.Year, now.Month, 1))
                     //todo: new text
                     dict.Add($"{nameof(updatedApprenticeship.EndDate)}", ValidationText.EndDateBeforeOrIsCurrentMonth.Text);
-
-                // we could else, but we return all failures and let consumer decide to stop on first or not
-                // we don't let setting the end date to the original end date pass validation (even though it is valid)
-                // because setting it to what it was originally won't count as a change
-                //todo: should original date refer to the last date pre-approval, or this, which is the last end date set (even after approval)
-                // like this, they could set the end date earlier than the original, but then couldn't move it back to the original!
-                // i.e. each push back after approval is undoable
-                //if (new DateTime(updatedApprenticeship.EndDate.Year.Value, updatedApprenticeship.EndDate.Month.Value, 1) >= new DateTime(updatedApprenticeship.OriginalApprenticeship.EndDate.Value.Year, updatedApprenticeship.OriginalApprenticeship.EndDate.Value.Month, 1))
-                //    dict.Add($"{nameof(updatedApprenticeship.EndDate)}", ValidationText.EndDateBeforeOriginalEndDate.Text);
             }
 
             return dict;
