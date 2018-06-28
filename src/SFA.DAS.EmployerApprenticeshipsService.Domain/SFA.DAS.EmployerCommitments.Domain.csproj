@@ -239,6 +239,7 @@
     <Compile Include="Http\ServiceUnavailableException.cs" />
     <Compile Include="Http\TooManyRequestsException.cs" />
     <Compile Include="Interfaces\IEmployerAccountService.cs" />
+    <Compile Include="Interfaces\IEmployerEmailNotificationService.cs" />
     <Compile Include="Interfaces\IFeatureToggleService.cs" />
     <Compile Include="Interfaces\IProviderEmailLookupService.cs" />
     <Compile Include="Configuration\TokenServiceApiClientConfiguration.cs" />

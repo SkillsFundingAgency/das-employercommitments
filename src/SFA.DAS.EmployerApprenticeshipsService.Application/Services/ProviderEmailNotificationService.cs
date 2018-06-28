@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -8,7 +7,7 @@ using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Application.Services
 {
-    public class ProviderEmailNotificationService : IProviderEmailNotificationService
+    public class ProviderEmailNotificationService : EmailNotificationService, IProviderEmailNotificationService
     {
         private readonly IProviderEmailService _providerEmailService;
         private readonly ILog _logger;
@@ -39,5 +38,18 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 emailMessage);
         }
 
+        public async Task SendSenderApprovedOrRejectedCommitmentNotification(CommitmentView commitment, Commitments.Api.Types.TransferApprovalStatus newTransferApprovalStatus, Dictionary<string, string> tokens)
+        {
+            _logger.Info($"Sending notification to provider {commitment.ProviderId} that sender has {newTransferApprovalStatus} cohort {commitment.Id}");
+
+            await _providerEmailService.SendEmailToAllProviderRecipients(
+                commitment.ProviderId.GetValueOrDefault(),
+                commitment.ProviderLastUpdateInfo?.EmailAddress ?? string.Empty,
+                new EmailMessage
+                {
+                    TemplateId = GenerateSenderApprovedOrRejectedTemplateId(newTransferApprovalStatus, RecipientType.Provider),
+                    Tokens = tokens
+                });
+        }
     }
 }

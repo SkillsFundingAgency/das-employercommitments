@@ -287,6 +287,8 @@
     <Compile Include="Queries\ValidateStatusChangeDate\ValidateStatusChangeDateQueryHandler.cs" />
     <Compile Include="Queries\ValidateStatusChangeDate\ValidateStatusChangeDateQueryResponse.cs" />
     <Compile Include="Queries\ValidateStatusChangeDate\ValidateStatusChangeDateQueryValidator.cs" />
+    <Compile Include="Services\EmailNotificationService.cs" />
+    <Compile Include="Services\EmployerEmailNotificationService.cs" />
     <Compile Include="Services\ProviderEmailNotificationService.cs" />
     <Compile Include="Services\ProviderEmailService.cs" />
     <Compile Include="Validation\IValidator.cs" />
