@@ -19,6 +19,9 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         private const string ProviderApprovedTemplateId = "SenderApprovedCommitmentProviderNotification";
         private const string ProviderRejectedTemplateId = "SenderRejectedCommitmentProviderNotification";
 
+        private const string CohortReference = "COREF";
+        private const string Ukprn = "UKPRN";
+
         private ProviderEmailNotificationService _providerEmailNotificationService;
         private Mock<IProviderEmailService> _providerEmailService;
         private CommitmentView _exampleCommitmentView;
@@ -43,17 +46,15 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             _exampleCommitmentView = new CommitmentView
             {
                 ProviderId = 1,
-                ProviderLastUpdateInfo = new LastUpdateInfo { EmailAddress = "LastUpdateEmail" },
-                LegalEntityName = "Legal Entity Name",
-                Reference = "Cohort Reference"
+                ProviderLastUpdateInfo = new LastUpdateInfo { EmailAddress = "LastUpdateEmail" }
             };
 
             _transferApprovalStatus = TransferApprovalStatus.Approved;
 
             _tokens = new Dictionary<string, string>
             {
-                {"cohort_reference", "COREF"},
-                {"ukprn", "UKPRN"},
+                {"cohort_reference", CohortReference },
+                {"ukprn", Ukprn },
                 {"employer_name", "Employer Name" },
                 {"sender_name", "Sender Name" },
                 {"employer_hashed_account", "EMPHASH" },
@@ -100,6 +101,78 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             await _act();
 
             CollectionAssert.AreEqual(expectedTokens, _sentEmailMessage.Tokens);
+        }
+
+        [Test]
+        public void AndSenderHasApprovedThenTemplateSubstitutionIsCorrect()
+        {
+            const string template = @"The transfer of funds for cohort ((cohort_reference)) has been approved.
+
+To view cohort ((cohort_reference)), follow the link below.
+https://providers.apprenticeships.sfa.bis.gov.uk/((ukprn))/apprentices/cohorts/transferfunded
+
+This is an automated message. Please do not reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
+            string expectedEmailBody = $@"The transfer of funds for cohort {CohortReference} has been approved.
+
+To view cohort {CohortReference}, follow the link below.
+https://providers.apprenticeships.sfa.bis.gov.uk/{Ukprn}/apprentices/cohorts/transferfunded
+
+This is an automated message. Please do not reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
+            var emailBody = TestHelpers.PopulateTemplate(template, _tokens);
+
+            TestContext.WriteLine(emailBody);
+            Assert.AreEqual(expectedEmailBody, emailBody);
+        }
+
+        [Test]
+        public void AndSenderHasRejectedThenTemplateSubstitutionIsCorrect()
+        {
+            const string template = @"The sending employer rejected the transfer request for cohort ((cohort_reference)).
+
+What happens next?
+
+Funds for apprenticeship training won’t be available until the receiving employer, sending employer and yourself agree the cohort details.
+
+You need to contact the receiving employer to discuss what steps to take next. To view cohort ((cohort_reference)), follow the link below.
+
+https://providers.apprenticeships.sfa.bis.gov.uk/((ukprn))/apprentices/cohorts/transferfunded
+
+This is an automated message. Please do not reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
+            string expectedEmailBody = $@"The sending employer rejected the transfer request for cohort {CohortReference}.
+
+What happens next?
+
+Funds for apprenticeship training won’t be available until the receiving employer, sending employer and yourself agree the cohort details.
+
+You need to contact the receiving employer to discuss what steps to take next. To view cohort {CohortReference}, follow the link below.
+
+https://providers.apprenticeships.sfa.bis.gov.uk/{Ukprn}/apprentices/cohorts/transferfunded
+
+This is an automated message. Please do not reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
+            var emailBody = TestHelpers.PopulateTemplate(template, _tokens);
+
+            TestContext.WriteLine(emailBody);
+            Assert.AreEqual(expectedEmailBody, emailBody);
         }
     }
 }
