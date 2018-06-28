@@ -133,7 +133,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             // if editing post-approvl, we always disable if start date is in the future,
             // as the validation rule that disallows setting end date to > current month
             // means any date entered would be before the start date (which is also disallowed)
-            //todo: can sender edit?
             var isEndDateLockedForUpdate = commitment.AgreementStatus != AgreementStatus.BothAgreed
                 ? isLockedForUpdate
                 : isStartDateInFuture || (isLockedForUpdate && !apprenticeship.HasHadDataLockSuccess);

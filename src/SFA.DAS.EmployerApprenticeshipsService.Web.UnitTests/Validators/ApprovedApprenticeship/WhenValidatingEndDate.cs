@@ -20,7 +20,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprovedApprentic
 
         private const string FieldName = "EndDate";
 
-        //todo: also in provider
         [SetUp]
         public void BaseSetup()
         {
