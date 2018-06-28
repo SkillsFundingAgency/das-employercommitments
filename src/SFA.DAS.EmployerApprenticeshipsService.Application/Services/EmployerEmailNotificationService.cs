@@ -30,9 +30,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
 
         private SendNotificationCommand BuildNotificationCommand(string emailAddress, Commitments.Api.Types.TransferApprovalStatus transferApprovalStatus, RecipientType recipientType, Dictionary<string, string> tokens)
         {
-            // employer's url: https://manage-apprenticeships.service.gov.uk/commitments/accounts/((employer_hashed_account))/apprentices/cohorts/transferFunded
-            // provider's url: https://providers.apprenticeships.sfa.bis.gov.uk/((ukprn))/apprentices/cohorts/transferfunded
-
             return new SendNotificationCommand
             {
                 Email = new Email

@@ -19,6 +19,11 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
         private const string EmployerApprovedTemplateId = "SenderApprovedCommitmentEmployerNotification";
         private const string EmployerRejectedTemplateId = "SenderRejectedCommitmentEmployerNotification";
 
+        private const string CohortReference = "COREF";
+        private const string EmployerName = "Employer Name";
+        private const string SenderName = "Sender Name";
+        private const string EmployerHashedAccount = "EMPHASH";
+
         private EmployerEmailNotificationService _employermailNotificationService;
         private Mock<IMediator> _mediator;
         private CommitmentView _exampleCommitmentView;
@@ -42,20 +47,18 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
             _exampleCommitmentView = new CommitmentView
             {
                 ProviderId = 1,
-                ProviderLastUpdateInfo = new LastUpdateInfo { EmailAddress = "LastUpdateEmail" },
-                LegalEntityName = "Legal Entity Name",
-                Reference = "Cohort Reference"
+                ProviderLastUpdateInfo = new LastUpdateInfo { EmailAddress = "LastUpdateEmail" }
             };
 
             _transferApprovalStatus = TransferApprovalStatus.Approved;
 
             _tokens = new Dictionary<string, string>
             {
-                {"cohort_reference", "COREF"},
+                {"cohort_reference", CohortReference},
                 {"ukprn", "UKPRN"},
-                {"employer_name", "Employer Name" },
-                {"sender_name", "Sender Name" },
-                {"employer_hashed_account", "EMPHASH" },
+                {"employer_name", EmployerName },
+                {"sender_name", SenderName },
+                {"employer_hashed_account", EmployerHashedAccount },
             };
 
             _act = async () =>
@@ -97,6 +100,62 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
             await _act();
 
             CollectionAssert.AreEqual(expectedTokens, _sendNotificationCommand.Email.Tokens);
+        }
+
+        [Test]
+        public void AndSenderHasApprovedThenTemplateSubstitutionIsCorrect()
+        {
+            const string template = @"";
+
+            string expectedEmailBody = $@"";
+
+            var emailBody = TestHelpers.PopulateTemplate(template, _tokens);
+
+            TestContext.WriteLine(emailBody);
+            Assert.AreEqual(expectedEmailBody, emailBody);
+        }
+
+        [Test]
+        public void AndSenderHasRejectedThenTemplateSubstitutionIsCorrect()
+        {
+            const string template = @"Dear ((employer_name)),
+
+((sender_name)) has rejected your transfer request for cohort ((cohort_reference)).
+
+What happens next?
+
+Contact ((sender_name)) to agree what steps to take next.
+
+To review and edit cohort ((cohort_reference)), follow the link below.
+https://manage-apprenticeships.service.gov.uk/commitments/accounts/((employer_hashed_account))/apprentices/cohorts/transferFunded
+
+This is an automated message. Please do not reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
+            string expectedEmailBody = $@"Dear {EmployerName},
+
+{SenderName} has rejected your transfer request for cohort {CohortReference}.
+
+What happens next?
+
+Contact {SenderName} to agree what steps to take next.
+
+To review and edit cohort {CohortReference}, follow the link below.
+https://manage-apprenticeships.service.gov.uk/commitments/accounts/{EmployerHashedAccount}/apprentices/cohorts/transferFunded
+
+This is an automated message. Please do not reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
+            var emailBody = TestHelpers.PopulateTemplate(template, _tokens);
+
+            TestContext.WriteLine(emailBody);
+            Assert.AreEqual(expectedEmailBody, emailBody);
         }
     }
 }
