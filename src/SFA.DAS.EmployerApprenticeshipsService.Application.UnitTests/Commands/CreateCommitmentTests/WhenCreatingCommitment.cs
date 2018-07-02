@@ -1,22 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentAssertions.Common;
 using KellermanSoftware.CompareNetObjects;
-using MediatR;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
-using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment;
-using SFA.DAS.EmployerCommitments.Application.Commands.SendNotification;
-using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.HashingService;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateCommitmentTests
 {
@@ -26,9 +18,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateCommi
         private CreateCommitmentCommandHandler _commandHandler;
 
         private Mock<IEmployerCommitmentApi> _employerCommitmentApi;
-        //private Mock<IProviderEmailLookupService> _mockProviderEmailLookupService; //this will change to notifc service
-        private Mock<IMediator> _mediator;
-        private Mock<IProviderEmailLookupService> _providerEmailLookupService;
+        private Mock<IProviderEmailNotificationService> _providerEmailNotificationService;
 
         private CommitmentView _commitment;
 
@@ -44,10 +34,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateCommi
         {
             _employerCommitmentApi = new Mock<IEmployerCommitmentApi>();
 
-            _mediator = new Mock<IMediator>();
-            _mediator.Setup(x => x.SendAsync(It.IsAny<SendNotificationCommand>()))
-                .ReturnsAsync(new Unit());
-
             _employerCommitmentApi.Setup(x => x.CreateEmployerCommitment(It.IsAny<long>(),It.IsAny<CommitmentRequest>()))
                 .ReturnsAsync(new CommitmentView())
                 .Callback<long, CommitmentRequest>((id, req) => _capturedCommitmentRequest = req);
@@ -57,10 +43,9 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateCommi
             _employerCommitmentApi.Setup(x => x.GetEmployerCommitment(It.IsAny<long>(), It.IsAny<long>()))
                 .ReturnsAsync(_commitment);
 
-            _providerEmailLookupService = new Mock<IProviderEmailLookupService>();
-            _providerEmailLookupService.Setup(x => x.GetEmailsAsync(It.IsAny<long>(), It.IsAny<string>()))
-                .ReturnsAsync(new List<string>{ "test@email.com"});
-            //_mockProviderEmailLookupService = new Mock<IProviderEmailLookupService>();          
+            _providerEmailNotificationService = new Mock<IProviderEmailNotificationService>();
+            _providerEmailNotificationService.Setup(x => x.SendCreateCommitmentNotification(It.IsAny<CommitmentView>()))
+                .Returns(Task.CompletedTask);
 
             _payload = new CreateCommitmentCommand
             {
@@ -78,17 +63,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateCommi
 
             _commandHandler = new CreateCommitmentCommandHandler(
                 _employerCommitmentApi.Object,
-                _mediator.Object, //this will go
-                Mock.Of<ILog>(),
-                new EmployerCommitmentsServiceConfiguration
-                {
-                    CommitmentNotification  = new CommitmentNotificationConfiguration
-                    {
-                        SendEmail = true
-                    }
-                }, //this will go
-                Mock.Of<IHashingService>(), //this will go
-                _providerEmailLookupService.Object //this will be notif service
+                _providerEmailNotificationService.Object
             );
 
             _act = async () => await _commandHandler.Handle(_payload);
@@ -118,7 +93,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateCommi
             await _act.Invoke();
 
             //Assert
-            _mediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()),
+            _providerEmailNotificationService.Verify(x => x.SendCreateCommitmentNotification(It.IsAny<CommitmentView>()),
                 Times.Exactly(expectSendNotification ? 1 : 0));
         }
     }
