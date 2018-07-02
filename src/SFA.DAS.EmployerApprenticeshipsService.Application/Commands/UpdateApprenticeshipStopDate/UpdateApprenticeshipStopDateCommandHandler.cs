@@ -5,7 +5,6 @@ using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
@@ -17,18 +16,23 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
         private readonly IEmployerCommitmentApi _commitmentsApi;
         private readonly IValidator<UpdateApprenticeshipStopDateCommand> _validator;
         private readonly ICurrentDateTime _currentDateTime;
-        private readonly IMediator _mediator;
         private readonly IAcademicYearDateProvider _academicYearDateProvider;
         private readonly IAcademicYearValidator _academicYearValidator;
+        private readonly IProviderEmailNotificationService _providerEmailNotificationService;
 
-        public UpdateApprenticeshipStopDateCommandHandler(IEmployerCommitmentApi commitmentsApi, IMediator mediator, ICurrentDateTime currentDateTime, IValidator<UpdateApprenticeshipStopDateCommand> validator, IAcademicYearDateProvider academicYearDateProvider, IAcademicYearValidator academicYearValidator)
+        public UpdateApprenticeshipStopDateCommandHandler(IEmployerCommitmentApi commitmentsApi,
+            ICurrentDateTime currentDateTime,
+            IValidator<UpdateApprenticeshipStopDateCommand> validator,
+            IAcademicYearDateProvider academicYearDateProvider,
+            IAcademicYearValidator academicYearValidator,
+            IProviderEmailNotificationService providerEmailNotificationService)
         {
             _commitmentsApi = commitmentsApi;
-            _mediator = mediator;
             _currentDateTime = currentDateTime;
             _validator = validator;
             _academicYearDateProvider = academicYearDateProvider;
             _academicYearValidator = academicYearValidator;
+            _providerEmailNotificationService = providerEmailNotificationService;
         }
 
         protected override async Task HandleCore(UpdateApprenticeshipStopDateCommand command)
@@ -45,23 +49,24 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
                 NewStopDate = command.NewStopDate
             };
 
-            await ValidateNewStopDate(command, validationResult);
+            var apprenticeship = await
+                _commitmentsApi.GetEmployerApprenticeship(command.EmployerAccountId, command.ApprenticeshipId);
+
+            ValidateNewStopDate(command, apprenticeship);
 
             await _commitmentsApi.PutApprenticeshipStopDate(command.EmployerAccountId, command.CommitmentId, command.ApprenticeshipId, stopDate);
+           
+            await _providerEmailNotificationService.SendProviderApprenticeshipStopEditNotification(apprenticeship,
+                command.NewStopDate);
         }
 
-        private async Task ValidateNewStopDate(UpdateApprenticeshipStopDateCommand command,
-            ValidationResult validationResult)
+        private void ValidateNewStopDate(UpdateApprenticeshipStopDateCommand command, Apprenticeship apprenticeship)
         {
-            var response = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
+            var validationResult = new ValidationResult();
+        
+            if (apprenticeship.IsWaitingToStart(_currentDateTime))
             {
-                AccountId = command.EmployerAccountId,
-                ApprenticeshipId = command.ApprenticeshipId
-            });
-
-            if (response.Apprenticeship.IsWaitingToStart(_currentDateTime))
-            {
-                if (!command.NewStopDate.Equals(response.Apprenticeship.StartDate))
+                if (!command.NewStopDate.Equals(apprenticeship.StartDate))
                 {
                     validationResult.AddError(nameof(command.NewStopDate),
                         "Date must the same as start date if training hasn't started");
@@ -76,7 +81,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
                     throw new InvalidRequestException(validationResult.ValidationDictionary);
                 }
 
-                if (response.Apprenticeship.StartDate > command.NewStopDate)
+                if (apprenticeship.StartDate > command.NewStopDate)
                 {
                     validationResult.AddError(nameof(command.NewStopDate),
                         "Date cannot be earlier than training start date");
