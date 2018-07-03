@@ -98,8 +98,10 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
                 {"employer_hashed_account", _hashingService.HashValue(commitment.EmployerAccountId) },
             };
 
-            await _providerEmailNotificationService.SendSenderApprovedOrRejectedCommitmentNotification(commitment, newTransferApprovalStatus, tokens);
-            await _employerEmailNotificationService.SendSenderApprovedOrRejectedCommitmentNotification(commitment, newTransferApprovalStatus, tokens);
+            var providerNotifyTask = _providerEmailNotificationService.SendSenderApprovedOrRejectedCommitmentNotification(commitment, newTransferApprovalStatus, tokens);
+            var employerNotifyTask = _employerEmailNotificationService.SendSenderApprovedOrRejectedCommitmentNotification(commitment, newTransferApprovalStatus, tokens);
+
+            await Task.WhenAll(providerNotifyTask, employerNotifyTask);
         }
     }
 }
