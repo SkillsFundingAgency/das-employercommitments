@@ -31,7 +31,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         private EmailMessage _sentEmailMessage;
         private Func<Task> _act;
 
-        //todo: move to base?
         [SetUp]
         public void Arrange()
         {

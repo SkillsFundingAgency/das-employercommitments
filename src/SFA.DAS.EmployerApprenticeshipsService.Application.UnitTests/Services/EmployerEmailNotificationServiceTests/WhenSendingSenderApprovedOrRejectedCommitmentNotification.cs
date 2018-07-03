@@ -32,7 +32,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
         private SendNotificationCommand _sendNotificationCommand;
         private Func<Task> _act;
 
-        //todo: move to base?
         [SetUp]
         public void Arrange()
         {
