@@ -105,9 +105,31 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
         [Test]
         public void AndSenderHasApprovedThenTemplateSubstitutionIsCorrect()
         {
-            const string template = @"";
+            const string template = @"Dear ((employer_name)),
 
-            string expectedEmailBody = $@"";
+Your transfer request for cohort ((cohort_reference)) has been approved by ((sender_name)).
+
+To review this cohort, follow the link below.
+https://manage-apprenticeships.service.gov.uk/commitments/accounts/((employer_hashed_account))/apprentices/cohorts/transferFunded
+
+This is an automated message. Please do not reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
+
+            string expectedEmailBody = $@"Dear {EmployerName},
+
+Your transfer request for cohort {CohortReference} has been approved by {SenderName}.
+
+To review this cohort, follow the link below.
+https://manage-apprenticeships.service.gov.uk/commitments/accounts/{EmployerHashedAccount}/apprentices/cohorts/transferFunded
+
+This is an automated message. Please do not reply to this email.
+
+Kind regards,
+
+Apprenticeship service team";
 
             var emailBody = TestHelpers.PopulateTemplate(template, _tokens);
 
