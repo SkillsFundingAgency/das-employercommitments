@@ -91,7 +91,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
 
             var tokens = new Dictionary<string, string>
             {
-                {"cohort_reference", commitment.Reference}, //todo: already hashed?
+                {"cohort_reference", commitment.Reference},
                 {"ukprn", commitment.ProviderId.ToString()},       // only provider email needs this
                 {"employer_name", commitment.LegalEntityName },    // only employer email needs these...
                 {"sender_name", commitment.TransferSender.Name },
