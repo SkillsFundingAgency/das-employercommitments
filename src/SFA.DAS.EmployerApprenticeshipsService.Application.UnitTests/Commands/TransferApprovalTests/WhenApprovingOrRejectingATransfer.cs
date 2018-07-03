@@ -201,8 +201,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
             Assert.AreEqual(expectedValue, actualTokens[tokenName]);
         }
 
-        //todo: unit test template substitution
-
         #endregion Notifications
     }
 }
