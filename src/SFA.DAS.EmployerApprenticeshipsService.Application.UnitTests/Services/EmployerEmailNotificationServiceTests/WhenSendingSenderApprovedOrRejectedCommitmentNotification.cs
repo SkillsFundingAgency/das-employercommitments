@@ -19,6 +19,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
         private const string EmployerApprovedTemplateId = "SenderApprovedCommitmentEmployerNotification";
         private const string EmployerRejectedTemplateId = "SenderRejectedCommitmentEmployerNotification";
 
+        private const string EmployersEmailAddress = "LastUpdateEmail@example.com";
         private const string CohortReference = "COREF";
         private const string EmployerName = "Employer Name";
         private const string SenderName = "Sender Name";
@@ -45,8 +46,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
 
             _exampleCommitmentView = new CommitmentView
             {
-                ProviderId = 1,
-                ProviderLastUpdateInfo = new LastUpdateInfo { EmailAddress = "LastUpdateEmail" }
+                EmployerLastUpdateInfo = new LastUpdateInfo { EmailAddress = EmployersEmailAddress }
             };
 
             _transferApprovalStatus = TransferApprovalStatus.Approved;
@@ -75,9 +75,29 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
         {
             await _act();
 
-            _mediator.Verify(x => x.SendAsync(
-                It.IsAny<SendNotificationCommand>()),
-                Times.Once);
+            _mediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()), Times.Once);
+        }
+
+        [Test]
+        public async Task ThenNoNotificationIsSentIfNoEmployerLastUpdateInfo()
+        {
+            _exampleCommitmentView.EmployerLastUpdateInfo = null;
+
+            await _act();
+
+            _mediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()), Times.Never);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public async Task ThenNoNotificationIsSentIfNoEmployerLastUpdateEmailAddress(string emailAddress)
+        {
+            _exampleCommitmentView.EmployerLastUpdateInfo.EmailAddress = emailAddress;
+
+            await _act();
+
+            _mediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()), Times.Never);
         }
 
         [TestCase(EmployerApprovedTemplateId, TransferApprovalStatus.Approved)]
@@ -89,6 +109,14 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
             await _act();
 
             Assert.AreEqual(expectedTemplateId, _sendNotificationCommand.Email.TemplateId);
+        }
+
+        [Test]
+        public async Task ThenEmployersEmailAddressIsPassedInEmailMessage()
+        {
+            await _act();
+
+            Assert.AreEqual(EmployersEmailAddress, _sendNotificationCommand.Email.RecipientsAddress);
         }
 
         [Test]

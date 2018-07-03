@@ -22,9 +22,16 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
 
         public async Task SendSenderApprovedOrRejectedCommitmentNotification(CommitmentView commitment, Commitments.Api.Types.TransferApprovalStatus newTransferApprovalStatus, Dictionary<string, string> tokens)
         {
-            _logger.Info($"Sending email notification to {commitment.EmployerLastUpdateInfo.EmailAddress} of employer id {commitment.EmployerAccountId} that sender has {newTransferApprovalStatus} cohort id {commitment.Id}");
+            var email = commitment.EmployerLastUpdateInfo?.EmailAddress;
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                _logger.Info($"No email associated with employer, skipping notification of employer id {commitment.EmployerAccountId} that sender has {newTransferApprovalStatus} cohort id {commitment.Id}");
+                return;
+            }
 
-            var notificationCommand = BuildNotificationCommand(commitment.EmployerLastUpdateInfo.EmailAddress, newTransferApprovalStatus, RecipientType.Employer, tokens);
+            _logger.Info($"Sending email notification to {email} of employer id {commitment.EmployerAccountId} that sender has {newTransferApprovalStatus} cohort id {commitment.Id}");
+
+            var notificationCommand = BuildNotificationCommand(email, newTransferApprovalStatus, RecipientType.Employer, tokens);
             await _mediator.SendAsync(notificationCommand);
         }
 

@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             _exampleCommitmentView = new CommitmentView
             {
                 ProviderId = 1,
-                ProviderLastUpdateInfo = new LastUpdateInfo { EmailAddress = "LastUpdateEmail" }
+                ProviderLastUpdateInfo = new LastUpdateInfo { EmailAddress = "LastUpdateEmail@example.com" }
             };
 
             _transferApprovalStatus = TransferApprovalStatus.Approved;
@@ -73,12 +73,29 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         [Test]
         public async Task ThenProviderEmailServiceIsCalledToSendEmail()
         {
+            var expectedProviderId = _exampleCommitmentView.ProviderId;
+            var expectedEmailAddress = _exampleCommitmentView.ProviderLastUpdateInfo.EmailAddress;
+
             await _act();
 
             _providerEmailService.Verify(x => x.SendEmailToAllProviderRecipients(
-                It.Is<long>(l => l == _exampleCommitmentView.ProviderId),
-                It.Is<string>(s => s == _exampleCommitmentView.ProviderLastUpdateInfo.EmailAddress),
+                It.Is<long>(l => l == expectedProviderId),
+                It.Is<string>(s => s == expectedEmailAddress),
                 It.IsAny<EmailMessage>()),
+                Times.Once);
+        }
+
+        [Test]
+        public async Task AndNullProviderLastUpdateInfoThenProviderEmailServiceIsCalledWithEmptyEmail()
+        {
+            _exampleCommitmentView.ProviderLastUpdateInfo = null;
+
+            await _act();
+
+            _providerEmailService.Verify(x => x.SendEmailToAllProviderRecipients(
+                    It.IsAny<long>(),
+                    It.Is<string>(s => s == ""),
+                    It.IsAny<EmailMessage>()),
                 Times.Once);
         }
 
