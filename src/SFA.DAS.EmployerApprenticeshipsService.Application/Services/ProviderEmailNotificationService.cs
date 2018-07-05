@@ -84,6 +84,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 string.Empty,
                 emailMessage);
         }
+
         public async Task SendSenderApprovedOrRejectedCommitmentNotification(CommitmentView commitment, Commitments.Api.Types.TransferApprovalStatus newTransferApprovalStatus)
         {
             Logger.Info($"Sending notification to provider {commitment.ProviderId} that sender has {newTransferApprovalStatus} cohort {commitment.Id}");

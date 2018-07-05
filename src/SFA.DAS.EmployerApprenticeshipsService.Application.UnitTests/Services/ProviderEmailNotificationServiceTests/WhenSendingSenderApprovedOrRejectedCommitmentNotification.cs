@@ -119,9 +119,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         {
             const string template = @"The transfer of funds for cohort ((cohort_reference)) has been approved.
 
-To view cohort ((cohort_reference)), follow the link below.
-https://providers.apprenticeships.sfa.bis.gov.uk/((ukprn))/apprentices/cohorts/transferfunded
-
 This is an automated message. Please do not reply to this email.
 
 Kind regards,
@@ -129,9 +126,6 @@ Kind regards,
 Apprenticeship service team";
 
             string expectedEmailBody = $@"The transfer of funds for cohort {CohortReference} has been approved.
-
-To view cohort {CohortReference}, follow the link below.
-https://providers.apprenticeships.sfa.bis.gov.uk/{ProviderId}/apprentices/cohorts/transferfunded
 
 This is an automated message. Please do not reply to this email.
 

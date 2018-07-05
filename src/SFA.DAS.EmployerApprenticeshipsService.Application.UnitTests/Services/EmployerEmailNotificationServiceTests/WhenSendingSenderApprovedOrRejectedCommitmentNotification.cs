@@ -147,9 +147,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
 
 Your transfer request for cohort ((cohort_reference)) has been approved by ((sender_name)).
 
-To review this cohort, follow the link below.
-https://manage-apprenticeships.service.gov.uk/commitments/accounts/((employer_hashed_account))/apprentices/cohorts/transferFunded
-
 This is an automated message. Please do not reply to this email.
 
 Kind regards,
@@ -159,9 +156,6 @@ Apprenticeship service team";
             string expectedEmailBody = $@"Dear {EmployerName},
 
 Your transfer request for cohort {CohortReference} has been approved by {SenderName}.
-
-To review this cohort, follow the link below.
-https://manage-apprenticeships.service.gov.uk/commitments/accounts/{HashedEmployerAccountId}/apprentices/cohorts/transferFunded
 
 This is an automated message. Please do not reply to this email.
 
