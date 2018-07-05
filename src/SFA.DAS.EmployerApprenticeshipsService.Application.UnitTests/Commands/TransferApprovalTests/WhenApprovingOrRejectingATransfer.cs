@@ -1,16 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
-using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApprovalTests
@@ -20,26 +17,13 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
     {
         #region Setup
 
-        private const long ProviderId = 987654321L;
-        private const string ProviderLastUpdatedByEmail = "providerbob@example.com";
-        private const string CommitmentReference = "COMREF";
-
-        private const string CohortReferenceToken = "cohort_reference";
-        private const string UkprnToken = "ukprn";
-        private const string EmployerNameToken = "employer_name";
-        private const string SenderNameToken = "sender_name";
-        private const string EmployerHashedAccountToken = "employer_hashed_account";
-
         private Mock<IEmployerCommitmentApi> _mockCommitmentApi;
-        private Mock<IHashingService> _hashingService;
         private Mock<IProviderEmailNotificationService> _providerEmailNotificationService;
         private Mock<IEmployerEmailNotificationService> _employerEmailNotificationService;
 
         private CommitmentView _repositoryCommitment;
         private TransferApprovalCommandHandler _sut;
         private TransferApprovalCommand _command;
-
-        private Dictionary<string, string> _tokens;
 
         [SetUp]
         public void Setup()
@@ -53,9 +37,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
 
             _repositoryCommitment = new CommitmentView
             {
-                Reference = CommitmentReference,
-                ProviderId = ProviderId,
-                ProviderLastUpdateInfo = new LastUpdateInfo {EmailAddress = ProviderLastUpdatedByEmail},
                 TransferSender = new TransferSender
                 {
                     Id = _command.TransferSenderId,
@@ -72,22 +53,18 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
                 CommitmentNotification = new CommitmentNotificationConfiguration {SendEmail = true}
             };
 
-            _hashingService = new Mock<IHashingService>();
-
             _providerEmailNotificationService = new Mock<IProviderEmailNotificationService>();
             _providerEmailNotificationService
-                .Setup(x => x.SendSenderApprovedOrRejectedCommitmentNotification(It.IsAny<CommitmentView>(), It.IsAny<TransferApprovalStatus>(), It.IsAny<Dictionary<string, string>>()))
-                .Callback<CommitmentView, TransferApprovalStatus, Dictionary<string, string>>((c, s, t) => _tokens = t)
+                .Setup(x => x.SendSenderApprovedOrRejectedCommitmentNotification(It.IsAny<CommitmentView>(), It.IsAny<TransferApprovalStatus>()))
                 .Returns(() => Task.CompletedTask);
 
             _employerEmailNotificationService = new Mock<IEmployerEmailNotificationService>();
             _employerEmailNotificationService
-                .Setup(x => x.SendSenderApprovedOrRejectedCommitmentNotification(It.IsAny<CommitmentView>(), It.IsAny<TransferApprovalStatus>(), It.IsAny<Dictionary<string, string>>()))
-                .Callback<CommitmentView, TransferApprovalStatus, Dictionary<string, string>>((c, s, t) => _tokens = t)
+                .Setup(x => x.SendSenderApprovedOrRejectedCommitmentNotification(It.IsAny<CommitmentView>(), It.IsAny<TransferApprovalStatus>()))
                 .Returns(() => Task.CompletedTask);
 
             _sut = new TransferApprovalCommandHandler(_mockCommitmentApi.Object, config,
-                Mock.Of<ILog>(), _hashingService.Object, _providerEmailNotificationService.Object, _employerEmailNotificationService.Object);
+                Mock.Of<ILog>(), _providerEmailNotificationService.Object, _employerEmailNotificationService.Object);
         }
 
         #endregion Setup
@@ -150,55 +127,22 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
 
             _providerEmailNotificationService.Verify(pens =>
                 pens.SendSenderApprovedOrRejectedCommitmentNotification(
-                    It.IsAny<CommitmentView>(), It.Is<TransferApprovalStatus>(s => s == transferApprovalStatus), It.IsAny<Dictionary<string, string>>()),
+                    It.IsAny<CommitmentView>(), It.Is<TransferApprovalStatus>(s => s == transferApprovalStatus)),
                     Times.Once);
-
-            // we pass more tokens than are required for any individual email (an implementation detail),
-            // which means we don't want to test for the presence of all the tokens we actually pass (e.g. with CollectionAssert)
-            // we only want to check for the tokens that are necessary
-
-            AssertToken(_tokens, CohortReferenceToken, CommitmentReference);
-            AssertToken(_tokens, UkprnToken, $"{ProviderId}");
         }
 
         [TestCase(TransferApprovalStatus.Approved)]
         [TestCase(TransferApprovalStatus.Rejected)]
         public async Task ThenEmployerIsNotifiedWhenEmailEnabled(TransferApprovalStatus transferApprovalStatus)
         {
-            const string legalEntityName = "Receiver Name";
-            const string transferSenderName = "Sender Name";
-            const long employerAccountId = 5L;
-            const string hashedEmployerAccountId = "6GVW8M";
-
             _command.TransferStatus = transferApprovalStatus;
-
-            _repositoryCommitment.LegalEntityName = legalEntityName;
-            _repositoryCommitment.TransferSender.Name = transferSenderName;
-            _repositoryCommitment.EmployerAccountId = employerAccountId;
-
-            _hashingService.Setup(h => h.HashValue(employerAccountId)).Returns(hashedEmployerAccountId);
 
             await _sut.Handle(_command);
 
             _employerEmailNotificationService.Verify(pens =>
                     pens.SendSenderApprovedOrRejectedCommitmentNotification(
-                        It.IsAny<CommitmentView>(), It.Is<TransferApprovalStatus>(s => s == transferApprovalStatus), It.IsAny<Dictionary<string, string>>()),
+                        It.IsAny<CommitmentView>(), It.Is<TransferApprovalStatus>(s => s == transferApprovalStatus)),
                 Times.Once);
-
-            // we pass more tokens than are required for any individual email (an implementation detail),
-            // which means we don't want to test for the presence of all the tokens we actually pass (e.g. with CollectionAssert)
-            // we only want to check for the tokens that are necessary
-
-            AssertToken(_tokens, CohortReferenceToken, CommitmentReference);
-            AssertToken(_tokens, EmployerNameToken, legalEntityName);
-            AssertToken(_tokens, SenderNameToken, transferSenderName);
-            AssertToken(_tokens, EmployerHashedAccountToken, hashedEmployerAccountId);
-        }
-
-        private void AssertToken(Dictionary<string, string> actualTokens, string tokenName, string expectedValue)
-        {
-            Assert.IsTrue(actualTokens.ContainsKey(tokenName));
-            Assert.AreEqual(expectedValue, actualTokens[tokenName]);
         }
 
         #endregion Notifications

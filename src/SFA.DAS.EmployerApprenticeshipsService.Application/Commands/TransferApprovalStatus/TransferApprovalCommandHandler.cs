@@ -6,7 +6,6 @@ using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus
@@ -16,7 +15,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
         private readonly IEmployerCommitmentApi _commitmentsService;
         private readonly ILog _logger;
         private readonly EmployerCommitmentsServiceConfiguration _configuration;
-        private readonly IHashingService _hashingService;
         private readonly IProviderEmailNotificationService _providerEmailNotificationService;
         private readonly IEmployerEmailNotificationService _employerEmailNotificationService;
 
@@ -24,14 +22,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
             IEmployerCommitmentApi commitmentsApi,
             EmployerCommitmentsServiceConfiguration configuration,
             ILog logger,
-            IHashingService hashingService,
             IProviderEmailNotificationService providerEmailNotificationService,
             IEmployerEmailNotificationService employerEmailNotificationService)
         {
             _commitmentsService = commitmentsApi;
             _configuration = configuration;
             _logger = logger;
-            _hashingService = hashingService;
             _providerEmailNotificationService = providerEmailNotificationService;
             _employerEmailNotificationService = employerEmailNotificationService;
         }
@@ -83,23 +79,15 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
 
         private async Task SendNotifications(CommitmentView commitment, Commitments.Api.Types.TransferApprovalStatus newTransferApprovalStatus)
         {
+            //todo: move this into base notification service? or in defaultregistry supply a noop implementation?
             if (!_configuration.CommitmentNotification.SendEmail)
             {
                 _logger.Info("Sending email notifications disabled by config.");
                 return;
             }
 
-            var tokens = new Dictionary<string, string>
-            {
-                {"cohort_reference", commitment.Reference},
-                {"ukprn", commitment.ProviderId.ToString()},       // only provider email needs this
-                {"employer_name", commitment.LegalEntityName },    // only employer email needs these...
-                {"sender_name", commitment.TransferSender.Name },
-                {"employer_hashed_account", _hashingService.HashValue(commitment.EmployerAccountId) },
-            };
-
-            var providerNotifyTask = _providerEmailNotificationService.SendSenderApprovedOrRejectedCommitmentNotification(commitment, newTransferApprovalStatus, tokens);
-            var employerNotifyTask = _employerEmailNotificationService.SendSenderApprovedOrRejectedCommitmentNotification(commitment, newTransferApprovalStatus, tokens);
+            var providerNotifyTask = _providerEmailNotificationService.SendSenderApprovedOrRejectedCommitmentNotification(commitment, newTransferApprovalStatus);
+            var employerNotifyTask = _employerEmailNotificationService.SendSenderApprovedOrRejectedCommitmentNotification(commitment, newTransferApprovalStatus);
 
             await Task.WhenAll(providerNotifyTask, employerNotifyTask);
         }

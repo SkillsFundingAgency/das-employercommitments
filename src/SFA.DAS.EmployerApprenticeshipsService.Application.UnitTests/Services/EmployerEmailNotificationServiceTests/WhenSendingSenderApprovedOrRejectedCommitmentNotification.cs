@@ -9,6 +9,7 @@ using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.SendNotification;
 using SFA.DAS.EmployerCommitments.Application.Services;
+using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEmailNotificationServiceTests
@@ -23,10 +24,12 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
         private const string CohortReference = "COREF";
         private const string EmployerName = "Employer Name";
         private const string SenderName = "Sender Name";
-        private const string EmployerHashedAccount = "EMPHASH";
+        const long EmployerAccountId = 5L;
+        const string HashedEmployerAccountId = "6GVW8M";
 
         private EmployerEmailNotificationService _employermailNotificationService;
         private Mock<IMediator> _mediator;
+        private Mock<IHashingService> _hashingService;
         private CommitmentView _exampleCommitmentView;
         private TransferApprovalStatus _transferApprovalStatus;
         private Dictionary<string, string> _tokens;
@@ -41,12 +44,21 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
                 .Callback<IAsyncRequest<Unit>>(c => _sendNotificationCommand = c as SendNotificationCommand)
                 .Returns(Task.FromResult(new Unit()));
 
+            _hashingService = new Mock<IHashingService>();
+
             _employermailNotificationService =
-                new EmployerEmailNotificationService(_mediator.Object, Mock.Of<ILog>());
+                new EmployerEmailNotificationService(_mediator.Object, Mock.Of<ILog>(), _hashingService.Object);
 
             _exampleCommitmentView = new CommitmentView
             {
-                EmployerLastUpdateInfo = new LastUpdateInfo { EmailAddress = EmployersEmailAddress }
+                EmployerLastUpdateInfo = new LastUpdateInfo { EmailAddress = EmployersEmailAddress },
+                EmployerAccountId = EmployerAccountId,
+                LegalEntityName = EmployerName,
+                Reference = CohortReference,
+                TransferSender = new TransferSender
+                {
+                    Name = SenderName
+                }
             };
 
             _transferApprovalStatus = TransferApprovalStatus.Approved;
@@ -54,14 +66,13 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
             _tokens = new Dictionary<string, string>
             {
                 {"cohort_reference", CohortReference},
-                {"ukprn", "UKPRN"},
                 {"employer_name", EmployerName },
                 {"sender_name", SenderName },
-                {"employer_hashed_account", EmployerHashedAccount },
+                {"employer_hashed_account", HashedEmployerAccountId },
             };
 
             _act = async () =>
-                await _employermailNotificationService.SendSenderApprovedOrRejectedCommitmentNotification(_exampleCommitmentView, _transferApprovalStatus, _tokens);
+                await _employermailNotificationService.SendSenderApprovedOrRejectedCommitmentNotification(_exampleCommitmentView, _transferApprovalStatus);
         }
 
         [TearDown]
@@ -100,6 +111,14 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
             _mediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()), Times.Never);
         }
 
+        [Test]
+        public async Task ThenEmployersEmailAddressIsPassedInEmailMessage()
+        {
+            await _act();
+
+            Assert.AreEqual(EmployersEmailAddress, _sendNotificationCommand.Email.RecipientsAddress);
+        }
+
         [TestCase(EmployerApprovedTemplateId, TransferApprovalStatus.Approved)]
         [TestCase(EmployerRejectedTemplateId, TransferApprovalStatus.Rejected)]
         public async Task ThenEmailMessageTemplateIdIsSetCorrectly(string expectedTemplateId, TransferApprovalStatus transferApprovalStatus)
@@ -112,21 +131,13 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.EmployerEma
         }
 
         [Test]
-        public async Task ThenEmployersEmailAddressIsPassedInEmailMessage()
+        public async Task ThenCorrectTokensArePassedInEmailMessage()
         {
-            await _act();
-
-            Assert.AreEqual(EmployersEmailAddress, _sendNotificationCommand.Email.RecipientsAddress);
-        }
-
-        [Test]
-        public async Task ThenSuppliedTokensArePassedInEmailMessage()
-        {
-            var expectedTokens = TestHelpers.Clone(_tokens);
+            _hashingService.Setup(h => h.HashValue(EmployerAccountId)).Returns(HashedEmployerAccountId);
 
             await _act();
 
-            CollectionAssert.AreEqual(expectedTokens, _sendNotificationCommand.Email.Tokens);
+            CollectionAssert.AreEqual(_tokens, _sendNotificationCommand.Email.Tokens);
         }
 
         [Test]
@@ -150,7 +161,7 @@ Apprenticeship service team";
 Your transfer request for cohort {CohortReference} has been approved by {SenderName}.
 
 To review this cohort, follow the link below.
-https://manage-apprenticeships.service.gov.uk/commitments/accounts/{EmployerHashedAccount}/apprentices/cohorts/transferFunded
+https://manage-apprenticeships.service.gov.uk/commitments/accounts/{HashedEmployerAccountId}/apprentices/cohorts/transferFunded
 
 This is an automated message. Please do not reply to this email.
 
@@ -193,7 +204,7 @@ What happens next?
 Contact {SenderName} to agree what steps to take next.
 
 To review and edit cohort {CohortReference}, follow the link below.
-https://manage-apprenticeships.service.gov.uk/commitments/accounts/{EmployerHashedAccount}/apprentices/cohorts/transferFunded
+https://manage-apprenticeships.service.gov.uk/commitments/accounts/{HashedEmployerAccountId}/apprentices/cohorts/transferFunded
 
 This is an automated message. Please do not reply to this email.
 

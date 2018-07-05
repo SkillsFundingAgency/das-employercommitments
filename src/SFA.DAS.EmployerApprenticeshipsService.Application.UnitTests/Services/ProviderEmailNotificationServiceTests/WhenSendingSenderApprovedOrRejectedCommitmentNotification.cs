@@ -20,8 +20,9 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         private const string ProviderApprovedTemplateId = "SenderApprovedCommitmentProviderNotification";
         private const string ProviderRejectedTemplateId = "SenderRejectedCommitmentProviderNotification";
 
+        private const string ProviderLastUpdatedByEmail = "providerbob@example.com";
+        private const long ProviderId = 987654321L;
         private const string CohortReference = "COREF";
-        private const string Ukprn = "UKPRN";
 
         private ProviderEmailNotificationService _providerEmailNotificationService;
         private Mock<IProviderEmailService> _providerEmailService;
@@ -45,8 +46,9 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
 
             _exampleCommitmentView = new CommitmentView
             {
-                ProviderId = 1,
-                ProviderLastUpdateInfo = new LastUpdateInfo { EmailAddress = "LastUpdateEmail@example.com" }
+                Reference = CohortReference,
+                ProviderId = ProviderId,
+                ProviderLastUpdateInfo = new LastUpdateInfo { EmailAddress = ProviderLastUpdatedByEmail }
             };
 
             _transferApprovalStatus = TransferApprovalStatus.Approved;
@@ -54,14 +56,11 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             _tokens = new Dictionary<string, string>
             {
                 {"cohort_reference", CohortReference },
-                {"ukprn", Ukprn },
-                {"employer_name", "Employer Name" },
-                {"sender_name", "Sender Name" },
-                {"employer_hashed_account", "EMPHASH" },
+                {"ukprn", ProviderId.ToString() }
             };
 
             _act = async () =>
-                await _providerEmailNotificationService.SendSenderApprovedOrRejectedCommitmentNotification(_exampleCommitmentView, _transferApprovalStatus, _tokens);
+                await _providerEmailNotificationService.SendSenderApprovedOrRejectedCommitmentNotification(_exampleCommitmentView, _transferApprovalStatus);
         }
 
         [TearDown]
@@ -71,16 +70,13 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         }
 
         [Test]
-        public async Task ThenProviderEmailServiceIsCalledToSendEmail()
+        public async Task ThenProviderEmailServiceIsCalledToSendEmailWithCorrectEmailAddressAndProviderId()
         {
-            var expectedProviderId = _exampleCommitmentView.ProviderId;
-            var expectedEmailAddress = _exampleCommitmentView.ProviderLastUpdateInfo.EmailAddress;
-
             await _act();
 
             _providerEmailService.Verify(x => x.SendEmailToAllProviderRecipients(
-                It.Is<long>(l => l == expectedProviderId),
-                It.Is<string>(s => s == expectedEmailAddress),
+                It.Is<long>(l => l == ProviderId),
+                It.Is<string>(s => s == ProviderLastUpdatedByEmail),
                 It.IsAny<EmailMessage>()),
                 Times.Once);
         }
@@ -111,13 +107,11 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         }
 
         [Test]
-        public async Task ThenSuppliedTokensArePassedInEmailMessage()
+        public async Task ThenCorrectTokensArePassedInEmailMessage()
         {
-            var expectedTokens = TestHelpers.Clone(_tokens);
-
             await _act();
 
-            CollectionAssert.AreEqual(expectedTokens, _sentEmailMessage.Tokens);
+            CollectionAssert.AreEqual(_tokens, _sentEmailMessage.Tokens);
         }
 
         [Test]
@@ -137,7 +131,7 @@ Apprenticeship service team";
             string expectedEmailBody = $@"The transfer of funds for cohort {CohortReference} has been approved.
 
 To view cohort {CohortReference}, follow the link below.
-https://providers.apprenticeships.sfa.bis.gov.uk/{Ukprn}/apprentices/cohorts/transferfunded
+https://providers.apprenticeships.sfa.bis.gov.uk/{ProviderId}/apprentices/cohorts/transferfunded
 
 This is an automated message. Please do not reply to this email.
 
@@ -178,7 +172,7 @@ Funds for apprenticeship training won’t be available until the receiving emplo
 
 You need to contact the receiving employer to discuss what steps to take next. To view cohort {CohortReference}, follow the link below.
 
-https://providers.apprenticeships.sfa.bis.gov.uk/{Ukprn}/apprentices/cohorts/transferfunded
+https://providers.apprenticeships.sfa.bis.gov.uk/{ProviderId}/apprentices/cohorts/transferfunded
 
 This is an automated message. Please do not reply to this email.
 
