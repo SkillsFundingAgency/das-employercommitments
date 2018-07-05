@@ -22,6 +22,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public DateTime? StopDate { get; set; }
 
+        public TrainingType TrainingType { get; set; }
+
         public string TrainingName { get; set; }
 
         public decimal? Cost { get; set; }
@@ -49,6 +51,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public bool PendingDataLockChange { get; set; }
 
         public bool CanEditStopDate { get; set; }
+
+        public string EndpointAssessorName { get; set; }
     }
 
     public enum PendingChanges
