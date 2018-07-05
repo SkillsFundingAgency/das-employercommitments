@@ -79,7 +79,9 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
 
         private async Task SendNotifications(CommitmentView commitment, Commitments.Api.Types.TransferApprovalStatus newTransferApprovalStatus)
         {
-            //todo: move this into base notification service? or in defaultregistry supply a noop implementation?
+            //todo: we should probably also check this in EmployerEmailNotificationService
+            // (ProviderEmailNotificationService uses ProviderEmailService, which checks it)
+            // or in defaultregistry we could supply no-op implementations for XxxEmailNotificationService when SendEmail is disabled
             if (!_configuration.CommitmentNotification.SendEmail)
             {
                 _logger.Info("Sending email notifications disabled by config.");
