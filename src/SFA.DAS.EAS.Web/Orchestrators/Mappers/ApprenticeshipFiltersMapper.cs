@@ -6,6 +6,7 @@ using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using ApprenticeshipStatus = SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship.ApprenticeshipStatus;
 using RecordStatus = SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship.RecordStatus;
+using FundingStatus = SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship.FundingStatus;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 {
@@ -48,6 +49,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 trainingCourses.AddRange(filters.Course);
             }
 
+            var fundingStatuses = new List<Commitments.Api.Types.Apprenticeship.Types.FundingStatus>();
+            if (filters.FundingStatus != null)
+            {
+                fundingStatuses.AddRange(
+                    filters.FundingStatus.Select(
+                            x => (Commitments.Api.Types.Apprenticeship.Types.FundingStatus)
+                                Enum.Parse(typeof(Commitments.Api.Types.Apprenticeship.Types.FundingStatus), x)));
+            }
+
             var result = new ApprenticeshipSearchQuery
             {
                 SearchKeyword = filters.SearchInput,
@@ -55,7 +65,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 TrainingProviderIds = selectedProviders,
                 ApprenticeshipStatuses = selectedStatuses,
                 RecordStatuses = recordStatuses,
-                TrainingCourses = trainingCourses
+                TrainingCourses = trainingCourses,
+                FundingStatuses = fundingStatuses
+                // IsTransferFunded = filters.FundingStatus?.Contains("TransferFunded") ?? false;
             };
 
             return result;
@@ -111,7 +123,20 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
                 if (recordStatus.Selected)
                 {
-                    result.RecordStatus.Add(recordStatus.Data.ToString());
+                    result.RecordStatus.Add(key);
+                }
+            }
+
+            //todo: using for type?
+            var fundingStatuses = new List<KeyValuePair<string, string>>();
+            foreach (var fundingStatus in facets.FundingStatuses)
+            {
+                var key = fundingStatus.Data.ToString();
+                providers.Add(new KeyValuePair<string, string>(key, ((FundingStatus)fundingStatus.Data).GetDescription()));
+
+                if (fundingStatus.Selected)
+                {
+                    result.FundingStatus.Add(key);
                 }
             }
 
@@ -119,6 +144,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             result.TrainingCourseOptions = courses;
             result.ProviderOrganisationOptions = providers;
             result.RecordStatusOptions = recordStatuses;
+            result.FundingStatusOptions = fundingStatuses;
 
             return result;
         }

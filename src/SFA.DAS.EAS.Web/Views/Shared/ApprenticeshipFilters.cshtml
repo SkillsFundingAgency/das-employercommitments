@@ -8,7 +8,7 @@
         <div class="option-select-label">Status</div>
     </div>
     <div class="options-container">
-       @RenderFilterOptions("Status", Model.ApprenticeshipStatusOptions, Model.Status)
+        @RenderFilterOptions("Status", Model.ApprenticeshipStatusOptions, Model.Status)
     </div>
 </div>
 
@@ -17,7 +17,7 @@
         <div class="option-select-label">Alerts</div>
     </div>
     <div class="options-container">
-       @RenderFilterOptions("RecordStatus", Model.RecordStatusOptions, Model.RecordStatus)
+        @RenderFilterOptions("RecordStatus", Model.RecordStatusOptions, Model.RecordStatus)
     </div>
 </div>
 
@@ -27,7 +27,7 @@
         <div class="option-select-label">Training Courses</div>
     </div>
     <div class="options-container">
-      @RenderFilterOptions("Course", Model.TrainingCourseOptions, Model.Course)
+        @RenderFilterOptions("Course", Model.TrainingCourseOptions, Model.Course)
     </div>
 </div>
 
@@ -40,7 +40,17 @@
     </div>
 </div>
 
+<div class="filter-option-select">
+    <div class="container-head js-container-head">
+        @* todo: Training Courses, but Funding status (but everything else on page capitalises first char only, so perhaps change Training Courses? *@
+        <div class="option-select-label">Funding Status</div>
+    </div>
+    <div class="options-container">
+        @RenderFilterOptions("FundingStatus", Model.FundingStatusOptions, Model.FundingStatus)
+    </div>
+</div>
 
+@* switch to @helper? *@
 @functions
 {
     private static HtmlString RenderFilterOptions(string groupName, List<KeyValuePair<string, string>> options, List<string> selected)
@@ -51,10 +61,10 @@
         {
             var checkedAtt = selected != null && selected.Contains(option.Key) ? "checked=\"checked\"" : "";
             result.Append("<div class=\"item\">");
-                result.Append($"<label for= \"{groupName}-{option.Key}\">");
-                result.Append($"<input name=\"{groupName}\" value =\"{option.Key}\" class=\"js-option-select\" id =\"{groupName}-{option.Key}\" type = \"checkbox\" {checkedAtt} aria-controls=\"js-search-results-info\">");
-                result.Append($"<span>{option.Value}</span>");
-                result.Append("</label>");
+            result.Append($"<label for= \"{groupName}-{option.Key}\">");
+            result.Append($"<input name=\"{groupName}\" value =\"{option.Key}\" class=\"js-option-select\" id =\"{groupName}-{option.Key}\" type = \"checkbox\" {checkedAtt} aria-controls=\"js-search-results-info\">");
+            result.Append($"<span>{option.Value}</span>");
+            result.Append("</label>");
             result.Append("</div>");
         }
 

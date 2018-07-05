@@ -42,10 +42,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Views.Shared
         {
             var checkedAtt = selected != null && selected.Contains(option.Key) ? "checked=\"checked\"" : "";
             result.Append("<div class=\"item\">");
-                result.Append($"<label for= \"{groupName}-{option.Key}\">");
-                result.Append($"<input name=\"{groupName}\" value =\"{option.Key}\" class=\"js-option-select\" id =\"{groupName}-{option.Key}\" type = \"checkbox\" {checkedAtt} aria-controls=\"js-search-results-info\">");
-                result.Append($"<span>{option.Value}</span>");
-                result.Append("</label>");
+            result.Append($"<label for= \"{groupName}-{option.Key}\">");
+            result.Append($"<input name=\"{groupName}\" value =\"{option.Key}\" class=\"js-option-select\" id =\"{groupName}-{option.Key}\" type = \"checkbox\" {checkedAtt} aria-controls=\"js-search-results-info\">");
+            result.Append($"<span>{option.Value}</span>");
+            result.Append("</label>");
             result.Append("</div>");
         }
 
@@ -75,9 +75,9 @@ WriteLiteral(" class=\"options-container\"");
 
 WriteLiteral(">\r\n");
 
-WriteLiteral("       ");
+WriteLiteral("        ");
 
-  Write(RenderFilterOptions("Status", Model.ApprenticeshipStatusOptions, Model.Status));
+   Write(RenderFilterOptions("Status", Model.ApprenticeshipStatusOptions, Model.Status));
 
 WriteLiteral("\r\n    </div>\r\n</div>\r\n\r\n<div");
 
@@ -97,9 +97,9 @@ WriteLiteral(" class=\"options-container\"");
 
 WriteLiteral(">\r\n");
 
-WriteLiteral("       ");
+WriteLiteral("        ");
 
-  Write(RenderFilterOptions("RecordStatus", Model.RecordStatusOptions, Model.RecordStatus));
+   Write(RenderFilterOptions("RecordStatus", Model.RecordStatusOptions, Model.RecordStatus));
 
 WriteLiteral("\r\n    </div>\r\n</div>\r\n\r\n\r\n<div");
 
@@ -119,9 +119,9 @@ WriteLiteral(" class=\"options-container\"");
 
 WriteLiteral(">\r\n");
 
-WriteLiteral("      ");
+WriteLiteral("        ");
 
- Write(RenderFilterOptions("Course", Model.TrainingCourseOptions, Model.Course));
+   Write(RenderFilterOptions("Course", Model.TrainingCourseOptions, Model.Course));
 
 WriteLiteral("\r\n    </div>\r\n</div>\r\n\r\n<div");
 
@@ -145,7 +145,33 @@ WriteLiteral("        ");
 
    Write(RenderFilterOptions("Provider", Model.ProviderOrganisationOptions, Model.Provider));
 
-WriteLiteral("\r\n    </div>\r\n</div>\r\n\r\n\r\n");
+WriteLiteral("\r\n    </div>\r\n</div>\r\n\r\n<div");
+
+WriteLiteral(" class=\"filter-option-select\"");
+
+WriteLiteral(">\r\n    <div");
+
+WriteLiteral(" class=\"container-head js-container-head\"");
+
+WriteLiteral(">\r\n        ");
+
+WriteLiteral("\r\n        <div");
+
+WriteLiteral(" class=\"option-select-label\"");
+
+WriteLiteral(">Funding Status</div>\r\n    </div>\r\n    <div");
+
+WriteLiteral(" class=\"options-container\"");
+
+WriteLiteral(">\r\n");
+
+WriteLiteral("        ");
+
+   Write(RenderFilterOptions("FundingStatus", Model.FundingStatusOptions, Model.FundingStatus));
+
+WriteLiteral("\r\n    </div>\r\n</div>\r\n\r\n");
+
+WriteLiteral("\r\n");
 
         }
     }
