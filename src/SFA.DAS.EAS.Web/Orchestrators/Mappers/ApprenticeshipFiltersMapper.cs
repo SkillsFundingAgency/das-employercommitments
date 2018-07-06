@@ -67,7 +67,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 RecordStatuses = recordStatuses,
                 TrainingCourses = trainingCourses,
                 FundingStatuses = fundingStatuses
-                // IsTransferFunded = filters.FundingStatus?.Contains("TransferFunded") ?? false;
             };
 
             return result;

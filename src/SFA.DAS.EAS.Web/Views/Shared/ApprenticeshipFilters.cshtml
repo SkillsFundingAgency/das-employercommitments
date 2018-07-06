@@ -1,8 +1,6 @@
 ﻿@using System.Text
 @model SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships.ApprenticeshipFiltersViewModel
 
-
-
 <div class="filter-option-select">
     <div class="container-head js-container-head">
         <div class="option-select-label">Status</div>
@@ -50,24 +48,28 @@
     </div>
 </div>
 
-@* switch to @helper? *@
-@functions
+@*@helper RenderFilter()
 {
-    private static HtmlString RenderFilterOptions(string groupName, List<KeyValuePair<string, string>> options, List<string> selected)
+    <div class="filter-option-select">
+        <div class="container-head js-container-head">
+            <div class="option-select-label">Status</div>
+        </div>
+        <div class="options-container">
+            @RenderFilterOptions("Status", Model.ApprenticeshipStatusOptions, Model.Status)
+        </div>
+    </div>
+}*@
+
+@helper RenderFilterOptions(string groupName, List<KeyValuePair<string, string>> options, List<string> selected)
+{
+    foreach (var option in options)
     {
-        var result = new StringBuilder();
-
-        foreach (var option in options)
-        {
-            var checkedAtt = selected != null && selected.Contains(option.Key) ? "checked=\"checked\"" : "";
-            result.Append("<div class=\"item\">");
-            result.Append($"<label for= \"{groupName}-{option.Key}\">");
-            result.Append($"<input name=\"{groupName}\" value =\"{option.Key}\" class=\"js-option-select\" id =\"{groupName}-{option.Key}\" type = \"checkbox\" {checkedAtt} aria-controls=\"js-search-results-info\">");
-            result.Append($"<span>{option.Value}</span>");
-            result.Append("</label>");
-            result.Append("</div>");
-        }
-
-        return new HtmlString(result.ToString());
+        var checkedAtt = selected != null && selected.Contains(option.Key) ? "checked=\"checked\"" : "";
+        <div class="item">
+            <label for="@(groupName)-@option.Key">
+            <input name="@groupName" value="@option.Key" class="js-option-select" id="@(groupName)-@option.Key" type="checkbox" @checkedAtt aria-controls="js-search-results-info">
+            <span>@option.Value</span>
+            </label>
+        </div>
     }
 }

@@ -33,31 +33,83 @@ namespace SFA.DAS.EmployerCommitments.Web.Views.Shared
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Shared/ApprenticeshipFilters.cshtml")]
     public partial class ApprenticeshipFilters : System.Web.Mvc.WebViewPage<SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships.ApprenticeshipFiltersViewModel>
     {
+
+#line default
+#line hidden
+public System.Web.WebPages.HelperResult RenderFilterOptions(string groupName, List<KeyValuePair<string, string>> options, List<string> selected)
+{
+#line default
+#line hidden
+return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
  
-    private static HtmlString RenderFilterOptions(string groupName, List<KeyValuePair<string, string>> options, List<string> selected)
+    foreach (var option in options)
     {
-        var result = new StringBuilder();
+        var checkedAtt = selected != null && selected.Contains(option.Key) ? "checked=\"checked\"" : "";
 
-        foreach (var option in options)
-        {
-            var checkedAtt = selected != null && selected.Contains(option.Key) ? "checked=\"checked\"" : "";
-            result.Append("<div class=\"item\">");
-            result.Append($"<label for= \"{groupName}-{option.Key}\">");
-            result.Append($"<input name=\"{groupName}\" value =\"{option.Key}\" class=\"js-option-select\" id =\"{groupName}-{option.Key}\" type = \"checkbox\" {checkedAtt} aria-controls=\"js-search-results-info\">");
-            result.Append($"<span>{option.Value}</span>");
-            result.Append("</label>");
-            result.Append("</div>");
-        }
+WriteLiteralTo(__razor_helper_writer, "        <div");
 
-        return new HtmlString(result.ToString());
+WriteLiteralTo(__razor_helper_writer, " class=\"item\"");
+
+WriteLiteralTo(__razor_helper_writer, ">\r\n            <label");
+
+WriteAttributeTo(__razor_helper_writer, "for", Tuple.Create(" for=\"", 2506), Tuple.Create("\"", 2536)
+, Tuple.Create(Tuple.Create("", 2512), Tuple.Create<System.Object, System.Int32>(groupName
+, 2512), false)
+, Tuple.Create(Tuple.Create("", 2524), Tuple.Create("-", 2524), true)
+, Tuple.Create(Tuple.Create("", 2525), Tuple.Create<System.Object, System.Int32>(option.Key
+, 2525), false)
+);
+
+WriteLiteralTo(__razor_helper_writer, ">\r\n            <input");
+
+WriteAttributeTo(__razor_helper_writer, "name", Tuple.Create(" name=\"", 2558), Tuple.Create("\"", 2575)
+, Tuple.Create(Tuple.Create("", 2565), Tuple.Create<System.Object, System.Int32>(groupName
+, 2565), false)
+);
+
+WriteAttributeTo(__razor_helper_writer, "value", Tuple.Create(" value=\"", 2576), Tuple.Create("\"", 2595)
+, Tuple.Create(Tuple.Create("", 2584), Tuple.Create<System.Object, System.Int32>(option.Key
+, 2584), false)
+);
+
+WriteLiteralTo(__razor_helper_writer, " class=\"js-option-select\"");
+
+WriteAttributeTo(__razor_helper_writer, "id", Tuple.Create(" id=\"", 2621), Tuple.Create("\"", 2650)
+       , Tuple.Create(Tuple.Create("", 2626), Tuple.Create<System.Object, System.Int32>(groupName
+, 2626), false)
+, Tuple.Create(Tuple.Create("", 2638), Tuple.Create("-", 2638), true)
+                   , Tuple.Create(Tuple.Create("", 2639), Tuple.Create<System.Object, System.Int32>(option.Key
+, 2639), false)
+);
+
+WriteLiteralTo(__razor_helper_writer, " type=\"checkbox\"");
+
+WriteLiteralTo(__razor_helper_writer, " ");
+
+                                                                                                  WriteTo(__razor_helper_writer, checkedAtt);
+
+WriteLiteralTo(__razor_helper_writer, " aria-controls=\"js-search-results-info\">\r\n            <span>");
+
+WriteTo(__razor_helper_writer, option.Value);
+
+WriteLiteralTo(__razor_helper_writer, "</span>\r\n            </label>\r\n        </div>\r\n");
+
     }
+
+});
+
+#line default
+#line hidden
+}
+#line default
+#line hidden
 
         public ApprenticeshipFilters()
         {
         }
         public override void Execute()
         {
-WriteLiteral("\r\n\r\n<div");
+WriteLiteral("<div");
 
 WriteLiteral(" class=\"filter-option-select\"");
 
@@ -171,7 +223,7 @@ WriteLiteral("        ");
 
 WriteLiteral("\r\n    </div>\r\n</div>\r\n\r\n");
 
-WriteLiteral("\r\n");
+WriteLiteral("\r\n\r\n");
 
         }
     }

@@ -23,7 +23,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public List<KeyValuePair<string, string>> TrainingCourseOptions { get; set; }
         public List<KeyValuePair<string, string>> RecordStatusOptions { get; set; }
         public List<KeyValuePair<string, string>> ProviderOrganisationOptions { get; set; }
-        // we could use a simpler model, but fitting into the existing pattern means we can reuse existing view code
         public List<KeyValuePair<string, string>> FundingStatusOptions { get; set; }
 
         public List<string> Status { get; set; }
