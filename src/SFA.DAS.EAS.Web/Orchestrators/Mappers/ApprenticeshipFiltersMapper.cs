@@ -126,7 +126,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 }
             }
 
-            //todo: using for type?
             var fundingStatuses = new List<KeyValuePair<string, string>>();
             foreach (var fundingStatus in facets.FundingStatuses)
             {
