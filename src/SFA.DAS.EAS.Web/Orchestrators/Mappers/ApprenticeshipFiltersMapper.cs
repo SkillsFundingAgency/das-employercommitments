@@ -132,7 +132,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             foreach (var fundingStatus in facets.FundingStatuses)
             {
                 var key = fundingStatus.Data.ToString();
-                providers.Add(new KeyValuePair<string, string>(key, ((FundingStatus)fundingStatus.Data).GetDescription()));
+                fundingStatuses.Add(new KeyValuePair<string, string>(key, ((FundingStatus)fundingStatus.Data).GetDescription()));
 
                 if (fundingStatus.Selected)
                 {
