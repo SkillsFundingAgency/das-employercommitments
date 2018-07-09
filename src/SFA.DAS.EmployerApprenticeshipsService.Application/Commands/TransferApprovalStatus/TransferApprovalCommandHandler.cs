@@ -49,14 +49,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
                 UserName = message.UserName
             };
 
-            if (message.TransferRequestId > 0)
-            {
-                await _commitmentsService.PatchTransferApprovalStatus(message.TransferSenderId, message.CommitmentId, message.TransferRequestId, request);
-            }
-            else
-            {
-                await _commitmentsService.PatchTransferApprovalStatus(message.TransferSenderId, message.CommitmentId, request);
-            }
+            await _commitmentsService.PatchTransferApprovalStatus(message.TransferSenderId, message.CommitmentId, message.TransferRequestId, request);
         }
     }
 }

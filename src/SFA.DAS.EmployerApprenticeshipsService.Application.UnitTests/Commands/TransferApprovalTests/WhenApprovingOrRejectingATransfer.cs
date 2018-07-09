@@ -17,7 +17,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
         private TransferApprovalCommandHandler _sut;
         private TransferApprovalCommand _command;
 
-
         [SetUp]
         public void Setup()
         {
@@ -44,18 +43,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
         }
 
         [Test]
-        public async Task ThenPatchTransferApprovalInterfaceIsCalledCorrectly()
-        {
-            await _sut.Handle(_command);
-
-            _mockCommitmentApi.Verify(x => x.PatchTransferApprovalStatus(_command.TransferSenderId,
-                _command.CommitmentId,
-                It.Is<TransferApprovalRequest>(p =>
-                    p.TransferApprovalStatus == _command.TransferStatus &&
-                    p.UserEmail == _command.UserEmail && p.UserName == _command.UserName)));
-        }
-
-        [Test]
         public async Task ThenPatchTransferRequestApprovalInterfaceIsCalledCorrectly()
         {
             _command.TransferRequestId = 10088;
@@ -69,7 +56,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
                     p.TransferApprovalStatus == _command.TransferStatus &&
                     p.UserEmail == _command.UserEmail && p.UserName == _command.UserName)));
         }
-
 
         [Test]
         public void ThenThrowErrorIfTranferSenderDoesNotMatchTransferSenderOnCommitment()
@@ -85,7 +71,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
             _repositoryCommitment.TransferSender.TransferApprovalStatus = status;
             Assert.CatchAsync<InvalidRequestException>(async () => await _sut.Handle(_command));
         }
-
     }
 }
 
