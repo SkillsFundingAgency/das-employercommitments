@@ -43,6 +43,26 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 emailMessage);
         }
 
+        public async Task SendCreateCommitmentNotification(CommitmentView commitment)
+        {
+            var emailMessage = new EmailMessage
+            {
+                TemplateId = "CreateCommitmentNotification",
+                Tokens = new Dictionary<string, string> {
+                    { "cohort_reference", commitment.Reference },
+                    { "employer_name", commitment.LegalEntityName },
+                    { "ukprn", commitment.ProviderId.ToString() }
+                }
+            };
+
+            _logger.Info($"Sending email to all provider recipients for Provider {commitment.ProviderId}, template {emailMessage.TemplateId}");
+
+            await _providerEmailService.SendEmailToAllProviderRecipients(
+                commitment.ProviderId.GetValueOrDefault(),
+                commitment.ProviderLastUpdateInfo?.EmailAddress ?? string.Empty,
+                emailMessage);
+        }
+
         public async Task SendProviderApprenticeshipStopNotification(Apprenticeship apprenticeship)
         {
             var emailMessage = new EmailMessage
