@@ -289,7 +289,6 @@
     <Compile Include="Orchestrators\Mappers\WhenMappingDataLockWithPriceHistory.cs" />
     <Compile Include="Orchestrators\Mappers\WhenMappingEditApprenticeshipStopDateViewModel.cs" />
     <Compile Include="Orchestrators\Mappers\WhenMappingProviderPaymentPriority.cs" />
-    <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingApprenticeships.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenMappingApprenticeshipFilters.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenMappingApprenticeshipSearchQuery.cs" />
     <Compile Include="Orchestrators\Mappers\WhenMappingToUpdateModel.cs" />
