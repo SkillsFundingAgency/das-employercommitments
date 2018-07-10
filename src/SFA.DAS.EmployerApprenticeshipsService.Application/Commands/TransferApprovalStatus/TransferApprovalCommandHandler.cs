@@ -4,16 +4,32 @@ using MediatR;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
+using SFA.DAS.EmployerCommitments.Domain.Configuration;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus
 {
     public sealed class TransferApprovalCommandHandler : AsyncRequestHandler<TransferApprovalCommand>
     {
         private readonly IEmployerCommitmentApi _commitmentsService;
+        private readonly ILog _logger;
+        private readonly EmployerCommitmentsServiceConfiguration _configuration;
+        private readonly IProviderEmailNotificationService _providerEmailNotificationService;
+        private readonly IEmployerEmailNotificationService _employerEmailNotificationService;
 
-        public TransferApprovalCommandHandler(IEmployerCommitmentApi commitmentsApi)
+        public TransferApprovalCommandHandler(
+            IEmployerCommitmentApi commitmentsApi,
+            EmployerCommitmentsServiceConfiguration configuration,
+            ILog logger,
+            IProviderEmailNotificationService providerEmailNotificationService,
+            IEmployerEmailNotificationService employerEmailNotificationService)
         {
             _commitmentsService = commitmentsApi;
+            _configuration = configuration;
+            _logger = logger;
+            _providerEmailNotificationService = providerEmailNotificationService;
+            _employerEmailNotificationService = employerEmailNotificationService;
         }
 
         protected override async Task HandleCore(TransferApprovalCommand message)
@@ -50,6 +66,25 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
             };
 
             await _commitmentsService.PatchTransferApprovalStatus(message.TransferSenderId, message.CommitmentId, message.TransferRequestId, request);
+
+            await SendNotifications(commitment, message.TransferStatus);
+        }
+
+        private async Task SendNotifications(CommitmentView commitment, Commitments.Api.Types.TransferApprovalStatus newTransferApprovalStatus)
+        {
+            //todo: we should probably also check this in EmployerEmailNotificationService
+            // (ProviderEmailNotificationService uses ProviderEmailService, which checks it)
+            // or in defaultregistry we could supply no-op implementations for XxxEmailNotificationService when SendEmail is disabled
+            if (!_configuration.CommitmentNotification.SendEmail)
+            {
+                _logger.Info("Sending email notifications disabled by config.");
+                return;
+            }
+
+            var providerNotifyTask = _providerEmailNotificationService.SendSenderApprovedOrRejectedCommitmentNotification(commitment, newTransferApprovalStatus);
+            var employerNotifyTask = _employerEmailNotificationService.SendSenderApprovedOrRejectedCommitmentNotification(commitment, newTransferApprovalStatus);
+
+            await Task.WhenAll(providerNotifyTask, employerNotifyTask);
         }
     }
 }

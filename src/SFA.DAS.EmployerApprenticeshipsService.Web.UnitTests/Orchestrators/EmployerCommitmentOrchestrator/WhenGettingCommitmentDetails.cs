@@ -126,7 +126,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         }
 
         [Test]
-        public async Task ThenIfTheCohortWasApprovedByTransferSenderThenShouldThrowAnException()
+        public void ThenIfTheCohortWasApprovedByTransferSenderThenShouldThrowAnException()
         {
             CommitmentView.AgreementStatus = AgreementStatus.BothAgreed;
             CommitmentView.EditStatus = EditStatus.Both;
@@ -140,7 +140,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         }
 
         [Test]
-        public async Task ThenIfCohortIsNotForTransferThenIfApprovedByBothPartiesShouldThrowAnException()
+        public void ThenIfCohortIsNotForTransferThenIfApprovedByBothPartiesShouldThrowAnException()
         {
             CommitmentView.AgreementStatus = AgreementStatus.BothAgreed;
             CommitmentView.EditStatus = EditStatus.Both;

@@ -216,7 +216,7 @@ Apprenticeship service team";
             arg.Email.Tokens["cohort_reference"].Should().Be(CohortReference);
             arg.Email.Tokens["receiving_employer"].Should().Be(legalEntityName);
 
-            var emailBody = PopulateTemplate(template, arg.Email.Tokens);
+            var emailBody = TestHelpers.PopulateTemplate(template, arg.Email.Tokens);
             TestContext.WriteLine(emailBody);
             Assert.AreEqual(expectedEmailBody, emailBody);
         }
@@ -277,19 +277,9 @@ Apprenticeship service team";
             arg.Email.Tokens["receiving_employer"].Should().Be(legalEntityName);
             arg.Email.Tokens["ukprn"].Should().Be(providerId.ToString());
 
-            var emailBody = PopulateTemplate(template, arg.Email.Tokens);
+            var emailBody = TestHelpers.PopulateTemplate(template, arg.Email.Tokens);
             TestContext.WriteLine(emailBody);
             Assert.AreEqual(expectedEmailBody, emailBody);
-        }
-
-        private string PopulateTemplate(string template, Dictionary<string, string> tokens)
-        {
-            foreach (var token in tokens)
-            {
-                template = template.Replace($"(({token.Key}))", token.Value);
-            }
-
-            return template;
         }
 
         [Test]

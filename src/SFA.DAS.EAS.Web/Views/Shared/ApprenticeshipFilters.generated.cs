@@ -33,119 +33,130 @@ namespace SFA.DAS.EmployerCommitments.Web.Views.Shared
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Shared/ApprenticeshipFilters.cshtml")]
     public partial class ApprenticeshipFilters : System.Web.Mvc.WebViewPage<SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships.ApprenticeshipFiltersViewModel>
     {
+
+#line default
+#line hidden
+public System.Web.WebPages.HelperResult RenderFilter(string groupHeader, string groupName, List<KeyValuePair<string, string>> options, List<string> selected)
+{
+#line default
+#line hidden
+return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
  
-    private static HtmlString RenderFilterOptions(string groupName, List<KeyValuePair<string, string>> options, List<string> selected)
-    {
-        var result = new StringBuilder();
 
-        foreach (var option in options)
-        {
-            var checkedAtt = selected != null && selected.Contains(option.Key) ? "checked=\"checked\"" : "";
-            result.Append("<div class=\"item\">");
-                result.Append($"<label for= \"{groupName}-{option.Key}\">");
-                result.Append($"<input name=\"{groupName}\" value =\"{option.Key}\" class=\"js-option-select\" id =\"{groupName}-{option.Key}\" type = \"checkbox\" {checkedAtt} aria-controls=\"js-search-results-info\">");
-                result.Append($"<span>{option.Value}</span>");
-                result.Append("</label>");
-            result.Append("</div>");
-        }
+WriteLiteralTo(__razor_helper_writer, "    <div");
 
-        return new HtmlString(result.ToString());
-    }
+WriteLiteralTo(__razor_helper_writer, " class=\"filter-option-select\"");
+
+WriteLiteralTo(__razor_helper_writer, ">\r\n        <div");
+
+WriteLiteralTo(__razor_helper_writer, " class=\"container-head js-container-head\"");
+
+WriteLiteralTo(__razor_helper_writer, ">\r\n            <div");
+
+WriteLiteralTo(__razor_helper_writer, " class=\"option-select-label\"");
+
+WriteLiteralTo(__razor_helper_writer, ">");
+
+               WriteTo(__razor_helper_writer, groupHeader);
+
+WriteLiteralTo(__razor_helper_writer, "</div>\r\n        </div>\r\n        <div");
+
+WriteLiteralTo(__razor_helper_writer, " class=\"options-container\"");
+
+WriteLiteralTo(__razor_helper_writer, ">\r\n");
+
+            
+             foreach (var option in options)
+            {
+                var checkedAtt = selected != null && selected.Contains(option.Key) ? "checked=\"checked\"" : "";
+
+WriteLiteralTo(__razor_helper_writer, "                <div");
+
+WriteLiteralTo(__razor_helper_writer, " class=\"item\"");
+
+WriteLiteralTo(__razor_helper_writer, ">\r\n                    <label");
+
+WriteAttributeTo(__razor_helper_writer, "for", Tuple.Create(" for=\"", 1286), Tuple.Create("\"", 1316)
+, Tuple.Create(Tuple.Create("", 1292), Tuple.Create<System.Object, System.Int32>(groupName
+, 1292), false)
+, Tuple.Create(Tuple.Create("", 1304), Tuple.Create("-", 1304), true)
+, Tuple.Create(Tuple.Create("", 1305), Tuple.Create<System.Object, System.Int32>(option.Key
+, 1305), false)
+);
+
+WriteLiteralTo(__razor_helper_writer, ">\r\n                        <input");
+
+WriteAttributeTo(__razor_helper_writer, "name", Tuple.Create(" name=\"", 1350), Tuple.Create("\"", 1367)
+, Tuple.Create(Tuple.Create("", 1357), Tuple.Create<System.Object, System.Int32>(groupName
+, 1357), false)
+);
+
+WriteAttributeTo(__razor_helper_writer, "value", Tuple.Create(" value=\"", 1368), Tuple.Create("\"", 1387)
+, Tuple.Create(Tuple.Create("", 1376), Tuple.Create<System.Object, System.Int32>(option.Key
+, 1376), false)
+);
+
+WriteLiteralTo(__razor_helper_writer, " class=\"js-option-select\"");
+
+WriteAttributeTo(__razor_helper_writer, "id", Tuple.Create(" id=\"", 1413), Tuple.Create("\"", 1442)
+                   , Tuple.Create(Tuple.Create("", 1418), Tuple.Create<System.Object, System.Int32>(groupName
+, 1418), false)
+, Tuple.Create(Tuple.Create("", 1430), Tuple.Create("-", 1430), true)
+                               , Tuple.Create(Tuple.Create("", 1431), Tuple.Create<System.Object, System.Int32>(option.Key
+, 1431), false)
+);
+
+WriteLiteralTo(__razor_helper_writer, " type=\"checkbox\"");
+
+WriteLiteralTo(__razor_helper_writer, " ");
+
+                                                                                                              WriteTo(__razor_helper_writer, checkedAtt);
+
+WriteLiteralTo(__razor_helper_writer, " aria-controls=\"js-search-results-info\">\r\n                        <span>");
+
+WriteTo(__razor_helper_writer, option.Value);
+
+WriteLiteralTo(__razor_helper_writer, "</span>\r\n                    </label>\r\n                </div>\r\n");
+
+            }
+
+WriteLiteralTo(__razor_helper_writer, "        </div>\r\n    </div>\r\n");
+
+
+});
+
+#line default
+#line hidden
+}
+#line default
+#line hidden
 
         public ApprenticeshipFilters()
         {
         }
         public override void Execute()
         {
-WriteLiteral("\r\n\r\n<div");
+Write(RenderFilter("Status", "Status", Model.ApprenticeshipStatusOptions, Model.Status));
 
-WriteLiteral(" class=\"filter-option-select\"");
+WriteLiteral("\r\n");
 
-WriteLiteral(">\r\n    <div");
+Write(RenderFilter("Alerts", "RecordStatus", Model.RecordStatusOptions, Model.RecordStatus));
 
-WriteLiteral(" class=\"container-head js-container-head\"");
+WriteLiteral("\r\n");
 
-WriteLiteral(">\r\n        <div");
+Write(RenderFilter("Training Courses", "Course", Model.TrainingCourseOptions, Model.Course));
 
-WriteLiteral(" class=\"option-select-label\"");
+WriteLiteral("\r\n");
 
-WriteLiteral(">Status</div>\r\n    </div>\r\n    <div");
+Write(RenderFilter("Provider", "Provider", Model.ProviderOrganisationOptions, Model.Provider));
 
-WriteLiteral(" class=\"options-container\"");
+WriteLiteral("\r\n");
 
-WriteLiteral(">\r\n");
+WriteLiteral("\r\n");
 
-WriteLiteral("       ");
+Write(RenderFilter("Funding Status", "FundingStatus", Model.FundingStatusOptions, Model.FundingStatus));
 
-  Write(RenderFilterOptions("Status", Model.ApprenticeshipStatusOptions, Model.Status));
-
-WriteLiteral("\r\n    </div>\r\n</div>\r\n\r\n<div");
-
-WriteLiteral(" class=\"filter-option-select\"");
-
-WriteLiteral(">\r\n    <div");
-
-WriteLiteral(" class=\"container-head js-container-head\"");
-
-WriteLiteral(">\r\n        <div");
-
-WriteLiteral(" class=\"option-select-label\"");
-
-WriteLiteral(">Alerts</div>\r\n    </div>\r\n    <div");
-
-WriteLiteral(" class=\"options-container\"");
-
-WriteLiteral(">\r\n");
-
-WriteLiteral("       ");
-
-  Write(RenderFilterOptions("RecordStatus", Model.RecordStatusOptions, Model.RecordStatus));
-
-WriteLiteral("\r\n    </div>\r\n</div>\r\n\r\n\r\n<div");
-
-WriteLiteral(" class=\"filter-option-select\"");
-
-WriteLiteral(">\r\n    <div");
-
-WriteLiteral(" class=\"container-head js-container-head\"");
-
-WriteLiteral(">\r\n        <div");
-
-WriteLiteral(" class=\"option-select-label\"");
-
-WriteLiteral(">Training Courses</div>\r\n    </div>\r\n    <div");
-
-WriteLiteral(" class=\"options-container\"");
-
-WriteLiteral(">\r\n");
-
-WriteLiteral("      ");
-
- Write(RenderFilterOptions("Course", Model.TrainingCourseOptions, Model.Course));
-
-WriteLiteral("\r\n    </div>\r\n</div>\r\n\r\n<div");
-
-WriteLiteral(" class=\"filter-option-select\"");
-
-WriteLiteral(">\r\n    <div");
-
-WriteLiteral(" class=\"container-head js-container-head\"");
-
-WriteLiteral(">\r\n        <div");
-
-WriteLiteral(" class=\"option-select-label\"");
-
-WriteLiteral(">Provider</div>\r\n    </div>\r\n    <div");
-
-WriteLiteral(" class=\"options-container\"");
-
-WriteLiteral(">\r\n");
-
-WriteLiteral("        ");
-
-   Write(RenderFilterOptions("Provider", Model.ProviderOrganisationOptions, Model.Provider));
-
-WriteLiteral("\r\n    </div>\r\n</div>\r\n\r\n\r\n");
+WriteLiteral("\r\n\r\n");
 
         }
     }

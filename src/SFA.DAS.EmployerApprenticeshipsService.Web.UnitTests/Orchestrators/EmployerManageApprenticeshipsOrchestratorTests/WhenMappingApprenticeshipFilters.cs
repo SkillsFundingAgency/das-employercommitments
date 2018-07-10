@@ -68,6 +68,14 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                     {
                         Data = new TrainingCourse {Id = "C5", Name = "Course 5", TrainingType = TrainingType.Framework}
                     }
+                },
+                FundingStatuses = new List<FacetItem<FundingStatus>>
+                {
+                    new FacetItem<FundingStatus>
+                    {
+                        Data = FundingStatus.TransferFunded,
+                        Selected = true
+                    }
                 }
             };
         }
@@ -136,5 +144,20 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             Assert.AreEqual(2, result.Course.Count);
         }
 
+        [Test]
+        public void ThenFundingStatusesAreMappedCorrectly()
+        {
+            //Act
+            var result = _mapper.Map(_facets);
+
+            //Assert
+            Assert.AreEqual(1, result.FundingStatusOptions.Count);
+
+            var actual = result.FundingStatusOptions.First();
+            Assert.AreEqual("TransferFunded", actual.Key);
+            Assert.AreEqual("Transfer funded", actual.Value);
+
+            Assert.AreEqual(1, result.FundingStatus.Count);
+        }
     }
 }
