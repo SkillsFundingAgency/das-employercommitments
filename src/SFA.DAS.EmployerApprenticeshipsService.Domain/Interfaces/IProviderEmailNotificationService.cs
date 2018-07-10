@@ -8,6 +8,7 @@ namespace SFA.DAS.EmployerCommitments.Domain.Interfaces
     public interface IProviderEmailNotificationService
     {
         Task SendProviderTransferRejectedCommitmentEditNotification(CommitmentView commitment);
+        Task SendCreateCommitmentNotification(CommitmentView commitment);
         Task SendProviderApprenticeshipStopNotification(Apprenticeship apprenticeship);
         Task SendProviderApprenticeshipStopEditNotification(Apprenticeship apprenticeship, DateTime newStopDate);
     }
