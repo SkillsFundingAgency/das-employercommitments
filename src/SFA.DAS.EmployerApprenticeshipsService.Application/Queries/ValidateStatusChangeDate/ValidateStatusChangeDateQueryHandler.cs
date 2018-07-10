@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MediatR;
+using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
@@ -15,19 +15,19 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDa
     public sealed class ValidateStatusChangeDateQueryHandler : IAsyncRequestHandler<ValidateStatusChangeDateQuery, ValidateStatusChangeDateQueryResponse>
     {
         private readonly IValidator<ValidateStatusChangeDateQuery> _queryValidator;
-        private readonly IMediator _mediator;
         private readonly ICurrentDateTime _currentDate;
         private readonly IAcademicYearValidator _academicYearValidator;
+        private readonly IEmployerCommitmentApi _commitmentsApi;
 
         public ValidateStatusChangeDateQueryHandler(IValidator<ValidateStatusChangeDateQuery> queryValidator,
-            IMediator mediator,
             ICurrentDateTime currentDate,
-            IAcademicYearValidator academicYearValidator)
+            IAcademicYearValidator academicYearValidator,
+            IEmployerCommitmentApi commitmentsApi)
         {
             _queryValidator = queryValidator;
-            _mediator = mediator;
             _currentDate = currentDate;
             _academicYearValidator = academicYearValidator;
+            _commitmentsApi = commitmentsApi;
         }
 
         public async Task<ValidateStatusChangeDateQueryResponse> Handle(ValidateStatusChangeDateQuery message)
@@ -35,12 +35,11 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDa
             ValidateQuery(message);
 
             var validationResult = new ValidationResult();
+            
+            var apprenticeship =
+                await _commitmentsApi.GetEmployerApprenticeship(message.AccountId, message.ApprenticeshipId);
 
-            var response = await _mediator.SendAsync(new GetApprenticeshipQueryRequest { AccountId = message.AccountId, ApprenticeshipId = message.ApprenticeshipId });
-
-            DateTime changeDateToUse;
-
-            changeDateToUse = DetermineActualChangeDate(message, response.Apprenticeship);
+            var changeDateToUse = DetermineActualChangeDate(message, apprenticeship);
 
             if (changeDateToUse > _currentDate.Now.Date)
             {
@@ -49,7 +48,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDa
                 return new ValidateStatusChangeDateQueryResponse { ValidationResult = validationResult };
             }
 
-            if (response.Apprenticeship.StartDate > changeDateToUse)
+            if (apprenticeship.StartDate > changeDateToUse)
             {
                 validationResult.AddError(nameof(message.DateOfChange),"Date cannot be earlier than training start date");
                 return new ValidateStatusChangeDateQueryResponse { ValidationResult = validationResult };
