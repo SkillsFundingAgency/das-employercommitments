@@ -23,13 +23,13 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
     {
         private UpdateApprenticeshipStatusCommandHandler _handler;
         private Mock<IEmployerCommitmentApi> _mockCommitmentApi;
-        private Mock<IMediator> _mockMediator;
         private Mock<ICurrentDateTime> _mockCurrentDateTime;
         private IValidator<UpdateApprenticeshipStatusCommand> _validator = new UpdateApprenticeshipStatusCommandValidator();
         private UpdateApprenticeshipStatusCommand _validCommand;
         private Apprenticeship _testApprenticeship;
         private Mock<IAcademicYearDateProvider> _academicYearDateProvider;
         private Mock<IAcademicYearValidator> _academicYearValidator;
+        private Mock<IProviderEmailNotificationService> _providerEmailNotificationService;
 
         [SetUp]
         public void Setup()
@@ -46,11 +46,11 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
             _testApprenticeship = new Apprenticeship { StartDate = DateTime.UtcNow.AddMonths(-2).Date };
 
             _mockCommitmentApi = new Mock<IEmployerCommitmentApi>();
-            _mockCommitmentApi.Setup(x => x.GetEmployerCommitment(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(new CommitmentView { ProviderId = 456L });
-            _mockMediator = new Mock<IMediator>();
+            _mockCommitmentApi.Setup(x => x.GetEmployerCommitment(It.IsAny<long>(), It.IsAny<long>()))
+                .ReturnsAsync(new CommitmentView { ProviderId = 456L });
+            _mockCommitmentApi.Setup(x => x.GetEmployerApprenticeship(It.IsAny<long>(), It.IsAny<long>()))
+                .ReturnsAsync(_testApprenticeship);
 
-            var apprenticeshipGetResponse = new GetApprenticeshipQueryResponse { Apprenticeship = _testApprenticeship };
-            _mockMediator.Setup(x => x.SendAsync(It.IsAny<GetApprenticeshipQueryRequest>())).ReturnsAsync(apprenticeshipGetResponse);
             _mockCurrentDateTime = new Mock<ICurrentDateTime>();
             _mockCurrentDateTime.SetupGet(x => x.Now).Returns(DateTime.UtcNow);
 
@@ -59,13 +59,17 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
 
             _academicYearValidator = new Mock<IAcademicYearValidator>();
 
+            _providerEmailNotificationService = new Mock<IProviderEmailNotificationService>();
+            _providerEmailNotificationService.Setup(x =>
+                x.SendProviderApprenticeshipStopNotification(It.IsAny<Apprenticeship>())).Returns(Task.CompletedTask);
+
             _handler = new UpdateApprenticeshipStatusCommandHandler(
                 _mockCommitmentApi.Object,
-                _mockMediator.Object,
                 _mockCurrentDateTime.Object,
                 _validator,
                 _academicYearDateProvider.Object,
-                _academicYearValidator.Object
+                _academicYearValidator.Object,
+                _providerEmailNotificationService.Object
                 );
         }
 
@@ -130,6 +134,26 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
             Func<Task> act = async () => await _handler.Handle(_validCommand);
 
             act.ShouldThrow<InvalidRequestException>().Where(x => x.ErrorMessages.Values.Contains("Date cannot be earlier than training start date"));
+        }
+
+        [Test]
+        public async Task ShouldRetrieveApprenticeship()
+        {
+            await _handler.Handle(_validCommand);
+
+            _mockCommitmentApi.Verify(x =>
+                x.GetEmployerApprenticeship(It.Is<long>(accountId => accountId == _validCommand.EmployerAccountId),
+                    It.Is<long>(apprenticeshipId => apprenticeshipId == _validCommand.ApprenticeshipId)));
+        }
+
+        [Test]
+        public async Task ShouldSendProviderNotification()
+        {
+            await _handler.Handle(_validCommand);
+            
+            _providerEmailNotificationService.Verify(x =>
+                    x.SendProviderApprenticeshipStopNotification(It.Is<Apprenticeship>(a => a == _testApprenticeship))
+                ,Times.Once);
         }
     }
 }

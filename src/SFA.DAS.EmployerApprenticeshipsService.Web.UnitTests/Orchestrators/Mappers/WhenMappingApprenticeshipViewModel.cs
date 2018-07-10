@@ -1,9 +1,11 @@
 using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
+using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 
@@ -173,6 +175,29 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
 
             Assert.AreEqual(expected, viewModel.IsUpdateLockedForStartDateAndCourse);
+        }
+
+        [Test]
+        public async Task ThenEndpointAssessorNameIsMapped()
+        {
+            const string endpointAssessorName = "Bad Assess";
+
+            var apprenticeship = new Apprenticeship { EndpointAssessorName = endpointAssessorName };
+
+            var viewModel = await Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+
+            Assert.AreEqual(endpointAssessorName, viewModel.EndpointAssessorName);
+        }
+
+        [TestCase(TrainingType.Standard)]
+        [TestCase(TrainingType.Framework)]
+        public async Task ThenTrainingTypeIsMapped(TrainingType trainingType)
+        {
+            var apprenticeship = new Apprenticeship { TrainingType = trainingType };
+
+            var viewModel = await Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+
+            Assert.AreEqual(trainingType, viewModel.TrainingType);
         }
 
         //todo: add view unit tests for display fields flags??

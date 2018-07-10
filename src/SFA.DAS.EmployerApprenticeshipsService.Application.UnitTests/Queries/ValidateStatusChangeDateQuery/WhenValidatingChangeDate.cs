@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MediatR;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDate;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
-using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.ValidateStatusChangeDateQuery
 {
@@ -19,7 +17,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.ValidateStat
     {
         private Application.Queries.ValidateStatusChangeDate.ValidateStatusChangeDateQuery _testQuery;
         private ValidateStatusChangeDateQueryHandler _handler;
-        private Mock<IMediator> _mockMediator;
+        private Mock<IEmployerCommitmentApi> _commitmentsApi;
         private Mock<ICurrentDateTime> _mockCurrentDate;
         private Mock<IAcademicYearValidator> _academicYearValidator;
         private Apprenticeship _apprenticeship;
@@ -35,11 +33,14 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.ValidateStat
 
             _academicYearValidator = new Mock<IAcademicYearValidator>();
 
-            _mockMediator = new Mock<IMediator>();
-            _mockMediator.Setup(x => x.SendAsync(It.IsAny<GetApprenticeshipQueryRequest>()))
-                .ReturnsAsync(new GetApprenticeshipQueryResponse { Apprenticeship = _apprenticeship });
+            _commitmentsApi = new Mock<IEmployerCommitmentApi>();
+            _commitmentsApi.Setup(x => x.GetEmployerApprenticeship(It.IsAny<long>(), It.IsAny<long>()))
+                .ReturnsAsync(_apprenticeship);
 
-            _handler = new ValidateStatusChangeDateQueryHandler(new ValidateStatusChangeDateQueryValidator(), _mockMediator.Object, _mockCurrentDate.Object, _academicYearValidator.Object);
+            _handler = new ValidateStatusChangeDateQueryHandler(new ValidateStatusChangeDateQueryValidator(),
+                _mockCurrentDate.Object,
+                _academicYearValidator.Object,
+                _commitmentsApi.Object);
         }
 
         [Test]
@@ -48,8 +49,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.ValidateStat
             _testQuery.DateOfChange = new DateTime(2017, 7, 10); // Change date in the future
             _mockCurrentDate.SetupGet(x => x.Now).Returns(DateTime.UtcNow.AddDays(-2)); // Started training
             _apprenticeship.StartDate = DateTime.UtcNow.AddDays(2);
-            _mockMediator.Setup(x => x.SendAsync(It.IsAny<GetApprenticeshipQueryRequest>()))
-                .ReturnsAsync(new GetApprenticeshipQueryResponse { Apprenticeship = _apprenticeship });
 
             var response = await _handler.Handle(_testQuery);
 
