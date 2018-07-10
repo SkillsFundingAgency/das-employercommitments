@@ -1,0 +1,42 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "appServiceName": {
+            "value": ""
+        },
+        "customHostname": {
+            "value": ""
+        },
+        "certificateName": {
+            "value": ""
+        },
+        "certificateResourceGroup": {
+            "value": ""
+        },
+        "sharedAppServicePlanName": {
+            "value": ""
+        },
+        "sharedAppServicePlanResourceGroup": {
+            "value": ""
+        },
+        "aseHostingEnvironmentName": {
+            "value": ""
+        },
+        "aseResourceGroup": {
+            "value": ""
+        },
+        "environmentName": {
+            "value": ""
+        },
+        "configurationStorageConnectionString": {
+            "value": ""
+        },
+        "loggingRedisConnectionString": {
+            "value": ""
+        },
+        "loggingRedisKey": {
+            "value": ""
+        }
+    }
+}
