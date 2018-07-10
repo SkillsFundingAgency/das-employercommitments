@@ -21,7 +21,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
     {
         private UpdateApprenticeshipStatusCommandHandler _handler;
         private Mock<IEmployerCommitmentApi> _mockCommitmentApi;
-        private Mock<IMediator> _mockMediator;
         private Mock<ICurrentDateTime> _mockCurrentDateTime;
         private IValidator<UpdateApprenticeshipStatusCommand> _validator = new UpdateApprenticeshipStatusCommandValidator();
         private UpdateApprenticeshipStatusCommand _validCommand;
@@ -46,11 +45,11 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
             var apprenticeshipFromApi = new Apprenticeship { StartDate = DateTime.UtcNow.AddMonths(-2).Date };
 
             _mockCommitmentApi = new Mock<IEmployerCommitmentApi>();
-            _mockCommitmentApi.Setup(x => x.GetEmployerCommitment(It.IsAny<long>(), It.IsAny<long>())).ReturnsAsync(new CommitmentView { ProviderId = 456L });
-            _mockMediator = new Mock<IMediator>();
+            _mockCommitmentApi.Setup(x => x.GetEmployerCommitment(It.IsAny<long>(), It.IsAny<long>()))
+                .ReturnsAsync(new CommitmentView { ProviderId = 456L });
+            _mockCommitmentApi.Setup(x => x.GetEmployerApprenticeship(It.IsAny<long>(), It.IsAny<long>()))
+                .ReturnsAsync(apprenticeshipFromApi);
 
-            var apprenticeshipGetResponse = new GetApprenticeshipQueryResponse { Apprenticeship = apprenticeshipFromApi };
-            _mockMediator.Setup(x => x.SendAsync(It.IsAny<GetApprenticeshipQueryRequest>())).ReturnsAsync(apprenticeshipGetResponse);
             _mockCurrentDateTime = new Mock<ICurrentDateTime>();
             _mockCurrentDateTime.SetupGet(x => x.Now).Returns(DateTime.UtcNow);
 
@@ -63,7 +62,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
 
             _handler = new UpdateApprenticeshipStatusCommandHandler(
                 _mockCommitmentApi.Object,
-                _mockMediator.Object,
                 _mockCurrentDateTime.Object,
                 _validator,
                 _academicYearDateProvider.Object,
