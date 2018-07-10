@@ -72,18 +72,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
         #region Core Functionality
 
         [Test]
-        public async Task ThenPatchTransferApprovalInterfaceIsCalledCorrectly()
-        {
-            await _sut.Handle(_command);
-
-            _mockCommitmentApi.Verify(x => x.PatchTransferApprovalStatus(_command.TransferSenderId,
-                _command.CommitmentId,
-                It.Is<TransferApprovalRequest>(p =>
-                    p.TransferApprovalStatus == _command.TransferStatus &&
-                    p.UserEmail == _command.UserEmail && p.UserName == _command.UserName)));
-        }
-
-        [Test]
         public async Task ThenPatchTransferRequestApprovalInterfaceIsCalledCorrectly()
         {
             _command.TransferRequestId = 10088;
