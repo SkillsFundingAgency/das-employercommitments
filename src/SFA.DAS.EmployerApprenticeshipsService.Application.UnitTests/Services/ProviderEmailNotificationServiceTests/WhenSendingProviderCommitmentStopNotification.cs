@@ -21,6 +21,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         private Mock<IHashingService> _hashingService;
 
         private Apprenticeship _exampleApprenticeship;
+        private DateTime _exampleStopDate;
 
         private EmailMessage _sentEmailMessage;
 
@@ -51,13 +52,15 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
                 StopDate = new DateTime(2018, 05, 01)
             };
 
+            _exampleStopDate = new DateTime(2018, 05, 01);
+
             //Keep a copy of the payload to assert against, to guard against handler modifications
             _exampleApprenticeship =
                 JsonConvert.DeserializeObject<Apprenticeship>(JsonConvert.SerializeObject(payload));
 
             _act = async () =>
                 await _providerEmailNotificationService.SendProviderApprenticeshipStopNotification(
-                    payload);
+                    payload, _exampleStopDate);
         }
 
         [TearDown]
@@ -96,7 +99,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             {
                 {"EMPLOYER", _exampleApprenticeship.LegalEntityName},
                 {"APPRENTICE", $"{_exampleApprenticeship.FirstName} {_exampleApprenticeship.LastName}"},
-                {"DATE", _exampleApprenticeship.StopDate.Value.ToString("dd/MM/yyyy")},
+                {"DATE", _exampleStopDate.ToString("dd/MM/yyyy")},
                 {"URL", $"{_exampleApprenticeship.ProviderId}/apprentices/manage/HASH/details" }
             };
 

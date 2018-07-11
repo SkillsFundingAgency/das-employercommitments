@@ -58,7 +58,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
 
             _providerEmailNotificationService = new Mock<IProviderEmailNotificationService>();
             _providerEmailNotificationService.Setup(x =>
-                x.SendProviderApprenticeshipStopNotification(It.IsAny<Apprenticeship>())).Returns(Task.CompletedTask);
+                x.SendProviderApprenticeshipStopNotification(It.IsAny<Apprenticeship>(), It.IsAny<DateTime>())).Returns(Task.CompletedTask);
 
             _handler = new UpdateApprenticeshipStatusCommandHandler(
                 _mockCommitmentApi.Object,
@@ -97,7 +97,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
 
             //Assert
             _providerEmailNotificationService.Verify(
-                x => x.SendProviderApprenticeshipStopNotification(It.IsAny<Apprenticeship>()),
+                x => x.SendProviderApprenticeshipStopNotification(It.IsAny<Apprenticeship>(), It.IsAny<DateTime>()),
                 Times.Exactly(expectSendNotification ? 1 : 0)
                 );
         }
