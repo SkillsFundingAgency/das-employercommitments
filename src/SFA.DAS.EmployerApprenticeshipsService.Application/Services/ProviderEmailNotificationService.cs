@@ -63,7 +63,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 emailMessage);
         }
 
-        public async Task SendProviderApprenticeshipStopNotification(Apprenticeship apprenticeship)
+        public async Task SendProviderApprenticeshipStopNotification(Apprenticeship apprenticeship, DateTime stopDate)
         {
             var emailMessage = new EmailMessage
             {
@@ -72,7 +72,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 {
                     {"EMPLOYER", apprenticeship.LegalEntityName},
                     {"APPRENTICE", apprenticeship.ApprenticeshipName },
-                    {"DATE", apprenticeship.StopDate.Value.ToString("dd/MM/yyyy") },
+                    {"DATE", stopDate.ToString("dd/MM/yyyy") },
                     {"URL", $"{apprenticeship.ProviderId}/apprentices/manage/{_hashingService.HashValue(apprenticeship.Id)}/details" }
                 }
             };
