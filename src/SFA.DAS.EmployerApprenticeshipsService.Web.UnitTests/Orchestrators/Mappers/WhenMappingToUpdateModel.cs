@@ -11,16 +11,12 @@ using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
-using SFA.DAS.NLog.Logger;
-using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 {
     [TestFixture]
     public class WhenMappingToUpdateModel : ApprenticeshipMapperBase
     {
-        
-
         [Test]
         public async Task TwoEmptyModelIsEqueal()
         {
@@ -148,7 +144,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         }
 
         [Test]
-        public async Task ShouldUpdateTrainngProgramForFramework()
+        public async Task ShouldUpdateTrainingProgramForFramework()
         {
             var a = new Apprenticeship
             {
@@ -253,6 +249,22 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             model.LastName.Should().BeNull();
             model.EmployerRef.Should().Be("");
             model.Cost.Should().BeNull();
+        }
+
+        [TestCase(true, true)]
+        [TestCase(false, false)]
+        public async Task ShouldMapHasHadDataLockSuccess(bool expectedHasHadDataLockSuccess, bool hasHadDataLockSuccess)
+        {
+            var apprenticeship = new Apprenticeship
+            {
+                HasHadDataLockSuccess = hasHadDataLockSuccess
+            };
+
+            var updated = new ApprenticeshipViewModel();
+
+            var model = await Sut.CompareAndMapToApprenticeshipViewModel(apprenticeship, updated);
+
+            model.HasHadDataLockSuccess.Should().Be(expectedHasHadDataLockSuccess);
         }
     }
 }

@@ -72,6 +72,19 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprovedApprentic
             Assert.IsFalse(result.ContainsKey(FieldName));
         }
 
-        //todo: non datalock success
+        [TestCase(1, 6, 2019, 1, 7, 2019)]
+        [TestCase(1, 6, 2019, 1, 8, 2019)]
+        public void AndHasNotHadDataLockSuccessShouldPassValidationWhenEndDateMonthInFuture(
+            int nowDay, int nowMonth, int nowYear,
+            int? endDay, int? endMonth, int? endYear)
+        {
+            _currentDateTime.Setup(x => x.Now).Returns(new DateTime(nowYear, nowMonth, nowDay));
+            _updateApprenticeshipViewModel.HasHadDataLockSuccess = false;
+            _updateApprenticeshipViewModel.EndDate = new DateTimeViewModel(endDay, endMonth, endYear);
+
+            var result = _validator.ValidateApprovedEndDate(_updateApprenticeshipViewModel);
+
+            Assert.IsFalse(result.ContainsKey(FieldName));
+        }
     }
 }

@@ -43,7 +43,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
             return dict;
         }
 
-        //note: once an apprenticeship has been approved, the end date logically changes from the planned end date to the actual end date
         public Dictionary<string, string> ValidateApprovedEndDate(UpdateApprenticeshipViewModel updatedApprenticeship)
         {
             var dict = new Dictionary<string, string>();
@@ -57,14 +56,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                     if (new DateTime(updatedApprenticeship.EndDate.Year.Value, updatedApprenticeship.EndDate.Month.Value, 1) > new DateTime(now.Year, now.Month, 1))
                         dict.Add($"{nameof(updatedApprenticeship.EndDate)}", ValidationText.EndDateBeforeOrIsCurrentMonth.Text);
                 }
-                //else
-                //{
-                //    var startDate = updatedApprenticeship.StartDate?.DateTime ??
-                //                    updatedApprenticeship.OriginalApprenticeship.StartDate;
-
-                //    if (updatedApprenticeship.EndDate.DateTime <= startDate)
-                //        dict.Add($"{nameof(updatedApprenticeship.EndDate)}", ValidationText.LearnPlanEndDate02.Text);
-                //}
             }
 
             return dict;

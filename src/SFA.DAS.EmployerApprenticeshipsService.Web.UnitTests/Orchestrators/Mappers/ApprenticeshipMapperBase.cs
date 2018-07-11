@@ -49,6 +49,5 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             Sut = new ApprenticeshipMapper(mockHashingService.Object, MockDateTime.Object, MockMediator.Object,
                 Mock.Of<ILog>(), AcademicYearValidator.Object, AcademicYearDateProvider.Object);
         }
-
     }
 }
