@@ -21,7 +21,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprovedApprentic
         private const string FieldName = "EndDate";
 
         [SetUp]
-        public void BaseSetup()
+        public void Setup()
         {
             _mockAcademicYearValidator = new Mock<IAcademicYearValidator>();
 
@@ -39,13 +39,14 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprovedApprentic
 
         [TestCase(1, 6, 2019, 1, 7, 2019)]
         [TestCase(1, 6, 2019, 1, 8, 2019)]
-        public void ShouldFailValidationWhenEndDateMonthInFuture(
+        public void AndHasHadDataLockSuccessShouldFailValidationWhenEndDateMonthInFuture(
             int nowDay,  int nowMonth,  int nowYear,
             int? endDay, int? endMonth, int? endYear)
         {
             const string expected = "The end date must not be in the future";
 
             _currentDateTime.Setup(x => x.Now).Returns(new DateTime(nowYear, nowMonth, nowDay));
+            _updateApprenticeshipViewModel.HasHadDataLockSuccess = true;
             _updateApprenticeshipViewModel.EndDate = new DateTimeViewModel(endDay, endMonth, endYear);
 
             var result = _validator.ValidateApprovedEndDate(_updateApprenticeshipViewModel);
@@ -58,16 +59,19 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprovedApprentic
         [TestCase(1, 6, 2019, 1, 5, 2019)]
         [TestCase(15, 6, 2019, 1, 6, 2019)]
         [TestCase(1, 6, 2019, 15, 6, 2019)]
-        public void ShouldPassValidationWhenEndDateIsCurrentMonthOrInPast(
+        public void AndHasHadDataLockSuccessShouldPassValidationWhenEndDateIsCurrentMonthOrInPast(
             int nowDay, int nowMonth, int nowYear,
             int? endDay, int? endMonth, int? endYear)
         {
             _currentDateTime.Setup(x => x.Now).Returns(new DateTime(nowYear, nowMonth, nowDay));
+            _updateApprenticeshipViewModel.HasHadDataLockSuccess = true;
             _updateApprenticeshipViewModel.EndDate = new DateTimeViewModel(endDay, endMonth, endYear);
 
             var result = _validator.ValidateApprovedEndDate(_updateApprenticeshipViewModel);
 
             Assert.IsFalse(result.ContainsKey(FieldName));
         }
+
+        //todo: non datalock success
     }
 }

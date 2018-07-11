@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using FluentValidation.Attributes;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.EmployerCommitments.Web.Validators;
@@ -38,5 +37,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public string ProviderName { get; set; }
 
         public string ChangesConfirmedError => GetErrorMessage(nameof(ChangesConfirmed));
+
+        public bool HasHadDataLockSuccess { get; set; }
     }
 }

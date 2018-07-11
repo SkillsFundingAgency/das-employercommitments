@@ -253,14 +253,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         public async Task<UpdateApprenticeshipViewModel> CompareAndMapToApprenticeshipViewModel(
             Apprenticeship original, ApprenticeshipViewModel edited)
         {
-            Func<string, string, string> changedOrNull = (a, edit) => 
-                a?.Trim() == edit?.Trim() ? null : edit;
+            string ChangedOrNull(string a, string edit) => a?.Trim() == edit?.Trim() ? null : edit;
 
             var apprenticeshipDetailsViewModel = MapToApprenticeshipDetailsViewModel(original);
             var model = new UpdateApprenticeshipViewModel
             {
-                FirstName = changedOrNull(original.FirstName, edited.FirstName),
-                LastName = changedOrNull(original.LastName, edited.LastName),
+                FirstName = ChangedOrNull(original.FirstName, edited.FirstName),
+                LastName = ChangedOrNull(original.LastName, edited.LastName),
                 DateOfBirth = original.DateOfBirth == edited.DateOfBirth.DateTime
                     ? null
                     : edited.DateOfBirth,
@@ -296,8 +295,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
                     _logger.Warn($"Apprentice training course has expired. TrainingName: {edited.TrainingName}, TrainingCode: {edited.TrainingCode}, Employer Ref: {edited.EmployerRef}, Apprenticeship ULN: {edited.ULN}");
                 }
-               
             }
+
+            model.HasHadDataLockSuccess = original.HasHadDataLockSuccess;
 
             return model;
         }

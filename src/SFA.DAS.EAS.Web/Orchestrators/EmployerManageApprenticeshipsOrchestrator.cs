@@ -218,6 +218,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             string hashedAccountId, string hashedApprenticeshipId, string externalUserId,
             ApprenticeshipViewModel apprenticeship)
         {
+            //todo: could pick up first 2 params from apprenticeship
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
 

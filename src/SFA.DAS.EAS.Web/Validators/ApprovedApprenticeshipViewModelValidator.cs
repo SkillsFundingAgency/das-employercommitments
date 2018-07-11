@@ -50,11 +50,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 
             if (updatedApprenticeship.EndDate != null)
             {
-                //todo: helper for year and month only
-                var now = CurrentDateTime.Now;
-                if (new DateTime(updatedApprenticeship.EndDate.Year.Value, updatedApprenticeship.EndDate.Month.Value, 1) > new DateTime(now.Year, now.Month, 1))
-                    //todo: new text
-                    dict.Add($"{nameof(updatedApprenticeship.EndDate)}", ValidationText.EndDateBeforeOrIsCurrentMonth.Text);
+                if (updatedApprenticeship.HasHadDataLockSuccess)
+                {
+                    //todo: helper for year and month only
+                    var now = CurrentDateTime.Now;
+                    if (new DateTime(updatedApprenticeship.EndDate.Year.Value, updatedApprenticeship.EndDate.Month.Value, 1) > new DateTime(now.Year, now.Month, 1))
+                        dict.Add($"{nameof(updatedApprenticeship.EndDate)}", ValidationText.EndDateBeforeOrIsCurrentMonth.Text);
+                }
+                else if (updatedApprenticeship.EndDate.DateTime <= updatedApprenticeship.StartDate.DateTime)
+                        dict.Add($"{nameof(updatedApprenticeship.EndDate)}", ValidationText.LearnPlanEndDate02.Text);
             }
 
             return dict;
