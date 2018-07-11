@@ -57,8 +57,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                     if (new DateTime(updatedApprenticeship.EndDate.Year.Value, updatedApprenticeship.EndDate.Month.Value, 1) > new DateTime(now.Year, now.Month, 1))
                         dict.Add($"{nameof(updatedApprenticeship.EndDate)}", ValidationText.EndDateBeforeOrIsCurrentMonth.Text);
                 }
-                else if (updatedApprenticeship.EndDate.DateTime <= updatedApprenticeship.StartDate.DateTime)
-                        dict.Add($"{nameof(updatedApprenticeship.EndDate)}", ValidationText.LearnPlanEndDate02.Text);
+                //else
+                //{
+                //    var startDate = updatedApprenticeship.StartDate?.DateTime ??
+                //                    updatedApprenticeship.OriginalApprenticeship.StartDate;
+
+                //    if (updatedApprenticeship.EndDate.DateTime <= startDate)
+                //        dict.Add($"{nameof(updatedApprenticeship.EndDate)}", ValidationText.LearnPlanEndDate02.Text);
+                //}
             }
 
             return dict;
