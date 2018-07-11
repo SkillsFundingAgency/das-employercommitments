@@ -52,7 +52,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                     RecipientsAddress = emailAddress,
                     TemplateId = GenerateSenderApprovedOrRejectedTemplateId(transferApprovalStatus, recipientType),
                     ReplyToAddress = "noreply@sfa.gov.uk",
-                    Subject = "",
+                    Subject = "x",
                     SystemId = "x",
                     Tokens = tokens
                 }
