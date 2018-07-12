@@ -132,12 +132,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Approved
                     && !apprenticeship.HasHadDataLockSuccess;
 
-            // if editing post-approvl, we always disable if start date is in the future,
+            // if editing post-approval, we disable if start date is in the future and has had data lock success,
             // as the validation rule that disallows setting end date to > current month
             // means any date entered would be before the start date (which is also disallowed)
             var isEndDateLockedForUpdate = commitment.AgreementStatus != AgreementStatus.BothAgreed
                 ? isLockedForUpdate
-                : isStartDateInFuture || (isLockedForUpdate && !apprenticeship.HasHadDataLockSuccess);
+                : isLockedForUpdate || (isStartDateInFuture && apprenticeship.HasHadDataLockSuccess);
 
             return new ApprenticeshipViewModel
             {
