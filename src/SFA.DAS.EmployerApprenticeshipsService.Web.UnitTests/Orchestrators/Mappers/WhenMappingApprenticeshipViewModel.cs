@@ -200,24 +200,24 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             Assert.AreEqual(trainingType, viewModel.TrainingType);
         }
 
-        //todo: add view unit tests for display fields flags??
-        [TestCase(true, true, true, true, AcademicYearValidationResult.NotWithinFundingPeriod)]
-        [TestCase(false, true, false, true, AcademicYearValidationResult.NotWithinFundingPeriod)]
-        [TestCase(true, false, true, true, AcademicYearValidationResult.NotWithinFundingPeriod)]
-        [TestCase(true, false, false, true, AcademicYearValidationResult.NotWithinFundingPeriod)]
-        [TestCase(true, true, true, false, AcademicYearValidationResult.NotWithinFundingPeriod)]
-        [TestCase(false, true, false, false, AcademicYearValidationResult.NotWithinFundingPeriod)]
-        [TestCase(true, false, true, false, AcademicYearValidationResult.NotWithinFundingPeriod)]
-        [TestCase(false, false, false, false, AcademicYearValidationResult.NotWithinFundingPeriod)]
-        [TestCase(true, true, true, true, AcademicYearValidationResult.Success)]
-        [TestCase(false, true, false, true, AcademicYearValidationResult.Success)]
-        [TestCase(true, false, true, true, AcademicYearValidationResult.Success)]
-        [TestCase(false, false, false, true, AcademicYearValidationResult.Success)]
-        [TestCase(true, true, true, false, AcademicYearValidationResult.Success)]
-        [TestCase(false, true, false, false, AcademicYearValidationResult.Success)]
-        [TestCase(true, false, true, false, AcademicYearValidationResult.Success)]
-        [TestCase(false, false, false, false, AcademicYearValidationResult.Success)]
-        public void OfApprovedApprenticeshipThenIsEndDateLockedForUpdateShouldBeSetCorrectly(bool expected, bool dataLockSuccess, bool isStartDateInFuture, bool isAfterLastAcademicYearFundingPeriod, AcademicYearValidationResult academicYearValidationResult)
+        [TestCase(true, false, true, true, true, AcademicYearValidationResult.NotWithinFundingPeriod, Description = "No valid change, must be locked (locked=true)")]
+        [TestCase(false, false, true, false, true, AcademicYearValidationResult.NotWithinFundingPeriod, Description = "Should override to enabled (lockdown=false)")]
+        [TestCase(false, true, false, true, true, AcademicYearValidationResult.NotWithinFundingPeriod, Description = "Same lockdown status as other lockable fields (lockdown=isLockedForUpdate)")]
+        [TestCase(true, true, false, false, true, AcademicYearValidationResult.NotWithinFundingPeriod, Description = "Same lockdown status as other lockable fields (lockdown=isLockedForUpdate)")]
+        [TestCase(true, false, true, true, false, AcademicYearValidationResult.NotWithinFundingPeriod, Description = "No valid change, must be locked (locked=true)")]
+        [TestCase(false, false, true, false, false, AcademicYearValidationResult.NotWithinFundingPeriod, Description = "Should override to enabled (lockdown=false)")]
+        [TestCase(false, true, false, true, false, AcademicYearValidationResult.NotWithinFundingPeriod, Description = "Same lockdown status as other lockable fields (lockdown=isLockedForUpdate)")]
+        [TestCase(false, true, false, false, false, AcademicYearValidationResult.NotWithinFundingPeriod, Description = "Same lockdown status as other lockable fields (lockdown=isLockedForUpdate)")]
+        [TestCase(true, false, true, true, true, AcademicYearValidationResult.Success, Description = "No valid change, must be locked (locked=true)")]
+        [TestCase(false, false, true, false, true, AcademicYearValidationResult.Success, Description = "Should override to enabled (lockdown=false)")]
+        [TestCase(false, true, false, true, true, AcademicYearValidationResult.Success, Description = "Same lockdown status as other lockable fields (lockdown=isLockedForUpdate)")]
+        [TestCase(false, true, false, false, true, AcademicYearValidationResult.Success, Description = "Same lockdown status as other lockable fields (lockdown=isLockedForUpdate)")]
+        [TestCase(true, false, true, true, false, AcademicYearValidationResult.Success, Description = "No valid change, must be locked (locked=true)")]
+        [TestCase(false, false, true, false, false, AcademicYearValidationResult.Success, Description = "Should override to enabled (lockdown=false)")]
+        [TestCase(false, true, false, true, false, AcademicYearValidationResult.Success, Description = "Same lockdown status as other lockable fields (lockdown=isLockedForUpdate)")]
+        [TestCase(false, true, false, false, false, AcademicYearValidationResult.Success, Description = "Same lockdown status as other lockable fields (lockdown=isLockedForUpdate)")]
+        public void OfApprovedApprenticeshipThenIsEndDateLockedForUpdateShouldBeSetCorrectly(bool expected, bool unchanged,
+            bool dataLockSuccess, bool isStartDateInFuture, bool isAfterLastAcademicYearFundingPeriod, AcademicYearValidationResult academicYearValidationResult)
         {
             AcademicYearValidator.Setup(m => m.IsAfterLastAcademicYearFundingPeriod).Returns(isAfterLastAcademicYearFundingPeriod);
             AcademicYearValidator.Setup(m => m.Validate(It.IsAny<DateTime>())).Returns(academicYearValidationResult);
@@ -233,6 +233,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
 
             Assert.AreEqual(expected, viewModel.IsEndDateLockedForUpdate);
+            if (unchanged)
+                Assert.AreEqual(viewModel.IsLockedForUpdate, viewModel.IsEndDateLockedForUpdate);
         }
     }
 }
