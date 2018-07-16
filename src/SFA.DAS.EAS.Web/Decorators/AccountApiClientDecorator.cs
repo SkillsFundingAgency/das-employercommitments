@@ -49,6 +49,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Decorators
             return await _inner.GetUserAccounts(userId);
         }
 
+        public Task<StatisticsViewModel> GetStatistics()
+        {
+            return _inner.GetStatistics();
+        }
+
         public async Task<LegalEntityViewModel> GetLegalEntity(string accountId, long id)
         {
             return await _inner.GetLegalEntity(accountId, id);
