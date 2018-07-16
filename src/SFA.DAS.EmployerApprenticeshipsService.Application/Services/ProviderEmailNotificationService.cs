@@ -10,17 +10,14 @@ using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Application.Services
 {
-    public class ProviderEmailNotificationService : IProviderEmailNotificationService
+    public class ProviderEmailNotificationService : EmailNotificationService, IProviderEmailNotificationService
     {
         private readonly IProviderEmailService _providerEmailService;
-        private readonly ILog _logger;
-        private readonly IHashingService _hashingService;
 
         public ProviderEmailNotificationService(IProviderEmailService providerEmailService, ILog logger, IHashingService hashingService)
+            :base(logger, hashingService)
         {
             _providerEmailService = providerEmailService;
-            _logger = logger;
-            _hashingService = hashingService;
         }
 
         public async Task SendProviderTransferRejectedCommitmentEditNotification(CommitmentView commitment)
@@ -35,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 }
             };
 
-            _logger.Info($"Sending email to all provider recipients for Provider {commitment.ProviderId}, template {emailMessage.TemplateId}");
+            Logger.Info($"Sending email to all provider recipients for Provider {commitment.ProviderId}, template {emailMessage.TemplateId}");
 
             await _providerEmailService.SendEmailToAllProviderRecipients(
                 commitment.ProviderId.GetValueOrDefault(),
@@ -55,7 +52,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 }
             };
 
-            _logger.Info($"Sending email to all provider recipients for Provider {commitment.ProviderId}, template {emailMessage.TemplateId}");
+            Logger.Info($"Sending email to all provider recipients for Provider {commitment.ProviderId}, template {emailMessage.TemplateId}");
 
             await _providerEmailService.SendEmailToAllProviderRecipients(
                 commitment.ProviderId.GetValueOrDefault(),
@@ -63,7 +60,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 emailMessage);
         }
 
-        public async Task SendProviderApprenticeshipStopNotification(Apprenticeship apprenticeship)
+        public async Task SendProviderApprenticeshipStopNotification(Apprenticeship apprenticeship, DateTime stopDate)
         {
             var emailMessage = new EmailMessage
             {
@@ -72,12 +69,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 {
                     {"EMPLOYER", apprenticeship.LegalEntityName},
                     {"APPRENTICE", apprenticeship.ApprenticeshipName },
-                    {"DATE", apprenticeship.StopDate.Value.ToString("dd/MM/yyyy") },
-                    {"URL", $"{apprenticeship.ProviderId}/apprentices/manage/{_hashingService.HashValue(apprenticeship.Id)}/details" }
+                    {"DATE", stopDate.ToString("dd/MM/yyyy") },
+                    {"URL", $"{apprenticeship.ProviderId}/apprentices/manage/{HashingService.HashValue(apprenticeship.Id)}/details" }
                 }
             };
 
-            _logger.Info($"Sending email to all provider recipients for Provider {apprenticeship.ProviderId}, template {emailMessage.TemplateId}");
+            Logger.Info($"Sending email to all provider recipients for Provider {apprenticeship.ProviderId}, template {emailMessage.TemplateId}");
 
             await _providerEmailService.SendEmailToAllProviderRecipients(
                 apprenticeship.ProviderId,
@@ -96,16 +93,36 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                     {"APPRENTICE", apprenticeship.ApprenticeshipName },
                     {"OLDDATE", apprenticeship.StopDate.Value.ToString("dd/MM/yyyy") },
                     {"NEWDATE", newStopDate.ToString("dd/MM/yyyy") },
-                    {"URL", $"{apprenticeship.ProviderId}/apprentices/manage/{_hashingService.HashValue(apprenticeship.Id)}/details" }
+                    {"URL", $"{apprenticeship.ProviderId}/apprentices/manage/{HashingService.HashValue(apprenticeship.Id)}/details" }
                 }
             };
 
-            _logger.Info($"Sending email to all provider recipients for Provider {apprenticeship.ProviderId}, template {emailMessage.TemplateId}");
+            Logger.Info($"Sending email to all provider recipients for Provider {apprenticeship.ProviderId}, template {emailMessage.TemplateId}");
 
             await _providerEmailService.SendEmailToAllProviderRecipients(
                 apprenticeship.ProviderId,
                 string.Empty,
                 emailMessage);
+        }
+
+        public async Task SendSenderApprovedOrRejectedCommitmentNotification(CommitmentView commitment, Commitments.Api.Types.TransferApprovalStatus newTransferApprovalStatus)
+        {
+            Logger.Info($"Sending notification to provider {commitment.ProviderId} that sender has {newTransferApprovalStatus} cohort {commitment.Id}");
+
+            var tokens = new Dictionary<string, string>
+            {
+                {"cohort_reference", commitment.Reference},
+                {"ukprn", commitment.ProviderId.ToString()}
+            };
+
+            await _providerEmailService.SendEmailToAllProviderRecipients(
+                commitment.ProviderId.GetValueOrDefault(),
+                commitment.ProviderLastUpdateInfo?.EmailAddress ?? string.Empty,
+                new EmailMessage
+                {
+                    TemplateId = GenerateSenderApprovedOrRejectedTemplateId(newTransferApprovalStatus, RecipientType.Provider),
+                    Tokens = tokens
+                });
         }
     }
 }

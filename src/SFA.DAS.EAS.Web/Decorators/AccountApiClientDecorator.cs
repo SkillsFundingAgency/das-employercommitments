@@ -97,7 +97,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Decorators
 
             if (int.TryParse(recordsSetting, out var records))
             {
-                for (var i = 1; i <= records; i++)
+                for (var i = 1; i <= records-1; i++)
                 {
                     result.Add(new TransferConnectionViewModel
                     {
@@ -106,6 +106,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Decorators
                         FundingEmployerHashedAccountId = _hashingService.HashValue(i)
                     });
                 }
+                result.Add(new TransferConnectionViewModel
+                {
+                    FundingEmployerAccountId = 8955,
+                    FundingEmployerAccountName = "Phil's Sender Account 8955",
+                    FundingEmployerHashedAccountId = _hashingService.HashValue(8955)
+                });
             }
 
             return Task.FromResult((ICollection<TransferConnectionViewModel>)result);

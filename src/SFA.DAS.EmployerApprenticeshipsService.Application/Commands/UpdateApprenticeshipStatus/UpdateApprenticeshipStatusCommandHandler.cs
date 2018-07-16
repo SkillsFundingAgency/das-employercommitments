@@ -61,7 +61,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
 
             if (command.ChangeType == ChangeStatusType.Stop)
             {
-                await _providerEmailNotificationService.SendProviderApprenticeshipStopNotification(apprenticeship);
+                await _providerEmailNotificationService.SendProviderApprenticeshipStopNotification(apprenticeship, command.DateOfChange);
             }
         }
 

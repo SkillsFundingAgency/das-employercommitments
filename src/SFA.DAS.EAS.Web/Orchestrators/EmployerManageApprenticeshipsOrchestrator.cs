@@ -85,7 +85,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             string hashedAccountId, ApprenticeshipFiltersViewModel filters, string externalUserId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
-            _logger.Info($"Getting On-programme apprenticeships for empployer: {accountId}");
+            _logger.Info($"Getting On-programme apprenticeships for employer: {accountId}");
 
             return await CheckUserAuthorization(async () =>
             {
