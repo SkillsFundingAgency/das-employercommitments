@@ -380,6 +380,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                     legalEntityName = viewModel.LegalEntityName,
                     legalEntityAddress = viewModel.LegalEntityAddress,
                     legalEntitySource = viewModel.LegalEntitySource,
+                    accountLegalEntityPublicHashedId = viewModel.AccountLegalEntityPublicHashedId,
                     providerId = viewModel.ProviderId,
                     providerName = viewModel.ProviderName,
                     cohortRef = viewModel.CohortRef,
