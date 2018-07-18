@@ -273,7 +273,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return View(model);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("{hashedApprenticeshipId}/changes/confirm")]

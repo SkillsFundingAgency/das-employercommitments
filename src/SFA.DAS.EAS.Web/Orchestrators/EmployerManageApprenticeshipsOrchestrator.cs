@@ -179,13 +179,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
 
-            _logger.Info(
-                $"Getting Approved Apprenticeship for Editing, Account: {accountId}, ApprenticeshipId: {apprenticeshipId}");
+            _logger.Info($"Getting Approved Apprenticeship for Editing, Account: {accountId}, ApprenticeshipId: {apprenticeshipId}");
 
             return await CheckUserAuthorization(async () =>
             {
                 await AssertApprenticeshipStatus(accountId, apprenticeshipId);
 
+                //todo: whenall
                 var apprenticeshipData = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
                 {
                     AccountId = accountId,
@@ -218,6 +218,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             string hashedAccountId, string hashedApprenticeshipId, string externalUserId,
             ApprenticeshipViewModel apprenticeship)
         {
+            //todo: could pick up first 2 params from apprenticeship
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
 
@@ -317,16 +318,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         Apprenticeship = new List<Apprenticeship> { await _apprenticeshipMapper.MapFrom(apprenticeship) }
                     });
 
-            var result = _apprenticeshipMapper
-                .MapOverlappingErrors(overlappingErrors)
-                .ToDictionary(overlap => overlap.Key, overlap => overlap.Value);
+            var result = _approvedApprenticeshipValidator.MapOverlappingErrors(overlappingErrors);
 
             foreach (var error in _approvedApprenticeshipValidator.ValidateToDictionary(apprenticeship))
             {
-                result.Add(error.Key, error.Value);
+                result.AddIfNotExists(error.Key, error.Value);
             }
 
             foreach (var error in _approvedApprenticeshipValidator.ValidateAcademicYear(updatedModel))
+            {
+                result.AddIfNotExists(error.Key, error.Value);
+            }
+
+            foreach (var error in _approvedApprenticeshipValidator.ValidateApprovedEndDate(updatedModel))
             {
                 result.AddIfNotExists(error.Key, error.Value);
             }

@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         private const string ExternalUserId = "UserId";
 
         [SetUp]
-        public void Setup()
+        public new void Setup()
         {
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetApprenticeshipQueryRequest>()))
                 .ReturnsAsync(new GetApprenticeshipQueryResponse
@@ -40,7 +40,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             Orchestrator = new EmployerManageApprenticeshipsOrchestrator(
                 MockMediator.Object,
-                _mockHashingService.Object,
+                MockHashingService.Object,
                 _apprenticeshipMapper.Object,
                 Validator,
                 MockDateTime.Object,
@@ -49,8 +49,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 AcademicYearDateProvider.Object,
                 AcademicYearValidator);
 
-            _mockHashingService.Setup(x => x.DecodeValue(HashedApprenticeshipId)).Returns(ApprenticeshipId);
-            _mockHashingService.Setup(x => x.DecodeValue(HashedAccountId)).Returns(AccountId);
+            MockHashingService.Setup(x => x.DecodeValue(HashedApprenticeshipId)).Returns(ApprenticeshipId);
+            MockHashingService.Setup(x => x.DecodeValue(HashedAccountId)).Returns(AccountId);
         }
 
         [Test]
