@@ -262,6 +262,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         LegalEntityName = legalEntity.Name,
                         LegalEntityAddress = legalEntity.RegisteredAddress,
                         LegalEntitySource = legalEntity.Source,
+                        AccountLegalEntityPublicHashedId = legalEntity.AccountLegalEntityPublicHashedId,
                         ProviderId = provider.Ukprn,
                         ProviderName = provider.ProviderName,
                         CohortRef = cohortRef
@@ -291,6 +292,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         LegalEntityName = model.LegalEntityName,
                         LegalEntityAddress = model.LegalEntityAddress,
                         LegalEntityOrganisationType = (OrganisationType)model.LegalEntitySource,
+                        AccountLegalEntityPublicHashedId = model.AccountLegalEntityPublicHashedId,
                         ProviderId = model.ProviderId,
                         ProviderName = model.ProviderName,
                         CommitmentStatus = CommitmentStatus.New,
@@ -330,6 +332,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         LegalEntityName = model.LegalEntityName,
                         LegalEntityAddress = model.LegalEntityAddress,
                         LegalEntityOrganisationType = (OrganisationType)model.LegalEntitySource,
+                        AccountLegalEntityPublicHashedId = model.AccountLegalEntityPublicHashedId,
                         ProviderId = long.Parse(model.ProviderId),
                         ProviderName = model.ProviderName,
                         CommitmentStatus = CommitmentStatus.Active,
@@ -616,29 +619,28 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitNewCommitmentModel(string hashedAccountId, string externalUserId, string transferConnectionCode, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string providerId, string providerName, string cohortRef, SaveStatus saveStatus)
+        //todo: too many params!
+        public async Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitNewCommitmentModel(string hashedAccountId, string externalUserId, string transferConnectionCode, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string accountLegalEntityPublicHashedId, string providerId, string providerName, string cohortRef, SaveStatus saveStatus)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             _logger.Info($"Getting Submit New Commitment ViewModel, Account: {accountId}");
 
-            return await CheckUserAuthorization(() =>
+            return await CheckUserAuthorization(() => new OrchestratorResponse<SubmitCommitmentViewModel>
             {
-                return new OrchestratorResponse<SubmitCommitmentViewModel>
+                Data = new SubmitCommitmentViewModel
                 {
-                    Data = new SubmitCommitmentViewModel
-                    {
-                        HashedAccountId = hashedAccountId,
-                        TransferConnectionCode = transferConnectionCode,
-                        LegalEntityCode = legalEntityCode,
-                        LegalEntityName = legalEntityName,
-                        LegalEntityAddress = legalEntityAddress,
-                        LegalEntitySource = legalEntitySource,
-                        ProviderId = providerId,
-                        ProviderName = providerName,
-                        CohortRef = cohortRef,
-                        SaveStatus = saveStatus
-                    }
-                };
+                    HashedAccountId = hashedAccountId,
+                    TransferConnectionCode = transferConnectionCode,
+                    LegalEntityCode = legalEntityCode,
+                    LegalEntityName = legalEntityName,
+                    LegalEntityAddress = legalEntityAddress,
+                    LegalEntitySource = legalEntitySource,
+                    AccountLegalEntityPublicHashedId = accountLegalEntityPublicHashedId,
+                    ProviderId = providerId,
+                    ProviderName = providerName,
+                    CohortRef = cohortRef,
+                    SaveStatus = saveStatus
+                }
             }, hashedAccountId, externalUserId);
         }
 

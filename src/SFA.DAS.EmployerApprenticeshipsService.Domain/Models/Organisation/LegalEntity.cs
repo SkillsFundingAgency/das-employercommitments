@@ -10,5 +10,6 @@ namespace SFA.DAS.EmployerCommitments.Domain.Models.Organisation
         public List<Agreement> Agreements { get; set; }
         public long Id { get; set; }
         public string Code { get; set; }
+        public string AccountLegalEntityPublicHashedId { get; set; }
     }
 }

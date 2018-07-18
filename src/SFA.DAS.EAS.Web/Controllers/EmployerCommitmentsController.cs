@@ -690,7 +690,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("Submit")]
-        public async Task<ActionResult> SubmitNewCommitment(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string providerId, string providerName, string cohortRef, SaveStatus? saveStatus)
+        public async Task<ActionResult> SubmitNewCommitment(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string accountLegalEntityPublicHashedId, string providerId, string providerName, string cohortRef, SaveStatus? saveStatus)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
@@ -701,13 +701,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 || string.IsNullOrWhiteSpace(providerName)
                 || string.IsNullOrWhiteSpace(cohortRef)
                 || string.IsNullOrWhiteSpace(legalEntityAddress)
+                || string.IsNullOrWhiteSpace(accountLegalEntityPublicHashedId)
                 || !saveStatus.HasValue)
             {
                 return RedirectToAction("Inform", new { hashedAccountId });
             }
 
             var response = await Orchestrator.GetSubmitNewCommitmentModel
-                (hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), transferConnectionCode, legalEntityCode, legalEntityName, legalEntityAddress, legalEntitySource, providerId, providerName, cohortRef, saveStatus.Value);
+                (hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), transferConnectionCode, legalEntityCode, legalEntityName, legalEntityAddress, legalEntitySource, accountLegalEntityPublicHashedId, providerId, providerName, cohortRef, saveStatus.Value);
 
             return View("SubmitCommitmentEntry", response);
         }
