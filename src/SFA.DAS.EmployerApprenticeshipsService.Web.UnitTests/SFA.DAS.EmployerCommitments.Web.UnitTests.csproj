@@ -247,7 +247,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RazorGeneratorMvcStart.cs" />
+    <Compile Include="Controllers\ControllerTest.cs" />
     <Compile Include="Controllers\ControllerTestBase.cs" />
+    <Compile Include="Controllers\EmployerCommitmentsControllerTests\EmployerCommitmentsControllerTest.cs" />
+    <Compile Include="Controllers\EmployerCommitmentsControllerTests\WhenCreatingCommitment.cs" />
     <Compile Include="Controllers\EmployerCommitmentsControllerTests\WhenSelectingLegalEntity.cs" />
     <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenGettingEditStopDateDetails.cs" />
     <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenUpdatingApprenticeshipStopDate.cs" />
@@ -300,6 +303,7 @@
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenValidateingApprenticeshipUpdate.cs" />
     <Compile Include="Orchestrators\Mappers\ApprenticeshipMapperBase.cs" />
     <Compile Include="StatusCalculator\WhenGettingStatusOfTransferCommitment.cs" />
+    <Compile Include="TestHelper.cs" />
     <Compile Include="Validators\ApprovedApprenticeships\ApprovedApprenticeshipValidatorTestBase.cs" />
     <Compile Include="Plumbing\CommitmentRoutePrefixTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
