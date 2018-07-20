@@ -48,6 +48,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
                         }).ToList(),
                     Code = legalEntityViewModel.Code,
                     Id = legalEntityViewModel.LegalEntityId,
+                    //todo: don't forget to remove hard-coding!
                     AccountLegalEntityPublicHashedId = "123456"//legalEntityViewModel.AccountLegalEntityPublicHashedId
                 });
             }
