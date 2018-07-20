@@ -266,6 +266,7 @@
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCallingGetSubmitNewCommitmentModel.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingEmployerAssignedCommitment.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingProviderAssignedCommitment.cs" />
+    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingSummary.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingAllWithProvider.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingApprenticeship.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingCommitmentDetails.cs" />

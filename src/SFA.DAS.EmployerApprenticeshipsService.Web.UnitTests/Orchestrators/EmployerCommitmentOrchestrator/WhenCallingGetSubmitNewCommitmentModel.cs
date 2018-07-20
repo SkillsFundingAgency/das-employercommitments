@@ -9,12 +9,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
     {
         private const string HashedAccountId = "HASH";
 
-        [SetUp]
-        public void Arrange()
-        {
-            MockHashingService.Setup(x => x.DecodeValue(HashedAccountId)).Returns(1L);
-        }
-
         [Test]
         public async Task ShouldReturnCorrectSubmitCommitmentViewModel()
         {
@@ -29,6 +23,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             const string providerName = "PRONAME";
             const string cohortRef = "COREF";
             const SaveStatus saveStatus = Enums.SaveStatus.Approve;
+
+            MockHashingService.Setup(x => x.DecodeValue(HashedAccountId)).Returns(1L);
 
             var response = await EmployerCommitmentOrchestrator.GetSubmitNewCommitmentModel(
                 HashedAccountId,
