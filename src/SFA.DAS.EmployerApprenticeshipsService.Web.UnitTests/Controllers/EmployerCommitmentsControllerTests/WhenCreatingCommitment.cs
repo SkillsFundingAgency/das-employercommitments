@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 using KellermanSoftware.CompareNetObjects;
 using Moq;
 using NUnit.Framework;
@@ -11,6 +13,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
     public class WhenCreatingCommitment : EmployerCommitmentsControllerTest
     {
         private CreateCommitmentViewModel _createCommitmentViewModel;
+        private Func<Task<ActionResult>> _act;
 
         [SetUp]
         public void WhenCreatingCommitmentSetup()
@@ -28,15 +31,16 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
                 ProviderName = "HIREAPRO",
                 CohortRef = "COREF"
             };
+
+            _act = async () => await Controller.CreateCommitment(TestHelper.Clone(_createCommitmentViewModel));
         }
 
-        //split test into 2?
         [Test]
         public async Task AndSelectedRouteIsProviderThenRedirectToSubmitNewCommitmentWithCorrectRouteValues()
         {
             _createCommitmentViewModel.SelectedRoute = "provider";
 
-            var result = await Controller.CreateCommitment(TestHelper.Clone(_createCommitmentViewModel));
+            var result = await _act();
 
             AssertRedirectAction(result, "SubmitNewCommitment", expectedRouteValues: new
             {
@@ -64,7 +68,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
             Orchestrator.Setup(o => o.CreateEmployerAssignedCommitment(It.IsAny<CreateCommitmentViewModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new OrchestratorResponse<string> {Data = hashedCommitmentId});
 
-            var result = await Controller.CreateCommitment(TestHelper.Clone(_createCommitmentViewModel));
+            var result = await _act();
 
             AssertRedirectAction(result, "Details", expectedRouteValues: new
             {
@@ -82,7 +86,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
             Orchestrator.Setup(o => o.CreateEmployerAssignedCommitment(It.IsAny<CreateCommitmentViewModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new OrchestratorResponse<string> { Data = hashedCommitmentId });
 
-            await Controller.CreateCommitment(TestHelper.Clone(_createCommitmentViewModel));
+            await _act();
 
             Orchestrator.Verify(o => o.CreateEmployerAssignedCommitment(
                 It.Is<CreateCommitmentViewModel>(vm => AreEqual(_createCommitmentViewModel, vm)),
