@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using KellermanSoftware.CompareNetObjects;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitments.Web.Enums;
@@ -12,6 +11,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
     [TestFixture]
     public class WhenCreatingCommitment : EmployerCommitmentsControllerTest
     {
+        private const string Employer = "employer";
+        private const string Provider = "provider";
+
         private CreateCommitmentViewModel _createCommitmentViewModel;
         private Func<Task<ActionResult>> _act;
 
@@ -38,7 +40,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
         [Test]
         public async Task AndSelectedRouteIsProviderThenRedirectToSubmitNewCommitmentWithCorrectRouteValues()
         {
-            _createCommitmentViewModel.SelectedRoute = "provider";
+            _createCommitmentViewModel.SelectedRoute = Provider;
 
             var result = await _act();
 
@@ -63,7 +65,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
         {
             const string hashedCommitmentId = "HashedCommitmentId";
 
-            _createCommitmentViewModel.SelectedRoute = "employer";
+            _createCommitmentViewModel.SelectedRoute = Employer;
 
             Orchestrator.Setup(o => o.CreateEmployerAssignedCommitment(It.IsAny<CreateCommitmentViewModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new OrchestratorResponse<string> {Data = hashedCommitmentId});
@@ -81,7 +83,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
         {
             const string hashedCommitmentId = "HashedCommitmentId";
 
-            _createCommitmentViewModel.SelectedRoute = "employer";
+            _createCommitmentViewModel.SelectedRoute = Employer;
 
             Orchestrator.Setup(o => o.CreateEmployerAssignedCommitment(It.IsAny<CreateCommitmentViewModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new OrchestratorResponse<string> { Data = hashedCommitmentId });
