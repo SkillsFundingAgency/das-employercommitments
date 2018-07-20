@@ -195,9 +195,6 @@
     <Compile Include="Commands\DeleteCommitment\DeleteCommitmentCommand.cs" />
     <Compile Include="Commands\DeleteCommitment\DeleteCommitmentCommandHandler.cs" />
     <Compile Include="Commands\DeleteCommitment\DeleteCommitmentCommandValidator.cs" />
-    <Compile Include="Commands\PublishGenericEvent\PublishGenericEventCommand.cs" />
-    <Compile Include="Commands\PublishGenericEvent\PublishGenericEventCommandHandler.cs" />
-    <Compile Include="Commands\PublishGenericEvent\PublishGenericEventCommandResponse.cs" />
     <Compile Include="Commands\ReviewApprenticeshipUpdate\ReviewApprenticeshipUpdateCommand.cs" />
     <Compile Include="Commands\ReviewApprenticeshipUpdate\ReviewApprenticeshipUpdateCommandHandler.cs" />
     <Compile Include="Commands\ReviewApprenticeshipUpdate\ReviewApprenticeshipUpdateCommandValidator.cs" />
