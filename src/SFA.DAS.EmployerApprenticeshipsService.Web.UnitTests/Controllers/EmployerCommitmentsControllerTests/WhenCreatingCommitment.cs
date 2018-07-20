@@ -89,16 +89,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
             await _act();
 
             Orchestrator.Verify(o => o.CreateEmployerAssignedCommitment(
-                It.Is<CreateCommitmentViewModel>(vm => AreEqual(_createCommitmentViewModel, vm)),
+                It.Is<CreateCommitmentViewModel>(vm => TestHelper.AreEqual(_createCommitmentViewModel, vm)),
                 It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
                 Times.Once);
-        }
-
-        private bool AreEqual(object obj1, object obj2)
-        {
-            var compare = new CompareLogic();
-            var result = compare.Compare(obj1, obj2);
-            return result.AreEqual;
         }
     }
 }
