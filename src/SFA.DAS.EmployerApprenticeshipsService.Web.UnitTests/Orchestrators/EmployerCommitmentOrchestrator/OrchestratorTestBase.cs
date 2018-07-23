@@ -23,6 +23,7 @@ using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
+using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
@@ -32,6 +33,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
     public abstract class OrchestratorTestBase
     {
         protected Mock<ICommitmentMapper> MockCommitmentMapper;
+        protected Mock<IApprenticeshipCoreValidator> MockApprenticeshipCoreValidator;
         protected Mock<IApprenticeshipMapper> MockApprenticeshipMapper;
         protected Mock<ILog> MockLogger;
         protected Mock<IHashingService> MockHashingService;
@@ -48,6 +50,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockMediator = new Mock<IMediator>();
             MockLogger = new Mock<ILog>();
             MockApprenticeshipMapper = new Mock<IApprenticeshipMapper>();
+            MockApprenticeshipCoreValidator = new Mock<IApprenticeshipCoreValidator>();
             MockCommitmentMapper = new Mock<ICommitmentMapper>();
 
             MockFeatureToggleOn = new Mock<IFeatureToggle>();
@@ -111,6 +114,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 MockMediator.Object,
                 MockHashingService.Object,
                 MockPublicHashingService.Object,
+                MockApprenticeshipCoreValidator.Object,
                 MockApprenticeshipMapper.Object,
                 MockCommitmentMapper.Object,
                 MockLogger.Object,

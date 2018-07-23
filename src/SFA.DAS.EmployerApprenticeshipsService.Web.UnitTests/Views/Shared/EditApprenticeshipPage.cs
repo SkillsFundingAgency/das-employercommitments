@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.Shared
         {
             var model = new ExtendedApprenticeshipViewModel
             {
-                Apprenticeship = new ApprenticeshipViewModel { ULN = Uln},
+                Apprenticeship = new ApprenticeshipViewModel { ULN = Uln },
                 ApprenticeshipProgrammes = new List<ITrainingProgramme>(),
                 ValidationErrors = new Dictionary<string, string>()
             };

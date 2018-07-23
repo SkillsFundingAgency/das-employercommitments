@@ -74,7 +74,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerManageApprenti
             {
                 PaymentStatus = status,
                 StopDate = stopdate,
-                CanEditStatus = true
+                CanEditStatus = true,
+                //todo: having to add this (after view has been regenerated) doesn't make sense
+                // CanEditStopDate is calculated using PaymentStatus, StartDate & StopDate,
+                // but this test doesn't seem to execute that code, even though we get different results for the different test cases!
+                CanEditStopDate = true
             };
 
             AssertParsedContent(model, "#stopDate", stopdate?.ToGdsFormat());

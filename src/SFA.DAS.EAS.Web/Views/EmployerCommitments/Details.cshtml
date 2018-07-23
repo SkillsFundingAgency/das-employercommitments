@@ -1,6 +1,7 @@
 ﻿@using SFA.DAS.EmployerCommitments.Web
 @using SFA.DAS.EmployerCommitments.Web.Extensions
 @using SFA.DAS.EmployerCommitments.Web.ViewModels
+@using SFA.DAS.EmployerCommitments.Web.Validators.Messages
 
 @{
     ViewBag.Title = "Review your cohort";
@@ -25,7 +26,7 @@
                         {
                             <li>
                                 <a href="#error-message-@errorMsg.Key" data-focuses="error-message-@errorMsg.Key">
-                                    @errorMsg.Value
+                                    @ValidationMessage.ExtractBannerMessage(errorMsg.Value)
                                 </a>
                             </li>
                         }
@@ -50,7 +51,7 @@
                     </ul>
                 </div>
             }
-            
+
             <h1 class="heading-xlarge">@Model.Data.PageTitle</h1>
 
         </div>
@@ -175,7 +176,7 @@
 
                             </div>
 
-                            if(group.OverlapErrorCount > 0)
+                            if (group.OverlapErrorCount > 0)
                             {
                                 <div class="overlap-notification" id="error-message-@group.GroupId">
                                     <p class="heading-small">
@@ -185,7 +186,7 @@
                                         Please update training dates to ensure they do not overlap.
                                     </p>
                                 </div>
-                               
+
                             }
                             else if (group.ApprenticeshipsOverFundingLimit > 0 && !Model.Data.Errors.Any())
                             {
@@ -227,7 +228,7 @@
                                                 {
                                                     <span class="missing">&ndash;</span>
                                                 }
-                                                
+
                                             </td>
                                             <td>
                                                 @if (apprenticeship.ApprenticeDateOfBirth.HasValue)
@@ -268,8 +269,8 @@
                                                 </td>
                                             }
 
-                                          @if (group.TrainingProgramme != null && apprenticeship.Cost.HasValue && apprenticeship.Cost > group.TrainingProgramme.MaxFunding && !Model.Data.Errors.Any())
-                                          {
+                                            @if (group.TrainingProgramme != null && apprenticeship.Cost.HasValue && apprenticeship.Cost > group.TrainingProgramme.MaxFunding && !Model.Data.Errors.Any())
+                                            {
                                                 <td class="funding-cap-alert-td">
                                                     <a href="#max-funding-group-@group.GroupId" aria-label="Cost is above the maximum funding band" aria-describedby="max-funding-group-@group.GroupId" title="Cost is above the maximum funding band"> @GetValueOrDefault(FormatCost(apprenticeship.Cost))</a>
                                                 </td>
@@ -345,14 +346,14 @@
 
 @helper GetValueOrDefault(string property)
 {
-if (!string.IsNullOrEmpty(property))
-{
+    if (!string.IsNullOrEmpty(property))
+    {
         <span>@property &nbsp;</span>
-}
-else
-{
+    }
+    else
+    {
         <span class="missing">@Html.Raw("&ndash;")</span>
-}
+    }
 }
 
 

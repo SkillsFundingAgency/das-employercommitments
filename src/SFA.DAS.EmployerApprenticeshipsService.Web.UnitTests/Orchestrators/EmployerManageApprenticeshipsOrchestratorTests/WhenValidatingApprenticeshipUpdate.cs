@@ -19,24 +19,27 @@ using SFA.DAS.HashingService;
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
     [TestFixture]
-    public class WhenValidateingApprenticeshipUpdate  : ManageApprenticeshipsOrchestratorTestBase
+    public class WhenValidatingApprenticeshipUpdate  : ManageApprenticeshipsOrchestratorTestBase
     {
-        public Mock<IValidateApprovedApprenticeship> mockValidator;
-        private Mock<IApprenticeshipMapper> mockMapper;
-        protected readonly Mock<ICurrentDateTime> CurrentDateTime = new Mock<ICurrentDateTime>();
+        private Mock<IValidateApprovedApprenticeship> _mockValidator;
+        private Mock<IApprenticeshipMapper> _mockMapper;
+        private readonly Mock<ICurrentDateTime> _currentDateTime = new Mock<ICurrentDateTime>();
 
         [SetUp]
         public void SetUp()
         {
-            mockValidator = new Mock<IValidateApprovedApprenticeship>();
-            mockMapper = new Mock<IApprenticeshipMapper>();
-            mockMapper.Setup(m => m.MapOverlappingErrors(It.IsAny<GetOverlappingApprenticeshipsQueryResponse>()))
+            _mockValidator = new Mock<IValidateApprovedApprenticeship>();
+            _mockValidator.Setup(m => m.MapOverlappingErrors(It.IsAny<GetOverlappingApprenticeshipsQueryResponse>()))
+                .Returns(new Dictionary<string, string>());
+            _mockMapper = new Mock<IApprenticeshipMapper>();
+
+            _mockValidator.Setup(m => m.ValidateToDictionary(It.IsAny<ApprenticeshipViewModel>()))
                 .Returns(new Dictionary<string, string>());
 
-            mockValidator.Setup(m => m.ValidateToDictionary(It.IsAny<ApprenticeshipViewModel>()))
+            _mockValidator.Setup(m => m.ValidateAcademicYear(It.IsAny<UpdateApprenticeshipViewModel>()))
                 .Returns(new Dictionary<string, string>());
 
-            mockValidator.Setup(m => m.ValidateAcademicYear(It.IsAny<UpdateApprenticeshipViewModel>()))
+            _mockValidator.Setup(m => m.ValidateApprovedEndDate(It.IsAny<UpdateApprenticeshipViewModel>()))
                 .Returns(new Dictionary<string, string>());
 
             var academicYearDateProvider = Mock.Of<IAcademicYearDateProvider>();
@@ -44,14 +47,14 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             Orchestrator = new EmployerManageApprenticeshipsOrchestrator(
                 MockMediator.Object,
                 Mock.Of<IHashingService>(),
-                mockMapper.Object,
-                mockValidator.Object,
-                CurrentDateTime.Object,
+                _mockMapper.Object,
+                _mockValidator.Object,
+                _currentDateTime.Object,
                 new Mock<ILog>().Object,
                 new Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>().Object,
                 ApprenticeshipFiltersMapper.Object,
                 academicYearDateProvider, 
-                new AcademicYearValidator(CurrentDateTime.Object, academicYearDateProvider)
+                new AcademicYearValidator(_currentDateTime.Object, academicYearDateProvider)
                 );
         }
 
@@ -68,10 +71,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             await Orchestrator.ValidateApprenticeship(viewModel, updateModel);
             
             MockMediator.Verify(m => m.SendAsync(It.IsAny<GetOverlappingApprenticeshipsQueryRequest>()), Times.Once, failMessage: "Should call");
-            mockMapper.Verify(m => m.MapOverlappingErrors(It.IsAny<GetOverlappingApprenticeshipsQueryResponse>()), Times.Once, failMessage: "Should verify overlapping apprenticeship");
-            mockValidator.Verify(m => m.ValidateToDictionary(It.IsAny<ApprenticeshipViewModel>()), Times.Once, failMessage: "Should validate apprenticeship");
-            mockValidator.Verify(m => m.ValidateAcademicYear(It.IsAny<UpdateApprenticeshipViewModel>()), Times.Once, failMessage: "Should validate academic year");
-
+            _mockValidator.Verify(m => m.MapOverlappingErrors(It.IsAny<GetOverlappingApprenticeshipsQueryResponse>()), Times.Once, failMessage: "Should verify overlapping apprenticeship");
+            _mockValidator.Verify(m => m.ValidateToDictionary(It.IsAny<ApprenticeshipViewModel>()), Times.Once, failMessage: "Should validate apprenticeship");
+            _mockValidator.Verify(m => m.ValidateAcademicYear(It.IsAny<UpdateApprenticeshipViewModel>()), Times.Once, failMessage: "Should validate academic year");
+            _mockValidator.Verify(m => m.ValidateApprovedEndDate(It.IsAny<UpdateApprenticeshipViewModel>()), Times.Once, failMessage: "Should validate end date");
         }
     }
 }

@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 {
     public abstract class ManageApprenticeshipsOrchestratorTestBase
     {
-        protected Mock<IHashingService> _mockHashingService;
+        protected Mock<IHashingService> MockHashingService;
         protected ApprenticeshipMapper ApprenticeshipMapper;
         protected Mock<IApprenticeshipFiltersMapper> ApprenticeshipFiltersMapper;
         protected Mock<IMediator> MockMediator;
@@ -55,10 +55,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 MockMediator.Object, Mock.Of<ILog>(), Mock.Of<IAcademicYearValidator>(),
                 Mock.Of<IAcademicYearDateProvider>());
 
-            _mockHashingService = new Mock<IHashingService>();
-            _mockHashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);
-            _mockHashingService.Setup(x => x.DecodeValue("ABC321")).Returns(321L);
-            _mockHashingService.Setup(x => x.DecodeValue("ABC456")).Returns(456L);
+            MockHashingService = new Mock<IHashingService>();
+            MockHashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);
+            MockHashingService.Setup(x => x.DecodeValue("ABC321")).Returns(321L);
+            MockHashingService.Setup(x => x.DecodeValue("ABC456")).Returns(456L);
 
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetUserAccountRoleQuery>()))
                 .ReturnsAsync(new GetUserAccountRoleResponse
@@ -72,15 +72,15 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             Validator = new ApprovedApprenticeshipViewModelValidator(
                 new WebApprenticeshipValidationText(academicYearProvider),
-                MockDateTime.Object,
                 academicYearProvider,
-                new AcademicYearValidator(MockDateTime.Object, academicYearProvider));
+                new AcademicYearValidator(MockDateTime.Object, academicYearProvider),
+                MockDateTime.Object);
 
             AcademicYearValidator = new AcademicYearValidator(MockDateTime.Object, academicYearProvider);
 
             Orchestrator = new EmployerManageApprenticeshipsOrchestrator(
                 MockMediator.Object,
-                _mockHashingService.Object,
+                MockHashingService.Object,
                 ApprenticeshipMapper,
                 Validator,
                 MockDateTime.Object,
