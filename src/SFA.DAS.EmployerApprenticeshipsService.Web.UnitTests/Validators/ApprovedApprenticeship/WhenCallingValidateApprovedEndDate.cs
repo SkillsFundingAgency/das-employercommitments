@@ -11,7 +11,7 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprovedApprenticeship
 {
     [TestFixture]
-    public class WhenValidatingEndDate
+    public class WhenCallingValidateApprovedEndDate
     {
         private IValidateApprovedApprenticeship _validator;
         private Mock<ICurrentDateTime> _currentDateTime;
@@ -35,6 +35,22 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprovedApprentic
                 academicYearProvider,
                 _mockAcademicYearValidator.Object,
                 _currentDateTime.Object);
+        }
+
+        /// <remarks>
+        /// Through the UI, with the other end date validation rules in place, validation would fail if no end date was supplied.
+        /// Passing validation here refers to the validation in the ValidateApprovedEndDate method only!
+        /// </remarks>
+        [Test]
+        public void AndHasHadDataLockSuccessShouldPassValidationWhenNoEndDateSupplied()
+        {
+            _currentDateTime.Setup(x => x.Now).Returns(new DateTime(2019, 1, 1));
+            _updateApprenticeshipViewModel.HasHadDataLockSuccess = true;
+            _updateApprenticeshipViewModel.EndDate = new DateTimeViewModel();
+
+            var result = _validator.ValidateApprovedEndDate(_updateApprenticeshipViewModel);
+
+            Assert.IsFalse(result.ContainsKey(FieldName));
         }
 
         [TestCase(1, 6, 2019, 1, 7, 2019)]

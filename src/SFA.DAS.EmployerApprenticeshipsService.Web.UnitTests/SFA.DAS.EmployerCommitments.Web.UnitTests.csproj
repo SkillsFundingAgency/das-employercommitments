@@ -316,7 +316,7 @@
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingTrainingCode.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingTrainingDates.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingUln.cs" />
-    <Compile Include="Validators\ApprovedApprenticeship\WhenValidatingEndDate.cs" />
+    <Compile Include="Validators\ApprovedApprenticeship\WhenCallingValidateApprovedEndDate.cs" />
     <Compile Include="Validators\EditApprenticeshipStopDate\WhenValidatingNewStopDate.cs" />
     <Compile Include="Validators\Messages\WhenExtractingMessages.cs" />
     <Compile Include="Validators\ProviderSelectionTest\WhenValidatingProviderId.cs" />
