@@ -1121,9 +1121,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             var errors = _apprenticeshipCoreValidator.MapOverlappingErrors(overlappingErrors);
 
-            var endDateError = _apprenticeshipCoreValidator.CheckEndDateInFuture(apprenticeship.EndDate);
-            if (endDateError != null)
-                errors.AddIfNotExists(endDateError.Value);
+            // EndDate is optional before approval
+            if (apprenticeship.EndDate.DateTime != null)
+            {
+                var endDateError = _apprenticeshipCoreValidator.CheckEndDateInFuture(apprenticeship.EndDate);
+                if (endDateError != null)
+                    errors.AddIfNotExists(endDateError.Value);
+            }
+
 
             return errors;
         }
