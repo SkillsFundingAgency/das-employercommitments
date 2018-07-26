@@ -41,11 +41,12 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprovedApprentic
         /// Through the UI, with the other end date validation rules in place, validation would fail if no end date was supplied.
         /// Passing validation here refers to the validation in the ValidateApprovedEndDate method only!
         /// </remarks>
-        [Test]
-        public void AndHasHadDataLockSuccessShouldPassValidationWhenNoEndDateSupplied()
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ShouldPassValidationWhenNoEndDateSupplied(bool hasHadDataLockSuccess)
         {
             _currentDateTime.Setup(x => x.Now).Returns(new DateTime(2019, 1, 1));
-            _updateApprenticeshipViewModel.HasHadDataLockSuccess = true;
+            _updateApprenticeshipViewModel.HasHadDataLockSuccess = hasHadDataLockSuccess;
             _updateApprenticeshipViewModel.EndDate = new DateTimeViewModel();
 
             var result = _validator.ValidateApprovedEndDate(_updateApprenticeshipViewModel);
