@@ -53,6 +53,22 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprovedApprentic
             Assert.IsFalse(result.ContainsKey(FieldName));
         }
 
+        /// <remarks>
+        /// Passing validation here refers to the validation in the ValidateApprovedEndDate method only!
+        /// </remarks>
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ShouldPassValidationWhenEndDateHasntChanged(bool hasHadDataLockSuccess)
+        {
+            _currentDateTime.Setup(x => x.Now).Returns(new DateTime(2019, 1, 1));
+            _updateApprenticeshipViewModel.HasHadDataLockSuccess = hasHadDataLockSuccess;
+            _updateApprenticeshipViewModel.EndDate = null;
+
+            var result = _validator.ValidateApprovedEndDate(_updateApprenticeshipViewModel);
+
+            Assert.IsFalse(result.ContainsKey(FieldName));
+        }
+
         [TestCase(1, 6, 2019, 1, 7, 2019)]
         [TestCase(1, 6, 2019, 1, 8, 2019)]
         public void AndHasHadDataLockSuccessShouldFailValidationWhenEndDateMonthInFuture(
