@@ -24,10 +24,6 @@ namespace SFA.DAS.EmployerCommitments.Application
 
         public ApprenticeshipInfoServiceWrapper(ICache cache, IApprenticeshipInfoServiceConfiguration configuration)
         {
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
-            if (configuration == null)
-                throw new ArgumentNullException(nameof(configuration));
             _cache = cache;
             _configuration = configuration;
         }
@@ -38,7 +34,9 @@ namespace SFA.DAS.EmployerCommitments.Application
             {
                 var api = new StandardApiClient(_configuration.BaseUrl);
 
-                var standards = api.FindAll().OrderBy(x => x.Title).ToList();
+                var standards = api.FindAll()
+                    .Where(s => s.IsActiveStandard) //this is to be removed in future
+                    .OrderBy(x => x.Title).ToList();
 
                 await _cache.SetCustomValueAsync(StandardsKey, MapFrom(standards));
             }
@@ -52,7 +50,9 @@ namespace SFA.DAS.EmployerCommitments.Application
             {
                 var api = new FrameworkApiClient(_configuration.BaseUrl);
 
-                var frameworks = api.FindAll().OrderBy(x => x.Title).ToList();
+                var frameworks = api.FindAll()
+                    .Where(f => f.IsActiveFramework) //this is to be removed in future
+                    .OrderBy(x => x.Title).ToList();
 
                 await _cache.SetCustomValueAsync(FrameworksKey, MapFrom(frameworks));
             }
@@ -94,7 +94,7 @@ namespace SFA.DAS.EmployerCommitments.Application
                     PathwayCode = x.PathwayCode,
                     PathwayName = x.PathwayName,
                     Duration = x.Duration,
-                    MaxFunding = x.MaxFunding
+                    MaxFunding = x.CurrentFundingCap
                 }).ToList()
             };
         }
@@ -128,7 +128,7 @@ namespace SFA.DAS.EmployerCommitments.Application
                     Title = GetTitle(x.Title, x.Level) + " (Standard)",
                     CourseName = x.Title, 
                     Duration = x.Duration,
-                    MaxFunding = x.MaxFunding
+                    MaxFunding = x.CurrentFundingCap
                 }).ToList()
             };
         }
