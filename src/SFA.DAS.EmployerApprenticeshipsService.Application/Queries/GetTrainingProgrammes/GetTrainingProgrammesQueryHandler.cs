@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 
@@ -13,20 +15,20 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes
 
         public GetTrainingProgrammesQueryHandler(IApprenticeshipInfoServiceWrapper apprenticeshipInfoServiceWrapper)
         {
-            if (apprenticeshipInfoServiceWrapper == null)
-                throw new ArgumentNullException(nameof(apprenticeshipInfoServiceWrapper));
-
             _apprenticeshipInfoServiceWrapper = apprenticeshipInfoServiceWrapper;
         }
 
         public async Task<GetTrainingProgrammesQueryResponse> Handle(GetTrainingProgrammesQueryRequest message)
         {
             var standardsTask = _apprenticeshipInfoServiceWrapper.GetStandardsAsync();
-            var frameworksTask = _apprenticeshipInfoServiceWrapper.GetFrameworksAsync();
+            var frameworksTask = message.IncludeFrameworks
+                ? _apprenticeshipInfoServiceWrapper.GetFrameworksAsync()
+                : Task.FromResult(new FrameworksView{ Frameworks = new List<EmployerCommitments.Domain.Models.ApprenticeshipCourse.Framework>() });
 
             await Task.WhenAll(standardsTask, frameworksTask);
 
-            var programmes = standardsTask.Result.Standards.Union(frameworksTask.Result.Frameworks.Cast<ITrainingProgramme>())
+            var programmes = standardsTask.Result.Standards
+                .Union(frameworksTask.Result.Frameworks.Cast<ITrainingProgramme>())
                 .OrderBy(m => m.Title)
                 .ToList();
 

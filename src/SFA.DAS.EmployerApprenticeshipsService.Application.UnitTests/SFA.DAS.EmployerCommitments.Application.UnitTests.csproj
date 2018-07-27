@@ -189,6 +189,7 @@
     <Compile Include="Queries\GetApprenticeshipDetails\WhenIValidateTheRequest.cs" />
     <Compile Include="Queries\GetApprenticeshipPriceHistory\WhenGettingApprenticeshipPriceHistory.cs" />
     <Compile Include="Queries\GetCommitment\WhenIGetACommitment.cs" />
+    <Compile Include="Queries\GetTrainingProgrammesTests\WhenIGetTrainingProgrammes.cs" />
     <Compile Include="Queries\GetUserAccountRoleQueryTests\WhenIGetUserAccountDetails.cs" />
     <Compile Include="Queries\GetUserAccountRoleQueryTests\WhenIValidateTheRequest.cs" />
     <Compile Include="Queries\QueryBaseTest.cs" />

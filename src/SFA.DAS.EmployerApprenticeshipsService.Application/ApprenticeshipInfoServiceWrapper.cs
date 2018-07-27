@@ -68,10 +68,6 @@ namespace SFA.DAS.EmployerCommitments.Application
                 var provider = api.Get(ukPrn);
                 return MapFrom(provider);
             }
-            catch (HttpRequestException)
-            {
-                throw;
-            }
             catch (EntityNotFoundException)
             {
                 return null;
