@@ -15,23 +15,23 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
     public class CommitmentsBaseOrchestrator
     {
-        private readonly IMediator _mediator;
-        private readonly IHashingService _hashingService;
-        private readonly ILog _logger;
+        protected readonly IMediator Mediator;
+        protected readonly IHashingService HashingService;
+        protected readonly ILog Logger;
 
         public CommitmentsBaseOrchestrator(
             IMediator mediator, 
             IHashingService hashingService,
             ILog logger)
         {
-            _mediator = mediator;
-            _hashingService = hashingService;
-            _logger = logger;
+            Mediator = mediator;
+            HashingService = hashingService;
+            Logger = logger;
         }
 
         public async Task<bool> AuthorizeRole(string hashedAccountId, string externalUserId, Role[] roles)
         {
-            var response = await _mediator.SendAsync(new GetUserAccountRoleQuery
+            var response = await Mediator.SendAsync(new GetUserAccountRoleQuery
             {
                 HashedAccountId = hashedAccountId,
                 UserId = externalUserId
@@ -96,7 +96,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         protected async Task<List<ITrainingProgramme>> GetTrainingProgrammes(bool includeFrameworks)
         {
-            var programmes = await _mediator.SendAsync(new GetTrainingProgrammesQueryRequest
+            var programmes = await Mediator.SendAsync(new GetTrainingProgrammesQueryRequest
             {
                 IncludeFrameworks = includeFrameworks
             });
@@ -105,7 +105,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         private async Task CheckUserIsConnectedToAccount(string hashedAccountId, string externalUserId)
         {
-            var response = await _mediator.SendAsync(new GetUserAccountRoleQuery
+            var response = await Mediator.SendAsync(new GetUserAccountRoleQuery
             {
                 HashedAccountId = hashedAccountId,
                 UserId = externalUserId
@@ -119,8 +119,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         private void LogUnauthorizedUserAttempt(string hashedAccountId, string externalUserId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            _logger.Warn($"User not associated to account. UserId:{externalUserId} AccountId:{accountId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            Logger.Warn($"User not associated to account. UserId:{externalUserId} AccountId:{accountId}");
         }
     }
 }

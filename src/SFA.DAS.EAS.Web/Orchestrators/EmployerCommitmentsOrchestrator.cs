@@ -46,10 +46,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
     public sealed class EmployerCommitmentsOrchestrator : CommitmentsBaseOrchestrator, IEmployerCommitmentsOrchestrator
     {
-        private readonly IMediator _mediator;
-        private readonly IHashingService _hashingService;
         private readonly IPublicHashingService _publicHashingService;
-        private readonly ILog _logger;
 
         private readonly Func<int, string> _addPluralizationSuffix = i => i > 1 ? "s" : "";
         private readonly IApprenticeshipCoreValidator _apprenticeshipCoreValidator;
@@ -67,13 +64,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             ILog logger,
             IFeatureToggleService featureToggleService) : base(mediator, hashingService, logger)
         {
-            _mediator = mediator;
-            _hashingService = hashingService;
             _publicHashingService = publicHashingService;
             _apprenticeshipCoreValidator = apprenticeshipCoreValidator;
             _apprenticeshipMapper = apprenticeshipMapper;
             _commitmentMapper = commitmentMapper;
-            _logger = logger;
             _featureToggleService = featureToggleService;
         }
 
@@ -81,9 +75,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         {
             return await CheckUserAuthorization(async () =>
             {
-                var accountId = _hashingService.DecodeValue(hashedAccountId);
+                var accountId = HashingService.DecodeValue(hashedAccountId);
 
-                var response = await _mediator.SendAsync(new GetProviderPaymentPriorityRequest { AccountId = accountId });
+                var response = await Mediator.SendAsync(new GetProviderPaymentPriorityRequest { AccountId = accountId });
 
                 return new OrchestratorResponse<CommitmentsIndexViewModel>
                 {
@@ -131,12 +125,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<SelectLegalEntityViewModel>> GetLegalEntities(string hashedAccountId, string transferConnectionCode, string cohortRef, string externalUserId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            _logger.Info($"Getting list of Legal Entities for Account: {accountId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            Logger.Info($"Getting list of Legal Entities for Account: {accountId}");
 
             return await CheckUserAuthorization(async () =>
             {
-                var legalEntities = await _mediator.SendAsync(new GetAccountLegalEntitiesRequest
+                var legalEntities = await Mediator.SendAsync(new GetAccountLegalEntitiesRequest
                 {
                     HashedAccountId = hashedAccountId,
                     UserId = externalUserId,
@@ -185,10 +179,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         private Task<GetAccountTransferConnectionsResponse> GetTransferConnectionsNoAuthorizationCheck(string hashedAccountId, string externalUserId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            _logger.Info($"Getting list of Transferring Entities for Account: {accountId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            Logger.Info($"Getting list of Transferring Entities for Account: {accountId}");
 
-            return _mediator.SendAsync(new GetAccountTransferConnectionsRequest
+            return Mediator.SendAsync(new GetAccountTransferConnectionsRequest
             {
                 HashedAccountId = hashedAccountId,
                 UserId = externalUserId
@@ -210,7 +204,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             string externalUserId, int providerId, string transferConnectionCode, string legalEntityCode,
             string cohortRef)
         {
-            _logger.Info($"Getting Provider Details, Provider: {providerId}");
+            Logger.Info($"Getting Provider Details, Provider: {providerId}");
 
             return CheckUserAuthorization(async () =>
             {
@@ -233,7 +227,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         private async Task<Provider> ProviderSearch(long providerId)
         {
-            var response = await _mediator.SendAsync(new GetProviderQueryRequest
+            var response = await Mediator.SendAsync(new GetProviderQueryRequest
             {
                 ProviderId = providerId
             });
@@ -245,8 +239,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             string transferConnectionCode, string legalEntityCode, string providerId, string cohortRef,
             string externalUserId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            _logger.Info($"Getting Commitment Summary Model for Account: {accountId}, LegalEntity: {legalEntityCode}, Provider: {providerId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            Logger.Info($"Getting Commitment Summary Model for Account: {accountId}, LegalEntity: {legalEntityCode}, Provider: {providerId}");
 
             return await CheckUserAuthorization(async () =>
             {
@@ -276,14 +270,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<string>> CreateEmployerAssignedCommitment(CreateCommitmentViewModel model, string externalUserId, string userDisplayName, string userEmail)
         {
-            var accountId = _hashingService.DecodeValue(model.HashedAccountId);
-            _logger.Info($"Creating Employer assigned commitment. AccountId: {accountId}, Provider: {model.ProviderId}");
+            var accountId = HashingService.DecodeValue(model.HashedAccountId);
+            Logger.Info($"Creating Employer assigned commitment. AccountId: {accountId}, Provider: {model.ProviderId}");
 
             return await CheckUserAuthorization(async () =>
             {
                 (long? transferSenderId, string transferSenderName) = await GetTransferConnectionInfo(model.HashedAccountId, model.TransferConnectionCode, externalUserId);
 
-                var response = await _mediator.SendAsync(new CreateCommitmentCommand
+                var response = await Mediator.SendAsync(new CreateCommitmentCommand
                 {
                     Commitment = new Commitment
                     {
@@ -306,7 +300,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 return new OrchestratorResponse<string>
                 {
-                    Data = _hashingService.HashValue(response.CommitmentId)
+                    Data = HashingService.HashValue(response.CommitmentId)
                 };
 
             }, model.HashedAccountId, externalUserId);
@@ -314,14 +308,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<string>> CreateProviderAssignedCommitment(SubmitCommitmentViewModel model, string externalUserId, string userDisplayName, string userEmail)
         {
-            var accountId = _hashingService.DecodeValue(model.HashedAccountId);
-            _logger.Info($"Creating Provider assigned Commitment. AccountId: {accountId}, Provider: {model.ProviderId}");
+            var accountId = HashingService.DecodeValue(model.HashedAccountId);
+            Logger.Info($"Creating Provider assigned Commitment. AccountId: {accountId}, Provider: {model.ProviderId}");
 
             return await CheckUserAuthorization(async () =>
             {
                 (long? transferSenderId, string transferSenderName) = await GetTransferConnectionInfo(model.HashedAccountId, model.TransferConnectionCode, externalUserId);
 
-                var response = await _mediator.SendAsync(new CreateCommitmentCommand
+                var response = await Mediator.SendAsync(new CreateCommitmentCommand
                 {
                     Message = model.Message,
                     Commitment = new Commitment
@@ -345,7 +339,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 return new OrchestratorResponse<string>
                 {
-                    Data = _hashingService.HashValue(response.CommitmentId)
+                    Data = HashingService.HashValue(response.CommitmentId)
                 };
 
             }, model.HashedAccountId, externalUserId);
@@ -353,13 +347,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<ExtendedApprenticeshipViewModel>> GetSkeletonApprenticeshipDetails(string hashedAccountId, string externalUserId, string hashedCommitmentId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
-            _logger.Info($"Getting skeleton apprenticeship model, Account: {accountId}, Commitment: {commitmentId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
+            Logger.Info($"Getting skeleton apprenticeship model, Account: {accountId}, Commitment: {commitmentId}");
 
             return await CheckUserAuthorization(async () =>
             {
-                var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                var commitmentData = await Mediator.SendAsync(new GetCommitmentQueryRequest
                 {
                     AccountId = accountId,
                     CommitmentId = commitmentId
@@ -388,17 +382,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task CreateApprenticeship(ApprenticeshipViewModel apprenticeship, string externalUserId, string userName, string userEmail)
         {
-            var accountId = _hashingService.DecodeValue(apprenticeship.HashedAccountId);
-            var commitmentId = _hashingService.DecodeValue(apprenticeship.HashedCommitmentId);
-            _logger.Info($"Creating Apprenticeship, Account: {accountId}, CommitmentId: {commitmentId}");
+            var accountId = HashingService.DecodeValue(apprenticeship.HashedAccountId);
+            var commitmentId = HashingService.DecodeValue(apprenticeship.HashedCommitmentId);
+            Logger.Info($"Creating Apprenticeship, Account: {accountId}, CommitmentId: {commitmentId}");
 
             await CheckUserAuthorization(async () =>
             {
                 await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
 
-                await _mediator.SendAsync(new CreateApprenticeshipCommand
+                await Mediator.SendAsync(new CreateApprenticeshipCommand
                 {
-                    AccountId = _hashingService.DecodeValue(apprenticeship.HashedAccountId),
+                    AccountId = HashingService.DecodeValue(apprenticeship.HashedAccountId),
                     Apprenticeship = await _apprenticeshipMapper.MapFrom(apprenticeship),
                     UserId = externalUserId,
                     UserEmailAddress = userEmail,
@@ -409,20 +403,20 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<ExtendedApprenticeshipViewModel>> GetApprenticeship(string hashedAccountId, string externalUserId, string hashedCommitmentId, string hashedApprenticeshipId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
-            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
-            _logger.Info($"Getting Apprenticeship, Account: {accountId}, ApprenticeshipId: {apprenticeshipId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
+            var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
+            Logger.Info($"Getting Apprenticeship, Account: {accountId}, ApprenticeshipId: {apprenticeshipId}");
 
             return await CheckUserAuthorization(async () =>
             {
-                var apprenticeshipData = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
+                var apprenticeshipData = await Mediator.SendAsync(new GetApprenticeshipQueryRequest
                 {
                     AccountId = accountId,
                     ApprenticeshipId = apprenticeshipId
                 });
 
-                var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                var commitmentData = await Mediator.SendAsync(new GetCommitmentQueryRequest
                 {
                     AccountId = accountId,
                     CommitmentId = apprenticeshipData.Apprenticeship.CommitmentId
@@ -434,7 +428,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 apprenticeship.HashedAccountId = hashedAccountId;
 
-                var overlaps = await _mediator.SendAsync(
+                var overlaps = await Mediator.SendAsync(
                     new GetOverlappingApprenticeshipsQueryRequest
                     {
                         Apprenticeship = new[] { apprenticeshipData.Apprenticeship }
@@ -455,20 +449,20 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<ApprenticeshipViewModel>> GetApprenticeshipViewModel(string hashedAccountId, string externalUserId, string hashedCommitmentId, string hashedApprenticeshipId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
-            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
-            _logger.Info($"Getting Apprenticeship, Account: {accountId}, ApprenticeshipId: {apprenticeshipId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
+            var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
+            Logger.Info($"Getting Apprenticeship, Account: {accountId}, ApprenticeshipId: {apprenticeshipId}");
 
             return await CheckUserAuthorization(async () =>
             {
-                var apprenticeshipData = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
+                var apprenticeshipData = await Mediator.SendAsync(new GetApprenticeshipQueryRequest
                 {
                     AccountId = accountId,
                     ApprenticeshipId = apprenticeshipId
                 });
 
-                var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                var commitmentData = await Mediator.SendAsync(new GetCommitmentQueryRequest
                 {
                     AccountId = accountId,
                     CommitmentId = apprenticeshipData.Apprenticeship.CommitmentId
@@ -487,16 +481,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task UpdateApprenticeship(ApprenticeshipViewModel apprenticeship, string externalUserId, string userName, string userEmail)
         {
-            var accountId = _hashingService.DecodeValue(apprenticeship.HashedAccountId);
-            var apprenticeshipId = _hashingService.DecodeValue(apprenticeship.HashedCommitmentId);
-            var commitmentId = _hashingService.DecodeValue(apprenticeship.HashedCommitmentId);
-            _logger.Info($"Updating Apprenticeship, Account: {accountId}, ApprenticeshipId: {apprenticeshipId}");
+            var accountId = HashingService.DecodeValue(apprenticeship.HashedAccountId);
+            var apprenticeshipId = HashingService.DecodeValue(apprenticeship.HashedCommitmentId);
+            var commitmentId = HashingService.DecodeValue(apprenticeship.HashedCommitmentId);
+            Logger.Info($"Updating Apprenticeship, Account: {accountId}, ApprenticeshipId: {apprenticeshipId}");
 
             await CheckUserAuthorization(async () =>
             {
                 await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
 
-                await _mediator.SendAsync(new UpdateApprenticeshipCommand
+                await Mediator.SendAsync(new UpdateApprenticeshipCommand
                 {
                     AccountId = accountId,
                     Apprenticeship = await _apprenticeshipMapper.MapFrom(apprenticeship),
@@ -511,13 +505,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         {
             try
             {
-                var accountId = _hashingService.DecodeValue(hashedAccountId);
-                var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
-                _logger.Info($"Getting Finish Editing Model, Account: {accountId}, CommitmentId: {commitmentId}");
+                var accountId = HashingService.DecodeValue(hashedAccountId);
+                var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
+                Logger.Info($"Getting Finish Editing Model, Account: {accountId}, CommitmentId: {commitmentId}");
 
                 return await CheckUserAuthorization(async () =>
                 {
-                    var response = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                    var response = await Mediator.SendAsync(new GetCommitmentQueryRequest
                     {
                         AccountId = accountId,
                         CommitmentId = commitmentId
@@ -530,7 +524,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                     var hasSigned = HasSignedAgreement(legalEntity, response.Commitment.TransferSender!=null);
 
-                    var overlaps = await _mediator.SendAsync(
+                    var overlaps = await Mediator.SendAsync(
                         new GetOverlappingApprenticeshipsQueryRequest
                         {
                             Apprenticeship = response.Commitment.Apprenticeships
@@ -575,9 +569,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task ApproveCommitment(string hashedAccountId, string externalUserId, string userDisplayName, string userEmail, string hashedCommitmentId, SaveStatus saveStatus)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
-            _logger.Info($"Approving Commitment, Account: {accountId}, CommitmentId: {commitmentId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
+            Logger.Info($"Approving Commitment, Account: {accountId}, CommitmentId: {commitmentId}");
 
             await CheckUserAuthorization(async () =>
             {
@@ -585,7 +579,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     ? LastAction.Amend
                     : LastAction.Approve;
 
-                await _mediator.SendAsync(new SubmitCommitmentCommand
+                await Mediator.SendAsync(new SubmitCommitmentCommand
                 {
                     EmployerAccountId = accountId,
                     CommitmentId = commitmentId,
@@ -601,14 +595,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task SetTransferRequestApprovalStatus(string hashedAccountId, string hashedCommitmentId, string hashedTransferRequestId, TransferApprovalConfirmationViewModel model, string externalUserId, string userDisplayName, string userEmail)
         {
-            var transferSenderId = _hashingService.DecodeValue(hashedAccountId);
-            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
-            var transferRequestId = _hashingService.DecodeValue(hashedTransferRequestId);
-            _logger.Info($"Transfer Approval Confirmation: Sender Account: {transferSenderId}, CommitmentId: {commitmentId}, Approving {model.ApprovalConfirmed}");
+            var transferSenderId = HashingService.DecodeValue(hashedAccountId);
+            var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
+            var transferRequestId = HashingService.DecodeValue(hashedTransferRequestId);
+            Logger.Info($"Transfer Approval Confirmation: Sender Account: {transferSenderId}, CommitmentId: {commitmentId}, Approving {model.ApprovalConfirmed}");
 
             await CheckUserAuthorization(async () =>
             {
-                await _mediator.SendAsync(new TransferApprovalCommand
+                await Mediator.SendAsync(new TransferApprovalCommand
                 {
                     CommitmentId = commitmentId,
                     TransferSenderId = transferSenderId,
@@ -622,8 +616,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitNewCommitmentModel(string hashedAccountId, string externalUserId, string transferConnectionCode, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string providerId, string providerName, string cohortRef, SaveStatus saveStatus)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            _logger.Info($"Getting Submit New Commitment ViewModel, Account: {accountId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            Logger.Info($"Getting Submit New Commitment ViewModel, Account: {accountId}");
 
             return await CheckUserAuthorization(() =>
             {
@@ -648,16 +642,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitCommitmentModel(string hashedAccountId, string externalUserId, string hashedCommitmentId, SaveStatus saveStatus)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
-            _logger.Info($"Getting Submit Existing Commitment ViewModel, Account: {accountId}, CommitmentId: {commitmentId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
+            Logger.Info($"Getting Submit Existing Commitment ViewModel, Account: {accountId}, CommitmentId: {commitmentId}");
 
             return await CheckUserAuthorization(async () =>
             {
-                var data = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                var data = await Mediator.SendAsync(new GetCommitmentQueryRequest
                 {
-                    AccountId = _hashingService.DecodeValue(hashedAccountId),
-                    CommitmentId = _hashingService.DecodeValue(hashedCommitmentId)
+                    AccountId = HashingService.DecodeValue(hashedAccountId),
+                    CommitmentId = HashingService.DecodeValue(hashedCommitmentId)
                 });
 
                 CheckCommitmentIsVisibleToEmployer(data.Commitment);
@@ -682,17 +676,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 if (model.SaveStatus != SaveStatus.Save)
                 {
-                    var accountId = _hashingService.DecodeValue(model.HashedAccountId);
-                    var commitmentId = _hashingService.DecodeValue(model.HashedCommitmentId);
-                    _logger.Info($"Submiting Commitment, Account: {accountId}, Commitment: {commitmentId}, Action: {model.SaveStatus}");
+                    var accountId = HashingService.DecodeValue(model.HashedAccountId);
+                    var commitmentId = HashingService.DecodeValue(model.HashedCommitmentId);
+                    Logger.Info($"Submiting Commitment, Account: {accountId}, Commitment: {commitmentId}, Action: {model.SaveStatus}");
 
                     var lastAction = model.SaveStatus == SaveStatus.AmendAndSend
                         ? LastAction.Amend
                         : LastAction.Approve;
 
-                    await _mediator.SendAsync(new SubmitCommitmentCommand
+                    await Mediator.SendAsync(new SubmitCommitmentCommand
                     {
-                        EmployerAccountId = _hashingService.DecodeValue(model.HashedAccountId),
+                        EmployerAccountId = HashingService.DecodeValue(model.HashedAccountId),
                         CommitmentId = commitmentId,
                         HashedCommitmentId = model.HashedCommitmentId,
                         Message = model.Message,
@@ -707,13 +701,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<AcknowledgementViewModel>> GetAcknowledgementModelForExistingCommitment(string hashedAccountId, string hashedCommitmentId, string externalUserId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
-            _logger.Info($"Getting Acknowldedgement Model for existing commitment, Account: {accountId}, CommitmentId: {commitmentId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
+            Logger.Info($"Getting Acknowldedgement Model for existing commitment, Account: {accountId}, CommitmentId: {commitmentId}");
 
             return await CheckUserAuthorization(async () =>
             {
-                var data = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                var data = await Mediator.SendAsync(new GetCommitmentQueryRequest
                 {
                     AccountId = accountId,
                     CommitmentId = commitmentId
@@ -737,8 +731,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<YourCohortsViewModel>> GetYourCohorts(string hashedAccountId, string externalUserId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            _logger.Info($"Getting your cohorts for Account: {accountId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            Logger.Info($"Getting your cohorts for Account: {accountId}");
 
             return await CheckUserAuthorization(async () =>
             {
@@ -779,8 +773,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<CommitmentListViewModel>> GetAllDraft(string hashedAccountId, string externalUserId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            _logger.Info($"Getting your cohorts waiting to be sent for Account: {accountId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            Logger.Info($"Getting your cohorts waiting to be sent for Account: {accountId}");
 
             return await CheckUserAuthorization(async () =>
                 {
@@ -805,8 +799,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<CommitmentListViewModel>> GetAllReadyForReview(string hashedAccountId, string externalUserId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            _logger.Info($"Getting your cohorts ready for review for Account: {accountId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            Logger.Info($"Getting your cohorts ready for review for Account: {accountId}");
 
             return await CheckUserAuthorization(async () =>
             {
@@ -831,8 +825,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<CommitmentListViewModel>> GetAllWithProvider(string hashedAccountId, string externalUserId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            _logger.Info($"Getting your cohorts with the provider sent for Account: {accountId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            Logger.Info($"Getting your cohorts with the provider sent for Account: {accountId}");
 
             return await CheckUserAuthorization(async () =>
             {
@@ -859,8 +853,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<TransferFundedCohortsViewModel>> GetAllTransferFunded(string hashedAccountId, string externalUserId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            _logger.Info($"Getting your transfer-funded cohorts for Account: {accountId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            Logger.Info($"Getting your transfer-funded cohorts for Account: {accountId}");
 
             return await CheckUserAuthorization(async () =>
             {
@@ -885,9 +879,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         private async Task<IEnumerable<CommitmentListItem>> GetAllCommitments(long accountId)
         {
-            _logger.Info($"Getting all Commitments for Account: {accountId}");
+            Logger.Info($"Getting all Commitments for Account: {accountId}");
 
-            var data = await _mediator.SendAsync(new GetCommitmentsQuery
+            var data = await Mediator.SendAsync(new GetCommitmentsQuery
             {
                 AccountId = accountId
             });
@@ -896,13 +890,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<CommitmentDetailsViewModel>> GetCommitmentDetails(string hashedAccountId, string hashedCommitmentId, string externalUserId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
-            _logger.Info($"Getting Commitment Details, Account: {accountId}, CommitmentId: {commitmentId}");
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
+            Logger.Info($"Getting Commitment Details, Account: {accountId}, CommitmentId: {commitmentId}");
 
             return await CheckUserAuthorization(async () =>
             {
-                var data = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                var data = await Mediator.SendAsync(new GetCommitmentQueryRequest
                 {
                     AccountId = accountId,
                     CommitmentId = commitmentId
@@ -910,7 +904,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 CheckCommitmentIsVisibleToEmployer(data.Commitment);
 
-                var overlappingApprenticeships = await _mediator.SendAsync(
+                var overlappingApprenticeships = await Mediator.SendAsync(
                    new GetOverlappingApprenticeshipsQueryRequest
                    {
                        Apprenticeship = data.Commitment.Apprenticeships
@@ -959,7 +953,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 var viewModel = new CommitmentDetailsViewModel
                 {
-                    HashedId = _hashingService.HashValue(data.Commitment.Id),
+                    HashedId = HashingService.HashValue(data.Commitment.Id),
                     Name = data.Commitment.Reference,
                     LegalEntityName = data.Commitment.LegalEntityName,
                     ProviderName = data.Commitment.ProviderName,
@@ -986,13 +980,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<DeleteCommitmentViewModel>> GetDeleteCommitmentModel(string hashedAccountId, string hashedCommitmentId, string externalUserId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
 
             return await CheckUserAuthorization(
                 async () =>
                     {
-                        var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
+                        var commitmentData = await Mediator.SendAsync(new GetCommitmentQueryRequest
                         {
                             AccountId = accountId,
                             CommitmentId = commitmentId
@@ -1022,14 +1016,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task DeleteCommitment(string hashedAccountId, string hashedCommitmentId, string externalUserId, string userName, string userEmail)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
 
-            _logger.Info($"Deleting commitment {hashedCommitmentId} Account: {accountId}, CommitmentId: {commitmentId}");
+            Logger.Info($"Deleting commitment {hashedCommitmentId} Account: {accountId}, CommitmentId: {commitmentId}");
 
             await CheckUserAuthorization(async () =>
             {
-                await _mediator.SendAsync(new DeleteCommitmentCommand
+                await Mediator.SendAsync(new DeleteCommitmentCommand
                 {
                     AccountId = accountId,
                     CommitmentId = commitmentId,
@@ -1042,13 +1036,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<DeleteApprenticeshipConfirmationViewModel>> GetDeleteApprenticeshipViewModel(string hashedAccountId, string externalUserId, string hashedCommitmentId, string hashedApprenticeshipId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
-            var commitmentId = _hashingService.DecodeValue(hashedCommitmentId);
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
+            var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
 
             return await CheckUserAuthorization(async () =>
             {
-                var apprenticeship = await _mediator.SendAsync(new GetApprenticeshipQueryRequest
+                var apprenticeship = await Mediator.SendAsync(new GetApprenticeshipQueryRequest
                 {
                     AccountId = accountId,
                     ApprenticeshipId = apprenticeshipId
@@ -1073,7 +1067,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<bool> AnyCohortsForCurrentStatus(string hashedAccountId, params RequestStatus[] requestStatusFromSession)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var accountId = HashingService.DecodeValue(hashedAccountId);
             var allCommitments = await GetAllCommitments(accountId);
             return allCommitments.Any(c => requestStatusFromSession.Contains(c.GetStatus()));
         }
@@ -1113,7 +1107,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<Dictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship)
         {
-            var overlappingErrors = await _mediator.SendAsync(
+            var overlappingErrors = await Mediator.SendAsync(
                 new GetOverlappingApprenticeshipsQueryRequest
                 {
                     Apprenticeship = new List<Apprenticeship> { await _apprenticeshipMapper.MapFrom(apprenticeship) }
@@ -1130,12 +1124,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task DeleteApprenticeship(DeleteApprenticeshipConfirmationViewModel model, string externalUser, string userName, string userEmail)
         {
-            var accountId = _hashingService.DecodeValue(model.HashedAccountId);
-            var apprenticeshipId = _hashingService.DecodeValue(model.HashedApprenticeshipId);
+            var accountId = HashingService.DecodeValue(model.HashedAccountId);
+            var apprenticeshipId = HashingService.DecodeValue(model.HashedApprenticeshipId);
 
             await CheckUserAuthorization(async () =>
                     {
-                        await _mediator.SendAsync(new DeleteApprenticeshipCommand
+                        await Mediator.SendAsync(new DeleteApprenticeshipCommand
                         {
                             AccountId = accountId,
                             ApprenticeshipId = apprenticeshipId,
@@ -1150,13 +1144,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         public async Task<OrchestratorResponse<TransferRequestViewModel>> GetTransferRequestDetails(
             string hashedTransferAccountId, Application.Queries.GetTransferRequest.CallerType callerType, string hashedTransferRequestId, string externalUserId)
         {
-            var accountId = _hashingService.DecodeValue(hashedTransferAccountId);
-            var transferRequestId = _hashingService.DecodeValue(hashedTransferRequestId);
-            _logger.Info($"Getting TransferRequest Details, Transfer Account: {accountId}, TransferRequestId: {transferRequestId}");
+            var accountId = HashingService.DecodeValue(hashedTransferAccountId);
+            var transferRequestId = HashingService.DecodeValue(hashedTransferRequestId);
+            Logger.Info($"Getting TransferRequest Details, Transfer Account: {accountId}, TransferRequestId: {transferRequestId}");
 
             return await CheckUserAuthorization(async () =>
             {
-                var data = await _mediator.SendAsync(new GetTransferRequestQueryRequest
+                var data = await Mediator.SendAsync(new GetTransferRequestQueryRequest
                 {
                     AccountId = accountId,
                     TransferRequestId = transferRequestId,
@@ -1207,7 +1201,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         private async Task<GetAccountLegalEntitiesResponse> GetActiveLegalEntities(string hashedAccountId, string externalUserId)
         {
-            return await _mediator.SendAsync(new GetAccountLegalEntitiesRequest
+            return await Mediator.SendAsync(new GetAccountLegalEntitiesRequest
             {
                 HashedAccountId = hashedAccountId,
                 UserId = externalUserId
@@ -1232,7 +1226,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         {
             return new CommitmentViewModel
             {
-                HashedId = _hashingService.HashValue(commitment.Id),
+                HashedId = HashingService.HashValue(commitment.Id),
                 Name = commitment.Reference,
                 LegalEntityName = commitment.LegalEntityName,
                 ProviderName = commitment.ProviderName
@@ -1249,7 +1243,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             //todo: throw if TransferApprovalStatus == Approved?
             return commitments.Select(c => new TransferFundedCohortsListItemViewModel
             {
-                HashedCommitmentId = _hashingService.HashValue(c.Id),
+                HashedCommitmentId = HashingService.HashValue(c.Id),
                 SendingEmployer = c.TransferSenderName,
                 ProviderName = c.ProviderName,
                 TransferApprovalStatus = c.TransferApprovalStatus,
@@ -1266,7 +1260,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         {
             return new CommitmentListItemViewModel
             {
-                HashedCommitmentId = _hashingService.HashValue(commitment.Id),
+                HashedCommitmentId = HashingService.HashValue(commitment.Id),
                 Name = commitment.Reference,
                 LegalEntityName = commitment.LegalEntityName,
                 ProviderName = commitment.ProviderName,
@@ -1279,7 +1273,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         {
             return new ApprenticeshipListItemViewModel
             {
-                HashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id),
+                HashedApprenticeshipId = HashingService.HashValue(apprenticeship.Id),
                 ApprenticeName = apprenticeship.ApprenticeshipName,
                 ApprenticeDateOfBirth = apprenticeship.DateOfBirth,
                 ApprenticeUln = apprenticeship.ULN,
@@ -1296,7 +1290,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         private async Task CheckCommitmentIsVisibleToEmployer(long commitmentId, long accountId)
         {
-            var commitmentData = await _mediator.SendAsync(new GetCommitmentQueryRequest
+            var commitmentData = await Mediator.SendAsync(new GetCommitmentQueryRequest
             {
                 AccountId = accountId,
                 CommitmentId = commitmentId

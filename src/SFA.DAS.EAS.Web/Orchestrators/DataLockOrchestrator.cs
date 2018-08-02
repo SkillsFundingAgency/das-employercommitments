@@ -19,9 +19,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
     public sealed class DataLockOrchestrator : CommitmentsBaseOrchestrator
     {
-        private readonly IMediator _mediator;
-        private readonly IHashingService _hashingService;
-
         private readonly IApprenticeshipMapper _apprenticeshipMapper;
 
         public DataLockOrchestrator(
@@ -31,21 +28,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IApprenticeshipMapper apprenticeshipMapper
             ) : base(mediator, hashingService, logger)
         {
-            _mediator = mediator;
-            _hashingService = hashingService;
             _apprenticeshipMapper = apprenticeshipMapper;
         }
 
         public async Task<OrchestratorResponse<DataLockStatusViewModel>> GetDataLockStatusForRestartRequest(string hashedAccountId, string hashedApprenticeshipId, string userId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
 
             return await CheckUserAuthorization(
                 async () =>
                 {
 
-                    var dataLockSummary = await _mediator.SendAsync(
+                    var dataLockSummary = await Mediator.SendAsync(
                         new GetDataLockSummaryQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
 
                     //var dataLock = dataLocks.DataLockStatus
@@ -56,7 +51,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     if (dataLock == null)
                         throw new InvalidStateException($"No data locks exist that can be restarted for apprenticeship: {apprenticeshipId}");
 
-                    var apprenticeship = await _mediator.SendAsync(
+                    var apprenticeship = await Mediator.SendAsync(
                         new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
 
                     var programms = await GetTrainingProgrammes(true);
@@ -83,22 +78,22 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task<OrchestratorResponse<DataLockStatusViewModel>> GetDataLockChangeStatus(string hashedAccountId, string hashedApprenticeshipId, string userId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
 
             return await CheckUserAuthorization(
                 async () =>
                 {
-                    var dataLockSummary = await _mediator.SendAsync(
+                    var dataLockSummary = await Mediator.SendAsync(
                             new GetDataLockSummaryQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
 
-                    var priceHistory = await _mediator.SendAsync(new GetPriceHistoryQueryRequest
+                    var priceHistory = await Mediator.SendAsync(new GetPriceHistoryQueryRequest
                     {
                         AccountId = accountId,
                         ApprenticeshipId = apprenticeshipId
                     });
 
-                    var apprenticeship = await _mediator.SendAsync(
+                    var apprenticeship = await Mediator.SendAsync(
                         new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
 
                     var dataLockPrice =
@@ -127,13 +122,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public async Task ConfirmRequestChanges(string hashedAccountId, string hashedApprenticeshipId, string user, bool approved)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var apprenticeshipId = _hashingService.DecodeValue(hashedApprenticeshipId);
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
 
             await CheckUserAuthorization(
                 async () =>
                 {
-                    await _mediator.SendAsync(
+                    await Mediator.SendAsync(
                         new ResolveRequestedChangesCommand
                         {
                             AccountId = accountId,

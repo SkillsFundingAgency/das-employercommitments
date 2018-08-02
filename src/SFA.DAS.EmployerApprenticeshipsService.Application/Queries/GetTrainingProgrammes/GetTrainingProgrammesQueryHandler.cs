@@ -18,21 +18,21 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes
 
         public async Task<GetTrainingProgrammesQueryResponse> Handle(GetTrainingProgrammesQueryRequest message)
         {
+            IEnumerable<ITrainingProgramme> programmes;
             var standardsTask = _apprenticeshipInfoServiceWrapper.GetStandardsAsync();
-            var frameworksTask = message.IncludeFrameworks
-                ? _apprenticeshipInfoServiceWrapper.GetFrameworksAsync()
-                : Task.FromResult(new FrameworksView{ Frameworks = new List<EmployerCommitments.Domain.Models.ApprenticeshipCourse.Framework>() });
-
-            await Task.WhenAll(standardsTask, frameworksTask);
-
-            var programmes = standardsTask.Result.Standards
-                .Union(frameworksTask.Result.Frameworks.Cast<ITrainingProgramme>())
-                .OrderBy(m => m.Title)
-                .ToList();
+            if (!message.IncludeFrameworks)
+            {
+                programmes = (await standardsTask).Standards;
+            }
+            else
+            {
+                var getFrameworksTask = _apprenticeshipInfoServiceWrapper.GetFrameworksAsync();
+                programmes = (await standardsTask).Standards.Union((await getFrameworksTask).Frameworks.Cast<ITrainingProgramme>());
+            }
 
             return new GetTrainingProgrammesQueryResponse
             {
-                TrainingProgrammes = programmes
+                TrainingProgrammes = programmes.OrderBy(m => m.Title).ToList()
             };
         }
     }
