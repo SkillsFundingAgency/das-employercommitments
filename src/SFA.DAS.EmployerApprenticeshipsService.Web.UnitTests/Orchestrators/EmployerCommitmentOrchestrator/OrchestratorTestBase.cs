@@ -36,8 +36,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         protected Mock<ILog> MockLogger;
         protected Mock<IHashingService> MockHashingService;
         protected Mock<IPublicHashingService> MockPublicHashingService;
-        protected Mock<IAcademicYearValidator> MockAcademicYearValidator;
-        protected Mock<IAcademicYearDateProvider> MockAcademicYearDateProvider;
         protected Mock<IMediator> MockMediator;
         protected EmployerCommitmentsOrchestrator EmployerCommitmentOrchestrator;
         protected Mock<IFeatureToggleService> MockFeatureToggleService;
@@ -52,8 +50,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockApprenticeshipMapper = new Mock<IApprenticeshipMapper>();
             MockApprenticeshipCoreValidator = new Mock<IApprenticeshipCoreValidator>();
             MockCommitmentMapper = new Mock<ICommitmentMapper>();
-            MockAcademicYearValidator = new Mock<IAcademicYearValidator>();
-            MockAcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
 
             MockFeatureToggleOn = new Mock<IFeatureToggle>();
             MockFeatureToggleOn.Setup(x => x.FeatureEnabled).Returns(true);
