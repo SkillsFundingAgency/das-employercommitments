@@ -187,6 +187,7 @@
     <Compile Include="Domain\Commitment\RequestStatus.cs" />
     <Compile Include="Exceptions\InvalidStateException.cs" />
     <Compile Include="Extensions\ApprenticeshipExtensions.cs" />
+    <Compile Include="Extensions\ITrainingProgrammeExtensions.cs" />
     <Compile Include="Services\ApprenticeshipInfoService.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStatus\UpdateApprenticeshipStatusCommand.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStatus\UpdateApprenticeshipStatusCommandHandler.cs" />
