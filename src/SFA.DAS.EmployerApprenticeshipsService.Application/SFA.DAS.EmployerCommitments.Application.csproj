@@ -88,12 +88,6 @@
     <Reference Include="SFA.DAS.Common.Domain, Version=1.3.0.44308, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.3.0.44308\lib\net45\SFA.DAS.Common.Domain.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Events.Api.Client, Version=2.1.24.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Events.Api.Client.2.1.24\lib\net45\SFA.DAS.Events.Api.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="SFA.DAS.Events.Api.Types, Version=2.1.24.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Events.Api.Types.2.1.24\lib\net45\SFA.DAS.Events.Api.Types.dll</HintPath>
-    </Reference>
     <Reference Include="SFA.DAS.HashingService, Version=1.0.0.42526, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.HashingService.1.0.0.42526\lib\net45\SFA.DAS.HashingService.dll</HintPath>
     </Reference>
@@ -195,9 +189,6 @@
     <Compile Include="Commands\DeleteCommitment\DeleteCommitmentCommand.cs" />
     <Compile Include="Commands\DeleteCommitment\DeleteCommitmentCommandHandler.cs" />
     <Compile Include="Commands\DeleteCommitment\DeleteCommitmentCommandValidator.cs" />
-    <Compile Include="Commands\PublishGenericEvent\PublishGenericEventCommand.cs" />
-    <Compile Include="Commands\PublishGenericEvent\PublishGenericEventCommandHandler.cs" />
-    <Compile Include="Commands\PublishGenericEvent\PublishGenericEventCommandResponse.cs" />
     <Compile Include="Commands\ReviewApprenticeshipUpdate\ReviewApprenticeshipUpdateCommand.cs" />
     <Compile Include="Commands\ReviewApprenticeshipUpdate\ReviewApprenticeshipUpdateCommandHandler.cs" />
     <Compile Include="Commands\ReviewApprenticeshipUpdate\ReviewApprenticeshipUpdateCommandValidator.cs" />
@@ -215,7 +206,6 @@
     <Compile Include="Commands\SendNotification\SendNotificationCommandValidator.cs" />
     <Compile Include="Extensions\CommitmentListItemExtensions.cs" />
     <Compile Include="Extensions\CommitmentViewExtensions.cs" />
-    <Compile Include="Factories\IGenericEventFactory.cs" />
     <Compile Include="Exceptions\InvalidRequestException.cs" />
     <Compile Include="Messages\QueueMessage.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
