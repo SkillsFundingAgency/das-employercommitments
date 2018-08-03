@@ -37,9 +37,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
             {
                 var api = new StandardApiClient(_configuration.BaseUrl);
 
-                var standards = api.FindAll()
-                    .Where(s => s.IsActiveStandard) //this is to be removed in future
-                    .OrderBy(x => x.Title).ToList();
+                var standards = api.FindAll().OrderBy(x => x.Title).ToList();
 
                 await _cache.SetCustomValueAsync(StandardsKey, _mapper.MapFrom(standards));
             }
@@ -53,9 +51,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
             {
                 var api = new FrameworkApiClient(_configuration.BaseUrl);
 
-                var frameworks = api.FindAll()
-                    .Where(f => f.IsActiveFramework) //this is to be removed in future
-                    .OrderBy(x => x.Title).ToList();
+                var frameworks = api.FindAll().OrderBy(x => x.Title).ToList();
 
                 await _cache.SetCustomValueAsync(FrameworksKey, _mapper.MapFrom(frameworks));
             }
