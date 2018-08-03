@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse
+﻿using System;
+
+namespace SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse
 {
     public class Framework : ITrainingProgramme
     {
@@ -12,5 +14,7 @@
         public string Title { get; set; }
         public int Duration { get; set; }
         public int MaxFunding { get; set; }
+        public DateTime? EffectiveFrom { get; set; }
+        public DateTime? EffectiveTo { get; set; }
     }
 }

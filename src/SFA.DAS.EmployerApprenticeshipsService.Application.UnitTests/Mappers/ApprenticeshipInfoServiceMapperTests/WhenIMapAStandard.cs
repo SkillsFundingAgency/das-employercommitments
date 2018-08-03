@@ -1,0 +1,69 @@
+﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using NUnit.Framework;
+using SFA.DAS.Apprenticeships.Api.Types;
+using SFA.DAS.EmployerCommitments.Application.Mappers;
+
+namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Mappers.ApprenticeshipInfoServiceMapperTests
+{
+    [TestFixture]
+    public class WhenIMapStandard
+    {
+        private ApprenticeshipInfoServiceMapper _mapper;
+        private StandardSummary _standard;
+
+        [SetUp]
+        public void Arrange()
+        {
+            _mapper = new ApprenticeshipInfoServiceMapper();
+
+            _standard = new StandardSummary
+            {
+                Id = "1",
+                Title = "TestTitle",
+                Level = 1,
+                CurrentFundingCap = 1000, //this is to become redundant
+                EffectiveFrom = new DateTime(2017, 05, 01),
+                EffectiveTo = new DateTime(2020, 7, 31)
+            };
+        }
+
+        [Test]
+        public void ThenTitleIsMappedCorrectly()
+        {
+            //Act
+            var result = _mapper.MapFrom(new List<StandardSummary> { CopyOf(_standard) });
+
+            //Assert
+            var expectedTitle = $"{_standard.Title}, Level: {_standard.Level} (Standard)";
+            Assert.AreEqual(expectedTitle, result.Standards[0].Title);
+        }
+
+        [Test]
+        public void ThenEffectiveFromIsMappedCorrectly()
+        {
+            //Act
+            var result = _mapper.MapFrom(new List<StandardSummary> { CopyOf(_standard) });
+
+            //Assert
+            Assert.AreEqual(_standard.EffectiveFrom, result.Standards[0].EffectiveFrom);
+        }
+
+        [Test]
+        public void ThenEffectiveToIsMappedCorrectly()
+        {
+            //Act
+            var result = _mapper.MapFrom(new List<StandardSummary> { CopyOf(_standard) });
+
+            //Assert
+            Assert.AreEqual(_standard.EffectiveFrom, result.Standards[0].EffectiveFrom);
+        }
+
+        private static StandardSummary CopyOf(StandardSummary source)
+        {
+            //copy the payload to guard against handler modifications
+            return JsonConvert.DeserializeObject<StandardSummary>(JsonConvert.SerializeObject(source));
+        }
+    }
+}

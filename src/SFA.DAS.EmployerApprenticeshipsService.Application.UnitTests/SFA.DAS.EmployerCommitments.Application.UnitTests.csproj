@@ -80,6 +80,9 @@
     <Reference Include="nunit.framework, Version=3.5.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.Apprenticeships.Api.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Apprenticeships.Api.Types.0.11.82\lib\net462\SFA.DAS.Apprenticeships.Api.Types.dll</HintPath>
+    </Reference>
     <Reference Include="SFA.DAS.Audit.Client, Version=1.0.0.20553, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Audit.Client.1.0.0.20553\lib\net45\SFA.DAS.Audit.Client.dll</HintPath>
     </Reference>
@@ -178,6 +181,9 @@
     <Compile Include="Commands\UpdateApprenticeshipTests\WhenUpdatingAnApprenticeship.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\WhenValidationUpdateProviderPaymentPriority.cs" />
     <Compile Include="FakeTimeProvider.cs" />
+    <Compile Include="Mappers\ApprenticeshipInfoServiceMapperTests\WhenIMapAFramework.cs" />
+    <Compile Include="Mappers\ApprenticeshipInfoServiceMapperTests\WhenIMapAProvider.cs" />
+    <Compile Include="Mappers\ApprenticeshipInfoServiceMapperTests\WhenIMapAStandard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\ApprenticeshipSearch\WhenSubmittingApprenticeshipSearch.cs" />
     <Compile Include="Queries\GetAccountTransferConnectionsTests\WhenIGetAccountTransferConnections.cs" />

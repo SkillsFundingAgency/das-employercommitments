@@ -4,7 +4,7 @@ using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipProvider;
 
 namespace SFA.DAS.EmployerCommitments.Domain.Interfaces
 {
-    public interface IApprenticeshipInfoServiceWrapper
+    public interface IApprenticeshipInfoService
     {
         Task<StandardsView> GetStandardsAsync(bool refreshCache = false);
         Task<FrameworksView> GetFrameworksAsync(bool refreshCache = false);

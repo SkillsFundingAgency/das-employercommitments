@@ -11,7 +11,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetApprentic
 {
     class WhenIGetApprenticeshipDetails : QueryBaseTest<GetApprenticeshipDetailsHandler, GetApprenticeshipDetailsQuery, GetApprenticeshipDetailsResponse>
     {
-        private Mock<IApprenticeshipInfoServiceWrapper> _apprenticeshipInfoService;
+        private Mock<IApprenticeshipInfoService> _apprenticeshipInfoService;
         private EmployerCommitments.Domain.Models.ApprenticeshipProvider.Provider _provider;
         
         public override GetApprenticeshipDetailsQuery Query { get; set; }
@@ -28,7 +28,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetApprentic
                 Name = "Test Provider"
             };
 
-            _apprenticeshipInfoService = new Mock<IApprenticeshipInfoServiceWrapper>();
+            _apprenticeshipInfoService = new Mock<IApprenticeshipInfoService>();
 
             _apprenticeshipInfoService.Setup(x => x.GetProvider(It.IsAny<int>())).Returns(new ProvidersView
             {

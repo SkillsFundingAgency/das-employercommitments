@@ -15,7 +15,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetTrainingP
     {
         private GetTrainingProgrammesQueryHandler _handler;
 
-        private Mock<IApprenticeshipInfoServiceWrapper> _apprenticeshipInfoServiceWrapper;
+        private Mock<IApprenticeshipInfoService> _apprenticeshipInfoServiceWrapper;
 
         private List<Standard> _standards;
         private List<Framework> _frameworks;
@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetTrainingP
                 new Framework()
             };
 
-            _apprenticeshipInfoServiceWrapper = new Mock<IApprenticeshipInfoServiceWrapper>();
+            _apprenticeshipInfoServiceWrapper = new Mock<IApprenticeshipInfoService>();
 
             _apprenticeshipInfoServiceWrapper.Setup(x => x.GetFrameworksAsync(It.IsAny<bool>()))
                 .ReturnsAsync(new FrameworksView

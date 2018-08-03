@@ -20,7 +20,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Provider
 
         private readonly EmployerCommitmentsServiceConfiguration _config;
         private Mock<IdamsEmailServiceWrapper> _mockIdamsService;
-        private Mock<IApprenticeshipInfoServiceWrapper> _mockApprenticeshipService;
+        private Mock<IApprenticeshipInfoService> _mockApprenticeshipService;
 
         public ProviderEmailLookupServiceTests()
         {
@@ -44,7 +44,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Provider
             _mockIdamsService.Setup(m => m.GetEmailsAsync(It.IsAny<long>())).ReturnsAsync(new List<string>());
             _mockIdamsService.Setup(m => m.GetSuperUserEmailsAsync(It.IsAny<long>())).ReturnsAsync(new List<string>());
 
-            _mockApprenticeshipService = new Mock<IApprenticeshipInfoServiceWrapper>();
+            _mockApprenticeshipService = new Mock<IApprenticeshipInfoService>();
             _sut = new Infrastructure.Services.ProviderEmailLookupService(
                 Mock.Of<ILog>(),
                 _mockIdamsService.Object,

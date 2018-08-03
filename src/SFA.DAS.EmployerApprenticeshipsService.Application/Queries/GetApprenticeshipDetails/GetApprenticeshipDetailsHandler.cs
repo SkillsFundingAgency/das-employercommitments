@@ -9,9 +9,9 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDetai
     public class GetApprenticeshipDetailsHandler : IAsyncRequestHandler<GetApprenticeshipDetailsQuery, GetApprenticeshipDetailsResponse>
     {
         private readonly IValidator<GetApprenticeshipDetailsQuery> _validator;
-        private readonly IApprenticeshipInfoServiceWrapper _apprenticeshipInfoService;
+        private readonly IApprenticeshipInfoService _apprenticeshipInfoService;
 
-        public GetApprenticeshipDetailsHandler(IValidator<GetApprenticeshipDetailsQuery> validator, IApprenticeshipInfoServiceWrapper apprenticeshipInfoService)
+        public GetApprenticeshipDetailsHandler(IValidator<GetApprenticeshipDetailsQuery> validator, IApprenticeshipInfoService apprenticeshipInfoService)
         {
             _validator = validator;
             _apprenticeshipInfoService = apprenticeshipInfoService;

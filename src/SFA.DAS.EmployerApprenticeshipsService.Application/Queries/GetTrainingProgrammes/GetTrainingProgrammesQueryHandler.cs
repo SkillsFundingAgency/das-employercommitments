@@ -9,24 +9,24 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes
 {
     public sealed class GetTrainingProgrammesQueryHandler : IAsyncRequestHandler<GetTrainingProgrammesQueryRequest, GetTrainingProgrammesQueryResponse>
     {
-        private readonly IApprenticeshipInfoServiceWrapper _apprenticeshipInfoServiceWrapper;
+        private readonly IApprenticeshipInfoService _apprenticeshipInfoService;
 
-        public GetTrainingProgrammesQueryHandler(IApprenticeshipInfoServiceWrapper apprenticeshipInfoServiceWrapper)
+        public GetTrainingProgrammesQueryHandler(IApprenticeshipInfoService apprenticeshipInfoService)
         {
-            _apprenticeshipInfoServiceWrapper = apprenticeshipInfoServiceWrapper;
+            _apprenticeshipInfoService = apprenticeshipInfoService;
         }
 
         public async Task<GetTrainingProgrammesQueryResponse> Handle(GetTrainingProgrammesQueryRequest message)
         {
             IEnumerable<ITrainingProgramme> programmes;
-            var standardsTask = _apprenticeshipInfoServiceWrapper.GetStandardsAsync();
+            var standardsTask = _apprenticeshipInfoService.GetStandardsAsync();
             if (!message.IncludeFrameworks)
             {
                 programmes = (await standardsTask).Standards;
             }
             else
             {
-                var getFrameworksTask = _apprenticeshipInfoServiceWrapper.GetFrameworksAsync();
+                var getFrameworksTask = _apprenticeshipInfoService.GetFrameworksAsync();
                 programmes = (await standardsTask).Standards.Union((await getFrameworksTask).Frameworks.Cast<ITrainingProgramme>());
             }
 
