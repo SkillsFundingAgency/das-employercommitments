@@ -44,8 +44,6 @@ using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
-using SFA.DAS.Events.Api.Client;
-using SFA.DAS.Events.Api.Client.Configuration;
 using SFA.DAS.Http;
 using SFA.DAS.Notifications.Api.Client;
 using SFA.DAS.Http.TokenGenerators;
@@ -93,10 +91,6 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 
             ConfigureHashingService(config);
             SetUpCommitmentApi(config);
-
-            For<IEventsApi>().Use<EventsApi>()
-                .Ctor<IEventsApiClientConfiguration>().Is(config.EventsApi)
-                .SelectConstructor(() => new EventsApi(null)); // The default one isn't the one we want to use.;
 
             For<IBooleanToggleValueProvider>().Use<CloudConfigurationBooleanValueProvider>();
             For<IFeatureToggleService>().Use<FeatureToggleService>();

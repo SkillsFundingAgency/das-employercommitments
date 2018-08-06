@@ -11,7 +11,6 @@ namespace SFA.DAS.EmployerCommitments.Domain.Configuration
         public string DashboardUrl { get; set; }
         public string DatabaseConnectionString { get; set; }
         public CommitmentsApiClientConfiguration CommitmentsApi { get; set; }
-        public EventsApiClientConfiguration EventsApi { get; set; }
         public string Hashstring { get; set; }
         public string AllowedHashstringCharacters { get; set; }
         public string PublicHashstring { get; set; }
