@@ -47,7 +47,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         {
             var dict = new Dictionary<string, string>();
 
-            if (updatedApprenticeship.EndDate != null)
+            if (updatedApprenticeship.EndDate?.DateTime != null)
             {
                 if (updatedApprenticeship.HasHadDataLockSuccess)
                 {

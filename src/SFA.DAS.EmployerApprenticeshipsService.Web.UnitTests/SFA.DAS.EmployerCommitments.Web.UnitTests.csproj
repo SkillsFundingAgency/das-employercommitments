@@ -279,6 +279,7 @@
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenSettingATransferRequestApproval.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingYourCohort.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingTransferConnections.cs" />
+    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenValidatingApprenticeship.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\ManageApprenticeshipsOrchestratorTestBase.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\OrchestratorTestBase.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingApprenticeship.cs" />
@@ -324,7 +325,7 @@
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingTrainingCode.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingTrainingDates.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingUln.cs" />
-    <Compile Include="Validators\ApprovedApprenticeship\WhenValidatingEndDate.cs" />
+    <Compile Include="Validators\ApprovedApprenticeship\WhenCallingValidateApprovedEndDate.cs" />
     <Compile Include="Validators\EditApprenticeshipStopDate\WhenValidatingNewStopDate.cs" />
     <Compile Include="Validators\Messages\WhenExtractingMessages.cs" />
     <Compile Include="Validators\ProviderSelectionTest\WhenValidatingProviderId.cs" />
