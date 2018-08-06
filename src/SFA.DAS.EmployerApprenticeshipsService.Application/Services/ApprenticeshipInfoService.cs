@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.Apprenticeships.Api.Types.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipProvider;
-using Framework = SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse.Framework;
-using Standard = SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse.Standard;
 
 namespace SFA.DAS.EmployerCommitments.Application.Services
 {
@@ -37,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
             {
                 var api = new StandardApiClient(_configuration.BaseUrl);
 
-                var standards = api.FindAll().OrderBy(x => x.Title).ToList();
+                var standards = (await api.GetAllAsync()).OrderBy(x => x.Title).ToList();
 
                 await _cache.SetCustomValueAsync(StandardsKey, _mapper.MapFrom(standards));
             }
@@ -51,7 +46,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
             {
                 var api = new FrameworkApiClient(_configuration.BaseUrl);
 
-                var frameworks = api.FindAll().OrderBy(x => x.Title).ToList();
+                var frameworks = (await api.GetAllAsync()).OrderBy(x => x.Title).ToList();
 
                 await _cache.SetCustomValueAsync(FrameworksKey, _mapper.MapFrom(frameworks));
             }
