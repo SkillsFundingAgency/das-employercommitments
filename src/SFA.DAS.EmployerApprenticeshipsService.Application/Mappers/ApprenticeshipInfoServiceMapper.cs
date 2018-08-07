@@ -6,6 +6,8 @@ using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipProvider;
 using Framework = SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse.Framework;
+using Standard = SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse.Standard;
+using FundingPeriod = SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse.FundingPeriod;
 
 namespace SFA.DAS.EmployerCommitments.Application.Mappers
 {
@@ -29,7 +31,8 @@ namespace SFA.DAS.EmployerCommitments.Application.Mappers
                     Duration = x.Duration,
                     MaxFunding = x.CurrentFundingCap,
                     EffectiveFrom = x.EffectiveFrom,
-                    EffectiveTo =  x.EffectiveTo
+                    EffectiveTo =  x.EffectiveTo,
+                    FundingPeriods = MapFundingPeriods(x.FundingPeriods)
                 }).ToList()
             };
         }
@@ -55,7 +58,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Mappers
             return new StandardsView
             {
                 CreationDate = DateTime.UtcNow,
-                Standards = standards.Select(x => new EmployerCommitments.Domain.Models.ApprenticeshipCourse.Standard
+                Standards = standards.Select(x => new Standard
                 {
                     Id = x.Id,
                     Code = long.Parse(x.Id),
@@ -65,9 +68,24 @@ namespace SFA.DAS.EmployerCommitments.Application.Mappers
                     Duration = x.Duration,
                     MaxFunding = x.CurrentFundingCap,
                     EffectiveFrom = x.EffectiveFrom,
-                    EffectiveTo = x.EffectiveTo
+                    EffectiveTo = x.EffectiveTo,
+                    FundingPeriods = MapFundingPeriods(x.FundingPeriods)
                 }).ToList()
             };
+        }
+        private static IEnumerable<FundingPeriod> MapFundingPeriods(IEnumerable<Apprenticeships.Api.Types.FundingPeriod> source)
+        {
+            if (source == null)
+            {
+                return Enumerable.Empty<FundingPeriod>();
+            }
+
+            return source.Select(x => new FundingPeriod
+            {
+                EffectiveFrom = x.EffectiveFrom,
+                EffectiveTo = x.EffectiveTo,
+                FundingCap = x.FundingCap
+            });
         }
 
         private static string GetTitle(string title, int level)

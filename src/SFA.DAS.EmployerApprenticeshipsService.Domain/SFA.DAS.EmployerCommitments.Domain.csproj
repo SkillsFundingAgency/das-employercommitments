@@ -251,6 +251,7 @@
     <Compile Include="Interfaces\IProviderEmailNotificationService.cs" />
     <Compile Include="Interfaces\IProviderEmailService.cs" />
     <Compile Include="Models\AcademicYear\AcademicYearValidationResult.cs" />
+    <Compile Include="Models\ApprenticeshipCourse\FundingPeriod.cs" />
     <Compile Include="Models\Apprenticeship\ApprenticeshipStatus.cs" />
     <Compile Include="Models\Apprenticeship\ChangeOption.cs" />
     <Compile Include="Models\Apprenticeship\ChangeStatusType.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse
 {
@@ -12,5 +13,6 @@ namespace SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse
 
         DateTime? EffectiveFrom { get; set; }
         DateTime? EffectiveTo { get; set; }
+        IEnumerable<FundingPeriod> FundingPeriods { get; set; }
     }
 }
