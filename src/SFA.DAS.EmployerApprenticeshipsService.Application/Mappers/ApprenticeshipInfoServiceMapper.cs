@@ -68,7 +68,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Mappers
                     Duration = x.Duration,
                     MaxFunding = x.CurrentFundingCap,
                     EffectiveFrom = x.EffectiveFrom,
-                    EffectiveTo = x.EffectiveTo,
+                    EffectiveTo = x.LastDateForNewStarts,
                     FundingPeriods = MapFundingPeriods(x.FundingPeriods)
                 }).ToList()
             };
