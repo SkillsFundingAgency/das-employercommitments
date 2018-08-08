@@ -8,10 +8,8 @@ namespace SFA.DAS.EmployerCommitments.Application.Extensions
     {
         public static bool IsActiveOn(this ITrainingProgramme course, DateTime effectiveDate)
         {
-            if ((!course.EffectiveFrom.HasValue || course.EffectiveFrom.Value <= effectiveDate) &&
-                (!course.EffectiveTo.HasValue || course.EffectiveTo.Value >= effectiveDate)) return true;
-
-            return false;
+            return (!course.EffectiveFrom.HasValue || course.EffectiveFrom.Value.FirstOfMonth() <= effectiveDate) &&
+                   (!course.EffectiveTo.HasValue || course.EffectiveTo.Value >= effectiveDate.FirstOfMonth());
         }
 
         public static int FundingCapOn(this ITrainingProgramme course, DateTime effectiveDate)

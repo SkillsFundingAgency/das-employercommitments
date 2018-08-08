@@ -10,6 +10,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Extensions.ITraining
     public class WhenDetermingWhetherACourseIsActive
     {
         [TestCase("2016-01-01", "2016-12-01", "2016-06-01", true, Description = "Within date range")]
+        [TestCase("2016-01-15", "2016-12-15", "2016-01-01", true, Description = "Within date range - ignoring start day")]
+        [TestCase("2016-01-15", "2016-12-15", "2016-12-30", true, Description = "Within date range - ignoring end day")]
         [TestCase(null, "2016-12-01", "2016-06-01", true, Description="Within date range with no defined course start date")]
         [TestCase("2016-01-01", null, "2016-06-01", true, Description = "Withing date range, with no defined course end date")]
         [TestCase(null, null, "2016-06-01", true, Description = "Within date range, with no defined course effective dates")]
