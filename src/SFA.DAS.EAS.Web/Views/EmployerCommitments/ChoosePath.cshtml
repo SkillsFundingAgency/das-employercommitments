@@ -21,9 +21,9 @@
             <fieldset role="radiogroup" aria-required="true">
                 <legend class="visuallyhidden">Choose provider to enter details</legend>
                 <div class="form-error-group form-group @Html.AddClassIfPropertyInError("SelectedRoute", "error")">
-                 
-                        @Html.ValidationMessage("SelectedRoute", "Please choose an option", new { id = "error-message-SelectedRoute" })
-                   
+
+                    @Html.ValidationMessage("SelectedRoute", "Please choose an option", new { id = "error-message-SelectedRoute" })
+
                     <label class="block-label selection-button-radio" for="SelectedRoute-Employer">
                         @Html.RadioButton("SelectedRoute", "employer", new { id = "SelectedRoute-Employer", dataOptionName = "Employer To Add", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Employer To Add')" })
                         I will add apprentices
@@ -40,6 +40,7 @@
             @Html.Hidden("LegalEntityName", Model.Data.LegalEntityName)
             @Html.Hidden("LegalEntityAddress", Model.Data.LegalEntityAddress)
             @Html.Hidden("LegalEntitySource", Model.Data.LegalEntitySource)
+            @Html.Hidden("AccountLegalEntityPublicHashedId", Model.Data.AccountLegalEntityPublicHashedId)
             @Html.Hidden("ProviderId", Model.Data.ProviderId)
             @Html.Hidden("ProviderName", Model.Data.ProviderName)
             <button type="submit" class="button" id="submit-choose-path">Continue</button>

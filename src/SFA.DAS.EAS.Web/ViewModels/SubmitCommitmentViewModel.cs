@@ -12,11 +12,10 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string LegalEntityName { get; set; }
         public string LegalEntityAddress { get; set; }
         public short LegalEntitySource { get; set; }
+        public string AccountLegalEntityPublicHashedId { get; set; }
         public string ProviderId { get; set; }
         public string ProviderName { get; set; }
         public string CohortRef { get; set; }
-        public string SaveOrSend { get; set; }
-
         public SaveStatus SaveStatus { get; set; }
     }
 }

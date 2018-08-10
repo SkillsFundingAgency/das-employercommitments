@@ -29,6 +29,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Decorators
             return await _inner.GetAccount(accountId);
         }
 
+        public Task<ICollection<AccountLegalEntityViewModel>> GetAccountLegalEntities(string highWaterMarkId = null)
+        {
+            return _inner.GetAccountLegalEntities(highWaterMarkId);
+        }
+
         public async Task<PagedApiResponseViewModel<AccountWithBalanceViewModel>> GetPageOfAccounts(int pageNumber = 1, int pageSize = 1000, DateTime? toDate = null)
         {
             return await _inner.GetPageOfAccounts(pageNumber, pageSize, toDate);
@@ -47,6 +52,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Decorators
         public async Task<ICollection<AccountDetailViewModel>> GetUserAccounts(string userId)
         {
             return await _inner.GetUserAccounts(userId);
+        }
+
+        public Task<StatisticsViewModel> GetStatistics()
+        {
+            return _inner.GetStatistics();
         }
 
         public async Task<LegalEntityViewModel> GetLegalEntity(string accountId, long id)

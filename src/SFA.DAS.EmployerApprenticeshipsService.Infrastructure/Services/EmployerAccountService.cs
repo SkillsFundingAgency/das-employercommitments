@@ -31,10 +31,10 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
             foreach (var entity in listOfEntities)
             {
                 var legalEntityViewModel = await _client.GetLegalEntity(accountId,Convert.ToInt64(entity.Id));
-                
+
                 list.Add(new LegalEntity
                 {
-                    Name=legalEntityViewModel.Name,
+                    Name = legalEntityViewModel.Name,
                     RegisteredAddress = legalEntityViewModel.Address,
                     Source =  legalEntityViewModel.SourceNumeric,
                     Agreements = 
@@ -47,7 +47,8 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
                             TemplateVersionNumber = agreementSource.TemplateVersionNumber
                         }).ToList(),
                     Code = legalEntityViewModel.Code,
-                    Id = legalEntityViewModel.LegalEntityId
+                    Id = legalEntityViewModel.LegalEntityId,
+                    AccountLegalEntityPublicHashedId = legalEntityViewModel.AccountLegalEntityPublicHashedId
                 });
             }
 

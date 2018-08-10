@@ -65,8 +65,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitNewCommitmentModel(string hashedAccountId,
             string externalUserId, string transferConnectionCode, string legalEntityCode, string legalEntityName,
-            string legalEntityAddress, short legalEntitySource, string providerId, string providerName,
-            string cohortRef, SaveStatus saveStatus);
+            string legalEntityAddress, short legalEntitySource, string accountLegalEntityPublicHashedId,
+            string providerId, string providerName, string cohortRef, SaveStatus saveStatus);
 
         Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitCommitmentModel(string hashedAccountId,
             string externalUserId, string hashedCommitmentId, SaveStatus saveStatus);

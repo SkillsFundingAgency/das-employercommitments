@@ -24,6 +24,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         private const long TransferConnectionId = 999;
         private const long TransferSenderId = 999;
         private const string TransferConnectionName = "TCName";
+        private const string AccountLegalEntityPublicHashedId = "123456";
 
         [SetUp]
         public void Arrange()
@@ -47,6 +48,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 LegalEntityName = "LegalEntityName",
                 LegalEntityAddress = "LegalEntityAddress",
                 LegalEntitySource = (short) OrganisationType.Other,
+                AccountLegalEntityPublicHashedId = AccountLegalEntityPublicHashedId,
                 ProviderId = 2,
                 ProviderName = "ProviderName",
                 TransferConnectionCode = TransferConnectionCode
@@ -79,15 +81,15 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                                                         _viewModel.LegalEntityAddress &&
                                                         p.Commitment.LegalEntityOrganisationType ==
                                                         (OrganisationType)_viewModel.LegalEntitySource &&
+                                                        p.Commitment.AccountLegalEntityPublicHashedId ==
+                                                        AccountLegalEntityPublicHashedId &&
                                                         p.Commitment.ProviderId == 2 &&
                                                         p.Commitment.CommitmentStatus == CommitmentStatus.New &&
                                                         p.Commitment.EditStatus == EditStatus.EmployerOnly &&
                                                         p.Commitment.EmployerLastUpdateInfo.Name == "DisplayName" &&
-                                                        p.Commitment.EmployerLastUpdateInfo.EmailAddress ==
-                                                        "UserEmail")),
+                                                        p.Commitment.EmployerLastUpdateInfo.EmailAddress == "UserEmail")),
                 Times.Once);
         }
-
 
         [Test]
         public async Task ShouldCallTransferMappingFunction()
@@ -123,6 +125,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                                                         _viewModel.LegalEntityAddress &&
                                                         p.Commitment.LegalEntityOrganisationType ==
                                                         (OrganisationType)_viewModel.LegalEntitySource &&
+                                                        p.Commitment.AccountLegalEntityPublicHashedId ==
+                                                        AccountLegalEntityPublicHashedId &&
                                                         p.Commitment.ProviderId == 2 &&
                                                         p.Commitment.CommitmentStatus == CommitmentStatus.New &&
                                                         p.Commitment.EditStatus == EditStatus.EmployerOnly &&
@@ -131,7 +135,5 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                                                         "UserEmail")),
                 Times.Once);
         }
-
-
     }
 }
