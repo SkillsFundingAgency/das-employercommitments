@@ -12,6 +12,23 @@ namespace SFA.DAS.EmployerCommitments.Application.Extensions
                    (!course.EffectiveTo.HasValue || course.EffectiveTo.Value >= effectiveDate.FirstOfMonth());
         }
 
+        public static TrainingProgrammeStatus GetStatusOn(this ITrainingProgramme course, DateTime effectiveDate)
+        {
+            if ((!course.EffectiveFrom.HasValue || course.EffectiveFrom.Value.FirstOfMonth() <= effectiveDate))
+            {
+                if(!course.EffectiveTo.HasValue || course.EffectiveTo.Value >= effectiveDate.FirstOfMonth())
+                {
+                    return TrainingProgrammeStatus.Active;
+                }
+                else
+                {
+                    return TrainingProgrammeStatus.Expired;
+                }
+            }
+
+            return TrainingProgrammeStatus.Pending;
+        }
+
         public static int FundingCapOn(this ITrainingProgramme course, DateTime effectiveDate)
         {
             if (!course.IsActiveOn(effectiveDate))

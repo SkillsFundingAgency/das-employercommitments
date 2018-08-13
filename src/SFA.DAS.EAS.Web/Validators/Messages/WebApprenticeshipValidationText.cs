@@ -46,6 +46,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators.Messages
             new ValidationMessage("Apprentices funded through a transfer can't start earlier than May 2018||The start date can't be earlier than May 2018.", "LearnStartDate_BeforeTransfersStart");
         public ValidationMessage LearnStartDateOverlap =>
             new ValidationMessage("The start date is not valid||The date overlaps with existing training dates for the same apprentice. Please check the date - contact your training provider for help.", "LearnStartDate_Overlap");
+        public ValidationMessage LearnStartDateNotValidForTrainingCourse =>
+            new ValidationMessage("This training course is only available to apprentices with a start date {suffix}||To select this course enter a start date {suffix}", "LearnStartDate_NotValidForTrainingCourse");
 
         public ValidationMessage LearnPlanEndDate01 =>
             new ValidationMessage("The end date is not valid", "LearnPlanEndDate_01");

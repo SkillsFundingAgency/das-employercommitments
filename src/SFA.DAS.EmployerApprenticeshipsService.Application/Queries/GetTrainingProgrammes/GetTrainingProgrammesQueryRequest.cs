@@ -8,7 +8,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes
         public GetTrainingProgrammesQueryRequest()
         {
             IncludeFrameworks = true;
-            EffectiveDate = DateTime.UtcNow;
+            EffectiveDate = null;
         }
 
         public bool IncludeFrameworks { get; set; }

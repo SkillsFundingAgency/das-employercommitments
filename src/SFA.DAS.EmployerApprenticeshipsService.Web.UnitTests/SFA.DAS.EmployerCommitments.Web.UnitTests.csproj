@@ -313,6 +313,7 @@
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingFirstName.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingLastName.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingEmployerReference.cs" />
+    <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingStartDate.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingTrainingCode.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingTrainingDates.cs" />
     <Compile Include="Validators\ApprenticeshipCreateOrEdit\WhenValidatingUln.cs" />
