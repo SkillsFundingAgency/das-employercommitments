@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         protected readonly IApprenticeshipValidationErrorText ValidationText;
         private readonly IAcademicYearDateProvider _academicYear;
         protected readonly ICurrentDateTime CurrentDateTime;
-        protected readonly IMediator _mediator;
+        protected readonly IMediator Mediator;
 
         public ApprenticeshipCoreValidator(IApprenticeshipValidationErrorText validationText,
                                             IAcademicYearDateProvider academicYear,
@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         {
             ValidationText = validationText;
             CurrentDateTime = currentDateTime;
-            _mediator = mediator;
+            Mediator = mediator;
             _academicYear = academicYear;
 
             ValidateFirstName();
@@ -234,7 +234,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                 return true;
             }
 
-            var result = _mediator.SendAsync(new GetTrainingProgrammesQueryRequest
+            var result = Mediator.SendAsync(new GetTrainingProgrammesQueryRequest
             {
                 EffectiveDate = null,
                 IncludeFrameworks = true
