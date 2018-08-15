@@ -62,7 +62,10 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string LegalEntityName { get; set; }
 
         public string LegalEntityAddress { get; set; }
+
         public short LegalEntitySource { get; set; }
+
+        public string AccountLegalEntityPublicHashedId { get; set; }
 
         [Required]
         public long ProviderId { get; set; }

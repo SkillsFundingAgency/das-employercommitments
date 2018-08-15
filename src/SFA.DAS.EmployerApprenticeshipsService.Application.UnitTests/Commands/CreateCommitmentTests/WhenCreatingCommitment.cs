@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using KellermanSoftware.CompareNetObjects;
 using Moq;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Commitment;
@@ -58,8 +57,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateCommi
             };
 
             //Store a copy of the original payload for assertions, to guard against handler modification
-            _validCommand =
-                JsonConvert.DeserializeObject<CreateCommitmentCommand>(JsonConvert.SerializeObject(_payload));
+            _validCommand = TestHelpers.Clone(_payload);
 
             _commandHandler = new CreateCommitmentCommandHandler(
                 _employerCommitmentApi.Object,
@@ -72,7 +70,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateCommi
         [Test]
         public async Task ThenCommitmentsApiIsCalledToCreateCommitment()
         {
-            await _act.Invoke();
+            await _act();
 
             _employerCommitmentApi.Verify(x => x.CreateEmployerCommitment(
                 It.Is<long>(employeraccountId => employeraccountId == _validCommand.Commitment.EmployerAccountId),
@@ -90,7 +88,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateCommi
             _payload.Commitment.CommitmentStatus = status;
 
             //Act
-            await _act.Invoke();
+            await _act();
 
             //Assert
             _providerEmailNotificationService.Verify(x => x.SendCreateCommitmentNotification(It.IsAny<CommitmentView>()),

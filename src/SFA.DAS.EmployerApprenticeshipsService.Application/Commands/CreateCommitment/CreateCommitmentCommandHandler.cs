@@ -32,6 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
 
             var commitmentId = (await _commitmentApi.CreateEmployerCommitment(request.Commitment.EmployerAccountId, commitmentRequest)).Id;
 
+            //todo: do we really need to fetch this?
             var commitment = await _commitmentApi.GetEmployerCommitment(request.Commitment.EmployerAccountId, commitmentId);
 
             if (request.Commitment.CommitmentStatus == CommitmentStatus.Active)
