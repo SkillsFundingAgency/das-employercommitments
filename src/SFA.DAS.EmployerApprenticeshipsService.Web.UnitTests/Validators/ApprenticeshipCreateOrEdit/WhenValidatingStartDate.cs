@@ -34,7 +34,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
 
             //Assert
             Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors[0].ErrorMessage.EndsWith("after 04 18"));
+            Assert.IsTrue(result.Errors[0].ErrorMessage.EndsWith("after 04 2018"));
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
 
             //Assert
             Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors[0].ErrorMessage.EndsWith("before 08 18"));
+            Assert.IsTrue(result.Errors[0].ErrorMessage.EndsWith("before 08 2018"));
         }
 
         [Test]
