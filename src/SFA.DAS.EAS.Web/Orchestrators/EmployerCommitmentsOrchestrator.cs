@@ -916,35 +916,31 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     a => MapToApprenticeshipListItem(a, overlappingApprenticeships)).ToList() ?? new List<ApprenticeshipListItemViewModel>(0);
 
                 var trainingProgrammes = await GetTrainingProgrammes(data.Commitment.TransferSender == null);
-                var apprenticeshipGroups = new List<ApprenticeshipListItemGroupViewModel>();
 
                 var errors = new Dictionary<string, string>();
                 var warnings = new Dictionary<string, string>();
 
-                foreach (var group in apprenticships.OrderBy(x => x.TrainingName).GroupBy(x => x.TrainingCode))
+                var apprenticeshipGroups = apprenticships.OrderBy(x => x.TrainingName).GroupBy(x => x.TrainingCode)
+                    .Select(g => new ApprenticeshipListItemGroupViewModel
+                    {
+                        Apprenticeships = g.OrderBy(x => x.CanBeApproved).ToList(),
+                        TrainingProgramme = trainingProgrammes.FirstOrDefault(x => x.Id == g.Key)
+                    }).ToList();
+
+                foreach (var apprenticeshipGroup in apprenticeshipGroups)
                 {
-                    var apprenticeshipListGroup = new ApprenticeshipListItemGroupViewModel
+                    if (apprenticeshipGroup.OverlapErrorCount > 0)
                     {
-                        Apprenticeships = group.OrderBy(x => x.CanBeApproved).ToList(),
-                        TrainingProgramme = trainingProgrammes.FirstOrDefault(x => x.Id == group.Key)
-                    };
-
-                    apprenticeshipGroups.Add(apprenticeshipListGroup);
-
-                    var trainingTitle = string.Empty;
-                    if (!string.IsNullOrEmpty(apprenticeshipListGroup.TrainingProgramme?.Title))
-                    {
-                        trainingTitle = $":{apprenticeshipListGroup.TrainingProgramme.Title}";
+                        var trainingTitle = string.IsNullOrEmpty(apprenticeshipGroup.TrainingProgramme?.Title)
+                            ? string.Empty
+                            : $":{apprenticeshipGroup.TrainingProgramme.Title}";
+                        errors.Add(apprenticeshipGroup.GroupId, $"Overlapping training dates{trainingTitle}");
                     }
 
-                    if (apprenticeshipListGroup.OverlapErrorCount > 0)
+                    if (apprenticeshipGroup.ApprenticeshipsOverFundingLimit > 0 // for this to be true, there must be a TrainingProgramme, so no need to cater for null
+                        && apprenticeshipGroup.AllApprenticeshipsHaveCost)//not right!
                     {
-                        errors.Add($"{apprenticeshipListGroup.GroupId}", $"Overlapping training dates{trainingTitle}");
-                    }
-                    
-                    if (apprenticeshipListGroup.ApprenticeshipsOverFundingLimit > 0)
-                    {
-                        warnings.Add(apprenticeshipListGroup.GroupId, $"Cost for {apprenticeshipListGroup.TrainingProgramme.Title}");
+                        warnings.Add(apprenticeshipGroup.GroupId, $"Cost for {apprenticeshipGroup.TrainingProgramme.Title}");
                     }
                 }
 
