@@ -183,7 +183,6 @@
                                         @($"{group.ApprenticeshipsOverFundingLimit}  {_addS("apprenticeship", group.ApprenticeshipsOverFundingLimit).ToLower()} above funding band maximum")
                                     </p>
                                     <p>
-                                        @*The costs are above the &pound;@group.TrainingProgramme.MaxFunding.ToString("N0") <a target="_blank" href="https://www.gov.uk/government/publications/apprenticeship-funding-and-performance-management-rules-2017-to-2018">maximum value of the funding band</a> for this apprenticeship. You'll need to pay the difference directly to the training provider - this can't be funded from your account.*@
                                         The costs are above the@(group.CommonFundingCap != null ? $" £{group.CommonFundingCap:N0}":"") <a target="_blank" href="https://www.gov.uk/government/publications/apprenticeship-funding-and-performance-management-rules-2017-to-2018">maximum value of the funding band</a> for this apprenticeship. You'll need to pay the difference directly to the training provider - this can't be funded from your account.
                                     </p>
                                 </div>
@@ -255,8 +254,11 @@
                                             </td>
                                         }
 
-                                        @*@if (group.TrainingProgramme != null && apprenticeship.Cost.HasValue && apprenticeship.Cost > group.TrainingProgramme.MaxFunding && !Model.Data.Errors.Any())*@
-                                        @if (group.TrainingProgramme != null && apprenticeship.Cost.HasValue && apprenticeship.Cost > group.TrainingProgramme.FundingCapOn(apprenticeship.StartDate.Value) && !Model.Data.Errors.Any())
+                                        @if (group.TrainingProgramme != null 
+                                             && apprenticeship.Cost.HasValue 
+                                             && apprenticeship.StartDate.HasValue
+                                             && apprenticeship.Cost > group.TrainingProgramme.FundingCapOn(apprenticeship.StartDate.Value)
+                                             && !Model.Data.Errors.Any())
                                         {
                                             <td class="funding-cap-alert-td">
                                                 <a href="#max-funding-group-@group.GroupId" aria-label="Cost is above the maximum funding band" aria-describedby="max-funding-group-@group.GroupId" title="Cost is above the maximum funding band"> @GetValueOrDefault(FormatCost(apprenticeship.Cost))</a>
