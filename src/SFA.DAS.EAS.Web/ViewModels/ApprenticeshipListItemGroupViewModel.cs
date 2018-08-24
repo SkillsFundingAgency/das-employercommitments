@@ -47,12 +47,15 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
                 if (TrainingProgramme == null || Apprenticeships.Count == 0)
                     return null;
 
-                //todo: need to find out what to do when the user hasn't provided a start date yet
-                var firstApprenticeshipsStartDate = Apprenticeships.First().StartDate;
-                if (!firstApprenticeshipsStartDate.HasValue)
+                if (Apprenticeships.Any(a => !a.Cost.HasValue || !a.StartDate.HasValue))
                     return null;
 
-                var firstFundingCap = TrainingProgramme.FundingCapOn(firstApprenticeshipsStartDate.Value);
+                //todo: need to find out what to do when the user hasn't provided a start date yet
+                //var firstApprenticeshipsStartDate = Apprenticeships.First().StartDate;
+                //if (!firstApprenticeshipsStartDate.HasValue)
+                //    return null;
+
+                var firstFundingCap = TrainingProgramme.FundingCapOn(Apprenticeships.First().StartDate.Value);
 
                 //todo: do we check for missing cost here, or handle that seperately?
                 if (Apprenticeships.Skip(1).Any(a => TrainingProgramme.FundingCapOn(a.StartDate.Value) != firstFundingCap))
@@ -62,10 +65,15 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
             }
         }
 
-        public bool AllApprenticeshipsHaveCost
-        {
-            get { return Apprenticeships.All(a => a.Cost.HasValue); }
-        }
+        //public bool AllApprenticeshipsHaveCost
+        //{
+        //    get { return Apprenticeships.All(a => a.Cost.HasValue); }
+        //}
+
+        //public bool ShowCommonFundingCap
+        //{
+        //    get { return Apprenticeships.All(a => a.Cost.HasValue && a.StartDate.HasValue); }
+        //}
 
         //public bool ShowFundingLimitWarning
         //{

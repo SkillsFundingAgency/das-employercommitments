@@ -601,9 +601,9 @@ WriteLiteral("                                        ");
 WriteLiteral("\r\n                                    </p>\r\n                                    <" +
 "p>\r\n                                        ");
 
-WriteLiteral("\r\n                                        The costs are above the ");
+WriteLiteral("\r\n                                        The costs are above the");
 
-                                                            Write(group.CommonFundingCap != null ? $"£{group.CommonFundingCap:N0}":"");
+                                                           Write(group.CommonFundingCap != null ? $" £{group.CommonFundingCap:N0}":"");
 
 WriteLiteral(" <a");
 
