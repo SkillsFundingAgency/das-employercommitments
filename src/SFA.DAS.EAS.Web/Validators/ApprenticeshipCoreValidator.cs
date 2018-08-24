@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Validators;
 using MediatR;
@@ -98,7 +99,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         {
             RuleFor(x => x.StartDate)
                 .Cascade(CascadeMode.StopOnFirstFailure)
-                .Must(TrainingCourseValidOnStartDate)
+                .MustAsync(async (viewModel, startDate, context, cancellationToken) => await TrainingCourseValidOnStartDate(viewModel, startDate, context))
                     .WithErrorCode(ValidationText.LearnStartDateNotValidForTrainingCourse.ErrorCode)
                     .WithMessage(ValidationText.LearnStartDateNotValidForTrainingCourse.Text)
                 .NotNull().WithMessage(ValidationText.LearnStartDate01.Text).WithErrorCode(ValidationText.LearnStartDate01.ErrorCode)
@@ -227,32 +228,28 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
             return date.DateTime != null && date.Day.HasValue;
         }
 
-        private bool TrainingCourseValidOnStartDate(ApprenticeshipViewModel viewModel, DateTimeViewModel startDate, PropertyValidatorContext context)
+        private async Task<bool> TrainingCourseValidOnStartDate(ApprenticeshipViewModel viewModel, DateTimeViewModel startDate, PropertyValidatorContext context)
         {
             if (string.IsNullOrWhiteSpace(viewModel.TrainingCode) || (!startDate.DateTime.HasValue))
-            {
                 return true;
-            }
 
-            var result = Mediator.SendAsync(new GetTrainingProgrammesQueryRequest
+            var result = await Mediator.SendAsync(new GetTrainingProgrammesQueryRequest
             {
                 EffectiveDate = null,
                 IncludeFrameworks = true
-            }).Result;
+            });
 
             var course = result.TrainingProgrammes.Single(x => x.Id == viewModel.TrainingCode);
 
             var courseStatus = course.GetStatusOn(startDate.DateTime.Value);
 
             if (courseStatus == TrainingProgrammeStatus.Active)
-            {
                 return true;
-            }
 
             var suffix = courseStatus == TrainingProgrammeStatus.Pending
-                         ? $"after {course.EffectiveFrom.Value.AddMonths(-1):MM yyyy}"
-                         : $"before {course.EffectiveTo.Value.AddMonths(1):MM yyyy}";
-            
+                ? $"after {course.EffectiveFrom.Value.AddMonths(-1):MM yyyy}"
+                : $"before {course.EffectiveTo.Value.AddMonths(1):MM yyyy}";
+
             context.MessageFormatter.AppendArgument("suffix", suffix);
             return false;
         }
