@@ -20,10 +20,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Extensions
                 {
                     return TrainingProgrammeStatus.Active;
                 }
-                else
-                {
-                    return TrainingProgrammeStatus.Expired;
-                }
+                return TrainingProgrammeStatus.Expired;
             }
 
             return TrainingProgrammeStatus.Pending;
