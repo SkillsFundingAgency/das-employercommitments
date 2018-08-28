@@ -921,11 +921,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var warnings = new Dictionary<string, string>();
 
                 var apprenticeshipGroups = apprenticships.OrderBy(x => x.TrainingName).GroupBy(x => x.TrainingCode)
-                    .Select(g => new ApprenticeshipListItemGroupViewModel
-                    {
-                        Apprenticeships = g.OrderBy(x => x.CanBeApproved).ToList(),
-                        TrainingProgramme = trainingProgrammes.FirstOrDefault(x => x.Id == g.Key)
-                    }).ToList();
+                    .Select(g => new ApprenticeshipListItemGroupViewModel(g.OrderBy(x => x.CanBeApproved).ToList(), trainingProgrammes.FirstOrDefault(x => x.Id == g.Key)))
+                    .ToList();
 
                 foreach (var apprenticeshipGroup in apprenticeshipGroups)
                 {

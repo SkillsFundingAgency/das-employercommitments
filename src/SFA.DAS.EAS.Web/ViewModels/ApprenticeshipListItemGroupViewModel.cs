@@ -7,13 +7,18 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 {
     public class ApprenticeshipListItemGroupViewModel
     {
-        public ITrainingProgramme TrainingProgramme { get; set; }
+        public ITrainingProgramme TrainingProgramme { get; }
+        public IList<ApprenticeshipListItemViewModel> Apprenticeships { get; }
 
-        public IList<ApprenticeshipListItemViewModel> Apprenticeships { get; set; }
+        public ApprenticeshipListItemGroupViewModel(IList<ApprenticeshipListItemViewModel> apprenticeships, ITrainingProgramme trainingProgramme = null)
+        {
+            TrainingProgramme = trainingProgramme;
+            Apprenticeships = apprenticeships;
+        }
 
-        public string GroupId => TrainingProgramme == null ? "0" : TrainingProgramme.Id;
+        public string GroupId => TrainingProgramme?.Id ?? "0";
 
-        public string GroupName => TrainingProgramme == null ? "No training course" : TrainingProgramme.Title;
+        public string GroupName => TrainingProgramme?.Title ?? "No training course";
 
         //todo: change to property that gets set, or else cache result, or calc in ctor, or have shared cache miss method to populate next 2 props. just be careful cache doesn't get out of date.
         public int ApprenticeshipsOverFundingLimit
