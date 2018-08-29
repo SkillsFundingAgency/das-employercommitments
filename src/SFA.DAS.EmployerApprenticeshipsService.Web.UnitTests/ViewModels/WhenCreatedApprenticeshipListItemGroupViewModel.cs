@@ -42,6 +42,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
             };
         }
 
+        #region ApprenticeshipsOverFundingLimit
+
         [Test]
         public void AndNoTrainingProgrammeThenThereAreNoApprenticeshipsOverFundingLimit()
         {
@@ -130,6 +132,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
             Assert.AreEqual(1, group.ApprenticeshipsOverFundingLimit);
         }
 
+        #endregion ApprenticeshipsOverFundingLimit
+
+        #region CommonFundingCap
+
         [Test]
         public void AndNoTrainingProgrammeThenThereIsNoCommonFundingCap()
         {
@@ -169,6 +175,22 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
             var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, trainingProgram);
 
             Assert.AreEqual(null, group.CommonFundingCap);
+        }
+
+        [Test]
+        public void AndSingleApprenticeshipThenTheCommonFundingCapShouldBeSet()
+        {
+            var apprenticeships = new[]
+            {
+                new ApprenticeshipListItemViewModel
+                {
+                    StartDate = new DateTime(2020,2,2)
+                }
+            };
+
+            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
+
+            Assert.AreEqual(TestTrainingProgrammeHundingCap, group.CommonFundingCap);
         }
 
         [Test]
@@ -231,5 +253,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
 
             Assert.AreEqual(null, group.CommonFundingCap);
         }
+
+        #endregion CommonFundingCap
+
+        #region ShowCommonFundingCap
+
+        [Test]
+        void ShowCommonFundingCap()
+        {
+
+        }
+
+        #endregion ShowCommonFundingCap
     }
 }
