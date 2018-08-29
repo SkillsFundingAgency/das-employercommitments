@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
@@ -53,6 +49,34 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
             var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, trainingProgram);
 
             Assert.AreEqual(expectedApprenticeshipsOverFundingLimit, group.ApprenticeshipsOverFundingLimit);
+        }
+
+        [Test]
+        public void AndNoTrainingProgrammeThenThereIsNoCommonFundingCap()
+        {
+            var apprenticeships = new[]
+            {
+                new ApprenticeshipListItemViewModel
+                {
+                    StartDate = new DateTime(2020,2,2),
+                    Cost = 500
+                }
+            };
+
+            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, null);
+
+            Assert.AreEqual(null, group.CommonFundingCap);
+        }
+
+        [Test]
+        public void AndNoApprenticeshipsThenThereIsNoCommonFundingCap()
+        {
+            var apprenticeships = new ApprenticeshipListItemViewModel[0];
+            var trainingProgram = new Framework();
+
+            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, trainingProgram);
+
+            Assert.AreEqual(null, group.CommonFundingCap);
         }
     }
 }
