@@ -13,6 +13,11 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public int ApprenticeshipsOverFundingLimit { get; }
         public int? CommonFundingCap { get; }
 
+        public bool AllApprenticeshipsOverFundingLimit =>
+            Apprenticeships.Any() && ApprenticeshipsOverFundingLimit == Apprenticeships.Count;
+
+        public bool ShowCommonFundingCap => AllApprenticeshipsOverFundingLimit && CommonFundingCap != null;
+
         public string GroupId => TrainingProgramme?.Id ?? "0";
 
         public string GroupName => TrainingProgramme?.Title ?? "No training course";
@@ -60,7 +65,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
             if (TrainingProgramme == null || !Apprenticeships.Any())
                 return null;
 
-            if (Apprenticeships.Any(a => !a.Cost.HasValue || !a.StartDate.HasValue))
+            if (Apprenticeships.Any(a => !a.StartDate.HasValue))
                 return null;
 
             var firstFundingCap = TrainingProgramme.FundingCapOn(Apprenticeships.First().StartDate.Value);
