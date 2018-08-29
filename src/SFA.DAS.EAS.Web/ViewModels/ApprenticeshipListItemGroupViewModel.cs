@@ -57,7 +57,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         /// </summary>
         private int? CalculateCommonFundingCap()
         {
-            if (TrainingProgramme == null || Apprenticeships.Count == 0)
+            if (TrainingProgramme == null || !Apprenticeships.Any())
                 return null;
 
             if (Apprenticeships.Any(a => !a.Cost.HasValue || !a.StartDate.HasValue))

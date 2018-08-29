@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
@@ -8,6 +9,29 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
     [TestFixture]
     public class WhenCreatedApprenticeshipListItemGroupViewModel
     {
+        private IList<ApprenticeshipListItemViewModel> _singleApprenticeship;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _singleApprenticeship = new[]
+            {
+                new ApprenticeshipListItemViewModel
+                {
+                    StartDate = new DateTime(2020,2,2),
+                    Cost = 500
+                }
+            };
+        }
+
+        [Test]
+        public void AndNoTrainingProgrammeThenThereNoApprenticeshipsOverFundingLimit()
+        {
+            var group = new ApprenticeshipListItemGroupViewModel(_singleApprenticeship, null);
+
+            Assert.AreEqual(0, group.ApprenticeshipsOverFundingLimit);
+        }
+
         [TestCase("2020-1-15",   "99", "2020-1-10", "2020-1-20", 100, 0, Description = "StarDatet in band, cost less than cap")]
         [TestCase("2020-1-15",  "100", "2020-1-10", "2020-1-20", 100, 0, Description = "StarDatet in band, cost same as cap")]
         [TestCase("2020-1-15",  "101", "2020-1-10", "2020-1-20", 100, 1, Description = "StartDate in band, cost just over cap")]
@@ -54,16 +78,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
         [Test]
         public void AndNoTrainingProgrammeThenThereIsNoCommonFundingCap()
         {
-            var apprenticeships = new[]
-            {
-                new ApprenticeshipListItemViewModel
-                {
-                    StartDate = new DateTime(2020,2,2),
-                    Cost = 500
-                }
-            };
-
-            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, null);
+            var group = new ApprenticeshipListItemGroupViewModel(_singleApprenticeship, null);
 
             Assert.AreEqual(null, group.CommonFundingCap);
         }
