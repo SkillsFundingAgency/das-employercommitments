@@ -259,9 +259,31 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
         #region ShowCommonFundingCap
 
         [Test]
-        void ShowCommonFundingCap()
+        public void AndNoApprenticeshipsAndNoTrainingProgrammeThenDontShowCommonFundingCap()
         {
+            var apprenticeships = new ApprenticeshipListItemViewModel[0];
 
+            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, null);
+
+            Assert.AreEqual(false, group.ShowCommonFundingCap);
+        }
+
+        [Test]
+        public void AndNoApprenticeshipsThenDontShowCommonFundingCap()
+        {
+            var apprenticeships = new ApprenticeshipListItemViewModel[0];
+
+            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
+
+            Assert.AreEqual(false, group.ShowCommonFundingCap);
+        }
+
+        [Test]
+        public void AndNoTrainingProgrammeThenDontShowCommonFundingCap()
+        {
+            var group = new ApprenticeshipListItemGroupViewModel(_singleApprenticeship, null);
+
+            Assert.AreEqual(false, group.ShowCommonFundingCap);
         }
 
         #endregion ShowCommonFundingCap

@@ -935,7 +935,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     }
 
                     if (apprenticeshipGroup.ApprenticeshipsOverFundingLimit > 0) // for this to be true, there must be a TrainingProgramme, so no need to cater for null
-//                        && apprenticeshipGroup.AllApprenticeshipsHaveCost)//not right!
                     {
                         warnings.Add(apprenticeshipGroup.GroupId, $"Cost for {apprenticeshipGroup.TrainingProgramme.Title}");
                     }
