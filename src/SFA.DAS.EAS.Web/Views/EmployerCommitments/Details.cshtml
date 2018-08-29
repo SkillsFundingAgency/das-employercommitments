@@ -300,11 +300,6 @@
 
 @functions
 {
-    //public string GetApprenticesCountText(IList<ApprenticeshipListItemViewModel> apprenticeships)
-    //{
-    //    return apprenticeships.Count == 1 ? "1 Apprentice" : $"{apprenticeships.Count} Apprentices";
-    //}
-
     readonly Func<string, int, string> _addS = (word, count) => count == 1 ? word : $"{word}s";
 
     public string PluraliseApprentice(int count)
@@ -316,11 +311,6 @@
     {
         return count == 1 ? "Incomplete record" : "Incomplete records";
     }
-
-    //private string GetClickableClass(int requestsCount)
-    //{
-    //    return requestsCount > 0 ? "clickable" : "";
-    //}
 
     public string FormatCost(decimal? cost)
     {

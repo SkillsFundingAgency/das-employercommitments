@@ -912,7 +912,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                        Apprenticeship = data.Commitment.Apprenticeships
                    });
 
-                var apprenticships = data.Commitment.Apprenticeships?.Select(
+                var apprenticeships = data.Commitment.Apprenticeships?.Select(
                     a => MapToApprenticeshipListItem(a, overlappingApprenticeships)).ToList() ?? new List<ApprenticeshipListItemViewModel>(0);
 
                 var trainingProgrammes = await GetTrainingProgrammes(data.Commitment.TransferSender == null);
@@ -920,7 +920,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var errors = new Dictionary<string, string>();
                 var warnings = new Dictionary<string, string>();
 
-                var apprenticeshipGroups = apprenticships.OrderBy(x => x.TrainingName).GroupBy(x => x.TrainingCode)
+                var apprenticeshipGroups = apprenticeships.OrderBy(x => x.TrainingName).GroupBy(x => x.TrainingCode)
                     .Select(g => new ApprenticeshipListItemGroupViewModel(g.OrderBy(x => x.CanBeApproved).ToList(), trainingProgrammes.FirstOrDefault(x => x.Id == g.Key)))
                     .ToList();
 
@@ -953,8 +953,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     LegalEntityName = data.Commitment.LegalEntityName,
                     ProviderName = data.Commitment.ProviderName,
                     Status = data.Commitment.GetStatus(),
-                    HasApprenticeships = apprenticships.Count > 0,
-                    Apprenticeships = apprenticships,
+                    HasApprenticeships = apprenticeships.Count > 0,
+                    Apprenticeships = apprenticeships,
                     ShowApproveOnlyOption = data.Commitment.AgreementStatus == AgreementStatus.ProviderAgreed,
                     LatestMessage = GetLatestMessage(data.Commitment.Messages, true)?.Message,
                     ApprenticeshipGroups = apprenticeshipGroups,

@@ -39,11 +39,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Views.EmployerCommitments
     public partial class Details : System.Web.Mvc.WebViewPage<OrchestratorResponse<CommitmentDetailsViewModel>>
     {
  
-    //public string GetApprenticesCountText(IList<ApprenticeshipListItemViewModel> apprenticeships)
-    //{
-    //    return apprenticeships.Count == 1 ? "1 Apprentice" : $"{apprenticeships.Count} Apprentices";
-    //}
-
     readonly Func<string, int, string> _addS = (word, count) => count == 1 ? word : $"{word}s";
 
     public string PluraliseApprentice(int count)
@@ -55,11 +50,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Views.EmployerCommitments
     {
         return count == 1 ? "Incomplete record" : "Incomplete records";
     }
-
-    //private string GetClickableClass(int requestsCount)
-    //{
-    //    return requestsCount > 0 ? "clickable" : "";
-    //}
 
     public string FormatCost(decimal? cost)
     {
@@ -931,9 +921,9 @@ WriteLiteral(" class=\"breadcrumbs\"");
 
 WriteLiteral(">\r\n        <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 16915), Tuple.Create("\"", 16945)
-, Tuple.Create(Tuple.Create("", 16922), Tuple.Create<System.Object, System.Int32>(Model.Data.BackLinkUrl
-, 16922), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 16555), Tuple.Create("\"", 16585)
+, Tuple.Create(Tuple.Create("", 16562), Tuple.Create<System.Object, System.Int32>(Model.Data.BackLinkUrl
+, 16562), false)
 );
 
 WriteLiteral(" aria-label=\"Back\"");

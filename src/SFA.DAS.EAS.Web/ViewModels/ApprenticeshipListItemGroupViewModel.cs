@@ -34,6 +34,11 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
             CommonFundingCap = CalculateCommonFundingCap();
         }
 
+        // if the training program is not effective on the start date, the user will get a validation message when creating the apprenticeship
+        // (e.g. This training course is only available to apprentices with a start date after 04 2018)
+        // so we don't have to worry too much about FundingCapOn returning 0, when the start date is outside of a funding cap
+        // but do we need to explicitly check for it? we don't want e.g. the common funding cap to be calculated as non-null 0
+
         //todo: having this logic in the ViewModel is probably not the best place for it
         private int CalculateApprenticeshipsOverFundingLimit()
         {
