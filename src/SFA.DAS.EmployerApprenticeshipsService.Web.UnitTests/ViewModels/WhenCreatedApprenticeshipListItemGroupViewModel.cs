@@ -40,7 +40,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
                 EffectiveFrom = new DateTime(2020, 2, 1),
                 EffectiveTo = new DateTime(2020, 3, 1)
             };
-
         }
 
         [Test]
@@ -190,6 +189,47 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
             var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
 
             Assert.AreEqual(TestTrainingProgrammeHundingCap, group.CommonFundingCap);
+        }
+
+        [Test]
+        public void AndApprenticeshipsHaveDifferentFundingCapsThenThereIsNoCommonFundingCap()
+        {
+            var apprenticeships = new[]
+            {
+                new ApprenticeshipListItemViewModel
+                {
+                    StartDate = new DateTime(2020,1,1)
+                },
+                new ApprenticeshipListItemViewModel
+                {
+                    StartDate = new DateTime(2020,2,1)
+                }
+            };
+
+            _testTrainingProgramme = new Framework
+            {
+                FundingPeriods = new[]
+                {
+                    new FundingPeriod
+                    {
+                        EffectiveFrom = new DateTime(2020, 1, 1),
+                        EffectiveTo = new DateTime(2020, 1, 31),
+                        FundingCap = 100
+                    },
+                    new FundingPeriod
+                    {
+                        EffectiveFrom = new DateTime(2020, 2, 1),
+                        EffectiveTo = new DateTime(2020, 2, 28),
+                        FundingCap = 200
+                    }
+                },
+                EffectiveFrom = new DateTime(2020, 1, 1),
+                EffectiveTo = new DateTime(2020, 2, 28)
+            };
+
+            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
+
+            Assert.AreEqual(null, group.CommonFundingCap);
         }
     }
 }
