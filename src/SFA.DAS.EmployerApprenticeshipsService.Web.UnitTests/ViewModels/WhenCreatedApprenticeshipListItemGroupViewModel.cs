@@ -10,6 +10,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
     [TestFixture]
     public class WhenCreatedApprenticeshipListItemGroupViewModel
     {
+        #region SetUp
+
         private const int TestTrainingProgrammeFundingCap = 100;
 
         private IList<ApprenticeshipListItemViewModel> _singleApprenticeship;
@@ -42,6 +44,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
                 EffectiveTo = new DateTime(2020, 3, 1)
             };
         }
+
+        #endregion SetUp
 
         #region ApprenticeshipsOverFundingLimit
 
@@ -176,22 +180,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
         }
 
         [Test]
-        public void AndSingleApprenticeshipThenTheCommonFundingCapShouldBeSet()
-        {
-            var apprenticeships = new[]
-            {
-                new ApprenticeshipListItemViewModel
-                {
-                    StartDate = new DateTime(2020,2,2)
-                }
-            };
-
-            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
-
-            Assert.AreEqual(TestTrainingProgrammeFundingCap, group.CommonFundingCap);
-        }
-
-        [Test]
         public void AndSingleApprenticeshipWithStartDateOutOfAllFundingBandsThenCommonFundingCapShouldNotBeSet()
         {
             var apprenticeships = new[]
@@ -205,6 +193,22 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
             var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
 
             Assert.AreEqual(null, group.CommonFundingCap);
+        }
+
+        [Test]
+        public void AndSingleApprenticeshipThenTheCommonFundingCapShouldBeSet()
+        {
+            var apprenticeships = new[]
+            {
+                new ApprenticeshipListItemViewModel
+                {
+                    StartDate = new DateTime(2020,2,2)
+                }
+            };
+
+            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
+
+            Assert.AreEqual(TestTrainingProgrammeFundingCap, group.CommonFundingCap);
         }
 
         [Test]
@@ -304,6 +308,18 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
         public void AndSingleApprenticeshipUnderFundingLimitThenDontShowCommonFundingCap()
         {
             _singleApprenticeship.First().Cost = TestTrainingProgrammeFundingCap - 1;
+
+            var group = new ApprenticeshipListItemGroupViewModel(_singleApprenticeship, _testTrainingProgramme);
+
+            Assert.AreEqual(false, group.ShowCommonFundingCap);
+        }
+
+        [Test]
+        public void AndSingleApprenticeshipWithStartDateOutsideFundingBandsThenDontShowCommonFundingCap()
+        {
+            var firstApprenticeship = _singleApprenticeship.First();
+            firstApprenticeship.StartDate = new DateTime(2000,1,1);
+            firstApprenticeship.Cost = TestTrainingProgrammeFundingCap + 1;
 
             var group = new ApprenticeshipListItemGroupViewModel(_singleApprenticeship, _testTrainingProgramme);
 
