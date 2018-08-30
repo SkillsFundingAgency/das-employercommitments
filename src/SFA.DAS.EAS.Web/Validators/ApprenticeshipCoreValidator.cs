@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using FluentValidation;
+using FluentValidation.Validators;
+using MediatR;
 using SFA.DAS.Commitments.Api.Types.Validation.Types;
+using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
+using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 
 namespace SFA.DAS.EmployerCommitments.Web.Validators
 {
@@ -16,13 +23,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         protected readonly IApprenticeshipValidationErrorText ValidationText;
         private readonly IAcademicYearDateProvider _academicYear;
         protected readonly ICurrentDateTime CurrentDateTime;
+        protected readonly IMediator Mediator;
 
         public ApprenticeshipCoreValidator(IApprenticeshipValidationErrorText validationText,
                                             IAcademicYearDateProvider academicYear,
-                                            ICurrentDateTime currentDateTime)
+                                            ICurrentDateTime currentDateTime, IMediator mediator)
         {
             ValidationText = validationText;
             CurrentDateTime = currentDateTime;
+            Mediator = mediator;
             _academicYear = academicYear;
 
             ValidateFirstName();
@@ -71,7 +80,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         protected virtual void ValidateTraining()
         {
             RuleFor(x => x.TrainingCode)
-                .NotEmpty().WithMessage(ValidationText.TrainingCode01.Text).WithErrorCode(ValidationText.TrainingCode01.ErrorCode); ;
+                .Cascade(CascadeMode.StopOnFirstFailure)
+                .NotEmpty().WithMessage(ValidationText.TrainingCode01.Text)
+                .WithErrorCode(ValidationText.TrainingCode01.ErrorCode);
         }
 
         protected virtual void ValidateDateOfBirth()
@@ -88,6 +99,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         {
             RuleFor(x => x.StartDate)
                 .Cascade(CascadeMode.StopOnFirstFailure)
+                .MustAsync(async (viewModel, startDate, context, cancellationToken) => await TrainingCourseValidOnStartDate(viewModel, startDate, context))
+                    .WithErrorCode(ValidationText.LearnStartDateNotValidForTrainingCourse.ErrorCode)
+                    .WithMessage(ValidationText.LearnStartDateNotValidForTrainingCourse.Text)
                 .NotNull().WithMessage(ValidationText.LearnStartDate01.Text).WithErrorCode(ValidationText.LearnStartDate01.ErrorCode)
                 .Must(ValidateDateWithoutDay).WithMessage(ValidationText.LearnStartDate01.Text).WithErrorCode(ValidationText.LearnStartDate01.ErrorCode)
                 .Must(StartDateForTransferNotBeforeMay2018).WithMessage(ValidationText.LearnStartDateBeforeTransfersStart.Text).WithErrorCode(ValidationText.LearnStartDateBeforeTransfersStart.ErrorCode)
@@ -212,6 +226,32 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         {
             // Check the day has value as the view model supports just month and year entry
             return date.DateTime != null && date.Day.HasValue;
+        }
+
+        private async Task<bool> TrainingCourseValidOnStartDate(ApprenticeshipViewModel viewModel, DateTimeViewModel startDate, PropertyValidatorContext context)
+        {
+            if (string.IsNullOrWhiteSpace(viewModel.TrainingCode) || (!startDate.DateTime.HasValue))
+                return true;
+
+            var result = await Mediator.SendAsync(new GetTrainingProgrammesQueryRequest
+            {
+                EffectiveDate = null,
+                IncludeFrameworks = true
+            });
+
+            var course = result.TrainingProgrammes.Single(x => x.Id == viewModel.TrainingCode);
+
+            var courseStatus = course.GetStatusOn(startDate.DateTime.Value);
+
+            if (courseStatus == TrainingProgrammeStatus.Active)
+                return true;
+
+            var suffix = courseStatus == TrainingProgrammeStatus.Pending
+                ? $"after {course.EffectiveFrom.Value.AddMonths(-1):MM yyyy}"
+                : $"before {course.EffectiveTo.Value.AddMonths(1):MM yyyy}";
+
+            context.MessageFormatter.AppendArgument("suffix", suffix);
+            return false;
         }
     }
 }

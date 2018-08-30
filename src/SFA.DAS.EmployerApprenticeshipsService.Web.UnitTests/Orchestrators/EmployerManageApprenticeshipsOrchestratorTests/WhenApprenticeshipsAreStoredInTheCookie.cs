@@ -48,7 +48,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 new WebApprenticeshipValidationText(academicYearProvider),
                 academicYearProvider,
                 new AcademicYearValidator(CurrentDateTime.Object, academicYearProvider),
-                CurrentDateTime.Object);
+                CurrentDateTime.Object,
+                Mock.Of<IMediator>());
 
             _orchestrator = new EmployerManageApprenticeshipsOrchestrator(
                 _mediator.Object, 

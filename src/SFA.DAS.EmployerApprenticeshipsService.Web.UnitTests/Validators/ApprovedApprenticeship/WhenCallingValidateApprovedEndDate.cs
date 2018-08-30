@@ -1,4 +1,5 @@
 ﻿using System;
+using MediatR;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -34,7 +35,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprovedApprentic
                 new WebApprenticeshipValidationText(academicYearProvider),
                 academicYearProvider,
                 _mockAcademicYearValidator.Object,
-                _currentDateTime.Object);
+                _currentDateTime.Object,
+                Mock.Of<IMediator>());
         }
 
         /// <remarks>

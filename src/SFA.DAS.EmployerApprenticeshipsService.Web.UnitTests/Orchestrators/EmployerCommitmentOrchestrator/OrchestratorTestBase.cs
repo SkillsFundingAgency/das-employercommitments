@@ -12,8 +12,6 @@ using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetFrameworks;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetStandards;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetUserAccountRole;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -86,18 +84,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 .ReturnsAsync(new GetTrainingProgrammesQueryResponse
                 {
                     TrainingProgrammes = new List<ITrainingProgramme>()
-                });
-
-            MockMediator.Setup(m => m.SendAsync(It.IsAny<GetStandardsQueryRequest>()))
-                .ReturnsAsync(new GetStandardsQueryResponse
-                {
-                    Standards = new List<Standard>()
-                });
-
-            MockMediator.Setup(m => m.SendAsync(It.IsAny<GetFrameworksQueryRequest>()))
-                .ReturnsAsync(new GetFrameworksQueryResponse
-                {
-                    Frameworks = new List<Framework>()
                 });
 
             MockMediator.Setup(m => m.SendAsync(It.IsAny<GetApprenticeshipQueryRequest>()))

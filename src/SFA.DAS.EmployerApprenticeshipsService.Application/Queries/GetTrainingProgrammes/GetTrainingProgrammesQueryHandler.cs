@@ -1,7 +1,8 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 
@@ -9,31 +10,41 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes
 {
     public sealed class GetTrainingProgrammesQueryHandler : IAsyncRequestHandler<GetTrainingProgrammesQueryRequest, GetTrainingProgrammesQueryResponse>
     {
-        private readonly IApprenticeshipInfoServiceWrapper _apprenticeshipInfoServiceWrapper;
+        private readonly IApprenticeshipInfoService _apprenticeshipInfoService;
 
-        public GetTrainingProgrammesQueryHandler(IApprenticeshipInfoServiceWrapper apprenticeshipInfoServiceWrapper)
+        public GetTrainingProgrammesQueryHandler(IApprenticeshipInfoService apprenticeshipInfoService)
         {
-            if (apprenticeshipInfoServiceWrapper == null)
-                throw new ArgumentNullException(nameof(apprenticeshipInfoServiceWrapper));
-
-            _apprenticeshipInfoServiceWrapper = apprenticeshipInfoServiceWrapper;
+            _apprenticeshipInfoService = apprenticeshipInfoService;
         }
 
         public async Task<GetTrainingProgrammesQueryResponse> Handle(GetTrainingProgrammesQueryRequest message)
         {
-            var standardsTask = _apprenticeshipInfoServiceWrapper.GetStandardsAsync();
-            var frameworksTask = _apprenticeshipInfoServiceWrapper.GetFrameworksAsync();
-
-            await Task.WhenAll(standardsTask, frameworksTask);
-
-            var programmes = standardsTask.Result.Standards.Union(frameworksTask.Result.Frameworks.Cast<ITrainingProgramme>())
-                .OrderBy(m => m.Title)
-                .ToList();
-
-            return new GetTrainingProgrammesQueryResponse
+            IEnumerable<ITrainingProgramme> programmes;
+            var standardsTask = _apprenticeshipInfoService.GetStandardsAsync();
+            if (!message.IncludeFrameworks)
             {
-                TrainingProgrammes = programmes
-            };
+                programmes = (await standardsTask).Standards;
+            }
+            else
+            {
+                var getFrameworksTask = _apprenticeshipInfoService.GetFrameworksAsync();
+                programmes = (await standardsTask).Standards.Union((await getFrameworksTask).Frameworks.Cast<ITrainingProgramme>());
+            }
+
+            var result = new GetTrainingProgrammesQueryResponse();
+
+            if (!message.EffectiveDate.HasValue)
+            {
+                result.TrainingProgrammes = programmes.OrderBy(m => m.Title).ToList();
+            }
+            else
+            {
+                result.TrainingProgrammes = programmes.Where(x => x.IsActiveOn(message.EffectiveDate.Value))
+                    .OrderBy(m => m.Title)
+                    .ToList();
+            }
+
+            return result;
         }
     }
 }

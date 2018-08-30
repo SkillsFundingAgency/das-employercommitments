@@ -14,7 +14,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
 
         private readonly IdamsEmailServiceWrapper _idamsEmailServiceWrapper;
 
-        private readonly IApprenticeshipInfoServiceWrapper _apprenticeshipInfoService;
+        private readonly IApprenticeshipInfoService _apprenticeshipInfoService;
 
         private readonly CommitmentNotificationConfiguration _configuration;
 
@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
             ILog logger,
             IdamsEmailServiceWrapper idamsEmailServiceWrapper,
             EmployerCommitmentsServiceConfiguration employerConfiguration,
-            IApprenticeshipInfoServiceWrapper apprenticeshipInfoService)
+            IApprenticeshipInfoService apprenticeshipInfoService)
         {
             _logger = logger;
             _idamsEmailServiceWrapper = idamsEmailServiceWrapper;

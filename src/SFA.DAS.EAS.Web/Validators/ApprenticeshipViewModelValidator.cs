@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using MediatR;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
@@ -15,8 +16,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
             IApprenticeshipValidationErrorText validationText, 
             IAcademicYearDateProvider academicYear, 
             IAcademicYearValidator academicYearValidator,
-            ICurrentDateTime currentDateTime)
-            : base(validationText, academicYear, currentDateTime)
+            ICurrentDateTime currentDateTime, IMediator mediator)
+            : base(validationText, academicYear, currentDateTime, mediator)
         {
             _academicYearValidator = academicYearValidator;
         }

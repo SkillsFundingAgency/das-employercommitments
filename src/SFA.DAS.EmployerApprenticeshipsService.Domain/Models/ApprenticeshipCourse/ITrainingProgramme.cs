@@ -1,4 +1,7 @@
-﻿namespace SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse
+﻿using System;
+using System.Collections.Generic;
+
+namespace SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse
 {
     public interface ITrainingProgramme
     {
@@ -7,5 +10,9 @@
 
         int Level { get; set; }
         int MaxFunding { get; set; }
+
+        DateTime? EffectiveFrom { get; set; }
+        DateTime? EffectiveTo { get; set; }
+        IEnumerable<FundingPeriod> FundingPeriods { get; set; }
     }
 }
