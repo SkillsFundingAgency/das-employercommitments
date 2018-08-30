@@ -308,9 +308,15 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
         }
 
         [TestCase(TestTrainingProgrammeHundingCap - 1, TestTrainingProgrammeHundingCap - 1, false, Description = "BothUnderLimitThenDontShowCommonFundingCap")]
-        [TestCase(TestTrainingProgrammeHundingCap + 1, TestTrainingProgrammeHundingCap - 1, false, Description = "OneOverLimitAndOneUnderLimitThenDontShowCommonFundingCap")]
+        [TestCase(TestTrainingProgrammeHundingCap + 1, TestTrainingProgrammeHundingCap - 1, false, Description = "FirstOverLimitAndSecondUnderLimitThenDontShowCommonFundingCap")]
+        [TestCase(TestTrainingProgrammeHundingCap - 1, TestTrainingProgrammeHundingCap + 1, false, Description = "FirstUnderLimitAndSeondOverLimitThenDontShowCommonFundingCap")]
         [TestCase(TestTrainingProgrammeHundingCap + 1, TestTrainingProgrammeHundingCap + 1, true, Description = "BothOverLimitThenShowCommonFundingCap")]
-        public void AndTwoApprenticeshipsBothUnderLimitThenDontShowCommonFundingCap(
+        [TestCase(null, null, false, Description = "BothNullThenDontShowCommonFundingCap")]
+        [TestCase(null, TestTrainingProgrammeHundingCap - 1, false, Description = "FirstNullAndSecondUnderThenDontShowCommonFundingCap")]
+        [TestCase(TestTrainingProgrammeHundingCap - 1, null, false, Description = "FirstUnderAndSecondNullThenDontShowCommonFundingCap")]
+        [TestCase(null, TestTrainingProgrammeHundingCap + 1, false, Description = "FirstNullAndSecondOverThenDontShowCommonFundingCap")]
+        [TestCase(TestTrainingProgrammeHundingCap + 1, null, false, Description = "FirstOverAndSecondNullThenDontShowCommonFundingCap")]
+        public void AndTwoApprenticeships(
             int firstApprenticeshipCost, int secondApprenticeshipCost, bool expectedShowCommonFundingCap)
         {
             var apprenticeships = new[]
