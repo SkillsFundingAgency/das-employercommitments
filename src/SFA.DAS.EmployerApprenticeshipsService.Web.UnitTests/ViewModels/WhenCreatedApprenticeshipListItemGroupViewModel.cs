@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
     [TestFixture]
     public class WhenCreatedApprenticeshipListItemGroupViewModel
     {
-        private const int TestTrainingProgrammeHundingCap = 100;
+        private const int TestTrainingProgrammeFundingCap = 100;
 
         private IList<ApprenticeshipListItemViewModel> _singleApprenticeship;
         private ITrainingProgramme _testTrainingProgramme;
@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
                     {
                         EffectiveFrom = new DateTime(2020, 2, 1),
                         EffectiveTo = new DateTime(2020, 3, 1),
-                        FundingCap = TestTrainingProgrammeHundingCap
+                        FundingCap = TestTrainingProgrammeFundingCap
                     }
                 },
                 EffectiveFrom = new DateTime(2020, 2, 1),
@@ -71,8 +71,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
         //todo: how should we handle cases where no funding band applies? code returns 0 as funding cap in this case, so any cost above 0 is counted as over funding limit
         // how does front end currently handle it? i think it *should* have failed validation and not got this far
         // if out of range of course or funding bands, should we throw an exception?
-        //[TestCase("2019-12-31", "101", "2020-1-10", "2020-1-20", 100, 0, Description = "StartDate preceeds band")]
-        //[TestCase("2020-2-1",   "101", "2020-1-10", "2020-1-20", 100, 0, Description = "StartDate after band")]
+        [TestCase("2019-12-31", "101", "2020-1-10", "2020-1-20", 100, 0, Description = "StartDate preceeds band")]
+        [TestCase("2020-2-1", "101", "2020-1-10", "2020-1-20", 100, 0, Description = "StartDate after band")]
         public void AndSingleApprenticeshipThenApprenticeshipsOverFundingLimitIsCalculatedCorrectly(
             DateTime? apprenticeshipStartDate, decimal apprenticeshipCost, 
             DateTime? fundingPeriodFrom, DateTime? fundingPeriodTo, int fundingCap, int expectedApprenticeshipsOverFundingLimit)
@@ -114,17 +114,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
                 new ApprenticeshipListItemViewModel
                 {
                     StartDate = new DateTime(2020, 2, 2),
-                    Cost = TestTrainingProgrammeHundingCap-1
+                    Cost = TestTrainingProgrammeFundingCap-1
                 },
                 new ApprenticeshipListItemViewModel
                 {
                     StartDate = new DateTime(2020, 2, 3),
-                    Cost = TestTrainingProgrammeHundingCap
+                    Cost = TestTrainingProgrammeFundingCap
                 },
                 new ApprenticeshipListItemViewModel
                 {
                     StartDate = new DateTime(2020, 2, 4),
-                    Cost = TestTrainingProgrammeHundingCap+1
+                    Cost = TestTrainingProgrammeFundingCap+1
                 },
             };
 
@@ -149,9 +149,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
         public void AndNoApprenticeshipsThenThereIsNoCommonFundingCap()
         {
             var apprenticeships = new ApprenticeshipListItemViewModel[0];
-            var trainingProgram = new Framework();
 
-            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, trainingProgram);
+            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
 
             Assert.AreEqual(null, group.CommonFundingCap);
         }
@@ -171,9 +170,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
                 }
             };
 
-            var trainingProgram = new Framework();
-
-            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, trainingProgram);
+            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
 
             Assert.AreEqual(null, group.CommonFundingCap);
         }
@@ -191,7 +188,23 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
 
             var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
 
-            Assert.AreEqual(TestTrainingProgrammeHundingCap, group.CommonFundingCap);
+            Assert.AreEqual(TestTrainingProgrammeFundingCap, group.CommonFundingCap);
+        }
+
+        [Test]
+        public void AndSingleApprenticeshipWithStartDateOutOfAllFundingBandsThenCommonFundingCapShouldNotBeSet()
+        {
+            var apprenticeships = new[]
+            {
+                new ApprenticeshipListItemViewModel
+                {
+                    StartDate = new DateTime(1969,7,20)
+                }
+            };
+
+            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
+
+            Assert.AreEqual(null, group.CommonFundingCap);
         }
 
         [Test]
@@ -211,7 +224,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
 
             var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
 
-            Assert.AreEqual(TestTrainingProgrammeHundingCap, group.CommonFundingCap);
+            Assert.AreEqual(TestTrainingProgrammeFundingCap, group.CommonFundingCap);
         }
 
         [Test]
@@ -290,7 +303,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
         [Test]
         public void AndSingleApprenticeshipUnderFundingLimitThenDontShowCommonFundingCap()
         {
-            _singleApprenticeship.First().Cost = TestTrainingProgrammeHundingCap - 1;
+            _singleApprenticeship.First().Cost = TestTrainingProgrammeFundingCap - 1;
 
             var group = new ApprenticeshipListItemGroupViewModel(_singleApprenticeship, _testTrainingProgramme);
 
@@ -300,22 +313,22 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
         [Test]
         public void AndSingleApprenticeshipOverFundingLimitThenShowCommonFundingCap()
         {
-            _singleApprenticeship.First().Cost = TestTrainingProgrammeHundingCap + 1;
+            _singleApprenticeship.First().Cost = TestTrainingProgrammeFundingCap + 1;
 
             var group = new ApprenticeshipListItemGroupViewModel(_singleApprenticeship, _testTrainingProgramme);
 
             Assert.AreEqual(true, group.ShowCommonFundingCap);
         }
 
-        [TestCase(TestTrainingProgrammeHundingCap - 1, TestTrainingProgrammeHundingCap - 1, false, Description = "BothUnderLimitThenDontShowCommonFundingCap")]
-        [TestCase(TestTrainingProgrammeHundingCap + 1, TestTrainingProgrammeHundingCap - 1, false, Description = "FirstOverLimitAndSecondUnderLimitThenDontShowCommonFundingCap")]
-        [TestCase(TestTrainingProgrammeHundingCap - 1, TestTrainingProgrammeHundingCap + 1, false, Description = "FirstUnderLimitAndSeondOverLimitThenDontShowCommonFundingCap")]
-        [TestCase(TestTrainingProgrammeHundingCap + 1, TestTrainingProgrammeHundingCap + 1, true, Description = "BothOverLimitThenShowCommonFundingCap")]
+        [TestCase(TestTrainingProgrammeFundingCap - 1, TestTrainingProgrammeFundingCap - 1, false, Description = "BothUnderLimitThenDontShowCommonFundingCap")]
+        [TestCase(TestTrainingProgrammeFundingCap + 1, TestTrainingProgrammeFundingCap - 1, false, Description = "FirstOverLimitAndSecondUnderLimitThenDontShowCommonFundingCap")]
+        [TestCase(TestTrainingProgrammeFundingCap - 1, TestTrainingProgrammeFundingCap + 1, false, Description = "FirstUnderLimitAndSeondOverLimitThenDontShowCommonFundingCap")]
+        [TestCase(TestTrainingProgrammeFundingCap + 1, TestTrainingProgrammeFundingCap + 1, true, Description = "BothOverLimitThenShowCommonFundingCap")]
         [TestCase(null, null, false, Description = "BothNullThenDontShowCommonFundingCap")]
-        [TestCase(null, TestTrainingProgrammeHundingCap - 1, false, Description = "FirstNullAndSecondUnderThenDontShowCommonFundingCap")]
-        [TestCase(TestTrainingProgrammeHundingCap - 1, null, false, Description = "FirstUnderAndSecondNullThenDontShowCommonFundingCap")]
-        [TestCase(null, TestTrainingProgrammeHundingCap + 1, false, Description = "FirstNullAndSecondOverThenDontShowCommonFundingCap")]
-        [TestCase(TestTrainingProgrammeHundingCap + 1, null, false, Description = "FirstOverAndSecondNullThenDontShowCommonFundingCap")]
+        [TestCase(null, TestTrainingProgrammeFundingCap - 1, false, Description = "FirstNullAndSecondUnderThenDontShowCommonFundingCap")]
+        [TestCase(TestTrainingProgrammeFundingCap - 1, null, false, Description = "FirstUnderAndSecondNullThenDontShowCommonFundingCap")]
+        [TestCase(null, TestTrainingProgrammeFundingCap + 1, false, Description = "FirstNullAndSecondOverThenDontShowCommonFundingCap")]
+        [TestCase(TestTrainingProgrammeFundingCap + 1, null, false, Description = "FirstOverAndSecondNullThenDontShowCommonFundingCap")]
         public void AndTwoApprenticeships(
             int firstApprenticeshipCost, int secondApprenticeshipCost, bool expectedShowCommonFundingCap)
         {

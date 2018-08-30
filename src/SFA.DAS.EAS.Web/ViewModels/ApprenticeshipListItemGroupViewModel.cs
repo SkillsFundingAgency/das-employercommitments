@@ -13,7 +13,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public int ApprenticeshipsOverFundingLimit { get; }
         public int? CommonFundingCap { get; }
 
-        public bool AllApprenticeshipsOverFundingLimit =>
+        private bool AllApprenticeshipsOverFundingLimit =>
             Apprenticeships.Any() && ApprenticeshipsOverFundingLimit == Apprenticeships.Count;
 
         public bool ShowCommonFundingCap => AllApprenticeshipsOverFundingLimit && CommonFundingCap != null;
@@ -51,7 +51,15 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
             if (TrainingProgramme == null)
                 return 0;
 
-            return Apprenticeships.Count(x => x.StartDate.HasValue && x.Cost.HasValue && x.Cost > TrainingProgramme.FundingCapOn(x.StartDate.Value));
+            return Apprenticeships.Count(x =>
+            {
+                if (!x.StartDate.HasValue)
+                    return false;
+
+                var fundingCapAtStartDate = TrainingProgramme.FundingCapOn(x.StartDate.Value);
+                return x.Cost.HasValue && fundingCapAtStartDate > 0
+                                       && x.Cost > fundingCapAtStartDate;
+            });
             //OverFundingLimit extension on apprenticeship?
         }
 
@@ -69,6 +77,10 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
                 return null;
 
             var firstFundingCap = TrainingProgramme.FundingCapOn(Apprenticeships.First().StartDate.Value);
+
+            // check for magic 0, which means unable to calculate a funding cap (e.g. date out of bounds)
+            if (firstFundingCap == 0)
+                return null;
 
             if (Apprenticeships.Skip(1).Any(a => TrainingProgramme.FundingCapOn(a.StartDate.Value) != firstFundingCap))
                 return null;
