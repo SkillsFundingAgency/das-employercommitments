@@ -254,10 +254,8 @@
                                             </td>
                                         }
 
-                                        @if (group.TrainingProgramme != null 
-                                             && apprenticeship.Cost.HasValue 
-                                             && apprenticeship.StartDate.HasValue
-                                             && apprenticeship.Cost > group.TrainingProgramme.FundingCapOn(apprenticeship.StartDate.Value)
+                                        @* if the user hasn't entered a startdate, cost and training programme yet, we don't show any error relating to band cap for that apprenticeship *@
+                                        @if (apprenticeship.IsOverFundingLimit(group.TrainingProgramme)
                                              && !Model.Data.Errors.Any())
                                         {
                                             <td class="funding-cap-alert-td">

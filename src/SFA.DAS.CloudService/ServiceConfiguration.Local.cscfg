@@ -13,7 +13,7 @@
       <Setting name="LoggingRedisConnectionString" value="" />
       <Setting name="LoggingRedisKey" value="" />
       <Setting name="TokenCertificateThumbprint" value="6B7ACC520305BFDB4F7252DAEB2177CC091FAAE1" />
-      <Setting name="MyaBaseUrl" value="https://dev-eas.apprenticeships.sfa.bis.gov.uk/" />
+      <Setting name="MyaBaseUrl" value="https://test2-eas.apprenticeships.sfa.bis.gov.uk/" />
       <Setting name="PsrBaseUrl" value="https://at-reporting.manage-apprenticeships.sfa.bis.gov.uk" />
       <Setting name="CommitmentsRoutePrefix" value="commitments" />
       <Setting name="CurrentTime" value="" />
