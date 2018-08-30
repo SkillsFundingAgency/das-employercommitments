@@ -307,71 +307,29 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
             Assert.AreEqual(true, group.ShowCommonFundingCap);
         }
 
-        //todo: test cases for next three
-        [Test]
-        public void AndTwoApprenticeshipsBothUnderLimitThenDontShowCommonFundingCap()
+        [TestCase(TestTrainingProgrammeHundingCap - 1, TestTrainingProgrammeHundingCap - 1, false, Description = "BothUnderLimitThenDontShowCommonFundingCap")]
+        [TestCase(TestTrainingProgrammeHundingCap + 1, TestTrainingProgrammeHundingCap - 1, false, Description = "OneOverLimitAndOneUnderLimitThenDontShowCommonFundingCap")]
+        [TestCase(TestTrainingProgrammeHundingCap + 1, TestTrainingProgrammeHundingCap + 1, true, Description = "BothOverLimitThenShowCommonFundingCap")]
+        public void AndTwoApprenticeshipsBothUnderLimitThenDontShowCommonFundingCap(
+            int firstApprenticeshipCost, int secondApprenticeshipCost, bool expectedShowCommonFundingCap)
         {
             var apprenticeships = new[]
             {
                 new ApprenticeshipListItemViewModel
                 {
                     StartDate = new DateTime(2020,2,2),
-                    Cost = TestTrainingProgrammeHundingCap - 1
+                    Cost = firstApprenticeshipCost
                 },
                 new ApprenticeshipListItemViewModel
                 {
                     StartDate = new DateTime(2020,2,2),
-                    Cost = TestTrainingProgrammeHundingCap - 1
+                    Cost = secondApprenticeshipCost
                 },
             };
 
             var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
 
-            Assert.AreEqual(false, group.ShowCommonFundingCap);
-        }
-
-        [Test]
-        public void AndTwoApprenticeshipsOneOverLimitAndOneUnderLimitThenDontShowCommonFundingCap()
-        {
-            var apprenticeships = new[]
-            {
-                new ApprenticeshipListItemViewModel
-                {
-                    StartDate = new DateTime(2020,2,2),
-                    Cost = TestTrainingProgrammeHundingCap + 1
-                },
-                new ApprenticeshipListItemViewModel
-                {
-                    StartDate = new DateTime(2020,2,2),
-                    Cost = TestTrainingProgrammeHundingCap - 1
-                },
-            };
-
-            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
-
-            Assert.AreEqual(false, group.ShowCommonFundingCap);
-        }
-
-        [Test]
-        public void AndTwoApprenticeshipsBothOverLimitThenShowCommonFundingCap()
-        {
-            var apprenticeships = new[]
-            {
-                new ApprenticeshipListItemViewModel
-                {
-                    StartDate = new DateTime(2020,2,2),
-                    Cost = TestTrainingProgrammeHundingCap + 1
-                },
-                new ApprenticeshipListItemViewModel
-                {
-                    StartDate = new DateTime(2020,2,2),
-                    Cost = TestTrainingProgrammeHundingCap + 1
-                },
-            };
-
-            var group = new ApprenticeshipListItemGroupViewModel(apprenticeships, _testTrainingProgramme);
-
-            Assert.AreEqual(true, group.ShowCommonFundingCap);
+            Assert.AreEqual(expectedShowCommonFundingCap, group.ShowCommonFundingCap);
         }
 
         #endregion ShowCommonFundingCap
