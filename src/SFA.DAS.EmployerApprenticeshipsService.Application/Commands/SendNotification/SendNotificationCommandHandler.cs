@@ -42,7 +42,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SendNotification
             {
                 _logger.Error(ex, "Error sending email to notifications api");
             }
-            
         }
     }
 }
