@@ -67,13 +67,13 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
             Assert.AreEqual(0, group.ApprenticeshipsOverFundingLimit);
         }
 
-        [TestCase("2020-1-15",   "99", "2020-1-10", "2020-1-20", 100, 0, Description = "StarDatet in band, cost less than cap")]
-        [TestCase("2020-1-15",  "100", "2020-1-10", "2020-1-20", 100, 0, Description = "StarDatet in band, cost same as cap")]
+        [TestCase("2020-1-15",   "99", "2020-1-10", "2020-1-20", 100, 0, Description = "StartDate in band, cost less than cap")]
+        [TestCase("2020-1-15",  "100", "2020-1-10", "2020-1-20", 100, 0, Description = "StartDate in band, cost same as cap")]
         [TestCase("2020-1-15",  "101", "2020-1-10", "2020-1-20", 100, 1, Description = "StartDate in band, cost just over cap")]
         [TestCase("2020-1-15",   null, "2020-1-10", "2020-1-20", 100, 0, Description = "StartDate in band, Apprenticeship has null cost")]
         [TestCase(null,         "101", "2020-1-10", "2020-1-20", 100, 0, Description = "Apprenticeship has no StartDate")]
         [TestCase("2019-12-31", "101", "2020-1-10", "2020-1-20", 100, 0, Description = "StartDate preceeds band, not over funding limit")]
-        [TestCase("2020-2-1", "101", "2020-1-10", "2020-1-20", 100, 0, Description = "StartDate after band, not over funding limit")]
+        [TestCase("2020-2-1",   "101", "2020-1-10", "2020-1-20", 100, 0, Description = "StartDate after band, not over funding limit")]
         public void AndSingleApprenticeshipThenApprenticeshipsOverFundingLimitIsCalculatedCorrectly(
             DateTime? apprenticeshipStartDate, decimal apprenticeshipCost, 
             DateTime? fundingPeriodFrom, DateTime? fundingPeriodTo, int fundingCap, int expectedApprenticeshipsOverFundingLimit)
