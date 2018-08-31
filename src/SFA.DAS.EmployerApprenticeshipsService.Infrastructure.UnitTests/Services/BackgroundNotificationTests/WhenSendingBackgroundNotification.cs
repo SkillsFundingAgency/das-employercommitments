@@ -10,7 +10,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.UnitTests.Services.Backgrou
     [TestFixture]
     public class WhenSendingBackgroundNotification
     {
-        [Test, EmployerCommitmentsAutoData, Ignore("todo")]
+        [Test, EmployerCommitmentsAutoData]
         public async Task ThenSendsEmailToNotificationApi(
             SendNotificationCommand command,
             [Frozen] Mock<INotificationsApi> mockNotificationsApi,

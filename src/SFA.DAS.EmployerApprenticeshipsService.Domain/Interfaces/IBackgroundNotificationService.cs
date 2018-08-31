@@ -3,7 +3,7 @@ using SFA.DAS.Notifications.Api.Types;
 
 namespace SFA.DAS.EmployerCommitments.Domain.Interfaces
 {
-    public interface IBackgroundNotificationsService
+    public interface IBackgroundNotificationService
     {
         Task SendEmail(Email email);
     }
