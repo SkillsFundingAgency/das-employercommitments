@@ -229,6 +229,7 @@
     <Compile Include="Interfaces\IAcademicYearValidator.cs" />
     <Compile Include="Interfaces\IApprenticeshipInfoServiceMapper.cs" />
     <Compile Include="Interfaces\IAzureAdAuthenticationService.cs" />
+    <Compile Include="Interfaces\IBackgroundNotificationsService.cs" />
     <Compile Include="Interfaces\ICookieStorageService.cs" />
     <Compile Include="Interfaces\ICurrentDateTime.cs" />
     <Compile Include="Http\HttpException.cs" />
