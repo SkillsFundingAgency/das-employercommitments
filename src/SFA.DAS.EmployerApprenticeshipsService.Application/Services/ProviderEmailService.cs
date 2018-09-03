@@ -43,6 +43,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
             });
 
             await Task.WhenAll(tasks);
+            _logger.Info("Emails have been handed to the notification api.");
         }
 
         private Email CreateEmailForRecipient(string recipient, EmailMessage source)

@@ -41,7 +41,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SendNotification
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Error sending email to notifications api");
+                _logger.Error(ex, "Error using background notifications service.");
             }
         }
     }
