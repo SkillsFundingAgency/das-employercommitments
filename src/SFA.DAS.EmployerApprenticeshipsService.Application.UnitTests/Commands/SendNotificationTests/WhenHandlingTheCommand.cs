@@ -7,7 +7,7 @@ using NUnit.Framework;
 using SFA.DAS.EmployerCommitments.Application.Commands.SendNotification;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Validation;
-using SFA.DAS.Notifications.Api.Client;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SendNotificationTests
 {
@@ -49,7 +49,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SendNotific
         [Test, EmployerCommitmentsAutoData]
         public async Task ThenSendsEmailToNotificationApi(
             SendNotificationCommand command,
-            [Frozen] Mock<INotificationsApi> mockNotificationsApi,
+            [Frozen] Mock<IBackgroundNotificationService> mockNotificationsApi,
             SendNotificationCommandHandler sut)
         {
             await sut.Handle(command);

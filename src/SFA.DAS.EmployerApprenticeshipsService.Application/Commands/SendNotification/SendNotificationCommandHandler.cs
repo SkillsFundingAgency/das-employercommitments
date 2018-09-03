@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Validation;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.NLog.Logger;
-using SFA.DAS.Notifications.Api.Client;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.SendNotification
 {
@@ -12,16 +12,16 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SendNotification
     {
         private readonly IValidator<SendNotificationCommand> _validator;
         private readonly ILog _logger;
-        private readonly INotificationsApi _notificationsApi;
+        private readonly IBackgroundNotificationService _backgroundNotificationService;
 
         public SendNotificationCommandHandler(
             IValidator<SendNotificationCommand> validator,
             ILog logger, 
-            INotificationsApi notificationsApi)
+            IBackgroundNotificationService backgroundNotificationService)
         {
             _validator = validator;
             _logger = logger;
-            _notificationsApi = notificationsApi;
+            _backgroundNotificationService = backgroundNotificationService;
         }
 
         protected override async Task HandleCore(SendNotificationCommand message)
@@ -36,7 +36,8 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SendNotification
             try
             {
                 //_logger.Info($"---- === ||| -->     {message.Email.RecipientsAddress}    <-- ||| === ----");
-                await _notificationsApi.SendEmail(message.Email);
+                // todo: remove async await once happy with general approach.
+                await Task.Run(() => _backgroundNotificationService.SendEmail(message.Email));
             }
             catch (Exception ex)
             {

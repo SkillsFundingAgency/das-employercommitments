@@ -252,7 +252,6 @@
     <Compile Include="Services\AcademicYearTests\WhenDeterminingTheAcademicYear.cs" />
     <Compile Include="Services\AcademicYearTests\WhenValidatingAcademicYear.cs" />
     <Compile Include="Services\AuditServiceTests\WhenISendAnAuditMessage.cs" />
-    <Compile Include="Services\BackgroundNotificationTests\WhenSendingBackgroundNotification.cs" />
     <Compile Include="Services\CookieStorageTests\WhenIUseTheCookieStorageService.cs" />
     <Compile Include="Services\EmployerAccountServiceTests\WhenICheckAUserIsConnectedToAnAccount.cs" />
     <Compile Include="Services\EmployerAccountServiceTests\WhenIGetTransferringEntitiesLinkedToAnAccount.cs" />

@@ -321,6 +321,7 @@
     <Compile Include="Services\AuditService.cs" />
     <Compile Include="Services\AzureAdAuthenticationService.cs" />
     <Compile Include="Services\AzureServiceBase.cs" />
+    <Compile Include="Services\BackgroundNotificationService.cs" />
     <Compile Include="Services\CloudConfigurationBooleanValueProvider.cs" />
     <Compile Include="Services\CookieStorageService.cs" />
     <Compile Include="Services\CurrentDateTime.cs" />
