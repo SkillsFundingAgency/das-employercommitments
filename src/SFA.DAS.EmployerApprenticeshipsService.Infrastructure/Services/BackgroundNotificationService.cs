@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Web.Hosting;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.NLog.Logger;
@@ -18,7 +19,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
             _notificationsApi = notificationsApi;
         }
 
-        public void SendEmail(Email email)
+        public Task SendEmail(Email email)
         {
             _logger.Debug($"Sending email to [{email.RecipientsAddress}] in a background task.");
             HostingEnvironment.QueueBackgroundWorkItem(async cancellationToken =>
@@ -32,6 +33,7 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
                     _logger.Error(ex, $"Error using the Notification Api when trying to send email {email.RecipientsAddress}.");
                 }
             });
+            return Task.CompletedTask;
         }
     }
 }

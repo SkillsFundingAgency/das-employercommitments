@@ -36,8 +36,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SendNotification
             try
             {
                 //_logger.Info($"---- === ||| -->     {message.Email.RecipientsAddress}    <-- ||| === ----");
-                // todo: remove async await once happy with general approach.
-                await Task.Run(() => _backgroundNotificationService.SendEmail(message.Email));
+                await _backgroundNotificationService.SendEmail(message.Email);
             }
             catch (Exception ex)
             {
