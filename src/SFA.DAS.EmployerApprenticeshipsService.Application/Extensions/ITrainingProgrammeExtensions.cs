@@ -29,13 +29,21 @@ namespace SFA.DAS.EmployerCommitments.Application.Extensions
         public static int FundingCapOn(this ITrainingProgramme course, DateTime effectiveDate)
         {
             if (!course.IsActiveOn(effectiveDate))
-            {
                 return 0;
-            }
 
-            var applicableFundingPeriod = course.FundingPeriods.FirstOrDefault(x =>
-                (!x.EffectiveFrom.HasValue || x.EffectiveFrom.Value.Date <= effectiveDate.Date) &&
-                (!x.EffectiveTo.HasValue || x.EffectiveTo.Value.Date >= effectiveDate.Date));
+            // first bite at the cherry, we look for a funding band on the exact start date
+            //var applicableFundingPeriod = course.FundingPeriods.FirstOrDefault(x =>
+            //        (!x.EffectiveFrom.HasValue || x.EffectiveFrom.Value.Date <= effectiveDate.Date) &&
+            //        (!x.EffectiveTo.HasValue || x.EffectiveTo.Value.Date >= effectiveDate.Date))
+            //    // the second bite we accept the first funding band if it starts in the same month as the start date
+            //    ?? course.FundingPeriods.FirstOrDefault(x =>
+            //        (!x.EffectiveFrom.HasValue || x.EffectiveFrom.Value.FirstOfMonth() <= effectiveDate) &&
+            //        (!x.EffectiveTo.HasValue || x.EffectiveTo.Value.Date >= effectiveDate.Date)); //x.EffectiveTo.Value >= effectiveDate.FirstOfMonth())); //todo: what to do with end date??
+
+            var applicableFundingPeriod = // the second bite we accept the first funding band if it starts in the same month as the start date
+                                          course.FundingPeriods.FirstOrDefault(x =>
+                                              (!x.EffectiveFrom.HasValue || x.EffectiveFrom.Value.FirstOfMonth() <= effectiveDate) &&
+                                              (!x.EffectiveTo.HasValue || x.EffectiveTo.Value.Date >= effectiveDate.Date)); //x.EffectiveTo.Value >= effectiveDate.FirstOfMonth())); //todo: what to do with end date??
 
             return applicableFundingPeriod?.FundingCap ?? 0;
         }
