@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SendNotification
 
             if (!validationResult.IsValid())
             {
-                _logger.Info("SendNotificationCommandHandler Invalid Request");
+                _logger.Info("Invalid SendNotificationCommand, not sending.");
                 throw new InvalidRequestException(validationResult.ValidationDictionary);
             }
             try
