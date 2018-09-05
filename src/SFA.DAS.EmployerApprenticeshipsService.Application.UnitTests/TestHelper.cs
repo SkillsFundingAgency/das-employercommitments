@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests
 {
-    public static class TestHelpers
+    public static class TestHelper
     {
         public static T Clone<T>(T source)
         {

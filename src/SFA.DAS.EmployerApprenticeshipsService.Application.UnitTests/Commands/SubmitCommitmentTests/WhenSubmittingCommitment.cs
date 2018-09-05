@@ -216,7 +216,7 @@ Apprenticeship service team";
             arg.Email.Tokens["cohort_reference"].Should().Be(CohortReference);
             arg.Email.Tokens["receiving_employer"].Should().Be(legalEntityName);
 
-            var emailBody = TestHelpers.PopulateTemplate(template, arg.Email.Tokens);
+            var emailBody = TestHelper.PopulateTemplate(template, arg.Email.Tokens);
             TestContext.WriteLine(emailBody);
             Assert.AreEqual(expectedEmailBody, emailBody);
         }
@@ -277,7 +277,7 @@ Apprenticeship service team";
             arg.Email.Tokens["receiving_employer"].Should().Be(legalEntityName);
             arg.Email.Tokens["ukprn"].Should().Be(providerId.ToString());
 
-            var emailBody = TestHelpers.PopulateTemplate(template, arg.Email.Tokens);
+            var emailBody = TestHelper.PopulateTemplate(template, arg.Email.Tokens);
             TestContext.WriteLine(emailBody);
             Assert.AreEqual(expectedEmailBody, emailBody);
         }

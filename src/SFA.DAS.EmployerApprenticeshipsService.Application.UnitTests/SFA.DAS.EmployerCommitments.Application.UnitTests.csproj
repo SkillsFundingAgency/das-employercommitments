@@ -213,7 +213,7 @@
     <Compile Include="Services\ProviderEmailNotificationServiceTests\WhenSendingSenderApprovedOrRejectedCommitmentNotification.cs" />
     <Compile Include="Services\ProviderEmailNotificationServiceTests\WhenSendingTransferRejectedCommitmentEditEmailNotification.cs" />
     <Compile Include="Services\ProviderEmailServiceTests\WhenISendEmailToAllProviderRecipients.cs" />
-    <Compile Include="TestHelpers.cs" />
+    <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

@@ -57,7 +57,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.CreateCommi
             };
 
             //Store a copy of the original payload for assertions, to guard against handler modification
-            _validCommand = TestHelpers.Clone(_payload);
+            _validCommand = TestHelper.Clone(_payload);
 
             _commandHandler = new CreateCommitmentCommandHandler(
                 _employerCommitmentApi.Object,

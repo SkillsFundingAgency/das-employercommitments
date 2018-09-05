@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Mappers.Apprenticesh
                 }
             };
 
-            _act = () => _mapper.MapFrom(new List<FrameworkSummary> { TestHelpers.Clone(_framework) });
+            _act = () => _mapper.MapFrom(new List<FrameworkSummary> { TestHelper.Clone(_framework) });
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Mappers.Apprenticesh
             var result = _act();
 
             //Assert
-            Assert.IsTrue(TestHelpers.EnumerablesAreEqual(new List<FundingPeriod>
+            Assert.IsTrue(TestHelper.EnumerablesAreEqual(new List<FundingPeriod>
             {
                 new FundingPeriod {EffectiveFrom = null},
                 new FundingPeriod {EffectiveFrom = new DateTime(2018,1,1)},
@@ -95,7 +95,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Mappers.Apprenticesh
         {
             var result = _act();
 
-            Assert.IsTrue(TestHelpers.EnumerablesAreEqual(_framework.FundingPeriods, result.Frameworks.First().FundingPeriods));
+            Assert.IsTrue(TestHelper.EnumerablesAreEqual(_framework.FundingPeriods, result.Frameworks.First().FundingPeriods));
         }
 
         [Test]
