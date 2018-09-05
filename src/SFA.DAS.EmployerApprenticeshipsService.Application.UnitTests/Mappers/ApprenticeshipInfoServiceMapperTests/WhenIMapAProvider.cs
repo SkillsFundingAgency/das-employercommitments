@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using System;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitments.Application.Mappers;
+using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipProvider;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Mappers.ApprenticeshipInfoServiceMapperTests
 {
@@ -9,6 +10,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Mappers.Apprenticesh
     {
         private ApprenticeshipInfoServiceMapper _mapper;
         private Apprenticeships.Api.Types.Providers.Provider _provider;
+        private Func<ProvidersView> _act;
 
         [SetUp]
         public void Arrange()
@@ -20,12 +22,14 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Mappers.Apprenticesh
                 Ukprn = 12345678,
                 ProviderName = "TestProvider"
             };
+
+            _act = () => _mapper.MapFrom(TestHelper.Clone(_provider));
         }
 
         [Test]
         public void ThenUkprnIsMappedCorrectly()
         {
-            var result = _mapper.MapFrom(CopyOf(_provider));
+            var result = _act();
 
             Assert.AreEqual(_provider.Ukprn, result.Provider.Ukprn);
         }
@@ -33,16 +37,9 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Mappers.Apprenticesh
         [Test]
         public void ThenProviderNameIsMappedCorrectly()
         {
-            var result = _mapper.MapFrom(CopyOf(_provider));
+            var result = _act();
 
             Assert.AreEqual(_provider.ProviderName, result.Provider.ProviderName);
-        }
-
-        private Apprenticeships.Api.Types.Providers.Provider CopyOf(Apprenticeships.Api.Types.Providers.Provider source)
-        {
-            return JsonConvert.DeserializeObject<Apprenticeships.Api.Types.Providers.Provider>(
-                    JsonConvert.SerializeObject(source)
-                );
         }
     }
 }
