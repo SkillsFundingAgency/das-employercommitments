@@ -161,7 +161,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Extensions.ITraining
         [TestCase("2018-08-16", 2, Description = "At start of second funding band (in same month as first)")]
         [TestCase("2018-08-21", 3, Description = "Start of third funding band")]
         [TestCase("2020-01-01", 3, Description = "Within third open-ended funding band")]
-        public void AndFirstFundingPeriodHasNUllEffectiveFromAndMultipleBandsInMonthThenTheApplicableFundingPeriodIsUsed(DateTime effectiveDate, int expectCap)
+        public void AndFirstFundingPeriodHasNullEffectiveFromAndMultipleBandsInMonthThenTheApplicableFundingPeriodIsUsed(DateTime effectiveDate, int expectCap)
         {
             var courseAndFundingBandStart = (DateTime?)null;
             var courseAndFundingBandEnd = (DateTime?)null;
