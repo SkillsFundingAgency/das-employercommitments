@@ -19,7 +19,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
     {
         private ProviderEmailService _providerEmailService;
         private Mock<IProviderEmailLookupService> _providerEmailLookupService;
-        private Mock<INotificationsApi> _notificationsApi;
+        private Mock<IBackgroundNotificationService> _backgroundNotificationService;
 
         private long _providerId;
         private string _providerLastUpdateEmailAddress;
@@ -45,13 +45,13 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
                 .ReturnsAsync(_exampleRecipients);
 
             _sentEmails = new List<Email>();
-            _notificationsApi = new Mock<INotificationsApi>();
-            _notificationsApi.Setup(x => x.SendEmail(It.IsAny<Email>()))
+            _backgroundNotificationService = new Mock<IBackgroundNotificationService>();
+            _backgroundNotificationService.Setup(x => x.SendEmail(It.IsAny<Email>()))
                 .Callback<Email>(email => _sentEmails.Add(email))
-                .Returns(() => Task.CompletedTask);
+                .Returns(Task.CompletedTask);
 
             _providerEmailService = new ProviderEmailService(_providerEmailLookupService.Object,
-                _notificationsApi.Object, Mock.Of<ILog>(),
+                _backgroundNotificationService.Object, Mock.Of<ILog>(),
                 new EmployerCommitmentsServiceConfiguration
                 {
                     CommitmentNotification = _commitmentNotificationConfiguration

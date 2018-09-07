@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Validation;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.NLog.Logger;
-using SFA.DAS.Notifications.Api.Client;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.SendNotification
 {
@@ -12,16 +12,16 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SendNotification
     {
         private readonly IValidator<SendNotificationCommand> _validator;
         private readonly ILog _logger;
-        private readonly INotificationsApi _notificationsApi;
+        private readonly IBackgroundNotificationService _backgroundNotificationService;
 
         public SendNotificationCommandHandler(
             IValidator<SendNotificationCommand> validator,
             ILog logger, 
-            INotificationsApi notificationsApi)
+            IBackgroundNotificationService backgroundNotificationService)
         {
             _validator = validator;
             _logger = logger;
-            _notificationsApi = notificationsApi;
+            _backgroundNotificationService = backgroundNotificationService;
         }
 
         protected override async Task HandleCore(SendNotificationCommand message)
@@ -30,19 +30,18 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SendNotification
 
             if (!validationResult.IsValid())
             {
-                _logger.Info("SendNotificationCommandHandler Invalid Request");
+                _logger.Info("Invalid SendNotificationCommand, not sending.");
                 throw new InvalidRequestException(validationResult.ValidationDictionary);
             }
             try
             {
                 //_logger.Info($"---- === ||| -->     {message.Email.RecipientsAddress}    <-- ||| === ----");
-                await _notificationsApi.SendEmail(message.Email);
+                await _backgroundNotificationService.SendEmail(message.Email);
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Error sending email to notifications api");
+                _logger.Error(ex, "Error using background notifications service.");
             }
-            
         }
     }
 }

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.Notification;
 using SFA.DAS.NLog.Logger;
-using SFA.DAS.Notifications.Api.Client;
 using SFA.DAS.Notifications.Api.Types;
 
 namespace SFA.DAS.EmployerCommitments.Application.Services
@@ -14,15 +12,15 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
     public class ProviderEmailService : IProviderEmailService
     {
         private readonly IProviderEmailLookupService _providerEmailLookupService;
-        private readonly INotificationsApi _notificationsApi;
+        private readonly IBackgroundNotificationService _backgroundNotificationService;
         private readonly ILog _logger;
         private readonly EmployerCommitmentsServiceConfiguration _configuration;
 
         public ProviderEmailService(IProviderEmailLookupService providerEmailLookupService,
-            INotificationsApi notificationsApi, ILog logger, EmployerCommitmentsServiceConfiguration configuration)
+            IBackgroundNotificationService backgroundNotificationService, ILog logger, EmployerCommitmentsServiceConfiguration configuration)
         {
             _providerEmailLookupService = providerEmailLookupService;
-            _notificationsApi = notificationsApi;
+            _backgroundNotificationService = backgroundNotificationService;
             _logger = logger;
             _configuration = configuration;
         }
@@ -39,10 +37,11 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
             var tasks = recipients.Select(recipient =>
             {
                 _logger.Info($"Sending email to: {recipient}");
-                return _notificationsApi.SendEmail(CreateEmailForRecipient(recipient, emailMessage));
+                 return _backgroundNotificationService.SendEmail(CreateEmailForRecipient(recipient, emailMessage));
             });
 
             await Task.WhenAll(tasks);
+            _logger.Info("Emails have been handed to the notification api.");
         }
 
         private Email CreateEmailForRecipient(string recipient, EmailMessage source)
