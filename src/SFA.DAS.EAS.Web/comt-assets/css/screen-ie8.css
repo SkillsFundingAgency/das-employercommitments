@@ -4358,11 +4358,6 @@ table .float-right, h2 .float-right {
   padding-left: 10px;
 }
 
-.funding-cap-alert a {
-  text-decoration: none;
-  color: #0b0c0c;
-}
-
 .funding-cap-alert-td {
   border-bottom: 5px solid #005ea5;
 }
