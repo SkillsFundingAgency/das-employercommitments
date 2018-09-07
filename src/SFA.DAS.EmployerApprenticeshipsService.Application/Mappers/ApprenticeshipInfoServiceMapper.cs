@@ -73,19 +73,18 @@ namespace SFA.DAS.EmployerCommitments.Application.Mappers
                 }).ToList()
             };
         }
+
         private static IEnumerable<FundingPeriod> MapFundingPeriods(IEnumerable<Apprenticeships.Api.Types.FundingPeriod> source)
         {
             if (source == null)
-            {
                 return Enumerable.Empty<FundingPeriod>();
-            }
 
             return source.Select(x => new FundingPeriod
             {
                 EffectiveFrom = x.EffectiveFrom,
                 EffectiveTo = x.EffectiveTo,
                 FundingCap = x.FundingCap
-            });
+            }).OrderBy(y => y.EffectiveFrom ?? DateTime.MinValue);
         }
 
         private static string GetTitle(string title, int level)

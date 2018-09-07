@@ -28,6 +28,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Views.EmployerCommitments
     using System.Web.UI;
     using System.Web.WebPages;
     using SFA.DAS.EmployerCommitments;
+    using SFA.DAS.EmployerCommitments.Application.Extensions;
     using SFA.DAS.EmployerCommitments.Web;
     using SFA.DAS.EmployerCommitments.Web.Extensions;
     using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
@@ -38,12 +39,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Views.EmployerCommitments
     public partial class Details : System.Web.Mvc.WebViewPage<OrchestratorResponse<CommitmentDetailsViewModel>>
     {
  
-
-    public string GetApprenticesCountText(IList<ApprenticeshipListItemViewModel> apprenticeships)
-    {
-        return apprenticeships.Count == 1 ? "1 Apprentice" : $"{apprenticeships.Count} Apprentices";
-    }
-
     readonly Func<string, int, string> _addS = (word, count) => count == 1 ? word : $"{word}s";
 
     public string PluraliseApprentice(int count)
@@ -54,11 +49,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Views.EmployerCommitments
     public string PluraliseIncompleteRecords(int count)
     {
         return count == 1 ? "Incomplete record" : "Incomplete records";
-    }
-
-    private string GetClickableClass(int requestsCount)
-    {
-        return requestsCount > 0 ? "clickable" : "";
     }
 
     public string FormatCost(decimal? cost)
@@ -162,10 +152,10 @@ WriteLiteral(">\r\n");
 
 WriteLiteral("                            <li>\r\n                                <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 1033), Tuple.Create("\"", 1068)
-, Tuple.Create(Tuple.Create("", 1040), Tuple.Create("#error-message-", 1040), true)
-, Tuple.Create(Tuple.Create("", 1055), Tuple.Create<System.Object, System.Int32>(errorMsg.Key
-, 1055), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 1092), Tuple.Create("\"", 1127)
+, Tuple.Create(Tuple.Create("", 1099), Tuple.Create("#error-message-", 1099), true)
+, Tuple.Create(Tuple.Create("", 1114), Tuple.Create<System.Object, System.Int32>(errorMsg.Key
+, 1114), false)
 );
 
 WriteLiteral(" data-focuses=\"error-message-");
@@ -211,12 +201,12 @@ WriteLiteral(">\r\n");
                          foreach (var warning in Model.Data.Warnings)
                         {
 
-WriteLiteral("                            <li>\r\n                                <a");
+WriteLiteral("                            <li><a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 1913), Tuple.Create("\"", 1951)
-, Tuple.Create(Tuple.Create("", 1920), Tuple.Create("#max-funding-group-", 1920), true)
-, Tuple.Create(Tuple.Create("", 1939), Tuple.Create<System.Object, System.Int32>(warning.Key
-, 1939), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 1938), Tuple.Create("\"", 1976)
+, Tuple.Create(Tuple.Create("", 1945), Tuple.Create("#max-funding-group-", 1945), true)
+, Tuple.Create(Tuple.Create("", 1964), Tuple.Create<System.Object, System.Int32>(warning.Key
+, 1964), false)
 );
 
 WriteLiteral(" data-focuses=\"max-funding-group-");
@@ -225,13 +215,11 @@ WriteLiteral(" data-focuses=\"max-funding-group-");
 
 WriteLiteral("\"");
 
-WriteLiteral(">\r\n");
+WriteLiteral(">");
 
-WriteLiteral("                                    ");
+                                                                                                                   Write(warning.Value);
 
-                               Write(warning.Value);
-
-WriteLiteral("\r\n                                </a>\r\n                            </li>\r\n");
+WriteLiteral("</a></li>\r\n");
 
                         }
 
@@ -247,7 +235,7 @@ WriteLiteral(">");
 
                                   Write(Model.Data.PageTitle);
 
-WriteLiteral("</h1>\r\n\r\n        </div>\r\n    </div>\r\n\r\n    <div");
+WriteLiteral("</h1>\r\n        </div>\r\n    </div>\r\n\r\n    <div");
 
 WriteLiteral(" class=\"grid-row\"");
 
@@ -321,14 +309,13 @@ WriteLiteral(">\r\n");
                     {
                         totalClass = "longer";
                     }
-
                 
 WriteLiteral("\r\n                <h2");
 
-WriteAttribute("class", Tuple.Create(" class=\"", 3735), Tuple.Create("\"", 3766)
-, Tuple.Create(Tuple.Create("", 3743), Tuple.Create<System.Object, System.Int32>(totalClass
-, 3743), false)
-, Tuple.Create(Tuple.Create(" ", 3754), Tuple.Create("bold-xlarge", 3755), true)
+WriteAttribute("class", Tuple.Create(" class=\"", 3654), Tuple.Create("\"", 3685)
+, Tuple.Create(Tuple.Create("", 3662), Tuple.Create<System.Object, System.Int32>(totalClass
+, 3662), false)
+, Tuple.Create(Tuple.Create(" ", 3673), Tuple.Create("bold-xlarge", 3674), true)
 );
 
 WriteLiteral(">&pound;");
@@ -363,7 +350,7 @@ WriteLiteral(">Status:</span> ");
 
                                               Write(Model.Data.Status.GetDescription());
 
-WriteLiteral("</p>\r\n        </div>\r\n\r\n\r\n        <div");
+WriteLiteral("</p>\r\n        </div>\r\n\r\n        <div");
 
 WriteLiteral(" class=\"column-two-thirds employer-details\"");
 
@@ -395,7 +382,6 @@ WriteLiteral("\r\n\r\n");
              if (!Model.Data.IsReadOnly)
             {
 
-
 WriteLiteral("                <div");
 
 WriteLiteral(" class=\"grid-row\"");
@@ -416,14 +402,14 @@ WriteLiteral(">\r\n                            <a");
 
 WriteLiteral(" class=\"button finishEditingBtn\"");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 4976), Tuple.Create("\"", 5013)
-, Tuple.Create(Tuple.Create("", 4983), Tuple.Create<System.Object, System.Int32>(Url.Action("FinishedEditing")
-, 4983), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 4891), Tuple.Create("\"", 4928)
+, Tuple.Create(Tuple.Create("", 4898), Tuple.Create<System.Object, System.Int32>(Url.Action("FinishedEditing")
+, 4898), false)
 );
 
-WriteAttribute("aria-label", Tuple.Create(" aria-label=\"", 5014), Tuple.Create("\"", 5045)
-                                 , Tuple.Create(Tuple.Create("", 5027), Tuple.Create<System.Object, System.Int32>(finishEditingText
-, 5027), false)
+WriteAttribute("aria-label", Tuple.Create(" aria-label=\"", 4929), Tuple.Create("\"", 4960)
+                                 , Tuple.Create(Tuple.Create("", 4942), Tuple.Create<System.Object, System.Int32>(finishEditingText
+, 4942), false)
 );
 
 WriteLiteral(">");
@@ -432,9 +418,9 @@ WriteLiteral(">");
 
 WriteLiteral("</a>\r\n                            <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 5101), Tuple.Create("\"", 5148)
-, Tuple.Create(Tuple.Create("", 5108), Tuple.Create<System.Object, System.Int32>(Url.Action("CreateApprenticeshipEntry")
-, 5108), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 5016), Tuple.Create("\"", 5063)
+, Tuple.Create(Tuple.Create("", 5023), Tuple.Create<System.Object, System.Int32>(Url.Action("CreateApprenticeshipEntry")
+, 5023), false)
 );
 
 WriteLiteral(" class=\"button button-secondary\"");
@@ -443,7 +429,6 @@ WriteLiteral(" aria-label=\"Add an apprentice\"");
 
 WriteLiteral(">Add an apprentice</a>\r\n                        </div>\r\n                    </div" +
 ">\r\n                </div>\r\n");
-
 
             }
 
@@ -456,7 +441,6 @@ WriteLiteral(">\r\n\r\n");
             
              if (!Model.Data.HasApprenticeships)
             {
-
 
 WriteLiteral("                <div");
 
@@ -485,15 +469,14 @@ WriteLiteral("                                <p>Apprentices will appear here wh
                             else
                             {
 
-WriteLiteral("                                <p>\r\n                                    You have" +
-"n’t added any apprentices yet - <a");
+WriteLiteral("                                <p>You haven’t added any apprentices yet - <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 6052), Tuple.Create("\"", 6099)
-     , Tuple.Create(Tuple.Create("", 6059), Tuple.Create<System.Object, System.Int32>(Url.Action("CreateApprenticeshipEntry")
-, 6059), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 5925), Tuple.Create("\"", 5972)
+    , Tuple.Create(Tuple.Create("", 5932), Tuple.Create<System.Object, System.Int32>(Url.Action("CreateApprenticeshipEntry")
+, 5932), false)
 );
 
-WriteLiteral("> add an apprentice </a>\r\n                                </p>\r\n");
+WriteLiteral("> add an apprentice </a></p>\r\n");
 
                             }
 
@@ -503,7 +486,6 @@ WriteLiteral("\r\n                        </div>\r\n                    </div>\r
             }
             else
             {
-
 
 WriteLiteral("                <div");
 
@@ -557,10 +539,10 @@ WriteLiteral("                                <div");
 
 WriteLiteral(" class=\"overlap-notification\"");
 
-WriteAttribute("id", Tuple.Create(" id=\"", 7205), Tuple.Create("\"", 7238)
-, Tuple.Create(Tuple.Create("", 7210), Tuple.Create("error-message-", 7210), true)
-    , Tuple.Create(Tuple.Create("", 7224), Tuple.Create<System.Object, System.Int32>(group.GroupId
-, 7224), false)
+WriteAttribute("id", Tuple.Create(" id=\"", 7042), Tuple.Create("\"", 7075)
+, Tuple.Create(Tuple.Create("", 7047), Tuple.Create("error-message-", 7047), true)
+    , Tuple.Create(Tuple.Create("", 7061), Tuple.Create<System.Object, System.Int32>(group.GroupId
+, 7061), false)
 );
 
 WriteLiteral(">\r\n                                    <p");
@@ -590,10 +572,10 @@ WriteLiteral("                                <div");
 
 WriteLiteral(" class=\"funding-cap-alert\"");
 
-WriteAttribute("id", Tuple.Create(" id=\"", 7935), Tuple.Create("\"", 7972)
-, Tuple.Create(Tuple.Create("", 7940), Tuple.Create("max-funding-group-", 7940), true)
-     , Tuple.Create(Tuple.Create("", 7958), Tuple.Create<System.Object, System.Int32>(group.GroupId
-, 7958), false)
+WriteAttribute("id", Tuple.Create(" id=\"", 7772), Tuple.Create("\"", 7809)
+, Tuple.Create(Tuple.Create("", 7777), Tuple.Create("max-funding-group-", 7777), true)
+     , Tuple.Create(Tuple.Create("", 7795), Tuple.Create<System.Object, System.Int32>(group.GroupId
+, 7795), false)
 );
 
 WriteLiteral(">\r\n                                    <p");
@@ -607,9 +589,9 @@ WriteLiteral("                                        ");
                                     Write($"{group.ApprenticeshipsOverFundingLimit}  {_addS("apprenticeship", group.ApprenticeshipsOverFundingLimit).ToLower()} above funding band maximum");
 
 WriteLiteral("\r\n                                    </p>\r\n                                    <" +
-"p>\r\n                                        The costs are above the &pound;");
+"p>\r\n                                        The costs are above the");
 
-                                                                  Write(group.TrainingProgramme.MaxFunding.ToString("N0"));
+                                                           Write(group.ShowCommonFundingCap ? $" £{group.CommonFundingCap:N0}":"");
 
 WriteLiteral(" <a");
 
@@ -620,10 +602,8 @@ WriteLiteral(" href=\"https://www.gov.uk/government/publications/apprenticeship-
 
 WriteLiteral(@">maximum value of the funding band</a> for this apprenticeship. You'll need to pay the difference directly to the training provider - this can't be funded from your account.
                                     </p>
-
                                 </div>
 ");
-
 
                             }
 
@@ -662,119 +642,102 @@ WriteLiteral(">Cost</th>\r\n                                    </tr>\r\n       
                                      foreach (var apprenticeship in group.Apprenticeships.OrderBy(a => a.CanBeApproved))
                                     {
 
-WriteLiteral("                                        <tr>\r\n                                   " +
-"         <td>\r\n");
+WriteLiteral("                                    <tr>\r\n                                       " +
+" <td>\r\n");
 
-WriteLiteral("                                                ");
+WriteLiteral("                                            ");
 
-                                           Write(GetValueOrDefault(apprenticeship.ApprenticeName));
+                                       Write(GetValueOrDefault(apprenticeship.ApprenticeName));
 
-WriteLiteral("\r\n                                            </td>\r\n                            " +
-"                <td");
+WriteLiteral("\r\n                                        </td>\r\n                                " +
+"        <td");
 
 WriteLiteral(" id=\"apprenticeUln\"");
 
 WriteLiteral(">\r\n");
 
-                                                
-                                                 if (!string.IsNullOrEmpty(apprenticeship.ApprenticeUln))
-                                                {
+                                            
+                                             if (!string.IsNullOrEmpty(apprenticeship.ApprenticeUln))
+                                            {
 
-WriteLiteral("                                                    <span>");
+WriteLiteral("                                                <span>");
 
-                                                     Write(apprenticeship.ApprenticeUln);
+                                                 Write(apprenticeship.ApprenticeUln);
 
 WriteLiteral("</span>\r\n");
 
-                                                }
-                                                else
-                                                {
+                                            }
+                                            else
+                                            {
 
-WriteLiteral("                                                    <span");
-
-WriteLiteral(" class=\"missing\"");
-
-WriteLiteral(">&ndash;</span>\r\n");
-
-                                                }
-
-WriteLiteral("\r\n                                            </td>\r\n                            " +
-"                <td>\r\n");
-
-                                                
-                                                 if (apprenticeship.ApprenticeDateOfBirth.HasValue)
-                                                {
-
-WriteLiteral("                                                    <span>\r\n");
-
-WriteLiteral("                                                        ");
-
-                                                   Write(apprenticeship.ApprenticeDateOfBirth.Value.ToGdsFormat());
-
-WriteLiteral("\r\n                                                    </span>\r\n");
-
-                                                }
-                                                else
-                                                {
-
-WriteLiteral("                                                    <span");
+WriteLiteral("                                                <span");
 
 WriteLiteral(" class=\"missing\"");
 
 WriteLiteral(">&ndash;</span>\r\n");
 
-                                                }
+                                            }
 
-WriteLiteral("                                            </td>\r\n");
+WriteLiteral("                                        </td>\r\n                                  " +
+"      <td>\r\n");
 
                                             
-                                             if (apprenticeship.StartDate != null && apprenticeship.EndDate != null)
+                                             if (apprenticeship.ApprenticeDateOfBirth.HasValue)
                                             {
-                                                if (apprenticeship.OverlappingApprenticeships.Any())
-                                                {
 
-WriteLiteral("                                                    <td");
+WriteLiteral("                                                <span>\r\n");
+
+WriteLiteral("                                                    ");
+
+                                               Write(apprenticeship.ApprenticeDateOfBirth.Value.ToGdsFormat());
+
+WriteLiteral("\r\n                                                </span>\r\n");
+
+                                            }
+                                            else
+                                            {
+
+WriteLiteral("                                                <span");
+
+WriteLiteral(" class=\"missing\"");
+
+WriteLiteral(">&ndash;</span>\r\n");
+
+                                            }
+
+WriteLiteral("                                        </td>\r\n");
+
+                                        
+                                         if (apprenticeship.StartDate != null && apprenticeship.EndDate != null)
+                                        {
+                                            if (apprenticeship.OverlappingApprenticeships.Any())
+                                            {
+
+WriteLiteral("                                                <td");
 
 WriteLiteral(" class=\"overlap-alert\"");
 
-WriteLiteral(">\r\n                                                        <a");
+WriteLiteral(">\r\n                                                    <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 11855), Tuple.Create("\"", 11891)
-, Tuple.Create(Tuple.Create("", 11862), Tuple.Create("#error-message-", 11862), true)
-, Tuple.Create(Tuple.Create("", 11877), Tuple.Create<System.Object, System.Int32>(group.GroupId
-, 11877), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 11567), Tuple.Create("\"", 11603)
+, Tuple.Create(Tuple.Create("", 11574), Tuple.Create("#error-message-", 11574), true)
+, Tuple.Create(Tuple.Create("", 11589), Tuple.Create<System.Object, System.Int32>(group.GroupId
+, 11589), false)
 );
 
-WriteLiteral("\r\n                                                           aria-label=\"The uniq" +
-"ue learner number already exists for these training dates\"");
+WriteLiteral("\r\n                                                       aria-label=\"The unique l" +
+"earner number already exists for these training dates\"");
 
-WriteAttribute("aria-describedby", Tuple.Create("\r\n                                                           aria-describedby=\"", 12031), Tuple.Create("\"", 12142)
-, Tuple.Create(Tuple.Create("", 12110), Tuple.Create("max-funding-group-", 12110), true)
-              , Tuple.Create(Tuple.Create("", 12128), Tuple.Create<System.Object, System.Int32>(group.GroupId
-, 12128), false)
+WriteAttribute("aria-describedby", Tuple.Create("\r\n                                                       aria-describedby=\"", 11739), Tuple.Create("\"", 11846)
+, Tuple.Create(Tuple.Create("", 11814), Tuple.Create("max-funding-group-", 11814), true)
+          , Tuple.Create(Tuple.Create("", 11832), Tuple.Create<System.Object, System.Int32>(group.GroupId
+, 11832), false)
 );
 
-WriteLiteral("\r\n                                                           title=\"The unique le" +
-"arner number already exists for these training dates\"");
+WriteLiteral("\r\n                                                       title=\"The unique learne" +
+"r number already exists for these training dates\"");
 
 WriteLiteral(">\r\n");
-
-WriteLiteral("                                                            ");
-
-                                                       Write(apprenticeship.StartDate.Value.ToGdsFormatWithoutDay());
-
-WriteLiteral(" to ");
-
-                                                                                                                  Write(apprenticeship.EndDate.Value.ToGdsFormatWithoutDay());
-
-WriteLiteral(" &nbsp;\r\n                                                        </a>\r\n          " +
-"                                          </td>\r\n");
-
-                                                }
-                                                else
-                                                {
-
-WriteLiteral("                                                    <td>\r\n");
 
 WriteLiteral("                                                        ");
 
@@ -784,55 +747,8 @@ WriteLiteral(" to ");
 
                                                                                                               Write(apprenticeship.EndDate.Value.ToGdsFormatWithoutDay());
 
-WriteLiteral("\r\n                                                    </td>\r\n");
-
-                                                }
-                                            }
-                                            else
-                                            {
-
-WriteLiteral("                                                <td>\r\n                           " +
-"                         <span");
-
-WriteLiteral(" class=\"missing\"");
-
-WriteLiteral(">&ndash;</span>\r\n                                                </td>\r\n");
-
-                                            }
-
-WriteLiteral("\r\n");
-
-                                            
-                                             if (group.TrainingProgramme != null && apprenticeship.Cost.HasValue && apprenticeship.Cost > group.TrainingProgramme.MaxFunding && !Model.Data.Errors.Any())
-                                            {
-
-WriteLiteral("                                                <td");
-
-WriteLiteral(" class=\"funding-cap-alert-td\"");
-
-WriteLiteral(">\r\n                                                    <a");
-
-WriteAttribute("href", Tuple.Create(" href=\"", 13855), Tuple.Create("\"", 13895)
-, Tuple.Create(Tuple.Create("", 13862), Tuple.Create("#max-funding-group-", 13862), true)
-, Tuple.Create(Tuple.Create("", 13881), Tuple.Create<System.Object, System.Int32>(group.GroupId
-, 13881), false)
-);
-
-WriteLiteral(" aria-label=\"Cost is above the maximum funding band\"");
-
-WriteAttribute("aria-describedby", Tuple.Create(" aria-describedby=\"", 13948), Tuple.Create("\"", 13999)
-, Tuple.Create(Tuple.Create("", 13967), Tuple.Create("max-funding-group-", 13967), true)
-                                                                                                       , Tuple.Create(Tuple.Create("", 13985), Tuple.Create<System.Object, System.Int32>(group.GroupId
-, 13985), false)
-);
-
-WriteLiteral(" title=\"Cost is above the maximum funding band\"");
-
-WriteLiteral("> ");
-
-                                                                                                                                                                                                                                                   Write(GetValueOrDefault(FormatCost(apprenticeship.Cost)));
-
-WriteLiteral("</a>\r\n                                                </td>\r\n");
+WriteLiteral(" &nbsp;\r\n                                                    </a>\r\n              " +
+"                                  </td>\r\n");
 
                                             }
                                             else
@@ -842,70 +758,135 @@ WriteLiteral("                                                <td>\r\n");
 
 WriteLiteral("                                                    ");
 
-                                               Write(GetValueOrDefault(FormatCost(apprenticeship.Cost)));
+                                               Write(apprenticeship.StartDate.Value.ToGdsFormatWithoutDay());
+
+WriteLiteral(" to ");
+
+                                                                                                          Write(apprenticeship.EndDate.Value.ToGdsFormatWithoutDay());
 
 WriteLiteral("\r\n                                                </td>\r\n");
 
                                             }
+                                        }
+                                        else
+                                        {
 
-WriteLiteral("\r\n                                            <td>\r\n");
+WriteLiteral("                                            <td>\r\n                               " +
+"                 <span");
 
-                                                
-                                                 if (!Model.Data.IsReadOnly)
-                                                {
+WriteLiteral(" class=\"missing\"");
 
-WriteLiteral("                                                    <a");
+WriteLiteral(">&ndash;</span>\r\n                                            </td>\r\n");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 14801), Tuple.Create("\"", 14911)
-, Tuple.Create(Tuple.Create("", 14808), Tuple.Create<System.Object, System.Int32>(Url.Action("EditApprenticeship", new {hashedApprenticeshipId = apprenticeship.HashedApprenticeshipId})
-, 14808), false)
+                                        }
+
+WriteLiteral("\r\n                                        ");
+
+WriteLiteral("\r\n");
+
+                                        
+                                         if (apprenticeship.IsOverFundingLimit(group.TrainingProgramme)
+                                             && !Model.Data.Errors.Any())
+                                        {
+
+WriteLiteral("                                            <td");
+
+WriteLiteral(" class=\"funding-cap-alert-td\"");
+
+WriteLiteral(">\r\n                                                <a");
+
+WriteAttribute("href", Tuple.Create(" href=\"", 13641), Tuple.Create("\"", 13681)
+, Tuple.Create(Tuple.Create("", 13648), Tuple.Create("#max-funding-group-", 13648), true)
+, Tuple.Create(Tuple.Create("", 13667), Tuple.Create<System.Object, System.Int32>(group.GroupId
+, 13667), false)
 );
 
-WriteAttribute("aria-label", Tuple.Create(" aria-label=\"", 14912), Tuple.Create("\"", 14960)
-, Tuple.Create(Tuple.Create("", 14925), Tuple.Create("Edit", 14925), true)
-                                                                                                     , Tuple.Create(Tuple.Create(" ", 14929), Tuple.Create<System.Object, System.Int32>(apprenticeship.ApprenticeName
-, 14930), false)
+WriteLiteral(" aria-label=\"Cost is above the maximum funding band\"");
+
+WriteAttribute("aria-describedby", Tuple.Create(" aria-describedby=\"", 13734), Tuple.Create("\"", 13785)
+, Tuple.Create(Tuple.Create("", 13753), Tuple.Create("max-funding-group-", 13753), true)
+                                                                                                   , Tuple.Create(Tuple.Create("", 13771), Tuple.Create<System.Object, System.Int32>(group.GroupId
+, 13771), false)
+);
+
+WriteLiteral(" title=\"Cost is above the maximum funding band\"");
+
+WriteLiteral("> ");
+
+                                                                                                                                                                                                                                               Write(GetValueOrDefault(FormatCost(apprenticeship.Cost)));
+
+WriteLiteral("</a>\r\n                                            </td>\r\n");
+
+                                        }
+                                        else
+                                        {
+
+WriteLiteral("                                            <td>\r\n");
+
+WriteLiteral("                                                ");
+
+                                           Write(GetValueOrDefault(FormatCost(apprenticeship.Cost)));
+
+WriteLiteral("\r\n                                            </td>\r\n");
+
+                                        }
+
+WriteLiteral("\r\n                                        <td>\r\n");
+
+                                            
+                                             if (!Model.Data.IsReadOnly)
+                                            {
+
+WriteLiteral("                                                <a");
+
+WriteAttribute("href", Tuple.Create(" href=\"", 14539), Tuple.Create("\"", 14649)
+, Tuple.Create(Tuple.Create("", 14546), Tuple.Create<System.Object, System.Int32>(Url.Action("EditApprenticeship", new {hashedApprenticeshipId = apprenticeship.HashedApprenticeshipId})
+, 14546), false)
+);
+
+WriteAttribute("aria-label", Tuple.Create(" aria-label=\"", 14650), Tuple.Create("\"", 14698)
+, Tuple.Create(Tuple.Create("", 14663), Tuple.Create("Edit", 14663), true)
+                                                                                                 , Tuple.Create(Tuple.Create(" ", 14667), Tuple.Create<System.Object, System.Int32>(apprenticeship.ApprenticeName
+, 14668), false)
 );
 
 WriteLiteral(">Edit</a>\r\n");
 
-                                                }
-                                                else
-                                                {
+                                            }
+                                            else
+                                            {
 
-WriteLiteral("                                                    <a");
+WriteLiteral("                                                <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 15182), Tuple.Create("\"", 15292)
-, Tuple.Create(Tuple.Create("", 15189), Tuple.Create<System.Object, System.Int32>(Url.Action("ViewApprenticeship", new {hashedApprenticeshipId = apprenticeship.HashedApprenticeshipId})
-, 15189), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 14904), Tuple.Create("\"", 15014)
+, Tuple.Create(Tuple.Create("", 14911), Tuple.Create<System.Object, System.Int32>(Url.Action("ViewApprenticeship", new {hashedApprenticeshipId = apprenticeship.HashedApprenticeshipId})
+, 14911), false)
 );
 
-WriteAttribute("aria-label", Tuple.Create(" aria-label=\"", 15293), Tuple.Create("\"", 15341)
-, Tuple.Create(Tuple.Create("", 15306), Tuple.Create("Edit", 15306), true)
-                                                                                                     , Tuple.Create(Tuple.Create(" ", 15310), Tuple.Create<System.Object, System.Int32>(apprenticeship.ApprenticeName
-, 15311), false)
+WriteAttribute("aria-label", Tuple.Create(" aria-label=\"", 15015), Tuple.Create("\"", 15063)
+, Tuple.Create(Tuple.Create("", 15028), Tuple.Create("View", 15028), true)
+                                                                                                 , Tuple.Create(Tuple.Create(" ", 15032), Tuple.Create<System.Object, System.Int32>(apprenticeship.ApprenticeName
+, 15033), false)
 );
 
 WriteLiteral(">View</a>\r\n");
 
-                                                }
+                                            }
 
-WriteLiteral("                                            </td>\r\n                              " +
-"          </tr>\r\n");
+WriteLiteral("                                        </td>\r\n                                  " +
+"  </tr>\r\n");
 
                                     }
 
 WriteLiteral("                                </tbody>\r\n                            </table>\r\n");
 
-
                         }
 
-WriteLiteral("\r\n                    </div>\r\n                </div>\r\n");
-
+WriteLiteral("                    </div>\r\n                </div>\r\n");
 
             }
 
-WriteLiteral("\r\n        </div>\r\n    </div>\r\n</div>\r\n\r\n");
+WriteLiteral("        </div>\r\n    </div>\r\n</div>\r\n\r\n");
 
  if (!Model.Data.IsReadOnly && !Model.Data.HideDeleteButton)
 {
@@ -914,9 +895,9 @@ WriteLiteral("    <a");
 
 WriteLiteral(" class=\"button delete-button\"");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 15861), Tuple.Create("\"", 15895)
-, Tuple.Create(Tuple.Create("", 15868), Tuple.Create<System.Object, System.Int32>(Url.Action("DeleteCohort")
-, 15868), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 15563), Tuple.Create("\"", 15597)
+, Tuple.Create(Tuple.Create("", 15570), Tuple.Create<System.Object, System.Int32>(Url.Action("DeleteCohort")
+, 15570), false)
 );
 
 WriteLiteral(" aria-label=\"Delete cohort\"");
@@ -939,9 +920,9 @@ WriteLiteral(" class=\"breadcrumbs\"");
 
 WriteLiteral(">\r\n        <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 17108), Tuple.Create("\"", 17138)
-, Tuple.Create(Tuple.Create("", 17115), Tuple.Create<System.Object, System.Int32>(Model.Data.BackLinkUrl
-, 17115), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 16464), Tuple.Create("\"", 16494)
+, Tuple.Create(Tuple.Create("", 16471), Tuple.Create<System.Object, System.Int32>(Model.Data.BackLinkUrl
+, 16471), false)
 );
 
 WriteLiteral(" aria-label=\"Back\"");
@@ -952,7 +933,7 @@ WriteLiteral(">Back</a>\r\n    </div>\r\n");
 
 });
 
-WriteLiteral("\r\n\r\n");
+WriteLiteral("\r\n");
 
 DefineSection("gaDataLayer", () => {
 

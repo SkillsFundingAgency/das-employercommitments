@@ -1,12 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types;
+using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
+using SFA.DAS.Commitments.Api.Types.Validation;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
+using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator
 {
@@ -142,6 +148,52 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
 
             Assert.ThrowsAsync<InvalidStateException>(() =>
                 EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId"));
+        }
+
+        [Test]
+        public async Task AndApprenticeshipIsOverFundingLimitThenACostWarningShouldBeAddedToViewModel()
+        {
+            CommitmentView.Apprenticeships = new List<Apprenticeship>
+            {
+                new Apprenticeship
+                {
+                    StartDate = new DateTime(2020,2,2),
+                    Cost = 500
+                }
+            };
+
+            MockMediator.Setup(m => m.SendAsync(It.IsAny<GetTrainingProgrammesQueryRequest>()))
+                .ReturnsAsync(new GetTrainingProgrammesQueryResponse
+                {
+                    TrainingProgrammes = new List<ITrainingProgramme>
+                    {
+                        new Standard
+                        {
+                            FundingPeriods = new[]
+                            {
+                                new FundingPeriod
+                                {
+                                    EffectiveFrom = new DateTime(2020, 2, 1),
+                                    EffectiveTo = new DateTime(2020, 3, 1),
+                                    FundingCap = 100
+                                }
+                            },
+                            EffectiveFrom = new DateTime(2020, 2, 1),
+                            EffectiveTo = new DateTime(2020, 3, 1),
+                            Title = "Tit"
+                        }
+                    }
+                });
+
+            MockMediator.Setup(m => m.SendAsync(It.IsAny<GetOverlappingApprenticeshipsQueryRequest>()))
+                .ReturnsAsync(new GetOverlappingApprenticeshipsQueryResponse
+                {
+                    Overlaps = Enumerable.Empty<ApprenticeshipOverlapValidationResult>()
+                });
+
+            var result = await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
+
+            Assert.IsTrue(TestHelper.EnumerablesAreEqual(new[] {new KeyValuePair<string,string>("0", "Cost for Tit") }, result.Data.Warnings.AsEnumerable()));
         }
     }
 }

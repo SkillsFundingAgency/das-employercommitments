@@ -2,7 +2,6 @@
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Validation;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
-using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.EmployerCommitments.Web.Views.EmployerCommitments;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerCommitments
@@ -32,13 +31,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerCommitments
                 HasApprenticeships = true,
                 ApprenticeshipGroups = new List<ApprenticeshipListItemGroupViewModel>
                 {
-                    new ApprenticeshipListItemGroupViewModel
-                    {
-                        Apprenticeships = new List<ApprenticeshipListItemViewModel>
-                        {
-                            item
-                        }
-                    }
+                    new ApprenticeshipListItemGroupViewModel(new List<ApprenticeshipListItemViewModel> { item })
                 },
                 Errors = new Dictionary<string, string>(),
                 Warnings = new Dictionary<string, string>(),
@@ -63,13 +56,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views.EmployerCommitments
                 HasApprenticeships = true,
                 ApprenticeshipGroups = new List<ApprenticeshipListItemGroupViewModel>
                 {
-                    new ApprenticeshipListItemGroupViewModel
-                    {
-                        Apprenticeships = new List<ApprenticeshipListItemViewModel>
-                        {
-                            item
-                        }
-                    }
+                    new ApprenticeshipListItemGroupViewModel(new List<ApprenticeshipListItemViewModel> { item })
                 },
                 Errors = new Dictionary<string, string>(),
                 Warnings = new Dictionary<string, string>(),

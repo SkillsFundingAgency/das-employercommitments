@@ -163,7 +163,7 @@ Kind regards,
 
 Apprenticeship service team";
 
-            var emailBody = TestHelpers.PopulateTemplate(template, _tokens);
+            var emailBody = TestHelper.PopulateTemplate(template, _tokens);
 
             TestContext.WriteLine(emailBody);
             Assert.AreEqual(expectedEmailBody, emailBody);
@@ -206,7 +206,7 @@ Kind regards,
 
 Apprenticeship service team";
 
-            var emailBody = TestHelpers.PopulateTemplate(template, _tokens);
+            var emailBody = TestHelper.PopulateTemplate(template, _tokens);
 
             TestContext.WriteLine(emailBody);
             Assert.AreEqual(expectedEmailBody, emailBody);
