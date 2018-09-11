@@ -104,5 +104,24 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
             var result = _sut.MapToTransferRequestViewModel(_transferRequest);
             Assert.AreEqual(expectEnabled, result.EnableRejection);
         }
+
+        [TestCase(TransferApprovalStatus.Pending, 1000, 2000, true, Description = "Show warning when cost below ceiling and pending")]
+        [TestCase(TransferApprovalStatus.Pending, 2000, 2000, false, Description = "No warning when cost equal to ceiling and pending")]
+        [TestCase(TransferApprovalStatus.Approved, 1000, 2000, false, Description = "No warning when already approved")]
+        [TestCase(TransferApprovalStatus.Approved, 1000, 2000, false, Description = "No warning when already rejected")]
+        [TestCase(TransferApprovalStatus.Pending, 0, 0, false, Description = "No warning when funding cap is zero value (historic)")]
+        public void ThenFundingCapWarningShouldBeShownWhenApplicable(TransferApprovalStatus status, int totalCost, int fundingCap, bool expectShowWarning)
+        {
+            //Arrange
+            _transferRequest.TransferCost = totalCost;
+            _transferRequest.FundingCap = fundingCap;
+            _transferRequest.Status = status;
+
+            //Act
+            var result = _sut.MapToTransferRequestViewModel(_transferRequest);
+
+            //Assert
+            Assert.AreEqual(expectShowWarning, result.ShowFundingCapWarning);
+        }
     }
 }

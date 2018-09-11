@@ -27,6 +27,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public DateTime? TransferApprovalSetOn { get; set; }
         public bool EnableRejection { get; set; }
         public bool PendingApproval => TransferApprovalStatus == TransferApprovalStatus.Pending;
-
-    }
+        public bool ShowFundingCapWarning { get; set; }
+     }
 }
