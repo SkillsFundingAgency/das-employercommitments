@@ -43,6 +43,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
                 ApprovedOrRejectedByUserEmail    = "tester@test.com",
                 ApprovedOrRejectedOn = new DateTime(2018, 3, 1),
                 TransferCost = 10999m,
+                FundingCap = 20000,
                 TrainingList = new List<TrainingCourseSummary>
                 {
                     new TrainingCourseSummary
@@ -89,6 +90,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
             Assert.AreEqual(statusDescription, result.TransferApprovalStatusDesc);
             Assert.AreEqual("tester", result.TransferApprovalSetBy);
             Assert.AreEqual(new DateTime(2018, 3, 1), result.TransferApprovalSetOn);
+            Assert.AreEqual(20000, result.FundingCap);
         }
 
         [TestCase(true, true)]

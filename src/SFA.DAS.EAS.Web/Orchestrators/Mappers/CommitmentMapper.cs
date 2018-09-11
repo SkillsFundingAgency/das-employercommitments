@@ -51,6 +51,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 TransferApprovalSetBy = transferRequest.ApprovedOrRejectedByUserName,
                 TransferApprovalSetOn = transferRequest.ApprovedOrRejectedOn,
                 TotalCost = transferRequest.TransferCost,
+                FundingCap = transferRequest.FundingCap,
                 EnableRejection = _featureToggleService.Get<TransfersRejectOption>().FeatureEnabled
             };
         }
