@@ -108,8 +108,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
         [TestCase(TransferApprovalStatus.Pending, 1000, 2000, true, Description = "Show warning when cost below ceiling and pending")]
         [TestCase(TransferApprovalStatus.Approved, 1000, 2000, true, Description = "Show warning when already approved and below ceiling")]
         [TestCase(TransferApprovalStatus.Pending, 2000, 2000, false, Description = "No warning when cost equal to ceiling and pending")]        
-        [TestCase(TransferApprovalStatus.Approved, 1000, 2000, false, Description = "No warning when already rejected")]
-        [TestCase(TransferApprovalStatus.Pending, 0, 0, false, Description = "No warning when funding cap is zero value (historic)")]
+        [TestCase(TransferApprovalStatus.Rejected, 1000, 2000, false, Description = "No warning when already rejected")]
+        [TestCase(TransferApprovalStatus.Pending, 1000, 0, false, Description = "No warning when funding cap is zero value (historic)")]
         public void ThenFundingCapWarningShouldBeShownWhenApplicable(TransferApprovalStatus status, int totalCost, int fundingCap, bool expectShowWarning)
         {
             //Arrange
