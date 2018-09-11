@@ -54,7 +54,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 TotalCost = transferRequest.TransferCost,
                 FundingCap = transferRequest.FundingCap,
                 EnableRejection = _featureToggleService.Get<TransfersRejectOption>().FeatureEnabled,
-                ShowFundingCapWarning = transferRequest.Status == TransferApprovalStatus.Pending
+                ShowFundingCapWarning = (transferRequest.Status == TransferApprovalStatus.Pending
+                                         || transferRequest.Status == TransferApprovalStatus.Approved)
                                          && transferRequest.TransferCost < transferRequest.FundingCap
             };
         }
