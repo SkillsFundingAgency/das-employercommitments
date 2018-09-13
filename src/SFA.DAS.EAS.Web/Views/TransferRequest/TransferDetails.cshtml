@@ -20,11 +20,25 @@
 
 <h1 class="heading-xlarge">@ViewBag.Title</h1>
 
+@if (Model.Data.ShowFundingCapWarning)
+{
+
+<div class="validation-summary-max-funding error-summary">
+    <h1 class="heading-medium warning-summary-heading" id="warning-summary">
+        Transfer request is lower than the funding band maximum
+    </h1>
+    The receiving employer and training provider could renegotiate the total cost of the training during the lifetime of the apprenticeship up to the funding band maximum.
+    <br /><br />
+    You will not be asked to approve these funding changes.
+</div>
+
+}
+
 <div class="grid-row">
     <div class="column-full">
         <hr class="hr-top" />
         <div class="column-one-third">
-            Account Name
+            Receiving employer
         </div>
         <div class="column-two-thirds">
             @Model.Data.LegalEntityName
@@ -33,7 +47,7 @@
     <div class="column-full">
         <hr class="hr-top" />
         <div class="column-one-third">
-            Receiving Employer Account Id
+            Receiving employer account ID
         </div>
         <div class="column-two-thirds">
             @Model.Data.PublicHashedTransferReceiverAccountId
@@ -42,7 +56,7 @@
     <div class="column-full">
         <hr class="hr-top" />
         <div class="column-one-third">
-            Cohort Reference
+            Cohort reference
         </div>
         <div class="column-half">
             @Model.Data.HashedCohortReference
@@ -60,12 +74,24 @@
     <div class="column-full">
         <hr class="hr-top" />
         <div class="column-one-third">
-            Total Cost
+            Current transfer request
         </div>
         <div class="column-two-thirds">
             @($"£{Model.Data.TotalCost:n0}")
         </div>
     </div>
+    @if (Model.Data.ShowFundingCapWarning)
+    {
+        <div class="column-full">
+            <hr class="hr-top" />
+            <div class="column-one-third">
+                Funding band maximum
+            </div>
+            <div class="column-two-thirds">
+                @($"£{Model.Data.FundingCap:n0}")
+            </div>
+        </div>
+    }
     <div class="column-full">
         <hr class="hr-top" />
         <div class="column-one-third">
@@ -87,7 +113,7 @@
         <div class="column-full">
             <hr class="hr-top" />
             <div class="column-one-third">
-                @Model.Data.TransferApprovalStatusDesc By
+                @Model.Data.TransferApprovalStatusDesc by
             </div>
             <div class="column-two-thirds">
                 @Model.Data.TransferApprovalSetBy
@@ -96,7 +122,7 @@
         <div class="column-full">
             <hr class="hr-top" />
             <div class="column-one-third">
-                @Model.Data.TransferApprovalStatusDesc On
+                @Model.Data.TransferApprovalStatusDesc on
             </div>
             <div class="column-two-thirds">
                 @($"{Model.Data.TransferApprovalSetOn:dd MMM yyyy}")
@@ -116,7 +142,7 @@
 
                 <fieldset role="radiogroup" aria-required="true" class="approve-transfer">
                     <div class="form-error-group form-group @Html.AddClassIfPropertyInError("ApprovalConfirmed", "error")">
-                        <h2 class="heading-medium" for="">Do you want to approve this transfer request?</h2>
+                        <h2 class="heading-medium" for="">Do you want to accept or reject the request?</h2>
                         <div>
                             @Html.ValidationMessage("ApprovalConfirmed", "Please choose an option", new { id = "error-message-ApprovalConfirmed" })
                         </div>

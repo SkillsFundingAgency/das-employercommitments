@@ -43,6 +43,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
                 ApprovedOrRejectedByUserEmail    = "tester@test.com",
                 ApprovedOrRejectedOn = new DateTime(2018, 3, 1),
                 TransferCost = 10999m,
+                FundingCap = 20000,
                 TrainingList = new List<TrainingCourseSummary>
                 {
                     new TrainingCourseSummary
@@ -89,6 +90,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
             Assert.AreEqual(statusDescription, result.TransferApprovalStatusDesc);
             Assert.AreEqual("tester", result.TransferApprovalSetBy);
             Assert.AreEqual(new DateTime(2018, 3, 1), result.TransferApprovalSetOn);
+            Assert.AreEqual(20000, result.FundingCap);
         }
 
         [TestCase(true, true)]
@@ -101,6 +103,25 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers.Commit
             //Assert
             var result = _sut.MapToTransferRequestViewModel(_transferRequest);
             Assert.AreEqual(expectEnabled, result.EnableRejection);
+        }
+
+        [TestCase(TransferApprovalStatus.Pending, 1000, 2000, true, Description = "Show warning when cost below ceiling and pending")]
+        [TestCase(TransferApprovalStatus.Approved, 1000, 2000, true, Description = "Show warning when already approved and below ceiling")]
+        [TestCase(TransferApprovalStatus.Pending, 2000, 2000, false, Description = "No warning when cost equal to ceiling and pending")]        
+        [TestCase(TransferApprovalStatus.Rejected, 1000, 2000, false, Description = "No warning when already rejected")]
+        [TestCase(TransferApprovalStatus.Pending, 1000, 0, false, Description = "No warning when funding cap is zero value (historic)")]
+        public void ThenFundingCapWarningShouldBeShownWhenApplicable(TransferApprovalStatus status, int totalCost, int fundingCap, bool expectShowWarning)
+        {
+            //Arrange
+            _transferRequest.TransferCost = totalCost;
+            _transferRequest.FundingCap = fundingCap;
+            _transferRequest.Status = status;
+
+            //Act
+            var result = _sut.MapToTransferRequestViewModel(_transferRequest);
+
+            //Assert
+            Assert.AreEqual(expectShowWarning, result.ShowFundingCapWarning);
         }
     }
 }

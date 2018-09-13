@@ -19,6 +19,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string LegalEntityName { get; set; }
         public string HashedCohortReference { get; set; }
         public decimal TotalCost { get; set; }
+        public int FundingCap { get; set; }
         public List<TrainingCourseSummaryViewModel> TrainingList { get; set; }
         public string TransferApprovalStatusDesc { get; set; }
         public TransferApprovalStatus TransferApprovalStatus { get; set; }
@@ -26,6 +27,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public DateTime? TransferApprovalSetOn { get; set; }
         public bool EnableRejection { get; set; }
         public bool PendingApproval => TransferApprovalStatus == TransferApprovalStatus.Pending;
-
-    }
+        public bool ShowFundingCapWarning { get; set; }
+     }
 }

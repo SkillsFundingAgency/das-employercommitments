@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
@@ -51,7 +52,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 TransferApprovalSetBy = transferRequest.ApprovedOrRejectedByUserName,
                 TransferApprovalSetOn = transferRequest.ApprovedOrRejectedOn,
                 TotalCost = transferRequest.TransferCost,
-                EnableRejection = _featureToggleService.Get<TransfersRejectOption>().FeatureEnabled
+                FundingCap = transferRequest.FundingCap,
+                EnableRejection = _featureToggleService.Get<TransfersRejectOption>().FeatureEnabled,
+                ShowFundingCapWarning = (transferRequest.Status == TransferApprovalStatus.Pending
+                                         || transferRequest.Status == TransferApprovalStatus.Approved)
+                                         && transferRequest.TransferCost < transferRequest.FundingCap
             };
         }
 
