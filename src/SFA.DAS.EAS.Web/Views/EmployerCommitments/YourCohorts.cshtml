@@ -78,6 +78,25 @@
                 <p class="heading-small">With transfer sending employers</p>
             </div>
         }
+        
+        @if (Model.Data.RejectedTransferFundedCohortsCount.HasValue)
+        {
+            <div class="column-one-half bingo-background block-five @GetClickableClass(Model.Data.RejectedTransferFundedCohortsCount.Value)">
+                <h2 class="bold-xxlarge">
+                    @if (Model.Data.RejectedTransferFundedCohortsCount > 0)
+                    {
+                        <a href="@Url.Action("TransferFunded")" title="@Model.Data.RejectedTransferFundedCohortsCount rejected transfer requests" aria-label="View all rejected transfer-funded cohorts">
+                            @Model.Data.RejectedTransferFundedCohortsCount
+                        </a>
+                    }
+                    else
+                    {
+                        <span>0</span>
+                    }
+                </h2>
+                <p class="heading-small">Rejected transfer requests</p>
+            </div>
+        }
     </div> <!-- /column-two-thirds-->
 
     <div class="column-one-third pull-right"></div><!-- /column-one-third -->

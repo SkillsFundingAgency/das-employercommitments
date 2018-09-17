@@ -162,13 +162,13 @@
             .heading-small{margin-bottom:20px;}
       }
 
-.block-one, .block-two{
+.block-one, .block-two, .block-three, .block-four{
      @include media(tablet) {
           margin-bottom:30px;
           }
 }
 
-.block-one,.block-three{
+.block-one, .block-three, .block-five{
      @include media(tablet) {
     margin-right:2%;
     }

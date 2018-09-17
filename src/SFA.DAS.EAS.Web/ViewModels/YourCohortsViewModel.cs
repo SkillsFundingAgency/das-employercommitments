@@ -9,5 +9,7 @@
         public int WithProviderCount { get; set; }
 
         public int? TransferFundedCohortsCount { get; set; }
+
+        public int? RejectedTransferFundedCohortsCount { get; set; }
     }
 }

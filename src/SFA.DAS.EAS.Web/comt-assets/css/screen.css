@@ -4893,13 +4893,13 @@ table .float-right, h2 .float-right {
 }
 
 @media (min-width: 641px) {
-  #cohorts-landing-page .block-one, #cohorts-landing-page .block-two {
+  #cohorts-landing-page .block-one, #cohorts-landing-page .block-two, #cohorts-landing-page .block-three, #cohorts-landing-page .block-four {
     margin-bottom: 30px;
   }
 }
 
 @media (min-width: 641px) {
-  #cohorts-landing-page .block-one, #cohorts-landing-page .block-three {
+  #cohorts-landing-page .block-one, #cohorts-landing-page .block-three, #cohorts-landing-page .block-five {
     margin-right: 2%;
   }
 }

@@ -4279,11 +4279,11 @@ table .float-right, h2 .float-right {
   margin-bottom: 20px;
 }
 
-#cohorts-landing-page .block-one, #cohorts-landing-page .block-two {
+#cohorts-landing-page .block-one, #cohorts-landing-page .block-two, #cohorts-landing-page .block-three, #cohorts-landing-page .block-four {
   margin-bottom: 30px;
 }
 
-#cohorts-landing-page .block-one, #cohorts-landing-page .block-three {
+#cohorts-landing-page .block-one, #cohorts-landing-page .block-three, #cohorts-landing-page .block-five {
   margin-right: 2%;
 }
 
