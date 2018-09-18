@@ -114,6 +114,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         }
 
         [HttpGet]
+        [Route("cohorts/rejectedTransfers")]
+        public async Task<ActionResult> RejectedTransfers(string hashedAccountId)
+        {
+            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+                return View("AccessDenied");
+
+            SaveRequestStatusInCookie(RequestStatus.WithSenderForApproval);
+
+            var model = await Orchestrator.GetAllTransferFunded(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+            return View("RejectedTransfers", model);
+        }
+
+        [HttpGet]
         [Route("Inform")]
         public async Task<ActionResult> Inform(string hashedAccountId)
         {
