@@ -120,10 +120,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            SaveRequestStatusInCookie(RequestStatus.WithSenderForApproval);
+            SaveRequestStatusInCookie(RequestStatus.RejectedBySender);//todo: this the right one?
 
-            var model = await Orchestrator.GetAllTransferFunded(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
-            return View("RejectedTransfers", model);
+            var model = await Orchestrator.GetAllTransferFunded(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));//todo: change this to getallrejected
+            return View("RejectedTransferFundedCohorts", model);
         }
 
         [HttpGet]
