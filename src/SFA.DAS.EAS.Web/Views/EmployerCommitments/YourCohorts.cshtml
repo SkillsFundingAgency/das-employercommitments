@@ -11,6 +11,16 @@
         <div class="hgroup">
             <h1 class="heading-xlarge">Your cohort requests</h1>
         </div>
+        
+        @if (Model.Data.RejectedTransferFundedCohortsCount.HasValue)
+        {
+            <div class="warning-summary" role="alert">
+                <h1 id="warning-rejected-transfers" class="heading-medium warning-summary-heading">You have a rejected transfer request</h1>
+                <ul class="warning-summary-list">
+                    <li>View this request in <a href="@Url.Action("RejectedTransfers")">rejected transfer requests</a></li>
+                </ul>
+            </div>
+        }
 
         <div class="column-one-half bingo-background block-one @GetClickableClass(Model.Data.ReadyForReviewCount)">
             <h2 class="bold-xxlarge">
@@ -85,7 +95,7 @@
                 <h2 class="bold-xxlarge">
                     @if (Model.Data.RejectedTransferFundedCohortsCount > 0)
                     {
-                        <a href="@Url.Action("TransferFunded")" title="@Model.Data.RejectedTransferFundedCohortsCount rejected transfer requests" aria-label="View all rejected transfer-funded cohorts">
+                        <a href="@Url.Action("RejectedTransfers")" title="@Model.Data.RejectedTransferFundedCohortsCount rejected transfer requests" aria-label="View all rejected transfer-funded cohorts">
                             @Model.Data.RejectedTransferFundedCohortsCount
                         </a>
                     }
