@@ -765,9 +765,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                           || m == RequestStatus.SentForReview),
                         TransferFundedCohortsCount = _featureToggleService.Get<Transfers>().FeatureEnabled
                             ? commitmentStatuses.Count(m => 
-                                m == RequestStatus.WithSenderForApproval
-                                || m == RequestStatus.RejectedBySender) : (int?)null,
-                        RejectedTransferFundedCohortsCount = 15
+                                m == RequestStatus.WithSenderForApproval) : (int?)null,
+                        RejectedTransferFundedCohortsCount = _featureToggleService.Get<Transfers>().FeatureEnabled
+                            ? commitmentStatuses.Count(m =>
+                                m == RequestStatus.RejectedBySender) : (int?)null
                     }
                 };
 
