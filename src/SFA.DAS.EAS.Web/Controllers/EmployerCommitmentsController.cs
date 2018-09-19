@@ -122,7 +122,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             SaveRequestStatusInCookie(RequestStatus.RejectedBySender);//todo: this the right one?
 
-            var model = await Orchestrator.GetAllTransferFunded(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));//todo: change this to getallrejected
+            var model = await Orchestrator.GetAllRejectedTransferFunded(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
             return View("RejectedTransferFundedCohorts", model);
         }
 
