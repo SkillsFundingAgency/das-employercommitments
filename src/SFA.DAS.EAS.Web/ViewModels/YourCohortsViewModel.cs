@@ -10,6 +10,6 @@
 
         public int? TransferFundedCohortsCount { get; set; }
 
-        public int? RejectedTransferFundedCohortsCount { get; set; }
+        public int RejectedTransferFundedCohortsCount { get; set; }
     }
 }

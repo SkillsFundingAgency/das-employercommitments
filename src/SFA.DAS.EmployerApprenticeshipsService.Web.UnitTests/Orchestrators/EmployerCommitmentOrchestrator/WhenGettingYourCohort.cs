@@ -15,7 +15,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         private const long ValidTransferSenderId = 1L;
 
         [Test]
-        public async Task ThenAllCountsShouldBeZeroIfNoCommitments()// todo: shouldn't the nullables be null?
+        public async Task ThenAllCountsShouldBeZeroIfNoCommitments()
         {
             //Arrange
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetCommitmentsQuery>()))

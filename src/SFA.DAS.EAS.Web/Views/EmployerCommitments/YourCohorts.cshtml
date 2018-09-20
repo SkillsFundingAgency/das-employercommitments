@@ -79,9 +79,9 @@
             </div>
         }
         
-        @if (Model.Data.RejectedTransferFundedCohortsCount.HasValue)
+        @if (Model.Data.RejectedTransferFundedCohortsCount > 0)
         {
-            <div class="column-one-half bingo-background block-five @GetClickableClass(Model.Data.RejectedTransferFundedCohortsCount.Value)">
+            <div class="column-one-half bingo-background block-five @GetClickableClass(Model.Data.RejectedTransferFundedCohortsCount)">
                 <h2 class="bold-xxlarge">
                     @if (Model.Data.RejectedTransferFundedCohortsCount > 0)
                     {
