@@ -120,7 +120,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            SaveRequestStatusInCookie(RequestStatus.RejectedBySender);//todo: this the right one?
+            SaveRequestStatusInCookie(RequestStatus.RejectedBySender);
 
             var model = await Orchestrator.GetAllRejectedTransferFunded(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
             return View("RejectedTransferFundedCohorts", model);
@@ -928,6 +928,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 case RequestStatus.ReadyForReview:
                 case RequestStatus.ReadyForApproval:
                     return Url.Action("ReadyForReview", new { hashedAccountId });
+                case RequestStatus.WithSenderForApproval:
+                    return Url.Action("TransferFunded", new {hashedAccountId});
+                case RequestStatus.RejectedBySender:
+                    return Url.Action("RejectedTransfers", new {hashedAccountId});
                 default:
                     return Url.Action("YourCohorts", new { hashedAccountId });
             }
