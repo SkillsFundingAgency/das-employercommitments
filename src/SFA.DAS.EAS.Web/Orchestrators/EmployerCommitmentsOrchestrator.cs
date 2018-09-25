@@ -862,7 +862,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             return await CheckUserAuthorization(async () =>
             {
                 var transferFundedCommitments = await GetAllCommitmentsOfStatus(accountId,
-                    RequestStatus.WithSenderForApproval, RequestStatus.RejectedBySender);//todo: remove rejected from here
+                    RequestStatus.WithSenderForApproval);
 
                 return new OrchestratorResponse<TransferFundedCohortsViewModel>
                 {
