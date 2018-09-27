@@ -30,8 +30,8 @@
             count++;
 
             var ilrPeriod = dl.IlrEndDate.HasValue
-                ? $"From {dl.CurrentStartDate.Date.ToGdsFormat()} to {dl.IlrEndDate.Value.ToGdsFormat()}"
-                : $"From {dl.CurrentStartDate.Date.ToGdsFormat()} onwards";
+                ? $"From {dl.IlrStartDate.Date.ToGdsFormat()} to {dl.IlrEndDate.Value.ToGdsFormat()}"
+                : $"From {dl.IlrStartDate.Date.ToGdsFormat()} onwards";
 
             var dasPeriod = $"From {dl.CurrentStartDate.ToGdsFormat()} onwards";
 
