@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Ajax.Utilities;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 {
@@ -30,8 +31,24 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public List<string> Provider { get; set; }
         public List<string> Course { get; set; }
         public List<string> FundingStatus { get; set; }
+
         public int PageNumber { get; set; }
         public string SearchInput { get; set; }
         public bool ResetFilter { get; set; }
+
+        public bool HasValues()
+        {
+            return ApprenticeshipStatusOptions.Count > 0
+                || FundingStatusOptions.Count > 0
+                || ProviderOrganisationOptions.Count > 0
+                || RecordStatusOptions.Count > 0
+                || TrainingCourseOptions.Count > 0
+                || Status.Count > 0
+                || RecordStatus.Count > 0
+                || Provider.Count > 0
+                || Course.Count > 0
+                || FundingStatus.Count > 0
+                || !SearchInput.IsNullOrWhiteSpace();
+        }
     }
 }

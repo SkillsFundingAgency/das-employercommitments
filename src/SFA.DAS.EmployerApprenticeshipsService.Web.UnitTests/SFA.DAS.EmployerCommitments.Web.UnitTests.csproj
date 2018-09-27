@@ -354,6 +354,7 @@
     <Compile Include="Validators\EditApprenticeshipStopDate\WhenValidatingNewStopDate.cs" />
     <Compile Include="Validators\Messages\WhenExtractingMessages.cs" />
     <Compile Include="Validators\ProviderSelectionTest\WhenValidatingProviderId.cs" />
+    <Compile Include="ViewModels\GivenAnApprenticeshipFiltersViewModel.cs" />
     <Compile Include="ViewModels\WhenCreatedApprenticeshipListItemGroupViewModel.cs" />
     <Compile Include="Views\EmployerCommitments\EmployerCommitmentsDetailsPage.cs" />
     <Compile Include="Views\EmployerCommitments\ViewApprenticeshipEntryPage.cs" />
