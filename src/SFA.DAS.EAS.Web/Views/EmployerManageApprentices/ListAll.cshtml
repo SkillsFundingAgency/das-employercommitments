@@ -43,10 +43,9 @@ else
                 @Html.Partial("ApprenticeshipFilters", Model.Data.Filters)
                 <button type="submit" class="button" value="Filter" id="submit-app-filter">Filter apprentices</button>
                 <p>
-                    <a href="@Url.Action("ListAll")" title="Reset" class="button text-link reset-link">Reset</a>
+                    <a href="@Url.Action("ListAll", new {resetFilter = true})" title="Reset" class="button text-link reset-link">Reset</a>
                 </p>
                 @Html.Hidden("SearchInput", Model.Data.Filters.SearchInput)
-                <input name="ResetFilter" type="hidden" value="False">
             </form>
         </div>
 
