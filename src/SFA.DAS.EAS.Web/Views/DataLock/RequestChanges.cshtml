@@ -65,8 +65,8 @@
             count++;
 
             var ilrPeriod = p.IlrEndDate.HasValue
-                ? $"From {p.CurrentStartDate.Date.ToGdsFormat()} to {p.IlrEndDate.Value.ToGdsFormat()}"
-                : $"From {p.CurrentStartDate.Date.ToGdsFormat()} onwards";
+                ? $"From {p.IlrStartDate.Date.ToGdsFormat()} to {p.IlrEndDate.Value.ToGdsFormat()}"
+                : $"From {p.IlrStartDate.Date.ToGdsFormat()} onwards";
 
             var dasPeriod = p.MissingPriceHistory
                 ? string.Empty
