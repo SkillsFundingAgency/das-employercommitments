@@ -42,10 +42,11 @@ else
             <form method="GET" action="@Url.Action("ListAll")" novalidate="novalidate">
                 @Html.Partial("ApprenticeshipFilters", Model.Data.Filters)
                 <button type="submit" class="button" value="Filter" id="submit-app-filter">Filter apprentices</button>
-                <p>
-                    <a href="@Url.Action("ListAll", new {resetFilter = true})" title="Reset" class="button text-link reset-link">Reset</a>
-                </p>
                 @Html.Hidden("SearchInput", Model.Data.Filters.SearchInput)
+            </form>
+            <form method="GET" action="@Url.Action("ListAll")" novalidate="novalidate">
+                <input name="ResetFilter" type="hidden" value="True">
+                <button type="submit" class="button text-link reset-link">Reset</button>
             </form>
         </div>
 
