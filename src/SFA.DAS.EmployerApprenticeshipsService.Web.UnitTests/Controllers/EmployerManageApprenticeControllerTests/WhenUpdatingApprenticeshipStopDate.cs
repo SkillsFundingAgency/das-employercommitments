@@ -35,7 +35,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
             _cookieStorage = new Mock<ICookieStorageService<FlashMessageViewModel>>();
 
             _controller = new EmployerManageApprenticesController(_orchestrator.Object, _owinWrapper.Object, Mock.Of<IMultiVariantTestingService>(),
-                _cookieStorage.Object);
+                _cookieStorage.Object, Mock.Of<ICookieStorageService<ApprenticeshipFiltersViewModel>>());
         }
 
         [Test]
@@ -47,8 +47,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
 
             Assert.AreEqual("AccessDenied", (result as ViewResult)?.ViewName);
         }
-
-
+        
         [Test]
         public async Task ThenOrchestratorWillUpdateStopDate()
         {

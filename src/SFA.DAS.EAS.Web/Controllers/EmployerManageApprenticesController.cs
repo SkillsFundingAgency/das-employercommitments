@@ -21,18 +21,18 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     public class EmployerManageApprenticesController : BaseController
     {
         private readonly IEmployerManageApprenticeshipsOrchestrator _orchestrator;
+        private readonly ICookieStorageService<ApprenticeshipFiltersViewModel> _filterCookieStorageService;
 
         public EmployerManageApprenticesController(
             IEmployerManageApprenticeshipsOrchestrator orchestrator,
             IOwinWrapper owinWrapper,
             IMultiVariantTestingService multiVariantTestingService,
-            ICookieStorageService<FlashMessageViewModel> flashMessage)
+            ICookieStorageService<FlashMessageViewModel> flashMessage,
+            ICookieStorageService<ApprenticeshipFiltersViewModel> filterCookieStorageService)
                 : base(owinWrapper, multiVariantTestingService, flashMessage)
         {
-            if (orchestrator == null)
-                throw new ArgumentNullException(nameof(orchestrator));
-
             _orchestrator = orchestrator;
+            _filterCookieStorageService = filterCookieStorageService;
         }
 
         [HttpGet]
@@ -43,13 +43,31 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
+            var cookieExists = false;
+            if (filtersViewModel.ResetFilter)
+            {
+                filtersViewModel = new ApprenticeshipFiltersViewModel();
+                _filterCookieStorageService.Delete(nameof(ApprenticeshipFiltersViewModel));
+            } 
+            else if (!filtersViewModel.HasValues())
+            {
+                filtersViewModel = _filterCookieStorageService.Get(nameof(ApprenticeshipFiltersViewModel)) ?? new ApprenticeshipFiltersViewModel();
+
+                cookieExists = filtersViewModel.HasValues();
+            }
+
+            if (cookieExists)
+                _filterCookieStorageService.Update(nameof(ApprenticeshipFiltersViewModel), filtersViewModel);
+            else
+                _filterCookieStorageService.Create(filtersViewModel,nameof(ApprenticeshipFiltersViewModel));
+
             var model = await _orchestrator
                 .GetApprenticeships(hashedAccountId,
                 filtersViewModel,
                 OwinWrapper.GetClaimValue(@"sub"));
 
             RemoveFlashMessageFromCookie();
-
+            
             return View(model);
         }
 
