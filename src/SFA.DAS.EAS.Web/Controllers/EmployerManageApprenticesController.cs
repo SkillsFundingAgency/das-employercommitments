@@ -52,13 +52,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             else if (!filtersViewModel.HasValues())
             {
                 filtersViewModel = _filterCookieStorageService.Get(nameof(ApprenticeshipFiltersViewModel)) ?? new ApprenticeshipFiltersViewModel();
-
                 cookieExists = filtersViewModel.HasValues();
             }
 
             if (cookieExists)
                 _filterCookieStorageService.Update(nameof(ApprenticeshipFiltersViewModel), filtersViewModel);
-            else
+            else if (filtersViewModel.HasValues())
                 _filterCookieStorageService.Create(filtersViewModel,nameof(ApprenticeshipFiltersViewModel));
 
             var model = await _orchestrator
