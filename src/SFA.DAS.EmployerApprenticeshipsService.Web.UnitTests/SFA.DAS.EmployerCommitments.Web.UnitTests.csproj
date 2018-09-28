@@ -309,6 +309,7 @@
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingApprenticeship.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenDeletingApprenticeship.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingIndexView.cs" />
+    <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenCheckingForFiltersCookie.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenUpdatingAnEmployeeStopDate.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingEditApprenticeshipStopDateViewModel.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingProviderPriorityList.cs" />

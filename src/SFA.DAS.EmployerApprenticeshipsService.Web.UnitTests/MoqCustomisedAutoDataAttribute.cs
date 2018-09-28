@@ -5,9 +5,9 @@ using AutoFixture.NUnit3;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests
 {
-    public class MoqCustomisedAutoData : AutoDataAttribute
+    public class MoqCustomisedAutoDataAttribute : AutoDataAttribute
     {
-        public MoqCustomisedAutoData() : base(FixtureBuilder.FixtureFactory)
+        public MoqCustomisedAutoDataAttribute() : base(FixtureBuilder.FixtureFactory)
         { }
     }
 
