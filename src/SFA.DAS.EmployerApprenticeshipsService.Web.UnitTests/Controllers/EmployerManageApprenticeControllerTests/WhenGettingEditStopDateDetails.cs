@@ -29,7 +29,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
             _orchestrator = new Mock<IEmployerManageApprenticeshipsOrchestrator>();
 
             _controller = new EmployerManageApprenticesController(_orchestrator.Object, Mock.Of<IOwinWrapper>(), Mock.Of<IMultiVariantTestingService>(),
-                Mock.Of<ICookieStorageService<FlashMessageViewModel>>(), Mock.Of<ICookieStorageService<ApprenticeshipFiltersViewModel>>());
+                Mock.Of<ICookieStorageService<FlashMessageViewModel>>());
         }
 
         [Test]
