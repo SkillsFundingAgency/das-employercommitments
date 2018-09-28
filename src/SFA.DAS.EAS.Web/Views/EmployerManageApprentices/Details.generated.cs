@@ -422,8 +422,35 @@ WriteLiteral(">Reference </th>\r\n                    <td>");
 
                    Write(Model.Data.EmployerReference);
 
-WriteLiteral("</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n\r\n    </div" +
-">\r\n</div>\r\n\r\n");
+WriteLiteral("</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n        \r\n");
+
+        
+         if (Model.Data.TrainingType == TrainingType.Standard)
+        {
+
+WriteLiteral("            <h2");
+
+WriteLiteral(" class=\"heading-medium\"");
+
+WriteLiteral(">End Point Assessor</h2>\r\n");
+
+WriteLiteral("            <table");
+
+WriteLiteral(" class=\"details-list\"");
+
+WriteLiteral(">\r\n                <tbody>\r\n                <tr>\r\n                    <th");
+
+WriteLiteral(" scope=\"row\"");
+
+WriteLiteral(">End point assessor</th>\r\n                    <td>");
+
+                    Write(Model.Data.EndpointAssessorName ?? "The end point assessor has not been declared");
+
+WriteLiteral("</td>\r\n                </tr>\r\n                </tbody>\r\n            </table>\r\n");
+
+        }
+
+WriteLiteral("    </div>\r\n</div>\r\n\r\n");
 
 DefineSection("breadcrumb", () => {
 
@@ -433,9 +460,9 @@ WriteLiteral(" class=\"breadcrumbs\"");
 
 WriteLiteral(">\r\n        <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 6969), Tuple.Create("\"", 7027)
-, Tuple.Create(Tuple.Create("", 6976), Tuple.Create<System.Object, System.Int32>(Url.Action("ListAll", "EmployerManageApprentices")
-, 6976), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 7463), Tuple.Create("\"", 7545)
+, Tuple.Create(Tuple.Create("", 7470), Tuple.Create<System.Object, System.Int32>(Url.Action("ListAll", "EmployerManageApprentices", new {checkCookie=true})
+, 7470), false)
 );
 
 WriteLiteral(" aria-label=\"Back to manage your apprentices\"");

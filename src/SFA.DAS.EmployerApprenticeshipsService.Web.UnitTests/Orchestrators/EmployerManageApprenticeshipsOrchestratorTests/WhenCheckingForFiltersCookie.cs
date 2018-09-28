@@ -11,43 +11,57 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
     [TestFixture]
     public class WhenCheckingForFiltersCookie
     {
+        private const int DefaultCookieExpiryDays = 1;
+
         [Test, MoqCustomisedAutoData]
         public void AndNotCheckCookieThenReturnsUnmodifiedFilters(
             ApprenticeshipFiltersViewModel filtersViewModel,
             [Frozen] Mock<ICookieStorageService<ApprenticeshipFiltersViewModel>> mockCookieStorageService,
             FiltersCookieManager sut)
         {
+            filtersViewModel.CheckCookie = false;
             var response = sut.CheckForCookie(TestHelper.Clone(filtersViewModel));
             response.ShouldBeEquivalentTo(filtersViewModel);
         }
-    }
 
-    public class FiltersCookieManager : IFiltersCookieManager
-    {
-        public FiltersCookieManager(ICookieStorageService<ApprenticeshipFiltersViewModel> filterCookieStorageService)
+        [Test, MoqCustomisedAutoData]
+        public void AndNotCheckCookieThenStillStoresFiltersInCookie(
+            ApprenticeshipFiltersViewModel filtersViewModel,
+            [Frozen] Mock<ICookieStorageService<ApprenticeshipFiltersViewModel>> mockCookieStorageService,
+            FiltersCookieManager sut)
         {
-            
+            filtersViewModel.CheckCookie = false;
+            sut.CheckForCookie(filtersViewModel);
+            mockCookieStorageService.Verify(service => service.Delete(nameof(ApprenticeshipFiltersViewModel)));
+            mockCookieStorageService.Verify(service => service.Create(filtersViewModel, nameof(ApprenticeshipFiltersViewModel), DefaultCookieExpiryDays));
         }
 
-        public ApprenticeshipFiltersViewModel CheckForCookie(ApprenticeshipFiltersViewModel filtersViewModel)
+        [Test, MoqCustomisedAutoData]
+        public void AndCheckCookieThenStillStoresFiltersInCookie(
+            ApprenticeshipFiltersViewModel filtersViewModel,
+            [Frozen] Mock<ICookieStorageService<ApprenticeshipFiltersViewModel>> mockCookieStorageService,
+            FiltersCookieManager sut)
         {
-            /*            var cookieExists = false;
-            if (filtersViewModel.ResetFilter)
-            {
-                filtersViewModel = new ApprenticeshipFiltersViewModel();
-                _filterCookieStorageService.Delete(nameof(ApprenticeshipFiltersViewModel));
-            }
-            else if (!filtersViewModel.HasValues())
-            {
-                filtersViewModel = _filterCookieStorageService.Get(nameof(ApprenticeshipFiltersViewModel)) ?? new ApprenticeshipFiltersViewModel();
-                cookieExists = filtersViewModel.HasValues();
-            }
+            filtersViewModel.CheckCookie = true;
+            sut.CheckForCookie(filtersViewModel);
+            mockCookieStorageService.Verify(service => service.Delete(nameof(ApprenticeshipFiltersViewModel)));
+            mockCookieStorageService.Verify(service => service.Create(filtersViewModel, nameof(ApprenticeshipFiltersViewModel), DefaultCookieExpiryDays));
+        }
 
-            if (cookieExists)
-                _filterCookieStorageService.Update(nameof(ApprenticeshipFiltersViewModel), filtersViewModel);
-            else if (filtersViewModel.HasValues())
-                _filterCookieStorageService.Create(filtersViewModel,nameof(ApprenticeshipFiltersViewModel));*/
-            return filtersViewModel;
+        [Test, MoqCustomisedAutoData]
+        public void AndCheckCookieThenReturnsFiltersFromCookie(
+            ApprenticeshipFiltersViewModel filtersViewModel,
+            ApprenticeshipFiltersViewModel filtersViewModelFromCookie,
+            [Frozen] Mock<ICookieStorageService<ApprenticeshipFiltersViewModel>> mockCookieStorageService,
+            FiltersCookieManager sut)
+        {
+            filtersViewModel.CheckCookie = true;
+            mockCookieStorageService
+                .Setup(service => service.Get(nameof(ApprenticeshipFiltersViewModel)))
+                .Returns(filtersViewModelFromCookie);
+
+            var response = sut.CheckForCookie(TestHelper.Clone(filtersViewModel));
+            response.ShouldBeEquivalentTo(filtersViewModelFromCookie);
         }
     }
 }

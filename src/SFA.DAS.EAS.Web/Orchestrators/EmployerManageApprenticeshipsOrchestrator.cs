@@ -89,14 +89,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 if (filters.SearchInput?.Trim() == _searchPlaceholderText.Trim())
                     filters.SearchInput = string.Empty;
-                
-                //todo: do cookie check and store of filters here
-                // filters = _cookieStuff.CheckForFiltersCookie(filters);
-                // or
-                /*if (filters.ReadCookie)
-                    _cookieStore.Get();
-                else if (filters.HasValues())
-                    _cookieStore.Create(filters);*/
+
+                filters = _filtersCookieManager.CheckForCookie(filters);
 
                 var searchQuery = _apprenticeshipFiltersMapper.MapToApprenticeshipSearchQuery(filters);
 

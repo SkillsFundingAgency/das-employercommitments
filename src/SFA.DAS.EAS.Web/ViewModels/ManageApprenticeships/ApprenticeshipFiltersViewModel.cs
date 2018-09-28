@@ -35,6 +35,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public int PageNumber { get; set; }
         public string SearchInput { get; set; }
         public bool ResetFilter { get; set; }
+        public bool CheckCookie { get; set; }
 
         public bool HasValues()
         {
