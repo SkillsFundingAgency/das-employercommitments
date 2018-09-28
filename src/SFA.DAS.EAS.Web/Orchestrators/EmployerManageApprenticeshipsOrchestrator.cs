@@ -47,7 +47,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly IAcademicYearDateProvider _academicYearDateProvider;
         private readonly IAcademicYearValidator _academicYearValidator;
         private readonly ICookieStorageService<UpdateApprenticeshipViewModel>
-            _apprenticshipsViewModelCookieStorageService;
+            _apprenticeshipsViewModelCookieStorageService;
 
         private readonly IFiltersCookieManager _filtersCookieManager;
         private readonly string _searchPlaceholderText;
@@ -61,7 +61,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IValidateApprovedApprenticeship approvedApprenticeshipValidator,
             ICurrentDateTime currentDateTime,
             ILog logger,
-            ICookieStorageService<UpdateApprenticeshipViewModel> apprenticshipsViewModelCookieStorageService,
+            ICookieStorageService<UpdateApprenticeshipViewModel> apprenticeshipsViewModelCookieStorageService,
             IFiltersCookieManager filtersCookieManager,
             IApprenticeshipFiltersMapper apprenticeshipFiltersMapper,
             IAcademicYearDateProvider academicYearDateProvider,
@@ -71,7 +71,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _apprenticeshipMapper = apprenticeshipMapper;
             _currentDateTime = currentDateTime;
             _approvedApprenticeshipValidator = approvedApprenticeshipValidator;
-            _apprenticshipsViewModelCookieStorageService = apprenticshipsViewModelCookieStorageService;
+            _apprenticeshipsViewModelCookieStorageService = apprenticeshipsViewModelCookieStorageService;
             _filtersCookieManager = filtersCookieManager;
             _apprenticeshipFiltersMapper = apprenticeshipFiltersMapper;
             _searchPlaceholderText = "Enter a name";
@@ -664,7 +664,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             GetOrchestratorResponseUpdateApprenticeshipViewModelFromCookie(string hashedAccountId,
                 string hashedApprenticeshipId)
         {
-            var mappedModel = _apprenticshipsViewModelCookieStorageService.Get(CookieName);
+            var mappedModel = _apprenticeshipsViewModelCookieStorageService.Get(CookieName);
 
             var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
             var accountId = HashingService.DecodeValue(hashedAccountId);
@@ -685,9 +685,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         public void CreateApprenticeshipViewModelCookie(UpdateApprenticeshipViewModel model)
         {
-            _apprenticshipsViewModelCookieStorageService.Delete(CookieName);
+            _apprenticeshipsViewModelCookieStorageService.Delete(CookieName);
             model.OriginalApprenticeship = null;
-            _apprenticshipsViewModelCookieStorageService.Create(model, CookieName);
+            _apprenticeshipsViewModelCookieStorageService.Create(model, CookieName);
         }
 
         public async Task SubmitReviewApprenticeshipUpdate(string hashedAccountId, string hashedApprenticeshipId, string userId, bool isApproved, string userName, string userEmail)
