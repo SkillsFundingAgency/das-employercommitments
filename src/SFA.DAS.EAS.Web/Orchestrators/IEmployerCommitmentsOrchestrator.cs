@@ -90,6 +90,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         Task<OrchestratorResponse<TransferFundedCohortsViewModel>> GetAllTransferFunded(string hashedAccountId,
             string externalUserId);
 
+        Task<OrchestratorResponse<TransferFundedCohortsViewModel>> GetAllRejectedTransferFunded(string hashedAccountId,
+            string externalUserId);
+
         Task<OrchestratorResponse<CommitmentDetailsViewModel>> GetCommitmentDetails(string hashedAccountId,
             string hashedCommitmentId, string externalUserId);
 
