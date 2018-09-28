@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             {
                 filtersViewModel = new ApprenticeshipFiltersViewModel();
                 _filterCookieStorageService.Delete(nameof(ApprenticeshipFiltersViewModel));
-            } 
+            }
             else if (!filtersViewModel.HasValues())
             {
                 filtersViewModel = _filterCookieStorageService.Get(nameof(ApprenticeshipFiltersViewModel)) ?? new ApprenticeshipFiltersViewModel();

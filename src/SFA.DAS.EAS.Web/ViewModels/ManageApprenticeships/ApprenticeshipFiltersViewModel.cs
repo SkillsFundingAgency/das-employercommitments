@@ -48,7 +48,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
                 || Provider.Count > 0
                 || Course.Count > 0
                 || FundingStatus.Count > 0
-                || !SearchInput.IsNullOrWhiteSpace();
+                || !SearchInput.IsNullOrWhiteSpace()
+                || PageNumber > 0;
         }
     }
 }

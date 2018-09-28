@@ -141,12 +141,24 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
             }
 
             [Test, AutoData]
-            public void AndSearchInputHasValuesThenReturnsTrue(
+            public void AndSearchInputHasValueThenReturnsTrue(
                 string searchInput)
             {
                 var sut = new ApprenticeshipFiltersViewModel
                 {
                     SearchInput = searchInput
+                };
+
+                sut.HasValues().Should().BeTrue();
+            }
+
+            [Test, AutoData]
+            public void AndPageNumberHasValueThenReturnsTrue(
+                int pageNumber)
+            {
+                var sut = new ApprenticeshipFiltersViewModel
+                {
+                    PageNumber = pageNumber
                 };
 
                 sut.HasValues().Should().BeTrue();
