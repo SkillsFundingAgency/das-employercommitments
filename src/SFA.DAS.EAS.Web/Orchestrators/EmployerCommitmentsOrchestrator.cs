@@ -680,7 +680,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 {
                     var accountId = HashingService.DecodeValue(model.HashedAccountId);
                     var commitmentId = HashingService.DecodeValue(model.HashedCommitmentId);
-                    Logger.Info($"Submiting Commitment, Account: {accountId}, Commitment: {commitmentId}, Action: {model.SaveStatus}");
+                    Logger.Info($"Submitting Commitment, Account: {accountId}, Commitment: {commitmentId}, Action: {model.SaveStatus}");
 
                     var lastAction = model.SaveStatus == SaveStatus.AmendAndSend
                         ? LastAction.Amend
@@ -705,7 +705,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         {
             var accountId = HashingService.DecodeValue(hashedAccountId);
             var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
-            Logger.Info($"Getting Acknowldedgement Model for existing commitment, Account: {accountId}, CommitmentId: {commitmentId}");
+            Logger.Info($"Getting Acknowledgement Model for existing commitment, Account: {accountId}, CommitmentId: {commitmentId}");
 
             return await CheckUserAuthorization(async () =>
             {
@@ -765,8 +765,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                           || m == RequestStatus.SentForReview),
                         TransferFundedCohortsCount = _featureToggleService.Get<Transfers>().FeatureEnabled
                             ? commitmentStatuses.Count(m => 
-                                m == RequestStatus.WithSenderForApproval
-                                || m == RequestStatus.RejectedBySender) : (int?)null
+                                m == RequestStatus.WithSenderForApproval) : (int?)null,
+                        RejectedTransferFundedCohortsCount = commitmentStatuses.Count(m =>
+                            m == RequestStatus.RejectedBySender)
                     }
                 };
 
@@ -861,7 +862,28 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             return await CheckUserAuthorization(async () =>
             {
                 var transferFundedCommitments = await GetAllCommitmentsOfStatus(accountId,
-                    RequestStatus.WithSenderForApproval, RequestStatus.RejectedBySender);
+                    RequestStatus.WithSenderForApproval);
+
+                return new OrchestratorResponse<TransferFundedCohortsViewModel>
+                {
+                    Data = new TransferFundedCohortsViewModel
+                    {
+                        Commitments = MapFrom(transferFundedCommitments)
+                    }
+                };
+
+            }, hashedAccountId, externalUserId);
+        }
+
+        public async Task<OrchestratorResponse<TransferFundedCohortsViewModel>> GetAllRejectedTransferFunded(string hashedAccountId, string externalUserId)
+        {
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            Logger.Info($"Getting your transfer-funded cohorts for Account: {accountId}");
+
+            return await CheckUserAuthorization(async () =>
+            {
+                var transferFundedCommitments = await GetAllCommitmentsOfStatus(accountId,
+                    RequestStatus.RejectedBySender);
 
                 return new OrchestratorResponse<TransferFundedCohortsViewModel>
                 {

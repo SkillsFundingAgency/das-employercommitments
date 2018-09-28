@@ -286,8 +286,10 @@
     <Compile Include="Infrastructure\StructureMapRegistrationTests\WhenAddingMessaging.cs" />
     <Compile Include="Infrastructure\StructureMapRegistrationTests\WhenInitalisingTheContainer.cs" />
     <Compile Include="Models\DateTimeViewModelTests.cs" />
+    <Compile Include="MoqCustomisedAutoDataAttribute.cs" />
     <Compile Include="Orchestrators\DataLockOrchestratorTests\WhenGettingDataLockChangeStatus.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\CheckingForAnyCohortsForCurrentStatus.cs" />
+    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCallingGetAllRejectedTransferFunded.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCallingGetSubmitNewCommitmentModel.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingEmployerAssignedCommitment.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingProviderAssignedCommitment.cs" />

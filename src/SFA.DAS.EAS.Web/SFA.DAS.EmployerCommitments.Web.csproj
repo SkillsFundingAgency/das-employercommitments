@@ -1171,6 +1171,7 @@
       <LastGenOutput>EditStopDate.generated.cs</LastGenOutput>
     </Content>
     <Content Include="Views\EmployerCommitments\TransferFundedCohorts.cshtml" />
+    <Content Include="Views\EmployerCommitments\RejectedTransferFundedCohorts.cshtml" />
     <None Include="Views\razorgenerator.directives" />
   </ItemGroup>
   <ItemGroup>
