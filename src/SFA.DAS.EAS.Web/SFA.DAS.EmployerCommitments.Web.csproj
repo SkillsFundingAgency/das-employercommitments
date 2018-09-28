@@ -448,6 +448,7 @@
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Decorators\AccountApiClientDecorator.cs" />
     <Compile Include="Orchestrators\IEmployerCommitmentsOrchestrator.cs" />
+    <Compile Include="Orchestrators\IFiltersCookieManager.cs" />
     <Compile Include="PublicHashingService\IPublicHashingService.cs" />
     <Compile Include="PublicHashingService\PublicHashingService.cs" />
     <Compile Include="DependencyResolution\StructureMapValidatorFactory.cs" />

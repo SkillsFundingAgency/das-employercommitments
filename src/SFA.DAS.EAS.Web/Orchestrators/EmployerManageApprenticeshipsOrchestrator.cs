@@ -48,6 +48,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly IAcademicYearValidator _academicYearValidator;
         private readonly ICookieStorageService<UpdateApprenticeshipViewModel>
             _apprenticshipsViewModelCookieStorageService;
+
+        private readonly IFiltersCookieManager _filtersCookieManager;
         private readonly string _searchPlaceholderText;
 
         private const string CookieName = "sfa-das-employerapprenticeshipsservice-apprentices";
@@ -60,6 +62,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             ICurrentDateTime currentDateTime,
             ILog logger,
             ICookieStorageService<UpdateApprenticeshipViewModel> apprenticshipsViewModelCookieStorageService,
+            IFiltersCookieManager filtersCookieManager,
             IApprenticeshipFiltersMapper apprenticeshipFiltersMapper,
             IAcademicYearDateProvider academicYearDateProvider,
             IAcademicYearValidator academicYearValidator)
@@ -69,6 +72,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _currentDateTime = currentDateTime;
             _approvedApprenticeshipValidator = approvedApprenticeshipValidator;
             _apprenticshipsViewModelCookieStorageService = apprenticshipsViewModelCookieStorageService;
+            _filtersCookieManager = filtersCookieManager;
             _apprenticeshipFiltersMapper = apprenticeshipFiltersMapper;
             _searchPlaceholderText = "Enter a name";
             _academicYearDateProvider = academicYearDateProvider;
@@ -85,6 +89,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 if (filters.SearchInput?.Trim() == _searchPlaceholderText.Trim())
                     filters.SearchInput = string.Empty;
+                
+                //todo: do cookie check and store of filters here
+                // filters = _cookieStuff.CheckForFiltersCookie(filters);
+                // or
+                /*if (filters.ReadCookie)
+                    _cookieStore.Get();
+                else if (filters.HasValues())
+                    _cookieStore.Create(filters);*/
 
                 var searchQuery = _apprenticeshipFiltersMapper.MapToApprenticeshipSearchQuery(filters);
 
