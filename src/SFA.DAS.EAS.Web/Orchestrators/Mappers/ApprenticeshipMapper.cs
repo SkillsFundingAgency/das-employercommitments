@@ -348,15 +348,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             return l;
         }
 
-        public async Task<IEnumerable<CourseChange>> MapCourseChanges(IEnumerable<DataLockStatus> dataLocks, Apprenticeship apprenticeship)
+        public async Task<IEnumerable<CourseChange>> MapCourseChanges(IEnumerable<DataLockStatus> dataLocks, Apprenticeship apprenticeship, IList<PriceHistory> priceHistory)
         {
             var l = new List<CourseChange>();
+
+            var earliestPriceHistory = priceHistory.Min(x => x.FromDate);
 
             foreach (var dl in dataLocks.Where(m => m.TriageStatus == TriageStatus.Change))
             {
                 var course = new CourseChange
                                  {
-                                     CurrentStartDate = apprenticeship.StartDate.Value,
+                                     CurrentStartDate = earliestPriceHistory,
                                      CurrentEndDate = apprenticeship.EndDate.Value,
                                      CurrentTrainingProgram = apprenticeship.TrainingName,
                                      IlrStartDate = dl.IlrEffectiveFromDate.Value,
