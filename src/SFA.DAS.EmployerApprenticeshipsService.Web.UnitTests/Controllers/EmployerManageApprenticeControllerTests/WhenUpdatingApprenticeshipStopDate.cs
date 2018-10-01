@@ -47,7 +47,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
 
             Assert.AreEqual("AccessDenied", (result as ViewResult)?.ViewName);
         }
-        
+
+
         [Test]
         public async Task ThenOrchestratorWillUpdateStopDate()
         {
