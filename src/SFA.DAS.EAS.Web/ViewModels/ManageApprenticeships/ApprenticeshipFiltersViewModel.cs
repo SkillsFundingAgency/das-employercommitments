@@ -39,12 +39,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public bool HasValues()
         {
-            return ApprenticeshipStatusOptions.Count > 0
-                || FundingStatusOptions.Count > 0
-                || ProviderOrganisationOptions.Count > 0
-                || RecordStatusOptions.Count > 0
-                || TrainingCourseOptions.Count > 0
-                || Status.Count > 0
+            return Status.Count > 0
                 || RecordStatus.Count > 0
                 || Provider.Count > 0
                 || Course.Count > 0

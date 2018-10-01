@@ -21,66 +21,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
             }
 
             [Test, AutoData]
-            public void AndApprenticeshipStatusOptionsHasValuesThenReturnsTrue(
-                List<KeyValuePair<string, string>> apprenticeshipStatusOptions)
-            {
-                var sut = new ApprenticeshipFiltersViewModel
-                {
-                    ApprenticeshipStatusOptions = apprenticeshipStatusOptions
-                };
-
-                sut.HasValues().Should().BeTrue();
-            }
-
-            [Test, AutoData]
-            public void AndFundingStatusOptionsHasValuesThenReturnsTrue(
-                List<KeyValuePair<string, string>> fundingStatusOptions)
-            {
-                var sut = new ApprenticeshipFiltersViewModel
-                {
-                    FundingStatusOptions = fundingStatusOptions
-                };
-
-                sut.HasValues().Should().BeTrue();
-            }
-
-            [Test, AutoData]
-            public void AndProviderOrganisationOptionsHasValuesThenReturnsTrue(
-                List<KeyValuePair<string, string>> providerOrganisationOptions)
-            {
-                var sut = new ApprenticeshipFiltersViewModel
-                {
-                    ProviderOrganisationOptions = providerOrganisationOptions
-                };
-
-                sut.HasValues().Should().BeTrue();
-            }
-
-            [Test, AutoData]
-            public void AndRecordStatusOptionsHasValuesThenReturnsTrue(
-                List<KeyValuePair<string, string>> recordStatusOptions)
-            {
-                var sut = new ApprenticeshipFiltersViewModel
-                {
-                    RecordStatusOptions = recordStatusOptions
-                };
-
-                sut.HasValues().Should().BeTrue();
-            }
-
-            [Test, AutoData]
-            public void AndTrainingCourseOptionsHasValuesThenReturnsTrue(
-                List<KeyValuePair<string, string>> trainingCourseOptions)
-            {
-                var sut = new ApprenticeshipFiltersViewModel
-                {
-                    TrainingCourseOptions = trainingCourseOptions
-                };
-
-                sut.HasValues().Should().BeTrue();
-            }
-
-            [Test, AutoData]
             public void AndStatusHasValuesThenReturnsTrue(
                 List<string> statuses)
             {
