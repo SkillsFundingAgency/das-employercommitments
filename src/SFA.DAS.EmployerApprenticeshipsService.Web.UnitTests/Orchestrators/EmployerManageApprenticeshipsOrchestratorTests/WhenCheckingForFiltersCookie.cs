@@ -63,5 +63,16 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             var response = sut.CheckForCookie(TestHelper.Clone(filtersViewModel));
             response.ShouldBeEquivalentTo(filtersViewModelFromCookie);
         }
+
+        [Test, MoqCustomisedAutoData]
+        public void AndNoValuesThenDeletesCookie(
+            [Frozen] Mock<ICookieStorageService<ApprenticeshipFiltersViewModel>> mockCookieStorageService,
+            FiltersCookieManager sut)
+        {
+            var filtersViewModel = new ApprenticeshipFiltersViewModel();
+            var response = sut.CheckForCookie(filtersViewModel);
+            mockCookieStorageService.Verify(service => service.Delete(nameof(ApprenticeshipFiltersViewModel)));
+            response.Should().BeSameAs(filtersViewModel);
+        }
     }
 }

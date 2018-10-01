@@ -24,8 +24,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }
 
             if (!filtersViewModel.HasValues())
+            {
+                _filterCookieStorageService.Delete(nameof(ApprenticeshipFiltersViewModel));
                 return filtersViewModel;
-
+            }
+                
             _filterCookieStorageService.Delete(nameof(ApprenticeshipFiltersViewModel));
             _filterCookieStorageService.Create(filtersViewModel, nameof(ApprenticeshipFiltersViewModel));
 
