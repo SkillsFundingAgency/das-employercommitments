@@ -56,14 +56,21 @@ else
             {
                 <div id="no-search-results">
                     <h3 class="heading-small">No results found.</h3>
-                        <p>
-                            You can search again or <a href="@Url.Action("ListAll")" title="see all apprentices" class="text-link">see all apprentices</a>
-                        </p>           
+                    <p>
+                        You can search again or <a href="@Url.Action("ListAll")" title="see all apprentices" class="text-link">see all apprentices</a>
+                    </p>
                 </div>
             }
             else
             {
-
+                <div id="total-count"><!--todo: set style margin-bottom:20px (same as tableREsponsive) and p bottom to be same as top     margin-top: .2631578947em; margin-bottom: 1.0526315789em; -->
+                    <p>
+                        <strong>count</strong> records found.
+                    </p>
+                    <p>
+                        You can search again or <a href="@Url.Action("ListAll")" title="see all apprentices" class="text-link">see all apprentices</a>
+                    </p>
+                </div>
                 <table class="tableResponsive">
                     <thead>
                         <tr>
