@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using Microsoft.Ajax.Utilities;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
@@ -18,6 +21,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
             RecordStatusOptions = new List<KeyValuePair<string, string>>();
             ProviderOrganisationOptions = new List<KeyValuePair<string, string>>();
             FundingStatusOptions = new List<KeyValuePair<string, string>>();
+
+            //todo page number init
         }
 
         public List<KeyValuePair<string, string>> ApprenticeshipStatusOptions { get; set; }
@@ -46,6 +51,31 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
                 || FundingStatus.Count > 0
                 || !SearchInput.IsNullOrWhiteSpace()
                 || PageNumber > 0;
+        }
+        
+        public string ToQueryString()
+        {
+            var result = new List<string>();
+
+            var props = GetType().GetProperties()
+                .Where(p => p.GetValue(this) != null 
+                        && !p.Name.EndsWith("Options"));
+
+            foreach (var p in props)
+            {
+                var value = p.GetValue(this);
+                if (value is ICollection enumerable)
+                {
+                    result.AddRange(from object v in enumerable select
+                        $"{p.Name}={HttpUtility.UrlEncode(v.ToString())}");
+                }
+                else
+                {
+                    result.Add($"{p.Name}={HttpUtility.UrlEncode(value.ToString())}");
+                }
+            }
+
+            return string.Join("&", result.ToArray());
         }
     }
 }
