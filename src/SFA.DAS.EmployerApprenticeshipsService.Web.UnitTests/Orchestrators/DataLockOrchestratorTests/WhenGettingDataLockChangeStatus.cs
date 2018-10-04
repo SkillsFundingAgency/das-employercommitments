@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.DataLockOrches
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetDataLockSummaryQueryRequest>())).Returns(Task.FromResult(summaryResponse));
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetPriceHistoryQueryRequest>())).Returns(Task.FromResult(priceHistoryResponse));
 
-            MockApprenticeshipMapper.Setup(x => x.MapCourseChanges(It.IsAny<IEnumerable<DataLockStatus>>(), It.IsAny<Apprenticeship>())).Returns(Task.FromResult(courseChanges));
+            MockApprenticeshipMapper.Setup(x => x.MapCourseChanges(It.IsAny<IEnumerable<DataLockStatus>>(), It.IsAny<Apprenticeship>(), It.IsAny<IList<PriceHistory>>())).Returns(Task.FromResult(courseChanges));
             MockApprenticeshipMapper.Setup(x => x.MapPriceChanges(It.IsAny<IEnumerable<DataLockStatus>>(), It.IsAny<List<PriceHistory>>())).Returns(pricesChanges);
             
             //Act
