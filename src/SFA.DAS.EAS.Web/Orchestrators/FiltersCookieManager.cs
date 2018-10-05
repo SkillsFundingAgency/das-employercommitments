@@ -12,29 +12,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _filterCookieStorageService = filterCookieStorageService;
         }
 
-        public ApprenticeshipFiltersViewModel CheckForCookie(ApprenticeshipFiltersViewModel filtersViewModel)
-        {
-            var tempFilters = _filterCookieStorageService.Get(nameof(ApprenticeshipFiltersViewModel)) 
-                              ?? new ApprenticeshipFiltersViewModel();
-            var cookieExists = tempFilters.HasValues();
-
-            if (filtersViewModel.CheckCookie && cookieExists)
-            {
-                filtersViewModel = tempFilters;
-            }
-
-            if (!filtersViewModel.HasValues())
-            {
-                _filterCookieStorageService.Delete(nameof(ApprenticeshipFiltersViewModel));
-                return filtersViewModel;
-            }
-                
-            _filterCookieStorageService.Delete(nameof(ApprenticeshipFiltersViewModel));
-            _filterCookieStorageService.Create(filtersViewModel, nameof(ApprenticeshipFiltersViewModel));
-
-            return filtersViewModel;
-        }
-
         public ApprenticeshipFiltersViewModel GetCookie()
         {
             return _filterCookieStorageService.Get(nameof(ApprenticeshipFiltersViewModel))

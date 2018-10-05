@@ -6,6 +6,5 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
     {
         ApprenticeshipFiltersViewModel GetCookie();
         void SetCookie(ApprenticeshipFiltersViewModel filtersViewModel);
-        ApprenticeshipFiltersViewModel CheckForCookie(ApprenticeshipFiltersViewModel filtersViewModel);
     }
 }
