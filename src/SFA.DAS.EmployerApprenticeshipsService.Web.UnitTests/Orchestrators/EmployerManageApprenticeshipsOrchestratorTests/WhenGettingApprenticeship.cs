@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 .ReturnsAsync(apprenticeshipDetailsViewModel);
 
             mockFilterCookieManager
-                .Setup(manager => manager.CheckForCookie(It.IsAny<ApprenticeshipFiltersViewModel>()))
+                .Setup(manager => manager.GetCookie())
                 .Returns(filtersViewModel);
 
             var result = await sut.GetApprenticeship(hashedAccountId, hashedApprenticeshipId, externalUserId);

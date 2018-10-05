@@ -90,7 +90,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 if (filters.SearchInput?.Trim() == _searchPlaceholderText.Trim())
                     filters.SearchInput = string.Empty;
 
-                filters = _filtersCookieManager.CheckForCookie(filters);
+                _filtersCookieManager.SetCookie(filters);
 
                 var searchQuery = _apprenticeshipFiltersMapper.MapToApprenticeshipSearchQuery(filters);
 
@@ -169,7 +169,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 detailsViewModel.PendingDataLockRestart = data.Apprenticeship.DataLockCourseTriaged;
                 detailsViewModel.PendingDataLockChange = data.Apprenticeship.DataLockPriceTriaged || data.Apprenticeship.DataLockCourseChangeTriaged;
 
-                detailsViewModel.SearchFiltersForListView = _filtersCookieManager.CheckForCookie(new ApprenticeshipFiltersViewModel());
+                detailsViewModel.SearchFiltersForListView = _filtersCookieManager.GetCookie();
 
                 return new OrchestratorResponse<ApprenticeshipDetailsViewModel> { Data = detailsViewModel };
             }, hashedAccountId, externalUserId);

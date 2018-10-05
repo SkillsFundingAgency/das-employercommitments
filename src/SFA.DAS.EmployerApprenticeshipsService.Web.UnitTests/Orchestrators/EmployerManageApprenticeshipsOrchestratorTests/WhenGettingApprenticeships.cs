@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 .ReturnsAsync(apprenticeshipSearchQueryResponse);
 
             await sut.GetApprenticeships(hashedAccountId, filtersViewModel, externalUserId);
-            mockFilterCookieManager.Verify(manager => manager.CheckForCookie(filtersViewModel));
+            mockFilterCookieManager.Verify(manager => manager.SetCookie(filtersViewModel));
         }
     }
 }
