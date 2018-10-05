@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Microsoft.Ajax.Utilities;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 {
@@ -22,7 +21,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
             ProviderOrganisationOptions = new List<KeyValuePair<string, string>>();
             FundingStatusOptions = new List<KeyValuePair<string, string>>();
 
-            //todo page number init
+            PageNumber = 1;
         }
 
         public List<KeyValuePair<string, string>> ApprenticeshipStatusOptions { get; set; }
@@ -40,18 +39,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public int PageNumber { get; set; }
         public string SearchInput { get; set; }
         public bool ResetFilter { get; set; }
-        public bool CheckCookie { get; set; }
-
-        public bool HasValues()
-        {
-            return Status.Count > 0
-                || RecordStatus.Count > 0
-                || Provider.Count > 0
-                || Course.Count > 0
-                || FundingStatus.Count > 0
-                || !SearchInput.IsNullOrWhiteSpace()
-                || PageNumber > 0;
-        }
         
         public string ToQueryString()
         {
