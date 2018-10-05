@@ -53,6 +53,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public bool CanEditStopDate { get; set; }
 
         public string EndpointAssessorName { get; set; }
+
+        public ApprenticeshipFiltersViewModel SearchFiltersForListView { get; set; }
     }
 
     public enum PendingChanges
