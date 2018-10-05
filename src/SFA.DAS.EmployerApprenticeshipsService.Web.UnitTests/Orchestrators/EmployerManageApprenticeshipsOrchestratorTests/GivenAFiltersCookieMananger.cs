@@ -9,7 +9,7 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
     [TestFixture]
-    public class WhenCheckingForFiltersCookie
+    public class GivenAFiltersCookieMananger
     {
         [TestFixture]
         public class WhenCallingGetCookie
