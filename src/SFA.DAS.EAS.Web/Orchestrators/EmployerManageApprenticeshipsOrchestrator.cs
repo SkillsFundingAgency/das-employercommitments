@@ -169,6 +169,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 detailsViewModel.PendingDataLockRestart = data.Apprenticeship.DataLockCourseTriaged;
                 detailsViewModel.PendingDataLockChange = data.Apprenticeship.DataLockPriceTriaged || data.Apprenticeship.DataLockCourseChangeTriaged;
 
+                detailsViewModel.SearchFiltersForListView = _filtersCookieManager.CheckForCookie(new ApprenticeshipFiltersViewModel{CheckCookie = true});
+
                 return new OrchestratorResponse<ApprenticeshipDetailsViewModel> { Data = detailsViewModel };
             }, hashedAccountId, externalUserId);
         }
