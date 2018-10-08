@@ -39,7 +39,17 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public int PageNumber { get; set; }
         public string SearchInput { get; set; }
         public bool ResetFilter { get; set; }
-        
+
+        public bool HasValues()
+        {
+            return Status.Count > 0
+                   || RecordStatus.Count > 0
+                   || Provider.Count > 0
+                   || Course.Count > 0
+                   || FundingStatus.Count > 0
+                   || !string.IsNullOrWhiteSpace(SearchInput);
+        }
+
         public string ToQueryString()
         {
             var result = new List<string>();
