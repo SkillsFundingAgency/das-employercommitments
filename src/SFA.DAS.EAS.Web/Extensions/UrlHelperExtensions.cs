@@ -17,6 +17,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Extensions
             return BuildExternalUrl(helper, baseUrl, controllerName, actionName, ignoreAccountId);
         }
 
+        public static string ExternalRecruitUrlAction()
+        {
+            return "todo";
+        }
+        
         private static string GetMyaBaseUrl()
         {
             return GetBaseUrl("MyaBaseUrl");
