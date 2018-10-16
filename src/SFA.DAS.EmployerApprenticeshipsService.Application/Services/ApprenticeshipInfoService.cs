@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types.Exceptions;
@@ -54,12 +55,31 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
             return await _cache.GetCustomValueAsync<FrameworksView>(FrameworksKey);
         }
 
-        public ProvidersView GetProvider(long ukPrn)
+        public ProvidersView GetProvider(long ukprn)
         {
+            var deletedUkprns = new List<Apprenticeships.Api.Types.Providers.Provider>
+            {
+                new Apprenticeships.Api.Types.Providers.Provider
+                {
+                    Ukprn = 10000534,
+                    ProviderName = "BARNFIELD COLLEGE"
+                },
+                new Apprenticeships.Api.Types.Providers.Provider
+                {
+                    Ukprn = 10004442,
+                    ProviderName = "MOULTON COLLEGE"
+                }
+            };
+
             try
             {
+                if (deletedUkprns.Exists(provider1 => provider1.Ukprn == ukprn))
+                {
+                    return _mapper.MapFrom(deletedUkprns.Single(provider1 => provider1.Ukprn == ukprn));
+                }
+
                 var api = new Providers.Api.Client.ProviderApiClient(_configuration.BaseUrl);
-                var provider = api.Get(ukPrn);
+                var provider = api.Get(ukprn);
                 return _mapper.MapFrom(provider);
             }
             catch (EntityNotFoundException)
@@ -67,6 +87,5 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 return null;
             }
         }
-
     }
 }

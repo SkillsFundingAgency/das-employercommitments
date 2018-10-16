@@ -8,6 +8,6 @@ namespace SFA.DAS.EmployerCommitments.Domain.Interfaces
     {
         Task<StandardsView> GetStandardsAsync(bool refreshCache = false);
         Task<FrameworksView> GetFrameworksAsync(bool refreshCache = false);
-        ProvidersView GetProvider(long ukPrn);
+        ProvidersView GetProvider(long ukprn);
     }
 }
