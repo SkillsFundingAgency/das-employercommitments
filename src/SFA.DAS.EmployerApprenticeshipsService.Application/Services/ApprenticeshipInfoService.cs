@@ -6,6 +6,7 @@ using SFA.DAS.Apprenticeships.Api.Types.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipProvider;
+using static System.String;
 
 namespace SFA.DAS.EmployerCommitments.Application.Services
 {
@@ -62,12 +63,14 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 new Apprenticeships.Api.Types.Providers.Provider
                 {
                     Ukprn = 10000534,
-                    ProviderName = "BARNFIELD COLLEGE"
+                    ProviderName = "BARNFIELD COLLEGE",
+                    Email = Empty
                 },
                 new Apprenticeships.Api.Types.Providers.Provider
                 {
                     Ukprn = 10004442,
-                    ProviderName = "MOULTON COLLEGE"
+                    ProviderName = "MOULTON COLLEGE",
+                    Email = Empty
                 }
             };
 
