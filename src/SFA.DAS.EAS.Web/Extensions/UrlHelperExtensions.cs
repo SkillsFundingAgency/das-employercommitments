@@ -17,9 +17,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Extensions
             return BuildExternalUrl(helper, baseUrl, controllerName, actionName, ignoreAccountId);
         }
 
-        public static string ExternalRecruitUrlAction()
+        public static string ExternalRecruitUrlAction(this UrlHelper helper, string controllerName = "", string actionName = "", bool ignoreAccountId = false)
         {
-            return "todo";
+            var baseUrl = GetRecruitBaseUrl();
+            return BuildExternalUrl(helper, baseUrl, controllerName, actionName, ignoreAccountId);
         }
         
         private static string GetMyaBaseUrl()
@@ -30,6 +31,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Extensions
         private static string GetPsrBaseUrl()
         {
             return GetBaseUrl("PsrBaseUrl");
+        }
+
+        private static string GetRecruitBaseUrl()
+        {
+            return GetBaseUrl("RecruitBaseUrl");
         }
 
         private static string GetBaseUrl(string configKey)
@@ -43,8 +49,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Extensions
         {
             var accountId = helper.RequestContext.RouteData.Values["hashedAccountId"];
 
-            return ignoreAccountId ? $"{baseUrl}{controllerName}/{actionName}"
-                : $"{baseUrl}accounts/{accountId}/{controllerName}/{actionName}";
+            return ignoreAccountId ? $"{baseUrl}{controllerName}{(string.IsNullOrWhiteSpace(controllerName) ? "" : "/")}{actionName}"
+                : $"{baseUrl}accounts/{accountId}/{controllerName}{(string.IsNullOrWhiteSpace(controllerName) ? "" : "/")}{actionName}";
         }
     }
 }
