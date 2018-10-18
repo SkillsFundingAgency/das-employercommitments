@@ -56,14 +56,24 @@ else
             {
                 <div id="no-search-results">
                     <h3 class="heading-small">No results found.</h3>
-                        <p>
-                            You can search again or <a href="@Url.Action("ListAll")" title="see all apprentices" class="text-link">see all apprentices</a>
-                        </p>           
+                    <p>
+                        You can search again or <a href="@Url.Action("ListAll")" title="see all apprentices" class="text-link">see all apprentices</a>
+                    </p>
                 </div>
             }
             else
             {
-
+                <div id="total-count">
+                    <p>
+                        <strong>@Model.Data.TotalResults</strong> record@(Model.Data.TotalResults > 1 ? "s" : null) found.
+                    </p>
+                    @if (Model.Data.Filters.HasValues())
+                    {
+                        <p>
+                            You can search again or <a href="@Url.Action("ListAll")" title="see all apprentices" class="text-link">see all apprentices</a>
+                        </p>
+                    }
+                </div>
                 <table class="tableResponsive">
                     <thead>
                         <tr>
