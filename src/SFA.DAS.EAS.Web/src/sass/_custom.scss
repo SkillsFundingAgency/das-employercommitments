@@ -656,6 +656,14 @@ h2{
    }
 }
 
+#total-count {
+    margin-bottom: em(20, 16);
+
+    p {
+        margin-bottom: em(5, 16);
+    }
+}
+
 #search-form{
 		margin:7px 0 15px 0;
           legend{margin-bottom:0;}
@@ -684,6 +692,7 @@ h2{
         }
 
 }
+
 #change-apprentice-status{
     #submit-apply-change{
         float:left;

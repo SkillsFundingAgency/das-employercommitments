@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 {
@@ -17,6 +20,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
             RecordStatusOptions = new List<KeyValuePair<string, string>>();
             ProviderOrganisationOptions = new List<KeyValuePair<string, string>>();
             FundingStatusOptions = new List<KeyValuePair<string, string>>();
+
+            PageNumber = 1;
         }
 
         public List<KeyValuePair<string, string>> ApprenticeshipStatusOptions { get; set; }
@@ -30,8 +35,44 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public List<string> Provider { get; set; }
         public List<string> Course { get; set; }
         public List<string> FundingStatus { get; set; }
+
         public int PageNumber { get; set; }
         public string SearchInput { get; set; }
         public bool ResetFilter { get; set; }
+
+        public bool HasValues()
+        {
+            return Status.Count > 0
+                   || RecordStatus.Count > 0
+                   || Provider.Count > 0
+                   || Course.Count > 0
+                   || FundingStatus.Count > 0
+                   || !string.IsNullOrWhiteSpace(SearchInput);
+        }
+
+        public string ToQueryString()
+        {
+            var result = new List<string>();
+
+            var props = GetType().GetProperties()
+                .Where(p => p.GetValue(this) != null 
+                        && !p.Name.EndsWith("Options"));
+
+            foreach (var p in props)
+            {
+                var value = p.GetValue(this);
+                if (value is ICollection enumerable)
+                {
+                    result.AddRange(from object v in enumerable select
+                        $"{p.Name}={HttpUtility.UrlEncode(v.ToString())}");
+                }
+                else
+                {
+                    result.Add($"{p.Name}={HttpUtility.UrlEncode(value.ToString())}");
+                }
+            }
+
+            return string.Join("&", result.ToArray());
+        }
     }
 }
