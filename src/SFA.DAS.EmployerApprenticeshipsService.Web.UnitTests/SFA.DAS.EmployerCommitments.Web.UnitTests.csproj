@@ -309,6 +309,9 @@
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingApprenticeship.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenDeletingApprenticeship.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingIndexView.cs" />
+    <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\GivenAFiltersCookieMananger.cs" />
+    <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingApprenticeship.cs" />
+    <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingApprenticeships.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenUpdatingAnEmployeeStopDate.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingEditApprenticeshipStopDateViewModel.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingProviderPriorityList.cs" />
@@ -354,6 +357,7 @@
     <Compile Include="Validators\EditApprenticeshipStopDate\WhenValidatingNewStopDate.cs" />
     <Compile Include="Validators\Messages\WhenExtractingMessages.cs" />
     <Compile Include="Validators\ProviderSelectionTest\WhenValidatingProviderId.cs" />
+    <Compile Include="ViewModels\GivenAnApprenticeshipFiltersViewModel.cs" />
     <Compile Include="ViewModels\WhenCreatedApprenticeshipListItemGroupViewModel.cs" />
     <Compile Include="Views\EmployerCommitments\EmployerCommitmentsDetailsPage.cs" />
     <Compile Include="Views\EmployerCommitments\ViewApprenticeshipEntryPage.cs" />

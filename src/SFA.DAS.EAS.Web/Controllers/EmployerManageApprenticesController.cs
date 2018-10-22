@@ -29,9 +29,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             ICookieStorageService<FlashMessageViewModel> flashMessage)
                 : base(owinWrapper, multiVariantTestingService, flashMessage)
         {
-            if (orchestrator == null)
-                throw new ArgumentNullException(nameof(orchestrator));
-
             _orchestrator = orchestrator;
         }
 
@@ -49,7 +46,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 OwinWrapper.GetClaimValue(@"sub"));
 
             RemoveFlashMessageFromCookie();
-
+            
             return View(model);
         }
 

@@ -13,6 +13,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Views.EmployerManageApprentices
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -95,9 +96,9 @@ WriteLiteral(">Changes for review</h3>\r\n                <p>\r\n               
 "ges to this apprentice\'s details that you need to review.\r\n                </p>\r" +
 "\n                <p>\r\n                    <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 971), Tuple.Create("\"", 1008)
-, Tuple.Create(Tuple.Create("", 978), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("ReviewChanges")
-, 978), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 1010), Tuple.Create("\"", 1047)
+, Tuple.Create(Tuple.Create("", 1017), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("ReviewChanges")
+, 1017), false)
 );
 
 WriteLiteral(">Review changes</a>\r\n                </p>\r\n            </div>\r\n");
@@ -118,9 +119,9 @@ WriteLiteral(">Changes pending</h3>\r\n                <p>\r\n                  
 " to this apprentice\'s details that are waiting for approval by the training prov" +
 "ider.\r\n                <p>\r\n                    <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 1479), Tuple.Create("\"", 1543)
-, Tuple.Create(Tuple.Create("", 1486), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("ViewChanges", "EmployerManageApprentices")
-, 1486), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 1518), Tuple.Create("\"", 1582)
+, Tuple.Create(Tuple.Create("", 1525), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("ViewChanges", "EmployerManageApprentices")
+, 1525), false)
 );
 
 WriteLiteral(">View changes</a>\r\n                </p>\r\n            </div>\r\n");
@@ -150,9 +151,9 @@ WriteLiteral(@">
                 </p>
                 <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 2077), Tuple.Create("\"", 2115)
-, Tuple.Create(Tuple.Create("", 2084), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("RequestRestart")
-, 2084), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 2116), Tuple.Create("\"", 2154)
+, Tuple.Create(Tuple.Create("", 2123), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("RequestRestart")
+, 2123), false)
 );
 
 WriteLiteral(" aria-label=\"View details\"");
@@ -177,9 +178,9 @@ WriteLiteral(">\r\n                <h3>\r\n                    Changes for revie
 "tice\'s details that you need to review.\r\n                </p>\r\n                <" +
 "a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 2550), Tuple.Create("\"", 2588)
-, Tuple.Create(Tuple.Create("", 2557), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("RequestChanges")
-, 2557), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 2589), Tuple.Create("\"", 2627)
+, Tuple.Create(Tuple.Create("", 2596), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("RequestChanges")
+, 2596), false)
 );
 
 WriteLiteral(" aria-label=\"View details\"");
@@ -313,9 +314,9 @@ WriteLiteral(">\r\n            Apprentice\r\n");
 
 WriteLiteral("                <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 4651), Tuple.Create("\"", 4693)
-, Tuple.Create(Tuple.Create("", 4658), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("EditApprenticeship")
-, 4658), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 4690), Tuple.Create("\"", 4732)
+, Tuple.Create(Tuple.Create("", 4697), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("EditApprenticeship")
+, 4697), false)
 );
 
 WriteLiteral(" class=\"float-right\"");
@@ -422,8 +423,35 @@ WriteLiteral(">Reference </th>\r\n                    <td>");
 
                    Write(Model.Data.EmployerReference);
 
-WriteLiteral("</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n\r\n    </div" +
-">\r\n</div>\r\n\r\n");
+WriteLiteral("</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n        \r\n");
+
+        
+         if (Model.Data.TrainingType == TrainingType.Standard)
+        {
+
+WriteLiteral("            <h2");
+
+WriteLiteral(" class=\"heading-medium\"");
+
+WriteLiteral(">End Point Assessor</h2>\r\n");
+
+WriteLiteral("            <table");
+
+WriteLiteral(" class=\"details-list\"");
+
+WriteLiteral(">\r\n                <tbody>\r\n                <tr>\r\n                    <th");
+
+WriteLiteral(" scope=\"row\"");
+
+WriteLiteral(">End point assessor</th>\r\n                    <td>");
+
+                    Write(Model.Data.EndpointAssessorName ?? "The end point assessor has not been declared");
+
+WriteLiteral("</td>\r\n                </tr>\r\n                </tbody>\r\n            </table>\r\n");
+
+        }
+
+WriteLiteral("    </div>\r\n</div>\r\n\r\n");
 
 DefineSection("breadcrumb", () => {
 
@@ -433,9 +461,12 @@ WriteLiteral(" class=\"breadcrumbs\"");
 
 WriteLiteral(">\r\n        <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 6969), Tuple.Create("\"", 7027)
-, Tuple.Create(Tuple.Create("", 6976), Tuple.Create<System.Object, System.Int32>(Url.Action("ListAll", "EmployerManageApprentices")
-, 6976), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 7502), Tuple.Create("\"", 7613)
+, Tuple.Create(Tuple.Create("", 7509), Tuple.Create<System.Object, System.Int32>(Url.Action("ListAll", "EmployerManageApprentices")
+, 7509), false)
+, Tuple.Create(Tuple.Create("", 7560), Tuple.Create("?", 7560), true)
+, Tuple.Create(Tuple.Create("", 7561), Tuple.Create<System.Object, System.Int32>(Model.Data.SearchFiltersForListView.ToQueryString()
+, 7561), false)
 );
 
 WriteLiteral(" aria-label=\"Back to manage your apprentices\"");
