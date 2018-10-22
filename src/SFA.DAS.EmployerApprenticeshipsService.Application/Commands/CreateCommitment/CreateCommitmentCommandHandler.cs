@@ -27,7 +27,8 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
             {
                 Commitment = request.Commitment,
                 UserId = request.UserId,
-                Message = request.Message
+                Message = request.Message,
+                LastAction = request.LastAction
             };
 
             var commitmentId = (await _commitmentApi.CreateEmployerCommitment(request.Commitment.EmployerAccountId, commitmentRequest)).Id;
