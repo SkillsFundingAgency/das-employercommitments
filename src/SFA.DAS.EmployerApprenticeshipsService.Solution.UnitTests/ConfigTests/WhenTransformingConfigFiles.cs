@@ -19,8 +19,8 @@ namespace SFA.DAS.EmployerCommitments.Solution.UnitTests.ConfigTests
             var extensions = new[] {".config", ".cscfg"};
             var excludedPaths = new[] { "obj", "bin", "vs", "package", "tool", "test" };
 
-            _excludedSettingNames = new[] { "webpages:Version", "LogLevel", "idaAudience", "idaTenant", "TokenCertificateThumbprint", "DeclarationsEnabled", "CurrentTime", "MyaBaseUrl" };
-            _allowedConfigValues = new[] { "0", "1", "2", "3", "UseDevelopmentStorage=true", "LOCAL", "true", "false", "localhost", "Endpoint=sb://[your namespace].servicebus.windows.net;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=[your secret]", "commitments", "https://at-reporting.manage-apprenticeships.sfa.bis.gov.uk" };
+            _excludedSettingNames = new[] { "webpages:Version", "LogLevel", "idaAudience", "idaTenant", "TokenCertificateThumbprint", "DeclarationsEnabled", "CurrentTime" };
+            _allowedConfigValues = new[] { "0", "1", "2", "3", "UseDevelopmentStorage=true", "LOCAL", "true", "false", "localhost", "Endpoint=sb://[your namespace].servicebus.windows.net;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=[your secret]", "commitments"};
 
             var path = new FileInfo(Assembly.GetCallingAssembly().Location).Directory.Parent.Parent.Parent;
 
@@ -79,7 +79,6 @@ namespace SFA.DAS.EmployerCommitments.Solution.UnitTests.ConfigTests
                     {
                         continue;
                     }
-
 
                     Assert.IsTrue(setting.Attribute("value").Value.Contains("__"), $"The setting {setting.Attribute("key")} has a invalid value {setting.Attribute("value")} in {configFile}");
                 }
