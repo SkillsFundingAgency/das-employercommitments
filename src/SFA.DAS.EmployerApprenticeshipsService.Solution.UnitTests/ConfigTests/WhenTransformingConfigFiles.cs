@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerCommitments.Solution.UnitTests.ConfigTests
         [Test]
         public void ThenTheCloudConfigurationValuesAreCheckedForSecrets()
         {
-            foreach (var configFile in _configFiles.Where(x=>Path.GetExtension(x).Equals(".cscfg")))
+            foreach (var configFile in _configFiles.Where(x=>Path.GetExtension(x).Equals(".cscfg") && !Path.HasExtension(".Local.cscfg")))
             {
                 var xmlConfig = XDocument.Load(configFile);
 
@@ -53,7 +53,6 @@ namespace SFA.DAS.EmployerCommitments.Solution.UnitTests.ConfigTests
 
                     Assert.IsTrue(setting.Attribute("value").Value.Contains("__"),$"The setting {setting.Attribute("name")} has a invalid value {setting.Attribute("value")} in {configFile}");
                 }
-
             }
         }
 
@@ -86,7 +85,5 @@ namespace SFA.DAS.EmployerCommitments.Solution.UnitTests.ConfigTests
                 }
             }
         }
-
     }
-
 }
