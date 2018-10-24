@@ -11,6 +11,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
         [Test]
         public void ShouldIfStartDateBeforeMay2017()
         {
+            CurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2017, 3, 1));
             ValidModel.StartDate = new DateTimeViewModel(30, 4, 2017);
 
             var result = Validator.Validate(ValidModel);

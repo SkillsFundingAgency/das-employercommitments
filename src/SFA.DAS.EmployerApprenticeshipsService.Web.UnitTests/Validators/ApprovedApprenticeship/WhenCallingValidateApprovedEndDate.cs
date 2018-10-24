@@ -27,6 +27,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprovedApprentic
             _mockAcademicYearValidator = new Mock<IAcademicYearValidator>();
 
             _currentDateTime = new Mock<ICurrentDateTime>();
+            _currentDateTime
+                .Setup(x => x.Now)
+                .Returns(new DateTime(2018, 11, 5));
+
             var academicYearProvider = new AcademicYearDateProvider(_currentDateTime.Object);
 
             _updateApprenticeshipViewModel = new UpdateApprenticeshipViewModel();

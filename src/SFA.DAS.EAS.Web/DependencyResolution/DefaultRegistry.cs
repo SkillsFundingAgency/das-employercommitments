@@ -86,7 +86,6 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 
             For<IApprenticeshipInfoServiceConfiguration>().Use(config.ApprenticeshipInfoService);
             For<IApprenticeshipCoreValidator>().Use<ApprenticeshipCoreValidator>().Singleton();
-            For<IApprenticeshipViewModelValidator>().Use<ApprenticeshipViewModelValidator>().Singleton();
             For<IValidateApprovedApprenticeship>().Use<ApprovedApprenticeshipViewModelValidator>().Singleton();
 
             ConfigureHashingService(config);
