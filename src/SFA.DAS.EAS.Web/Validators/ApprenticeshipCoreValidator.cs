@@ -101,7 +101,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                 .Cascade(CascadeMode.StopOnFirstFailure)
                 .NotNull().WithMessage(ValidationText.LearnStartDate01.Text).WithErrorCode(ValidationText.LearnStartDate01.ErrorCode)
                 .Must(ValidateDateWithoutDay).WithMessage(ValidationText.LearnStartDate01.Text).WithErrorCode(ValidationText.LearnStartDate01.ErrorCode)
-                .Must(model => model.DateTime.Value >= _academicYear.CurrentAcademicYearStartDate).WithMessage(ValidationText.AcademicYearStartDate01.Text).WithErrorCode(ValidationText.AcademicYearStartDate01.ErrorCode)
+                .Must(StartDateOnOrAfterAcademicYearStartDate).WithMessage(ValidationText.AcademicYearStartDate01.Text).WithErrorCode(ValidationText.AcademicYearStartDate01.ErrorCode)
                 .MustAsync(async (viewModel, startDate, context, cancellationToken) => await TrainingCourseValidOnStartDate(viewModel, startDate, context))
                     .WithErrorCode(ValidationText.LearnStartDateNotValidForTrainingCourse.ErrorCode)
                     .WithMessage(ValidationText.LearnStartDateNotValidForTrainingCourse.Text)                             
@@ -194,6 +194,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         {
             var age = _academicYear.CurrentAcademicYearStartDate.Year - dob.DateTime.Value.Year;
             return age <= 115;
+        }
+
+        private bool StartDateOnOrAfterAcademicYearStartDate(DateTimeViewModel startDate)
+        {
+            return startDate.DateTime.Value >= _academicYear.CurrentAcademicYearStartDate;
         }
 
         private bool StartDateWithinAYearOfTheEndOfTheCurrentTeachingYear(DateTimeViewModel startDate)
