@@ -8,6 +8,7 @@ using FluentValidation;
 using MediatR;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
+using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.ReviewApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UndoApprenticeshipUpdate;
@@ -18,6 +19,7 @@ using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
@@ -166,8 +168,21 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var detailsViewModel =
                     await _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(data.Apprenticeship);
 
-                detailsViewModel.PendingDataLockRestart = data.Apprenticeship.DataLockCourseTriaged;
-                detailsViewModel.PendingDataLockChange = data.Apprenticeship.DataLockPriceTriaged || data.Apprenticeship.DataLockCourseChangeTriaged;
+                var dataLockSummary = await Mediator.SendAsync(new GetDataLockSummaryQueryRequest
+                {
+                    AccountId = accountId,
+                    ApprenticeshipId = apprenticeshipId
+                });
+
+                detailsViewModel.PendingDataLockRestart =
+                    dataLockSummary.DataLockSummary.DataLockWithCourseMismatch.Any(x =>
+                        x.TriageStatus == TriageStatus.Restart);
+
+                detailsViewModel.PendingDataLockChange =
+                    dataLockSummary.DataLockSummary.DataLockWithCourseMismatch.Any(x =>
+                        x.TriageStatus == TriageStatus.Change) ||
+                    dataLockSummary.DataLockSummary.DataLockWithOnlyPriceMismatch.Any(x =>
+                        x.TriageStatus == TriageStatus.Change);
 
                 detailsViewModel.SearchFiltersForListView = _filtersCookieManager.GetCookie();
 

@@ -1,11 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
+using SFA.DAS.Commitments.Api.Types.DataLock;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetUserAccountRole;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
@@ -36,6 +39,16 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             mockMediator
                 .Setup(mediator => mediator.SendAsync(It.IsAny<GetApprenticeshipQueryRequest>()))
                 .ReturnsAsync(getApprenticeshipQueryResponse);
+
+            mockMediator.Setup(x => x.SendAsync(It.IsAny<GetDataLockSummaryQueryRequest>()))
+                .ReturnsAsync(new GetDataLockSummaryQueryResponse
+                {
+                    DataLockSummary = new DataLockSummary
+                    {
+                        DataLockWithOnlyPriceMismatch = new List<DataLockStatus>(),
+                        DataLockWithCourseMismatch = new List<DataLockStatus>()
+                    }
+                });
 
             mockMapper
                 .Setup(mapper => mapper.MapToApprenticeshipDetailsViewModel(It.IsAny<Apprenticeship>(), false))
