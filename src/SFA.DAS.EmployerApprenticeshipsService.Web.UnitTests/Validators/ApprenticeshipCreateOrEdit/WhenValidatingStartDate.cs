@@ -87,5 +87,22 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             Assert.That(result.Errors[0].ErrorMessage, Is.EqualTo("The earliest start date you can use is 08 2017"));
             Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("AcademicYear_01"));
         }
+
+        [Test]
+        public void AndStartDateIsBeforeAcademicYearAndBeforeTrainingStartThenOnlyHasStartDateError()
+        {
+            //Arrange
+            CurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2018, 11, 5));
+            ValidModel.TrainingCode = "TESTCOURSE";
+            ValidModel.StartDate = new DateTimeViewModel(1, 1, 2018);
+
+            //Act
+            var result = Validator.Validate(ValidModel);
+
+            //Assert
+            Assert.IsFalse(result.IsValid);
+            Assert.That(result.Errors[0].ErrorMessage, Is.EqualTo("The earliest start date you can use is 08 2017"));
+            Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("AcademicYear_01"));
+        }
     }
 }
