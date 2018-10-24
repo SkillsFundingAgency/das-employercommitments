@@ -21,8 +21,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
         protected ApprenticeshipViewModelValidator Validator;
         protected ApprenticeshipViewModel ValidModel;
 
-        protected int YearNow;
-
         [SetUp]
         public void BaseSetup()
         {
@@ -37,12 +35,16 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
                             Id = "TESTCOURSE",
                             EffectiveFrom = new DateTime(2018, 5, 1),
                             EffectiveTo = new DateTime(2018, 7, 1)
+                        },
+                        new Standard
+                        {
+                            Id = "OTHERCOURSE",
+                            EffectiveFrom = new DateTime(2017, 1, 1)
                         }
                     }
                 });
 
-            YearNow = DateTime.Now.Year;
-            CurrentDateTime.Setup(x => x.Now).Returns(DateTime.Now.AddMonths(6));
+            CurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2017,11,5));
             var academicYearProvider = new AcademicYearDateProvider(CurrentDateTime.Object);
             Validator = new ApprenticeshipViewModelValidator(
                 new WebApprenticeshipValidationText(academicYearProvider),
