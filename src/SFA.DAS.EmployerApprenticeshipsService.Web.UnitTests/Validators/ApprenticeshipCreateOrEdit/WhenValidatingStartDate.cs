@@ -1,6 +1,10 @@
-﻿using Moq;
+﻿using System;
+using System.Linq;
+using Castle.Core.Internal;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
+using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCreateOrEdit
@@ -65,6 +69,23 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             //Assert
             Assert.IsTrue(result.IsValid);
             MockMediator.Verify(x=> x.SendAsync(It.IsAny<GetTrainingProgrammesQueryRequest>()), Times.Never);
+        }
+
+        [Test]
+        public void AndStartDateIsBeforeAcademicYearThenInvalid()
+        {
+            //Arrange
+            CurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2018, 11, 5));
+            ValidModel.TrainingCode = "OTHERCOURSE";
+            ValidModel.StartDate = new DateTimeViewModel(1, 1, 2018);
+
+            //Act
+            var result = Validator.Validate(ValidModel);
+
+            //Assert
+            Assert.IsFalse(result.IsValid);
+            Assert.That(result.Errors[0].ErrorMessage, Is.EqualTo("The earliest start date you can use is 08 2017"));
+            Assert.That(result.Errors[0].ErrorCode, Is.EqualTo("AcademicYear_01"));
         }
     }
 }
