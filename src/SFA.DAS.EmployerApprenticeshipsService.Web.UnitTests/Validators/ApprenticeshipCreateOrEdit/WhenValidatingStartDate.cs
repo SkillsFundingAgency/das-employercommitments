@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Linq;
-using Castle.Core.Internal;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
-using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCreateOrEdit
