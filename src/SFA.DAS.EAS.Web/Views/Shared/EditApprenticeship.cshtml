@@ -174,7 +174,12 @@ else
     <div class="form-error-group form-group">
         <hr />
         <span class="form-label-bold">Planned training finish date</span>
-        <span class="">@Model.Apprenticeship.EndDate.DateTime.Value.ToGdsFormatWithoutDay() </span>
+        <span>
+            @if (Model.Apprenticeship.EndDate.DateTime != null)
+            {
+                @Model.Apprenticeship.EndDate.DateTime.Value.ToGdsFormatWithoutDay() 
+            }
+        </span>
     </div>
 
     @Html.Hidden("EndDate.Month", Model.Apprenticeship.EndDate.Month)
