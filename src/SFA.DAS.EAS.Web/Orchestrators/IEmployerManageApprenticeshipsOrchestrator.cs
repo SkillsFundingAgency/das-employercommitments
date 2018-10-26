@@ -51,5 +51,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         Task UpdatePaymentOrder(string hashedAccountId, IEnumerable<long> paymentItems, string user, string userName, string userEmail);
 
         Task<bool> AuthorizeRole(string hashedAccountId, string externalUserId, Role[] roles);
+
+        Task<OrchestratorResponse<ApprovedApprenticeshipViewModel>> GetApprovedApprenticeshipViewModel(
+            string hashedAccountId, string hashedApprenticeshipId, string externalUserId);
     }
 }

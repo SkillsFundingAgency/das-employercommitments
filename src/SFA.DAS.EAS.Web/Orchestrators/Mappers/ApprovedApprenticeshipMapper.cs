@@ -44,31 +44,31 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             result.CurrentCost = source.PriceEpisodes.GetCostOn(_currentDateTime.Now);
 
             //Pending Change of Circumstances
-            result.PendingChanges = PendingChanges.None;
-            if (source.PendingUpdate != null)
+            switch (source.UpdateOriginator)
             {
-                switch (source.PendingUpdate.Originator)
-                {
-                    case Originator.Employer:
-                        result.PendingChanges = PendingChanges.WaitingForApproval;
-                        break;
-                    case Originator.Provider:
-                        result.PendingChanges = PendingChanges.ReadyForApproval;
-                        break;
-                }
+                case Originator.Employer:
+                    result.PendingChanges = PendingChanges.WaitingForApproval;
+                    break;
+                case Originator.Provider:
+                    result.PendingChanges = PendingChanges.ReadyForApproval;
+                    break;
+                default:
+                    result.PendingChanges = PendingChanges.None;
+                    break;
             }
 
             //Data Locks
-            //todo: these extension methods need testing
             result.PendingDataLockChange = source.DataLocks.Any(x =>
                 (x.IsPriceOnly() || x.WithCourseError())
-                && x.UnHandled() && x.TriageStatus == TriageStatus.Change);
-                
+                && x.UnHandled()
+                && x.TriageStatus == TriageStatus.Change);
 
             result.PendingDataLockRestart = source.DataLocks.Any(x =>
-                x.WithCourseError() && x.UnHandled() && x.TriageStatus == TriageStatus.Restart);
+                x.WithCourseError()
+                && x.UnHandled()
+                && x.TriageStatus == TriageStatus.Restart);
 
-            //Edit Statuses
+            //Statuses
             result.EnableEdit = result.PendingChanges == PendingChanges.None
                                 && !result.PendingDataLockChange
                                 && !result.PendingDataLockRestart

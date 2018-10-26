@@ -21,6 +21,7 @@ using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetApprovedApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
@@ -42,6 +43,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
     public sealed class EmployerManageApprenticeshipsOrchestrator : CommitmentsBaseOrchestrator, IEmployerManageApprenticeshipsOrchestrator
     {
         private readonly IApprenticeshipMapper _apprenticeshipMapper;
+        private readonly IApprovedApprenticeshipMapper _approvedApprenticeshipMapper;
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IApprenticeshipFiltersMapper _apprenticeshipFiltersMapper;
 
@@ -67,7 +69,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IFiltersCookieManager filtersCookieManager,
             IApprenticeshipFiltersMapper apprenticeshipFiltersMapper,
             IAcademicYearDateProvider academicYearDateProvider,
-            IAcademicYearValidator academicYearValidator)
+            IAcademicYearValidator academicYearValidator, IApprovedApprenticeshipMapper approvedApprenticeshipMapper)
             : base(mediator, hashingService, logger)
         {
             _apprenticeshipMapper = apprenticeshipMapper;
@@ -79,6 +81,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _searchPlaceholderText = "Enter a name";
             _academicYearDateProvider = academicYearDateProvider;
             _academicYearValidator = academicYearValidator;
+            _approvedApprenticeshipMapper = approvedApprenticeshipMapper;
         }
 
         public async Task<OrchestratorResponse<ManageApprenticeshipsViewModel>> GetApprenticeships(
@@ -187,6 +190,27 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 detailsViewModel.SearchFiltersForListView = _filtersCookieManager.GetCookie();
 
                 return new OrchestratorResponse<ApprenticeshipDetailsViewModel> { Data = detailsViewModel };
+            }, hashedAccountId, externalUserId);
+        }
+
+        public async Task<OrchestratorResponse<ApprovedApprenticeshipViewModel>> GetApprovedApprenticeshipViewModel(string hashedAccountId, string hashedApprenticeshipId, string externalUserId)
+        {
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
+
+            Logger.Info(
+                $"Getting approved apprenticeship for Employer: {accountId}, ApprenticeshipId: {apprenticeshipId}");
+
+            return await CheckUserAuthorization(async () =>
+            {
+                var data = await Mediator.SendAsync(
+                    new GetApprovedApprenticeshipQueryRequest{ AccountId = accountId, ApprovedApprenticeshipId = apprenticeshipId });
+
+                var detailsViewModel = _approvedApprenticeshipMapper.Map(data.ApprovedApprenticeship);             
+
+                detailsViewModel.SearchFiltersForListView = _filtersCookieManager.GetCookie();
+
+                return new OrchestratorResponse<ApprovedApprenticeshipViewModel> { Data = detailsViewModel };
             }, hashedAccountId, externalUserId);
         }
 

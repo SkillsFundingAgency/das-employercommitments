@@ -38,7 +38,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
                 LegalEntityId = "TEST_LEGAL_ENTITY_ID",
                 ProviderId = 3,
                 ProviderName = "TEST_PROVIDER_NAME",
-                UpdateOriginator = Originator.Employer,
+                UpdateOriginator = null,
                 PaymentOrder = 2,
                 ProviderRef = "PROVIDER_REF",
                 EmployerRef = "EMPLOYER_REF",
@@ -234,7 +234,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void ThenEditDisabledIfPendingChanges(bool hasPendingChanges, bool expectCanEdit)
         {
             //Arrange
-            if (hasPendingChanges) _source.PendingUpdate = new ApprenticeshipUpdate();
+            if (hasPendingChanges) _source.UpdateOriginator = Originator.Employer;
 
             //Act
             var result = _mapper.Map(TestHelper.Clone(_source));
@@ -297,18 +297,13 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         public void ThenPendingChangesIsMappedCorrectly(Originator originator, PendingChanges expectPendingChange)
         {
             //Arrange
-            _source.PendingUpdate = new ApprenticeshipUpdate
-            {
-                Originator = originator
-            };
+            _source.UpdateOriginator = originator;
 
             //Act
             var result = _mapper.Map(TestHelper.Clone(_source));
 
             //Assert
             Assert.AreEqual(expectPendingChange, result.PendingChanges);
-
         }
-
     }
 }
