@@ -171,21 +171,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var detailsViewModel =
                     await _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(data.Apprenticeship);
 
-                var dataLockSummary = await Mediator.SendAsync(new GetDataLockSummaryQueryRequest
-                {
-                    AccountId = accountId,
-                    ApprenticeshipId = apprenticeshipId
-                });
-
-                detailsViewModel.PendingDataLockRestart =
-                    dataLockSummary.DataLockSummary.DataLockWithCourseMismatch.Any(x =>
-                        x.TriageStatus == TriageStatus.Restart);
-
-                detailsViewModel.PendingDataLockChange =
-                    dataLockSummary.DataLockSummary.DataLockWithCourseMismatch.Any(x =>
-                        x.TriageStatus == TriageStatus.Change) ||
-                    dataLockSummary.DataLockSummary.DataLockWithOnlyPriceMismatch.Any(x =>
-                        x.TriageStatus == TriageStatus.Change);
+                detailsViewModel.PendingDataLockRestart = data.Apprenticeship.DataLockCourseTriaged;
+                detailsViewModel.PendingDataLockChange = data.Apprenticeship.DataLockPriceTriaged || data.Apprenticeship.DataLockCourseChangeTriaged;
 
                 detailsViewModel.SearchFiltersForListView = _filtersCookieManager.GetCookie();
 
