@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System.Web;
+using System.Web.Mvc;
+using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Authentication;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
@@ -10,18 +12,29 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     [CommitmentsRoutePrefix("Service")]
     public class ServiceController : BaseController
     {
-        public ServiceController(IOwinWrapper owinWrapper,IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage) 
+        private readonly EmployerCommitmentsServiceConfiguration _configuration;
+
+        public ServiceController(IOwinWrapper owinWrapper,IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage, EmployerCommitmentsServiceConfiguration configuration) 
             : base(owinWrapper, multiVariantTestingService, flashMessage)
         {
-            
+            _configuration = configuration;
         }
 
-        // GET: Service
-
-        [Route("signout")]
+        [Route("signOut")]
         public ActionResult SignOut()
         {
-            return OwinWrapper.SignOutUser(Url.ExternalMyaUrlAction("service","signout",true));
+            var owinContext = HttpContext.GetOwinContext();
+            var authenticationManager = owinContext.Authentication;
+            var idToken = authenticationManager.User.FindFirst("id_token")?.Value;
+            var constants = new Constants(_configuration.Identity);
+
+            return OwinWrapper.SignOutUser(string.Format(constants.LogoutEndpoint(), idToken, owinContext.Request.Uri.Scheme, owinContext.Request.Uri.Authority));
+        }
+
+        [Route("SignOutCleanup")]
+        public void SignOutCleanup()
+        {
+            OwinWrapper.SignOutUser();
         }
 
         [Authorize]
