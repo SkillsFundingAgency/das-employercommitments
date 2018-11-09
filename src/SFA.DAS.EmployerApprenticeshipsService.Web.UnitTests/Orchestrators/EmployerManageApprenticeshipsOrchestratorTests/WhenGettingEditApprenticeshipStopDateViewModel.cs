@@ -49,7 +49,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 Mock.Of<IFiltersCookieManager>(),
                 ApprenticeshipFiltersMapper.Object,
                 AcademicYearDateProvider.Object,
-                AcademicYearValidator);
+                AcademicYearValidator,
+                Mock.Of<IApprovedApprenticeshipMapper>());
 
             MockHashingService.Setup(x => x.DecodeValue(HashedApprenticeshipId)).Returns(ApprenticeshipId);
             MockHashingService.Setup(x => x.DecodeValue(HashedAccountId)).Returns(AccountId);

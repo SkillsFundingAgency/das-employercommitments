@@ -2,7 +2,7 @@
 @using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types
 @using SFA.DAS.EmployerCommitments.Web.Extensions
 @using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
-@model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<ApprenticeshipDetailsViewModel>
+@model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<ApprovedApprenticeshipViewModel>
 
 @{
     ViewBag.Title = "Apprentice detail";
@@ -168,7 +168,7 @@
                 </tr>
                 <tr>
                     <th scope="row">Total cost of training </th>
-                    <td>@FormatCost(Model.Data.Cost) </td>
+                    <td>@FormatCost(Model.Data.CurrentCost) </td>
                 </tr>
                 <tr>
                     <th scope="row">Reference </th>

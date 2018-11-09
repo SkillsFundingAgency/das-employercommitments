@@ -58,8 +58,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model = await _orchestrator
-                .GetApprenticeship(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
+            var model = await _orchestrator.GetApprovedApprenticeshipViewModel(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
             var flashMessage = GetFlashMessageViewModelFromCookie();
 
             if (flashMessage != null)
@@ -69,6 +68,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             return View(model);
         }
+
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/statuschange", Name = "ChangeStatusSelectOption")]

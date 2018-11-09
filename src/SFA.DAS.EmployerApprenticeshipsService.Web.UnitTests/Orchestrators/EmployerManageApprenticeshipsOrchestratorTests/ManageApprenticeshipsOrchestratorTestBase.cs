@@ -1,9 +1,10 @@
 using System;
-
+using System.Collections.Generic;
 using MediatR;
 using Moq;
 using NUnit.Framework;
-
+using SFA.DAS.Commitments.Api.Types.DataLock;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDataLockSummary;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetUserAccountRole;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AccountTeam;
@@ -66,6 +67,16 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                     User = new TeamMember() { AccountId = AccountId, HashedAccountId = HashedAccountId, Email = Email, Name = Name }
                 });
 
+            MockMediator.Setup(x => x.SendAsync(It.IsAny<GetDataLockSummaryQueryRequest>()))
+                .ReturnsAsync(new GetDataLockSummaryQueryResponse
+                {
+                    DataLockSummary = new DataLockSummary
+                    {
+                        DataLockWithOnlyPriceMismatch = new List<DataLockStatus>(),
+                        DataLockWithCourseMismatch = new List<DataLockStatus>()
+                    }
+                });
+
             ApprenticeshipFiltersMapper = new Mock<IApprenticeshipFiltersMapper>();
 
             var academicYearProvider = new AcademicYearDateProvider(MockDateTime.Object);
@@ -90,7 +101,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 Mock.Of<IFiltersCookieManager>(),
                 ApprenticeshipFiltersMapper.Object,
                 AcademicYearDateProvider.Object,
-                AcademicYearValidator);
+                AcademicYearValidator,
+                Mock.Of<IApprovedApprenticeshipMapper>());
         }
     }
 }

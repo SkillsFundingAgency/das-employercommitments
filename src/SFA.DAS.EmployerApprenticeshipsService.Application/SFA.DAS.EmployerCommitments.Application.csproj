@@ -82,11 +82,11 @@
     <Reference Include="SFA.DAS.Audit.Types, Version=1.0.0.20553, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Audit.Client.1.0.0.20553\lib\net45\SFA.DAS.Audit.Types.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=2.1.629.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.2.1.629\lib\net462\SFA.DAS.Commitments.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=2.1.701.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.2.1.701\lib\net462\SFA.DAS.Commitments.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=2.1.629.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.2.1.629\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=2.1.701.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.2.1.701\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Common.Domain, Version=1.4.43.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.4.43\lib\net462\SFA.DAS.Common.Domain.dll</HintPath>
@@ -192,8 +192,13 @@
     <Compile Include="Domain\Commitment\RequestStatus.cs" />
     <Compile Include="Exceptions\InvalidStateException.cs" />
     <Compile Include="Extensions\ApprenticeshipExtensions.cs" />
+    <Compile Include="Extensions\DataLockExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\ITrainingProgrammeExtensions.cs" />
+    <Compile Include="Extensions\PriceEpisodeExtensions.cs" />
+    <Compile Include="Queries\GetApprovedApprenticeship\GetApprovedApprenticeshipQueryHandler.cs" />
+    <Compile Include="Queries\GetApprovedApprenticeship\GetApprovedApprenticeshipQueryRequest.cs" />
+    <Compile Include="Queries\GetApprovedApprenticeship\GetApprovedApprenticeshipQueryResponse.cs" />
     <Compile Include="Services\ApprenticeshipInfoService.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStatus\UpdateApprenticeshipStatusCommand.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStatus\UpdateApprenticeshipStatusCommandHandler.cs" />
