@@ -9,30 +9,25 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
     {
         public RequestStatus GetStatus(EditStatus editStatus, int apprenticeshipCount, LastAction lastAction, AgreementStatus? overallAgreementStatus, long? transferSenderId, TransferApprovalStatus? transferApprovalStatus)
         {
-            bool hasApprenticeships = apprenticeshipCount > 0;
-
             if (transferSenderId.HasValue)
             {
-                return GetTransferStatus(editStatus, transferApprovalStatus, lastAction, hasApprenticeships,  overallAgreementStatus);
+                return GetTransferStatus(editStatus, transferApprovalStatus, lastAction,  overallAgreementStatus);
             }
 
             if (editStatus == EditStatus.Both)
                 return RequestStatus.Approved;
 
             if (editStatus == EditStatus.ProviderOnly)
-                return GetProviderOnlyStatus(lastAction, hasApprenticeships);
+                return GetProviderOnlyStatus(lastAction);
 
             if (editStatus == EditStatus.EmployerOnly)
-                return GetEmployerOnlyStatus(lastAction, hasApprenticeships, overallAgreementStatus);
+                return GetEmployerOnlyStatus(lastAction, overallAgreementStatus);
 
             return RequestStatus.None;
         }
 
-        private static RequestStatus GetProviderOnlyStatus(LastAction lastAction, bool hasApprenticeships)
+        private static RequestStatus GetProviderOnlyStatus(LastAction lastAction)
         {
-            if (!hasApprenticeships || lastAction == LastAction.None)
-                return RequestStatus.SentToProvider;
-
             if (lastAction == LastAction.Amend)
                 return RequestStatus.SentForReview;
 
@@ -42,9 +37,9 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
             return RequestStatus.None;
         }
 
-        private RequestStatus GetEmployerOnlyStatus(LastAction lastAction, bool hasApprenticeships, AgreementStatus? overallAgreementStatus)
+        private RequestStatus GetEmployerOnlyStatus(LastAction lastAction, AgreementStatus? overallAgreementStatus)
         {
-            if (!hasApprenticeships || lastAction == LastAction.None || lastAction == LastAction.AmendAfterRejected)
+            if (lastAction == LastAction.None || lastAction == LastAction.AmendAfterRejected)
                 return RequestStatus.NewRequest;
 
             // LastAction.Approve > LastAction.Amend, but then AgreementStatus >= ProviderAgreed, so no need for > on LastAction??
@@ -57,7 +52,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
             return RequestStatus.None;
         }
 
-        private RequestStatus GetTransferStatus(EditStatus edit, TransferApprovalStatus? transferApproval, LastAction lastAction, bool hasApprenticeships, AgreementStatus? overallAgreementStatus)
+        private RequestStatus GetTransferStatus(EditStatus edit, TransferApprovalStatus? transferApproval, LastAction lastAction, AgreementStatus? overallAgreementStatus)
         {
             const string invalidStateExceptionMessagePrefix = "Transfer funder commitment in invalid state: ";
 
@@ -74,9 +69,9 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
                                 return RequestStatus.WithSenderForApproval;
                             case EditStatus.EmployerOnly:
                                 //todo: need to set to draft after rejected by sender and edited by receiver (but not sent to provider)
-                                return GetEmployerOnlyStatus(lastAction, hasApprenticeships, overallAgreementStatus);
+                                return GetEmployerOnlyStatus(lastAction, overallAgreementStatus);
                             case EditStatus.ProviderOnly:
-                                return GetProviderOnlyStatus(lastAction, hasApprenticeships);
+                                return GetProviderOnlyStatus(lastAction);
                             default:
                                 throw new Exception("Unexpected EditStatus");
                         }
