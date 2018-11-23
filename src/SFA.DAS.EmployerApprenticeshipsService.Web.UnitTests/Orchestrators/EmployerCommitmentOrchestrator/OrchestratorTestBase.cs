@@ -137,7 +137,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                         Id = id,
                         Reference = id.ToString(),
                         EditStatus = EditStatus.ProviderOnly,
-                        LastAction = LastAction.None,
+                        LastAction = LastAction.Amend,
                         ApprenticeshipCount = 1,
                         AgreementStatus = AgreementStatus.NotAgreed
                     };

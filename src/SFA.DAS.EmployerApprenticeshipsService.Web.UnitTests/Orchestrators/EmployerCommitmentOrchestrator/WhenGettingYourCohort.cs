@@ -42,7 +42,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
             /*expectedWithProviderCount=*/1, /*expectedTransferFundedCohortsCount=*/0, /*expectedRejectedTransferFundedCohortsCount = */ 0,
             ValidTransferSenderId, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
-            EditStatus.ProviderOnly, LastAction.None, 0, TestName = "With provider")]
+            EditStatus.ProviderOnly, LastAction.Amend, 0, TestName = "With provider")]
         [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/1,
             /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/0, /*expectedRejectedTransferFundedCohortsCount = */ 0,
             ValidTransferSenderId, TransferApprovalStatus.Pending, AgreementStatus.ProviderAgreed,
@@ -70,7 +70,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
             /*expectedWithProviderCount=*/1, /*expectedTransferFundedCohortsCount=*/0, /*expectedRejectedTransferFundedCohortsCount = */ 0,
             null, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
-            EditStatus.ProviderOnly, LastAction.None, 0, TestName = "Been sent to provider by employer to add apprentices")]
+            EditStatus.ProviderOnly, LastAction.Amend, 0, TestName = "Been sent to provider by employer to add apprentices")]
         public async Task ThenCountsShouldBeCorrectWhenEmployerHasASingleCommitmentThats(
             int expectedDraftCount, int expectedReadyForReviewCount, int expectedWithProviderCount, int expectedTransferFundedCohortsCount, int expectedRejectedTransferFundedCohortsCount,
             long? transferSenderId, TransferApprovalStatus transferApprovalStatus,
@@ -114,7 +114,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         [TestCase(/*expectedDraftCount=*/1, /*expectedReadyForReviewCount=*/0,
             /*expectedWithProviderCount=*/1, /*expectedTransferFundedCohortsCount=*/0, /*expectedRejectedTransferFundedCohortsCount = */ 0,
             null, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
-            EditStatus.ProviderOnly, LastAction.None, 0,
+            EditStatus.ProviderOnly, LastAction.Amend, 0,
             ValidTransferSenderId, TransferApprovalStatus.Pending, AgreementStatus.NotAgreed,
             EditStatus.EmployerOnly, LastAction.None, 0, TestName = "With a transfers draft and a non-transfers with provider")]
         public async Task ThenCountsShouldBeCorrectWhenEmployerHasTwoCommitments(
