@@ -41,10 +41,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Authentication
             _owinContext.Authentication.User = new ClaimsPrincipal(claimsIdentity);
         }
 
-        public ActionResult SignOutUser(string redirectUrl)
+        public void SignOutUser()
         {
             var authenticationManager = _owinContext.Authentication;
             authenticationManager.SignOut("Cookies");
+        }
+
+        public ActionResult SignOutUser(string redirectUrl)
+        {
+            SignOutUser();
             
             return new RedirectResult(redirectUrl);   
         }

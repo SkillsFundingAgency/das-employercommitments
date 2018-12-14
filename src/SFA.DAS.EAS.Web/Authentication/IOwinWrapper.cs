@@ -11,6 +11,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Authentication
         void RemovePartialLoginCookie();
         void SignInUser(string id, string displayName, string email);
         ActionResult SignOutUser(string redirectUrl);
+        void SignOutUser();
         string GetClaimValue(string claimKey);
         Task UpdateClaims();
     }
