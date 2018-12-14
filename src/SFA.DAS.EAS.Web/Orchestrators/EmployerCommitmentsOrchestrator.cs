@@ -335,9 +335,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         ProviderName = model.ProviderName,
                         CommitmentStatus = CommitmentStatus.Active,
                         EditStatus = EditStatus.ProviderOnly,
-                        EmployerLastUpdateInfo = new LastUpdateInfo { Name = userDisplayName, EmailAddress = userEmail },
+                        EmployerLastUpdateInfo = new LastUpdateInfo { Name = userDisplayName, EmailAddress = userEmail }
                     },
-                    UserId = externalUserId
+                    UserId = externalUserId,
+                    LastAction = LastAction.Amend
                 });
 
                 return new OrchestratorResponse<string>

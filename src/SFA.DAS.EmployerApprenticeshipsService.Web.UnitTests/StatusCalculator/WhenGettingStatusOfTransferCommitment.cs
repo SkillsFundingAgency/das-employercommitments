@@ -13,7 +13,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
     public sealed class WhenGettingStatusOfTransferCommitment
     {
         [TestCase(RequestStatus.NewRequest, EditStatus.EmployerOnly, TransferApprovalStatus.Pending, LastAction.None, TestName = "With receiving employer")]
-        [TestCase(RequestStatus.SentToProvider, EditStatus.ProviderOnly, TransferApprovalStatus.Pending, LastAction.None, TestName = "With provider")]
+        [TestCase(RequestStatus.SentForReview, EditStatus.ProviderOnly, TransferApprovalStatus.Pending, LastAction.Amend, TestName = "With provider")]
         [TestCase(RequestStatus.WithSenderForApproval, EditStatus.Both, TransferApprovalStatus.Pending , LastAction.None, TestName = "With sender but not yet actioned by them")]
         [TestCase(RequestStatus.RejectedBySender, EditStatus.EmployerOnly, TransferApprovalStatus.Rejected, LastAction.None, TestName = "With sender, rejected by them, but not yet saved or edited")]
         [TestCase(RequestStatus.None, EditStatus.Both, TransferApprovalStatus.Approved, LastAction.None, TestName = "Approved by all 3 parties")]

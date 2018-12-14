@@ -71,6 +71,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockMediator.Verify(x => x.SendAsync(
                     It.Is<CreateCommitmentCommand>(p => p.UserId == "externalUser" &&
                                                         p.Message == _viewModel.Message &&
+                                                        p.LastAction == LastAction.Amend &&
                                                         p.Commitment.Reference == _viewModel.CohortRef &&
                                                         p.Commitment.EmployerAccountId == UnhashedAccountId &&
                                                         p.Commitment.TransferSenderName == null &&
