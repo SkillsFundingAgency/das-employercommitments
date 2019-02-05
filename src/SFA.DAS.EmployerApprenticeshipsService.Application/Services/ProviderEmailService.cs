@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
@@ -14,10 +15,11 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
         private readonly IProviderEmailLookupService _providerEmailLookupService;
         private readonly IBackgroundNotificationService _backgroundNotificationService;
         private readonly ILog _logger;
-        private readonly EmployerCommitmentsServiceConfiguration _configuration;
+        private readonly CommitmentNotificationConfiguration _configuration;
+        private readonly IdamsEmailServiceWrapper _idamsEmailServiceWrapper;
 
         public ProviderEmailService(IProviderEmailLookupService providerEmailLookupService,
-            IBackgroundNotificationService backgroundNotificationService, ILog logger, EmployerCommitmentsServiceConfiguration configuration)
+            IBackgroundNotificationService backgroundNotificationService, ILog logger, CommitmentNotificationConfiguration configuration)
         {
             _providerEmailLookupService = providerEmailLookupService;
             _backgroundNotificationService = backgroundNotificationService;
@@ -26,21 +28,31 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
         }
         public async Task SendEmailToAllProviderRecipients(long providerId, string lastUpdateEmailAddress, EmailMessage emailMessage)
         {
-            if (!_configuration.CommitmentNotification.SendEmail)
+            IEnumerable<string> explicitAddresses;
+            if (!_configuration.UseProviderEmail)
             {
-                _logger.Info("Sending email notifications disabled by config.");
-                return;
+                _logger.Info($"Using provider test email (${string.Join(", ", _configuration.ProviderTestEmails)})");
+                explicitAddresses = _configuration.ProviderTestEmails;
             }
 
-            var recipients = await _providerEmailLookupService.GetEmailsAsync(providerId,lastUpdateEmailAddress);
-
-            var tasks = recipients.Select(recipient =>
+            if (!string.IsNullOrEmpty(lastUpdateEmailAddress))
             {
-                _logger.Info($"Sending email to: {recipient}");
-                 return _backgroundNotificationService.SendEmail(CreateEmailForRecipient(recipient, emailMessage));
-            });
+                _logger.Debug($"Using provider last updated email ({lastUpdateEmailAddress})");
+                explicitAddresses = new List<string> { lastUpdateEmailAddress };
+            }
 
-            await Task.WhenAll(tasks);
+            //pas call? will just be an internal object call when this lives in pas?
+            
+
+            var recipients = await _providerEmailLookupService.GetEmailsAsync(providerId, lastUpdateEmailAddress);
+            //to be replaced by pas call
+            //var tasks = recipients.Select(recipient =>
+            //{
+            //    _logger.Info($"Sending email to: {recipient}");
+            //    return _backgroundNotificationService.SendEmail(CreateEmailForRecipient(recipient, emailMessage));
+            //});
+
+            //await Task.WhenAll(tasks);
             _logger.Info("Emails have been handed to the notification api.");
         }
 
