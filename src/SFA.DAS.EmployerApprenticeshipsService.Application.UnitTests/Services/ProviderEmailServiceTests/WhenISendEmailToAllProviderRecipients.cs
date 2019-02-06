@@ -8,6 +8,7 @@ using SFA.DAS.EmployerCommitments.Application.Services;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.Notification;
+using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Notifications.Api.Client;
 using SFA.DAS.Notifications.Api.Types;
@@ -50,12 +51,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
                 .Callback<Email>(email => _sentEmails.Add(email))
                 .Returns(Task.CompletedTask);
 
-            _providerEmailService = new ProviderEmailService(_providerEmailLookupService.Object,
-                _backgroundNotificationService.Object, Mock.Of<ILog>(),
-                new EmployerCommitmentsServiceConfiguration
-                {
-                    CommitmentNotification = _commitmentNotificationConfiguration
-                });
+            _providerEmailService = new ProviderEmailService(Mock.Of<ILog>(),
+                _commitmentNotificationConfiguration, Mock.Of<ProviderNotifyService>());
 
             _exampleValidEmail = new EmailMessage
             {

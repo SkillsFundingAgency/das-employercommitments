@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
@@ -32,8 +33,8 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
 
         public async Task<List<string>>GetEmailsAsync(long providerId, string lastUpdateEmail)
         {
-            
-
+            await Task.Delay(0);
+            throw new NotImplementedException();
             
         }
 
