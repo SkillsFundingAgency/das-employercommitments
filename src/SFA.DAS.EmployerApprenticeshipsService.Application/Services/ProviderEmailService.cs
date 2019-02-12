@@ -18,10 +18,10 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
         private readonly CommitmentNotificationConfiguration _configuration;
         private readonly ProviderNotifyService _providerNotifyService;
 
-        public ProviderEmailService(ILog logger, CommitmentNotificationConfiguration configuration, ProviderNotifyService providerNotifyService)
+        public ProviderEmailService(ILog logger, EmployerCommitmentsServiceConfiguration configuration, ProviderNotifyService providerNotifyService)
         {
             _logger = logger;
-            _configuration = configuration;
+            _configuration = configuration.CommitmentNotification;
             _providerNotifyService = providerNotifyService;
         }
         public async Task SendEmailToAllProviderRecipients(long providerId, string lastUpdateEmailAddress, EmailMessage emailMessage)

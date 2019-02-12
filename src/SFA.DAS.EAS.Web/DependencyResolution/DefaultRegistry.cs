@@ -108,6 +108,8 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             RegisterLogger();
 
             RegisterAccountApi();
+
+            RegisterPasAccountApi(config);
         }
 
         private void RegisterAccountApi()
@@ -123,6 +125,12 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
                     For<IAccountApiClient>().DecorateAllWith<Decorators.AccountApiClientDecorator>();  
                 }
             }
+        }
+
+        private void RegisterPasAccountApi(EmployerCommitmentsServiceConfiguration config)
+        {
+            For<PAS.Account.Api.Client.IPasAccountApiConfiguration>().Use(config.ProviderAccountUserApi);
+            For<PAS.Account.Api.Client.IPasAccountApiClient>().Use<PAS.Account.Api.Client.PasAccountApiClient>();
         }
 
         private void SetUpCommitmentApi(EmployerCommitmentsServiceConfiguration config)

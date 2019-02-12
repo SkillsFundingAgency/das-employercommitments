@@ -6,9 +6,9 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
 {
     public class ProviderNotifyService
     {
-        private readonly IAccountApiClient _accountApiClient;
+        private readonly IPasAccountApiClient _accountApiClient;
 
-        public ProviderNotifyService(IAccountApiClient accountApiClient)
+        public ProviderNotifyService(IPasAccountApiClient accountApiClient)
         {
             _accountApiClient = accountApiClient;
         }
