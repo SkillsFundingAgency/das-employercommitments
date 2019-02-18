@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
 
         private long _providerId;
         private string _providerLastUpdateEmailAddress;
-        private CommitmentNotificationConfiguration _commitmentNotificationConfiguration;
+        private EmployerCommitmentsServiceConfiguration _configuration;
         private List<string> _exampleRecipients;
         private EmailMessage _exampleValidEmail;
 
@@ -38,7 +38,10 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             _providerId = 1;
             _providerLastUpdateEmailAddress = "AlternativeEmailAddress";
 
-            _commitmentNotificationConfiguration = new CommitmentNotificationConfiguration {SendEmail = true};
+            _configuration = new EmployerCommitmentsServiceConfiguration
+            {
+                CommitmentNotification = new CommitmentNotificationConfiguration {SendEmail = true}
+            };
 
             _exampleRecipients = new List<string> { "Recipient1@example.com", "Recipient2@example.com", "Recipient3@example.com" };
             _providerEmailLookupService = new Mock<IProviderEmailLookupService>();
@@ -52,7 +55,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
                 .Returns(Task.CompletedTask);
 
             _providerEmailService = new ProviderEmailService(Mock.Of<ILog>(),
-                _commitmentNotificationConfiguration, Mock.Of<ProviderNotifyService>());
+                _configuration, Mock.Of<ProviderNotifyService>());
 
             _exampleValidEmail = new EmailMessage
             {
@@ -97,7 +100,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         public async Task ThenIfSendingEmailIsDisabledInConfigurationThenNoEmailsAreSent()
         {
             //Arrange
-            _commitmentNotificationConfiguration.SendEmail = false;
+            _configuration.CommitmentNotification.SendEmail = false;
 
             //Act
             await _act();
