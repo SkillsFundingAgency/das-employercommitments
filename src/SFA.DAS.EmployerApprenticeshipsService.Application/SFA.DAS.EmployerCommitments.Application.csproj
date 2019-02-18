@@ -115,10 +115,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SFA.DAS.PAS.Account.Api.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.PAS.Account.Api.Client.1.0.0.40435\lib\net45\SFA.DAS.PAS.Account.Api.Client.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.PAS.Account.Api.Client.1.0.0.40437\lib\net45\SFA.DAS.PAS.Account.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.PAS.Account.Api.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.PAS.Account.Api.Types.1.0.0.40435\lib\net45\SFA.DAS.PAS.Account.Api.Types.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.PAS.Account.Api.Types.1.0.0.40437\lib\net45\SFA.DAS.PAS.Account.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Provider.Events.Api.Client, Version=2.0.0.33572, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.0.0.33572\lib\net45\SFA.DAS.Provider.Events.Api.Client.dll</HintPath>
