@@ -259,10 +259,10 @@
       <HintPath>..\packages\SFA.DAS.OidcMiddleware.2.0.0.18229\lib\net45\SFA.DAS.OidcMiddleware.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.PAS.Account.Api.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.PAS.Account.Api.Client.1.0.0.40437\lib\net45\SFA.DAS.PAS.Account.Api.Client.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.PAS.Account.Api.Client.1.0.0.40701\lib\net45\SFA.DAS.PAS.Account.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.PAS.Account.Api.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.PAS.Account.Api.Types.1.0.0.40437\lib\net45\SFA.DAS.PAS.Account.Api.Types.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.PAS.Account.Api.Types.1.0.0.40701\lib\net45\SFA.DAS.PAS.Account.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Providers.Api.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Providers.Api.Client.0.11.98\lib\net462\SFA.DAS.Providers.Api.Client.dll</HintPath>
