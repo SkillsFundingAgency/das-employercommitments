@@ -28,7 +28,7 @@
     <IISExpressSSLPort>443</IISExpressSSLPort>
     <TargetFrameworkProfile />
     <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
-    <Use64BitIISExpress>true</Use64BitIISExpress>
+    <Use64BitIISExpress />
     <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
