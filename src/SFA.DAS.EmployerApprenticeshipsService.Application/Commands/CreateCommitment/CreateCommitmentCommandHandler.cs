@@ -36,10 +36,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
             //todo: do we really need to fetch this?
             var commitment = await _commitmentApi.GetEmployerCommitment(request.Commitment.EmployerAccountId, commitmentId);
 
-#if DEBUG
-            await _providerEmailNotificationService.SendCreateCommitmentNotification(commitment); // TODO REMOVE THIS ONLY FOR LOCAL TESTING
-#endif
-
             if (request.Commitment.CommitmentStatus == CommitmentStatus.Active)
             {
                 await _providerEmailNotificationService.SendCreateCommitmentNotification(commitment);

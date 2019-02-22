@@ -257,7 +257,6 @@
     <Compile Include="Services\EmployerAccountServiceTests\WhenIGetLegalEntitiesLinkedToAnAccount.cs" />
     <Compile Include="Services\FeatureToggleTests\DummyFeatureToggle.cs" />
     <Compile Include="Services\FeatureToggleTests\WhenIGetASimpleFeatureToggle.cs" />
-    <Compile Include="Services\ProviderEmailLookupService\ProviderEmailLookupServiceTests.cs" />
     <Compile Include="Services\WhiteListTests\WhenIGetUserWhiteList.cs" />
   </ItemGroup>
   <ItemGroup>

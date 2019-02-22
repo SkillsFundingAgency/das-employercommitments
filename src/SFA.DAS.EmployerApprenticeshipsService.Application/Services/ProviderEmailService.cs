@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
@@ -16,9 +15,9 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
     {
         private readonly ILog _logger;
         private readonly CommitmentNotificationConfiguration _configuration;
-        private readonly ProviderNotifyService _providerNotifyService;
+        private readonly IProviderNotifyService _providerNotifyService;
 
-        public ProviderEmailService(ILog logger, EmployerCommitmentsServiceConfiguration configuration, ProviderNotifyService providerNotifyService)
+        public ProviderEmailService(ILog logger, EmployerCommitmentsServiceConfiguration configuration, IProviderNotifyService providerNotifyService)
         {
             _logger = logger;
             _configuration = configuration.CommitmentNotification;
@@ -39,37 +38,14 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                 explicitAddresses = new List<string> { lastUpdateEmailAddress };
             }
 
-            //pas call? will just be an internal object call when this lives in pas?
-
             await _providerNotifyService.SendProviderEmailNotifications(providerId, new ProviderEmailRequest
             {
                 ExplicitEmailAddresses = explicitAddresses?.ToList(),
                 TemplateId = emailMessage.TemplateId,
                 Tokens = emailMessage.Tokens
             });
-            //var recipients = await _providerEmailLookupService.GetEmailsAsync(providerId, lastUpdateEmailAddress);
-            //to be replaced by pas call
-            //var tasks = recipients.Select(recipient =>
-            //{
-            //    _logger.Info($"Sending email to: {recipient}");
-            //    return _backgroundNotificationService.SendEmail(CreateEmailForRecipient(recipient, emailMessage));
-            //});
 
-            //await Task.WhenAll(tasks);
             _logger.Info("Emails have been handed to the provider account api.");
-        }
-
-        private Email CreateEmailForRecipient(string recipient, EmailMessage source)
-        {
-            return new Email
-            {
-                RecipientsAddress = recipient,
-                TemplateId = source.TemplateId,
-                Tokens = new Dictionary<string, string>(source.Tokens),
-                ReplyToAddress = "noreply@sfa.gov.uk",
-                Subject = "x",
-                SystemId ="x"
-            };
         }
     }
 }

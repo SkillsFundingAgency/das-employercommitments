@@ -333,7 +333,6 @@
     <Compile Include="Services\EmployerAccountService.cs" />
     <Compile Include="Services\FeatureToggleService.cs" />
     <Compile Include="Services\HttpClientWrapper.cs" />
-    <Compile Include="Services\ProviderEmailLookupService.cs" />
     <Compile Include="Services\ProviderNotifyService.cs" />
     <Compile Include="Services\RestService.cs" />
     <Compile Include="Services\MultiVariantTestingService.cs" />

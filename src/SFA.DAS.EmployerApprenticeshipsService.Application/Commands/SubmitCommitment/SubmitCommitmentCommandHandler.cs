@@ -5,12 +5,11 @@ using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
-using SFA.DAS.EmployerCommitments.Application.Commands.SendNotification;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.Notification;
 using SFA.DAS.NLog.Logger;
-using SFA.DAS.Notifications.Api.Types;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment
 {
@@ -19,22 +18,21 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment
         private readonly IEmployerCommitmentApi _commitmentApi;
         private readonly IMediator _mediator;
         private readonly EmployerCommitmentsServiceConfiguration _configuration;
-        private readonly IProviderEmailLookupService _providerEmailLookupService;
         private readonly ILog _logger;
         private readonly SubmitCommitmentCommandValidator _validator;
+        private IProviderEmailService _providerEmailService;
 
         public SubmitCommitmentCommandHandler(
             IEmployerCommitmentApi commitmentApi,
             IMediator mediator,
             EmployerCommitmentsServiceConfiguration configuration,
-            IProviderEmailLookupService providerEmailLookupService,
-            ILog logger)
+            ILog logger, IProviderEmailService providerEmailService)
         {
             _commitmentApi = commitmentApi;
             _mediator = mediator;
             _configuration = configuration;
-            _providerEmailLookupService = providerEmailLookupService;
             _logger = logger;
+            _providerEmailService = providerEmailService;
 
             _validator = new SubmitCommitmentCommandValidator();
         }
@@ -79,12 +77,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment
         private async Task SendNotification(CommitmentView commitment, SubmitCommitmentCommand message)
         {
             _logger.Info($"Sending notification for commitment {commitment.Id} to providers with ukprn {commitment.ProviderId}");
-            var emails = await
-                _providerEmailLookupService.GetEmailsAsync(
-                    commitment.ProviderId.GetValueOrDefault(),
-                    commitment.ProviderLastUpdateInfo?.EmailAddress ?? string.Empty);
-
-            _logger.Info($"Found {emails.Count} provider email address/es");
 
             var tokens = new Dictionary<string, string> {
                 { "cohort_reference", commitment.Reference }
@@ -111,27 +103,16 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment
                     break;
             }
 
-            foreach (var email in emails)
+            var emailMessage = new EmailMessage
             {
-                _logger.Info($"Sending email to {email}");
-                await _mediator.SendAsync(BuildNotificationCommand(email, templateId, tokens));
-            }
-        }
-
-        private SendNotificationCommand BuildNotificationCommand(string email, string templateId, Dictionary<string, string> tokens)
-        {
-            return new SendNotificationCommand
-            {
-                Email = new Email
-                {
-                    RecipientsAddress = email,
-                    TemplateId = templateId,
-                    ReplyToAddress = "noreply@sfa.gov.uk",
-                    Subject = "x",
-                    SystemId = "x",
-                    Tokens = tokens
-                }
+                TemplateId = templateId,
+                Tokens = tokens
             };
+
+            await _providerEmailService.SendEmailToAllProviderRecipients(
+                commitment.ProviderId.GetValueOrDefault(),
+                commitment.ProviderLastUpdateInfo?.EmailAddress ?? string.Empty,
+                emailMessage);
         }
     }
 }

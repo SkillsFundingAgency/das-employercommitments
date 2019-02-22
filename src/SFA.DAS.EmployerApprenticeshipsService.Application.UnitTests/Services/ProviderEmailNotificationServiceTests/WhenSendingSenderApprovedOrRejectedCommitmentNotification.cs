@@ -32,10 +32,19 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         private Dictionary<string, string> _tokens;
         private EmailMessage _sentEmailMessage;
         private Func<Task> _act;
+        private EmployerCommitmentsServiceConfiguration _configuration;
 
         [SetUp]
         public void Arrange()
         {
+            _configuration = new EmployerCommitmentsServiceConfiguration
+            {
+                CommitmentNotification = new CommitmentNotificationConfiguration
+                {
+                    SendEmail = true
+                }
+            };
+
             _providerEmailService = new Mock<IProviderEmailService>();
             _providerEmailService.Setup(x =>
                 x.SendEmailToAllProviderRecipients(It.IsAny<long>(), It.IsAny<string>(), It.IsAny<EmailMessage>()))
@@ -43,7 +52,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
                 .Returns(Task.CompletedTask);
 
             _providerEmailNotificationService =
-                new ProviderEmailNotificationService(_providerEmailService.Object, Mock.Of<ILog>(), Mock.Of<IHashingService>(), Mock.Of<EmployerCommitmentsServiceConfiguration>());
+                new ProviderEmailNotificationService(_providerEmailService.Object, Mock.Of<ILog>(), Mock.Of<IHashingService>(), _configuration);
 
             _exampleCommitmentView = new CommitmentView
             {

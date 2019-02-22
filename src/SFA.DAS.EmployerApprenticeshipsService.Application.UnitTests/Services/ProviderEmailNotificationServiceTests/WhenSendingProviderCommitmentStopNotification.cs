@@ -18,6 +18,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
     {
         private ProviderEmailNotificationService _providerEmailNotificationService;
 
+        private EmployerCommitmentsServiceConfiguration _configuration;
+
         private Mock<IProviderEmailService> _providerEmailService;
         private Mock<IHashingService> _hashingService;
 
@@ -31,6 +33,14 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         [SetUp]
         public void Arrange()
         {
+            _configuration = new EmployerCommitmentsServiceConfiguration
+            {
+                CommitmentNotification = new CommitmentNotificationConfiguration
+                {
+                    SendEmail = true
+                }
+            };
+
             _providerEmailService = new Mock<IProviderEmailService>();
             _providerEmailService.Setup(x =>
                 x.SendEmailToAllProviderRecipients(It.IsAny<long>(), It.IsAny<string>(), It.IsAny<EmailMessage>()))
@@ -41,7 +51,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             _hashingService.Setup(x => x.HashValue(It.IsAny<long>())).Returns("HASH");
 
             _providerEmailNotificationService =
-                new ProviderEmailNotificationService(_providerEmailService.Object, Mock.Of<ILog>(), _hashingService.Object, Mock.Of<EmployerCommitmentsServiceConfiguration>());
+                new ProviderEmailNotificationService(_providerEmailService.Object, Mock.Of<ILog>(), _hashingService.Object, _configuration);
 
             var payload = new Apprenticeship
             {

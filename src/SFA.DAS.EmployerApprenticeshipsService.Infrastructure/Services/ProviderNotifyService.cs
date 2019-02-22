@@ -4,7 +4,12 @@ using SFA.DAS.PAS.Account.Api.Types;
 
 namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
 {
-    public class ProviderNotifyService
+    public interface IProviderNotifyService
+    {
+        Task SendProviderEmailNotifications(long ukprn, ProviderEmailRequest request);
+    }
+
+    public class ProviderNotifyService : IProviderNotifyService
     {
         private readonly IPasAccountApiClient _accountApiClient;
 
