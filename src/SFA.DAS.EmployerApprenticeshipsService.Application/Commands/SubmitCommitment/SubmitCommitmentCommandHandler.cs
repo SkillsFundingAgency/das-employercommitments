@@ -16,20 +16,17 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment
     public sealed class SubmitCommitmentCommandHandler : AsyncRequestHandler<SubmitCommitmentCommand>
     {
         private readonly IEmployerCommitmentApi _commitmentApi;
-        private readonly IMediator _mediator;
         private readonly EmployerCommitmentsServiceConfiguration _configuration;
         private readonly ILog _logger;
         private readonly SubmitCommitmentCommandValidator _validator;
-        private IProviderEmailService _providerEmailService;
+        private readonly IProviderEmailService _providerEmailService;
 
         public SubmitCommitmentCommandHandler(
             IEmployerCommitmentApi commitmentApi,
-            IMediator mediator,
             EmployerCommitmentsServiceConfiguration configuration,
             ILog logger, IProviderEmailService providerEmailService)
         {
             _commitmentApi = commitmentApi;
-            _mediator = mediator;
             _configuration = configuration;
             _logger = logger;
             _providerEmailService = providerEmailService;

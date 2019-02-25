@@ -1,12 +1,10 @@
 ﻿using System.Threading.Tasks;
-using MediatR;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
-using SFA.DAS.EmployerCommitments.Application.Commands.SendNotification;
 using SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
@@ -22,7 +20,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
         private SubmitCommitmentCommandHandler _handler;
         private Mock<IEmployerCommitmentApi> _mockCommitmentApi;
         private SubmitCommitmentCommand _validCommand;
-        private Mock<IMediator> _mockMediator;
         private CommitmentView _repositoryCommitment;
         private Mock<IProviderEmailService> _mockEmailService;
 
@@ -44,7 +41,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
             _mockCommitmentApi.Setup(x => x.GetEmployerCommitment(It.IsAny<long>(), It.IsAny<long>()))
                 .ReturnsAsync(_repositoryCommitment);
 
-            _mockMediator = new Mock<IMediator>();
             var config = new EmployerCommitmentsServiceConfiguration
                              {
                                  CommitmentNotification = new CommitmentNotificationConfiguration { SendEmail = true }
@@ -52,7 +48,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
 
             _mockEmailService = new Mock<IProviderEmailService>();
 
-            _handler = new SubmitCommitmentCommandHandler(_mockCommitmentApi.Object, _mockMediator.Object, config, Mock.Of<ILog>(), _mockEmailService.Object);
+            _handler = new SubmitCommitmentCommandHandler(_mockCommitmentApi.Object, config, Mock.Of<ILog>(), _mockEmailService.Object);
         }
 
         [Test]
@@ -83,15 +79,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.SubmitCommi
             await _handler.Handle(_validCommand);
 
             _mockEmailService.Verify(x => x.SendEmailToAllProviderRecipients(It.IsAny<long>(), It.IsAny<string>(), It.IsAny<EmailMessage>()), Times.Never);
-        }
-
-        [Test]
-        public async Task NotShouldCallSendNotificationCommand()
-        {
-            _validCommand.LastAction = LastAction.None;
-            await _handler.Handle(_validCommand);
-
-            _mockMediator.Verify(x => x.SendAsync(It.IsAny<SendNotificationCommand>()), Times.Never);
         }
 
         [Test]
