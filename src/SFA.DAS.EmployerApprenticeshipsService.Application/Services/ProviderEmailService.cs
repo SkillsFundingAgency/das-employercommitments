@@ -14,23 +14,16 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
     public class ProviderEmailService : IProviderEmailService
     {
         private readonly ILog _logger;
-        private readonly CommitmentNotificationConfiguration _configuration;
         private readonly IProviderNotifyService _providerNotifyService;
 
-        public ProviderEmailService(ILog logger, EmployerCommitmentsServiceConfiguration configuration, IProviderNotifyService providerNotifyService)
+        public ProviderEmailService(ILog logger, IProviderNotifyService providerNotifyService)
         {
             _logger = logger;
-            _configuration = configuration.CommitmentNotification;
             _providerNotifyService = providerNotifyService;
         }
         public async Task SendEmailToAllProviderRecipients(long providerId, string lastUpdateEmailAddress, EmailMessage emailMessage)
         {
             IEnumerable<string> explicitAddresses = null;
-            if (!_configuration.UseProviderEmail)
-            {
-                _logger.Info($"Using provider test email (${string.Join(", ", _configuration.ProviderTestEmails)})");
-                explicitAddresses = _configuration.ProviderTestEmails;
-            }
 
             if (!string.IsNullOrEmpty(lastUpdateEmailAddress))
             {

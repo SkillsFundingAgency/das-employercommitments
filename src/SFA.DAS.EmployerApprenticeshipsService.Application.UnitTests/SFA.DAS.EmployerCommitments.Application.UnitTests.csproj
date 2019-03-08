@@ -228,7 +228,8 @@
     <Compile Include="Services\EmployerEmailNotificationServiceTests\WhenSendingSenderApprovedOrRejectedCommitmentNotification.cs" />
     <Compile Include="Services\ProviderEmailNotificationServiceTests\WhenSendingSenderApprovedOrRejectedCommitmentNotification.cs" />
     <Compile Include="Services\ProviderEmailNotificationServiceTests\WhenSendingTransferRejectedCommitmentEditEmailNotification.cs" />
-    <Compile Include="Services\ProviderEmailServiceTests\WhenSendingEmailToAllProviderRecipients.cs" />
+    <Compile Include="Services\ProviderEmailServiceTests\WhenSendingEmail_UsingLastUpdatedEmailAddress.cs" />
+    <Compile Include="Services\ProviderEmailServiceTests\WhenSendingEmail_NotUsingLastUpdatedEmailAddress.cs" />
     <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
