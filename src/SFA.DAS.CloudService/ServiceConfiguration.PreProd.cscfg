@@ -25,7 +25,7 @@
             <Setting name="FeatureToggle.TransfersRejectOption" value="__FeatureToggle.TransfersRejectOption__" />
     </ConfigurationSettings>
     <Certificates>
-      <Certificate name="WebSslCert" thumbprint="D49BCBE072F6FB54FACF3EA36B82FE18663140B0" thumbprintAlgorithm="sha1" />
+      <Certificate name="WebSslCert" thumbprint="D4B7EBCE1013CBB10A6DD74D1A20E2C9A69107A2" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>
   <NetworkConfiguration>
