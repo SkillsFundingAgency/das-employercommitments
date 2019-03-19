@@ -33,7 +33,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
 
             var commitmentId = (await _commitmentApi.CreateEmployerCommitment(request.Commitment.EmployerAccountId, commitmentRequest)).Id;
 
-            //todo: do we really need to fetch this?
             var commitment = await _commitmentApi.GetEmployerCommitment(request.Commitment.EmployerAccountId, commitmentId);
 
             if (request.Commitment.CommitmentStatus == CommitmentStatus.Active)
@@ -41,7 +40,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment
                 await _providerEmailNotificationService.SendCreateCommitmentNotification(commitment);
             }
 
-            return new CreateCommitmentCommandResponse { CommitmentId = commitment.Id };
+            return new CreateCommitmentCommandResponse { CommitmentId = commitment.Id, CohortReference = commitment.Reference};
         }      
     }
 }

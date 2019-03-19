@@ -343,7 +343,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 return new OrchestratorResponse<string>
                 {
-                    Data = HashingService.HashValue(response.CommitmentId)
+                    Data = response.CohortReference
                 };
 
             }, model.HashedAccountId, externalUserId);
