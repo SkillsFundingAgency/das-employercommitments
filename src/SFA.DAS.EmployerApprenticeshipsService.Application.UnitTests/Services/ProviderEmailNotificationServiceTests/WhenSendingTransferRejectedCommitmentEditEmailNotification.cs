@@ -6,6 +6,7 @@ using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Services;
+using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.Notification;
 using SFA.DAS.HashingService;
@@ -18,6 +19,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
     {
         private ProviderEmailNotificationService _providerEmailNotificationService;
 
+        private EmployerCommitmentsServiceConfiguration _configuration;
+
         private Mock<IProviderEmailService> _providerEmailService;
 
         private CommitmentView _exampleCommitmentView;
@@ -29,6 +32,14 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         [SetUp]
         public void Arrange()
         {
+            _configuration = new EmployerCommitmentsServiceConfiguration
+            {
+                CommitmentNotification = new CommitmentNotificationConfiguration
+                {
+                    SendEmail = true
+                }
+            };
+
             _providerEmailService = new Mock<IProviderEmailService>();
             _providerEmailService.Setup(x =>
                 x.SendEmailToAllProviderRecipients(It.IsAny<long>(), It.IsAny<string>(), It.IsAny<EmailMessage>()))
@@ -36,7 +47,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
                 .Returns(Task.CompletedTask);
 
             _providerEmailNotificationService =
-                new ProviderEmailNotificationService(_providerEmailService.Object, Mock.Of<ILog>(), Mock.Of<IHashingService>());
+                new ProviderEmailNotificationService(_providerEmailService.Object, Mock.Of<ILog>(), Mock.Of<IHashingService>(), _configuration);
 
             _exampleCommitmentView = new CommitmentView
             {

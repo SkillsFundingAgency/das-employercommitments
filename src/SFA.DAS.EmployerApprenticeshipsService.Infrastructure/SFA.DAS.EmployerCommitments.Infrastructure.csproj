@@ -93,9 +93,8 @@
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=6.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAzure.Storage.6.2.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.3.7\lib\net45\NLog.dll</HintPath>
@@ -163,6 +162,12 @@
     </Reference>
     <Reference Include="SFA.DAS.Notifications.Api.Types, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Notifications.Api.Types.2.0.0.35919\lib\net45\SFA.DAS.Notifications.Api.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.PAS.Account.Api.Client, Version=1.1.683.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.PAS.Account.Api.Client.1.1.683\lib\net45\SFA.DAS.PAS.Account.Api.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.PAS.Account.Api.Types, Version=1.1.683.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.PAS.Account.Api.Types.1.1.683\lib\net45\SFA.DAS.PAS.Account.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Provider.Events.Api.Client, Version=2.0.0.33572, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.0.0.33572\lib\net45\SFA.DAS.Provider.Events.Api.Client.dll</HintPath>
@@ -322,7 +327,7 @@
     <Compile Include="Services\EmployerAccountService.cs" />
     <Compile Include="Services\FeatureToggleService.cs" />
     <Compile Include="Services\HttpClientWrapper.cs" />
-    <Compile Include="Services\ProviderEmailLookupService.cs" />
+    <Compile Include="Services\ProviderNotifyService.cs" />
     <Compile Include="Services\RestService.cs" />
     <Compile Include="Services\MultiVariantTestingService.cs" />
     <Compile Include="Services\UserWhiteListService.cs" />
@@ -331,10 +336,6 @@
     <Folder Include="Interfaces\PostcodeAnywhere\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.EmployerApprenticeshipsService.Application\SFA.DAS.EmployerCommitments.Application.csproj">
-      <Project>{0226F97A-704E-49B0-A100-B75FEEC9C8AD}</Project>
-      <Name>SFA.DAS.EmployerCommitments.Application</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.EmployerApprenticeshipsService.Domain\SFA.DAS.EmployerCommitments.Domain.csproj">
       <Project>{EC415CDA-9294-4967-BD27-AA900985427D}</Project>
       <Name>SFA.DAS.EmployerCommitments.Domain</Name>

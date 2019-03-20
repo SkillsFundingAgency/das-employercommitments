@@ -82,9 +82,8 @@
     <Reference Include="Moq, Version=4.5.23.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.5.23\lib\net45\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.3.7\lib\net45\NLog.dll</HintPath>
@@ -131,6 +130,9 @@
     </Reference>
     <Reference Include="SFA.DAS.Notifications.Api.Types, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Notifications.Api.Types.2.0.0.35919\lib\net45\SFA.DAS.Notifications.Api.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.PAS.Account.Api.Types, Version=1.1.683.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.PAS.Account.Api.Types.1.1.683\lib\net45\SFA.DAS.PAS.Account.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Provider.Events.Api.Client, Version=2.0.0.33572, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.0.0.33572\lib\net45\SFA.DAS.Provider.Events.Api.Client.dll</HintPath>
@@ -226,7 +228,8 @@
     <Compile Include="Services\EmployerEmailNotificationServiceTests\WhenSendingSenderApprovedOrRejectedCommitmentNotification.cs" />
     <Compile Include="Services\ProviderEmailNotificationServiceTests\WhenSendingSenderApprovedOrRejectedCommitmentNotification.cs" />
     <Compile Include="Services\ProviderEmailNotificationServiceTests\WhenSendingTransferRejectedCommitmentEditEmailNotification.cs" />
-    <Compile Include="Services\ProviderEmailServiceTests\WhenISendEmailToAllProviderRecipients.cs" />
+    <Compile Include="Services\ProviderEmailServiceTests\WhenSendingEmail_UsingLastUpdatedEmailAddress.cs" />
+    <Compile Include="Services\ProviderEmailServiceTests\WhenSendingEmail_NotUsingLastUpdatedEmailAddress.cs" />
     <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>

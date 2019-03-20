@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
+using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.Notification;
 using SFA.DAS.HashingService;
@@ -13,15 +14,23 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
     public class ProviderEmailNotificationService : EmailNotificationService, IProviderEmailNotificationService
     {
         private readonly IProviderEmailService _providerEmailService;
+        private readonly EmployerCommitmentsServiceConfiguration _configuration;
 
-        public ProviderEmailNotificationService(IProviderEmailService providerEmailService, ILog logger, IHashingService hashingService)
+        public ProviderEmailNotificationService(IProviderEmailService providerEmailService, ILog logger, IHashingService hashingService, EmployerCommitmentsServiceConfiguration configuration)
             :base(logger, hashingService)
         {
             _providerEmailService = providerEmailService;
+            _configuration = configuration;
         }
 
         public async Task SendProviderTransferRejectedCommitmentEditNotification(CommitmentView commitment)
         {
+            if (!_configuration.CommitmentNotification.SendEmail)
+            {
+                Logger.Info("Sending email notifications disabled by config.");
+                return;
+            }
+
             var emailMessage = new EmailMessage
             {
                 TemplateId = "ProviderTransferRejectedCommitmentEditNotification",
@@ -42,6 +51,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
 
         public async Task SendCreateCommitmentNotification(CommitmentView commitment)
         {
+            if (!_configuration.CommitmentNotification.SendEmail)
+            {
+                Logger.Info("Sending email notifications disabled by config.");
+                return;
+            }
+
             var emailMessage = new EmailMessage
             {
                 TemplateId = "CreateCommitmentNotification",
@@ -62,6 +77,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
 
         public async Task SendProviderApprenticeshipStopNotification(Apprenticeship apprenticeship, DateTime stopDate)
         {
+            if (!_configuration.CommitmentNotification.SendEmail)
+            {
+                Logger.Info("Sending email notifications disabled by config.");
+                return;
+            }
+
             var emailMessage = new EmailMessage
             {
                 TemplateId = "ProviderApprenticeshipStopNotification",
@@ -84,6 +105,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
 
         public async Task SendProviderApprenticeshipStopEditNotification(Apprenticeship apprenticeship, DateTime newStopDate)
         {
+            if (!_configuration.CommitmentNotification.SendEmail)
+            {
+                Logger.Info("Sending email notifications disabled by config.");
+                return;
+            }
+
             var emailMessage = new EmailMessage
             {
                 TemplateId = "ProviderApprenticeshipStopEditNotification",
@@ -107,6 +134,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
 
         public async Task SendSenderApprovedOrRejectedCommitmentNotification(CommitmentView commitment, Commitments.Api.Types.TransferApprovalStatus newTransferApprovalStatus)
         {
+            if (!_configuration.CommitmentNotification.SendEmail)
+            {
+                Logger.Info("Sending email notifications disabled by config.");
+                return;
+            }
+
             Logger.Info($"Sending notification to provider {commitment.ProviderId} that sender has {newTransferApprovalStatus} cohort {commitment.Id}");
 
             var tokens = new Dictionary<string, string>

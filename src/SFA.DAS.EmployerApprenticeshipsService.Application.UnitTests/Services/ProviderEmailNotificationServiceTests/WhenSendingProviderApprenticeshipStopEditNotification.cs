@@ -7,6 +7,7 @@ using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.EmployerCommitments.Application.Services;
+using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.Notification;
 using SFA.DAS.HashingService;
@@ -18,6 +19,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
     public class WhenSendingProviderApprenticeshipStopEditNotification
     {
         private ProviderEmailNotificationService _providerEmailNotificationService;
+
+        private EmployerCommitmentsServiceConfiguration _configuration;
 
         private Mock<IProviderEmailService> _providerEmailService;
         private Mock<IHashingService> _hashingService;
@@ -32,6 +35,14 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
         [SetUp]
         public void Arrange()
         {
+            _configuration = new EmployerCommitmentsServiceConfiguration
+            {
+                CommitmentNotification = new CommitmentNotificationConfiguration
+                {
+                    SendEmail = true
+                }
+            };
+
             _providerEmailService = new Mock<IProviderEmailService>();
             _providerEmailService.Setup(x =>
                     x.SendEmailToAllProviderRecipients(It.IsAny<long>(), It.IsAny<string>(), It.IsAny<EmailMessage>()))
@@ -42,7 +53,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Services.ProviderEma
             _hashingService.Setup(x => x.HashValue(It.IsAny<long>())).Returns("HASH");
 
             _providerEmailNotificationService =
-                new ProviderEmailNotificationService(_providerEmailService.Object, Mock.Of<ILog>(), _hashingService.Object);
+                new ProviderEmailNotificationService(_providerEmailService.Object, Mock.Of<ILog>(), _hashingService.Object, _configuration);
 
             var payload = new Apprenticeship
             {

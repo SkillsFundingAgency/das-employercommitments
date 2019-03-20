@@ -63,18 +63,17 @@
     <Reference Include="Microsoft.ServiceBus, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAzure.ServiceBus.3.3.2\lib\net45-full\Microsoft.ServiceBus.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.3.7\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Apprenticeships.Api.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Apprenticeships.Api.Client.0.11.75\lib\net462\SFA.DAS.Apprenticeships.Api.Client.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.Apprenticeships.Api.Client.0.11.98\lib\net462\SFA.DAS.Apprenticeships.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Apprenticeships.Api.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Apprenticeships.Api.Types.0.11.75\lib\net462\SFA.DAS.Apprenticeships.Api.Types.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.Apprenticeships.Api.Types.0.11.98\lib\net462\SFA.DAS.Apprenticeships.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Audit.Client, Version=1.0.0.20553, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Audit.Client.1.0.0.20553\lib\net45\SFA.DAS.Audit.Client.dll</HintPath>
@@ -115,14 +114,20 @@
       <HintPath>..\packages\SFA.DAS.Notifications.Api.Types.2.0.0.35919\lib\net45\SFA.DAS.Notifications.Api.Types.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SFA.DAS.PAS.Account.Api.Client, Version=1.1.683.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.PAS.Account.Api.Client.1.1.683\lib\net45\SFA.DAS.PAS.Account.Api.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.PAS.Account.Api.Types, Version=1.1.683.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.PAS.Account.Api.Types.1.1.683\lib\net45\SFA.DAS.PAS.Account.Api.Types.dll</HintPath>
+    </Reference>
     <Reference Include="SFA.DAS.Provider.Events.Api.Client, Version=2.0.0.33572, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.0.0.33572\lib\net45\SFA.DAS.Provider.Events.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Provider.Events.Api.Types, Version=2.0.0.33572, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.0.0.33572\lib\net45\SFA.DAS.Provider.Events.Api.Types.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Providers.Api.Client, Version=0.10.29.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Providers.Api.Client.0.10.29-prerelease\lib\net45\SFA.DAS.Providers.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.Providers.Api.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Providers.Api.Client.0.11.98\lib\net462\SFA.DAS.Providers.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.TimeProvider, Version=1.0.0.3956, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.TimeProvider.1.0.0.3956\lib\net45\SFA.DAS.TimeProvider.dll</HintPath>
@@ -310,6 +315,10 @@
     <ProjectReference Include="..\SFA.DAS.EmployerApprenticeshipsService.Domain\SFA.DAS.EmployerCommitments.Domain.csproj">
       <Project>{EC415CDA-9294-4967-BD27-AA900985427D}</Project>
       <Name>SFA.DAS.EmployerCommitments.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.EmployerApprenticeshipsService.Infrastructure\SFA.DAS.EmployerCommitments.Infrastructure.csproj">
+      <Project>{01AC2BC2-AC01-400F-AB8F-548DD5C0EE74}</Project>
+      <Name>SFA.DAS.EmployerCommitments.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

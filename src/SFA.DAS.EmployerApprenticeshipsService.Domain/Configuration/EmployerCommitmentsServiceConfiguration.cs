@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.Notifications.Api.Client.Configuration;
 
 namespace SFA.DAS.EmployerCommitments.Domain.Configuration
 {
@@ -17,6 +16,7 @@ namespace SFA.DAS.EmployerCommitments.Domain.Configuration
         public string PublicAllowedHashstringCharacters { get; set; }
         public ApprenticeshipInfoServiceConfiguration ApprenticeshipInfoService { get; set; }
 		public CommitmentNotificationConfiguration CommitmentNotification { get; set; }
+        public PasAccountApiConfiguration ProviderAccountUserApi { get; set; }
     }
 
     public class CommitmentNotificationConfiguration
@@ -40,6 +40,15 @@ namespace SFA.DAS.EmployerCommitments.Domain.Configuration
     public class ApprenticeshipInfoServiceConfiguration : IApprenticeshipInfoServiceConfiguration
     {
         public string BaseUrl { get; set; }
+    }
+
+    public class PasAccountApiConfiguration : PAS.Account.Api.Client.IPasAccountApiConfiguration
+    {
+        public string ApiBaseUrl { get; set; }
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
+        public string IdentifierUri { get; set; }
+        public string Tenant { get; set; }
     }
 
     
