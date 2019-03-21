@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using FluentValidation.Mvc;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.UserProfile;
@@ -548,12 +552,37 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 case ChangeStatusType.Pause:
                     return "Apprentice paused.";
                 case ChangeStatusType.Stop:
-                    return "Apprentice stopped.";
+                    var surveyLink = GenerateStopSurveyLink();
+                    return $"Apprentice stopped.<br/>{surveyLink} to help us improve how you stop an apprenticeship.";                           
                 case ChangeStatusType.Resume:
                 case ChangeStatusType.None:
                     return "Apprentice resumed.";
             }
             return string.Empty;
+        }
+
+        private static string GenerateStopSurveyLink()
+        {
+            var result = new StringBuilder();
+            using (var stringWriter = new StringWriter())
+            {
+                using (var htmlWriter = new HtmlTextWriter(stringWriter))
+                {
+                    var surveyLink = new HtmlAnchor
+                    {
+                        HRef = "https://www.smartsurvey.co.uk/s/stoppingapprentices/",
+                        Target = "_blank",
+                        InnerText = "Complete our survey"
+                    };
+                    surveyLink.Attributes.Add("id", "stop-survey-link");
+                    surveyLink.Attributes.Add("rel", "noopener norefferer");
+                    surveyLink.Attributes.Add("aria-label", "Complete our survey");
+
+                    surveyLink.RenderControl(htmlWriter);
+                }
+                result.Append(stringWriter);
+            }
+            return result.ToString();
         }
 
         private bool NeedReapproval(UpdateApprenticeshipViewModel model)
