@@ -575,7 +575,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                         InnerText = "Complete our survey"
                     };
                     surveyLink.Attributes.Add("id", "stop-survey-link");
-                    surveyLink.Attributes.Add("rel", "noopener norefferer");
+                    surveyLink.Attributes.Add("rel", "noopener noreferrer");
                     surveyLink.Attributes.Add("aria-label", "Complete our survey");
 
                     surveyLink.RenderControl(htmlWriter);
