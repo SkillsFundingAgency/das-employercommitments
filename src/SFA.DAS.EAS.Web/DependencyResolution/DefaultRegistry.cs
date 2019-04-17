@@ -151,10 +151,6 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<IValidationApi>().Use<ValidationApi>()
                 .Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
                 .Ctor<HttpClient>().Is(httpClient);
-
-            For<IValidationApi>().Use<ValidationApi>()
-                .Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
-                .Ctor<HttpClient>().Is(httpClient);
         }
 
         private void ConfigureNotificationsApi()
