@@ -1,11 +1,6 @@
-# Employer Apprenticeships Service (BETA)
+# Employer Commitments
 
-This solution represents the Employer Apprenticeships Service (currently pre private BETA) code base.
-
-### Build
-![Build Status](https://sfa-gov-uk.visualstudio.com/_apis/public/build/definitions/c39e0c0b-7aff-4606-b160-3566f3bbce23/403/badge)
-
-[![NuGet Badge](https://buildstats.info/nuget/SFA.DAS.Account.Api.Client)](https://www.nuget.org/packages/SFA.DAS.Account.Api.Client)
+This solution represents the Employer Commitments product.
 
 ## Getting Started ##
 
