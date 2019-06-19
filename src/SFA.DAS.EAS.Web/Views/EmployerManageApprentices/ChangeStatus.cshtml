@@ -4,7 +4,7 @@
 @model OrchestratorResponse<ChangeStatusChoiceViewModel>
 
 @{
-    ViewBag.Title = "Change apprentice status";
+    ViewBag.Title = "Which status change would you like to make?";
     ViewBag.Section = "apprentices";
     ViewBag.PageId = "change-apprentice-status";
 }
@@ -20,39 +20,49 @@
             <div class="form-error-group form-group" @Html.AddClassIfPropertyInError("ChangeType", "error")>
                 <fieldset>
 
-                    <legend class="form-label-bold">What status change do you want to make?</legend>
-                    
+                    <legend class="form-label-bold">Pause an apprenticeship to:</legend>
+                    <ul>
+                        <li class="list-bullet">record a break in learning as agreed with the training provider</li>
+                        <li class="list-bullet">freeze future payments to a training provider for a period of time</li>
+                    </ul>
+                    <legend class="form-label-bold">Stop an apprenticeship to:</legend>
+                    <ul>
+                        <li class="list-bullet">change your training provider during the lifetime of a course</li>
+                        <li class="list-bullet">cancel all future payments</li>
+                    </ul>
+                    <legend class="form-label-bold">! Do not stop completed apprenticeships.</legend>
+
                     @Html.ValidationMessage("ChangeType", "Please choose an option", new { id = "error-message-ChangeType" })
-                    
+
                     @if (Model.Data.IsCurrentlyPaused)
                     {
                         <label for=@($"ChangeType-{ChangeStatusType.Resume}") class="block-label selection-button-radio">
                             @Html.RadioButton("ChangeType", ChangeStatusType.Resume, new { id = $"ChangeType-{ChangeStatusType.Resume}", dataOptionName = $"{ChangeStatusType.Resume}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{ChangeStatusType.Resume}')" })
-                            Resume
+                            Resume this apprenticeship
                         </label>
                     }
                     else
                     {
                         <label for=@($"ChangeType-{ChangeStatusType.Pause}") class="block-label selection-button-radio">
                             @Html.RadioButton("ChangeType", ChangeStatusType.Pause, new { id = $"ChangeType-{ChangeStatusType.Pause}", dataOptionName = $"{ChangeStatusType.Pause}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{ChangeStatusType.Pause}')" })
-                            Pause
+                            Pause this apprenticeship
                         </label>
                     }
-                    
+
                     <label for=@($"ChangeType-{ChangeStatusType.Stop}") class="block-label selection-button-radio">
                         @Html.RadioButton("ChangeType", ChangeStatusType.Stop, new { id = $"ChangeType-{ChangeStatusType.Stop}", dataOptionName = $"{ChangeStatusType.Stop}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{ChangeStatusType.Stop}')" })
-                        Stop
+                        Stop this apprenticeship
                     </label>
-                   
+
                     <label for=@($"ChangeType-{ChangeStatusType.None}") class="block-label selection-button-radio">
                         @Html.RadioButton("ChangeType", ChangeStatusType.None, new { id = $"ChangeType-{ChangeStatusType.None}", dataOptionName = $"{ChangeStatusType.None}", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', '{ChangeStatusType.None}')" })
-                        Don't change the status
+                        Go back to apprentice details
                     </label>
-                  
-                    
+
+
                 </fieldset>
             </div>
-            <button class="button" type="submit" id="submit-change-status">Continue</button>
+            <button class="button" type="submit" id="submit-change-status">Save and continue</button>
         </form>
     </div>
 </div>
