@@ -1,5 +1,4 @@
-﻿@using System.Collections.Specialized
-@using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types
+﻿@using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types
 @using SFA.DAS.EmployerCommitments.Web.Extensions
 @using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 @model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<ApprenticeshipDetailsViewModel>
@@ -13,6 +12,8 @@
     <div class="column-two-thirds">
         <h1 class="heading-xlarge" id="learnerName">@Model.Data.FirstName @Model.Data.LastName</h1>
 
+        @* todo should we display 'Edit details' in either of the two following circumstances? *@
+        
         @if (Model.Data.PendingChanges == PendingChanges.ReadyForApproval)
         {
             <div class="panel panel-border-wide alert-default">
@@ -35,6 +36,10 @@
                     <a href="@Url.RouteUrl("ViewChanges", "EmployerManageApprentices")">View changes</a>
                 </p>
             </div>
+        }
+        else
+        {
+            <div>Edit details if there's a change in apprentice or apprenticeship circumstances.</div>
         }
 
         @if (Model.Data.PendingDataLockRestart)
@@ -97,20 +102,14 @@
                     }
                 </tr>
             }
-            </tbody>
-        </table>
-
-        <h2 class="heading-medium">Overview</h2>
-        <table class="details-list">
-            <tbody>
-                <tr>
-                    <th scope="row">Training provider</th>
-                    <td>@Model.Data.ProviderName</td>
-                </tr>
-                <tr>
-                    <th scope="row">Cohort reference</th>
-                    <td>@Model.Data.CohortReference</td>
-                </tr>
+            <tr>
+                <th scope="row">Training provider</th>
+                <td>@Model.Data.ProviderName</td>
+            </tr>
+            <tr>
+                <th scope="row">Cohort reference</th>
+                <td>@Model.Data.CohortReference</td>
+            </tr>
             </tbody>
         </table>
 
