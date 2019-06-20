@@ -17,22 +17,31 @@
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
             <h1 class="heading-xlarge">@ViewBag.Title</h1>
 
-            <div class="govuk-form-group govuk-form-group--erorr" @Html.AddClassIfPropertyInError("ChangeType", "error")>
+
+
+            <legend class="form-label-bold">Pause an apprenticeship to:</legend>
+            <ul class="list-bullet">
+                <li>record a break in learning as agreed with the training provider</li>
+                <li>freeze future payments to a training provider for a period of time</li>
+            </ul>
+            <legend class="form-label-bold">Stop an apprenticeship to:</legend>
+            <ul class="list-bullet">
+                <li>change your training provider during the lifetime of a course</li>
+                <li>cancel all future payments</li>
+            </ul>
+
+            <div class="notice">
+                <i class="icon icon-important">
+                    <span class="visually-hidden">Warning</span>
+                </i>
+                <strong class="bold-small">
+                    Do not stop completed apprenticeships.
+                </strong>
+            </div>
+            <br/>
+            <div class="form-group @Html.AddClassIfPropertyInError("ChangeType", "error")">
                 <fieldset>
-
-                    <legend class="form-label-bold">Pause an apprenticeship to:</legend>
-                    <ul class="list-bullet">
-                        <li>record a break in learning as agreed with the training provider</li>
-                        <li>freeze future payments to a training provider for a period of time</li>
-                    </ul>
-                    <legend class="form-label-bold">Stop an apprenticeship to:</legend>
-                    <ul class="list-bullet">
-                        <li>change your training provider during the lifetime of a course</li>
-                        <li>cancel all future payments</li>
-                    </ul>
-                    <legend class="form-label-bold">! Do not stop completed apprenticeships.</legend>
-
-                    @Html.ValidationMessage("ChangeType", "Please choose an option", new { id = "error-message-ChangeType" })
+                    @Html.ValidationMessage("ChangeType", "Select whether to change this apprenticeship status or not", new { id = "error-message-ChangeType" })
 
                     @if (Model.Data.IsCurrentlyPaused)
                     {
