@@ -17,18 +17,18 @@
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
             <h1 class="heading-xlarge">@ViewBag.Title</h1>
 
-            <div class="form-error-group form-group" @Html.AddClassIfPropertyInError("ChangeType", "error")>
+            <div class="govuk-form-group govuk-form-group--erorr" @Html.AddClassIfPropertyInError("ChangeType", "error")>
                 <fieldset>
 
                     <legend class="form-label-bold">Pause an apprenticeship to:</legend>
-                    <ul>
-                        <li class="list-bullet">record a break in learning as agreed with the training provider</li>
-                        <li class="list-bullet">freeze future payments to a training provider for a period of time</li>
+                    <ul class="list-bullet">
+                        <li>record a break in learning as agreed with the training provider</li>
+                        <li>freeze future payments to a training provider for a period of time</li>
                     </ul>
                     <legend class="form-label-bold">Stop an apprenticeship to:</legend>
-                    <ul>
-                        <li class="list-bullet">change your training provider during the lifetime of a course</li>
-                        <li class="list-bullet">cancel all future payments</li>
+                    <ul class="list-bullet">
+                        <li>change your training provider during the lifetime of a course</li>
+                        <li>cancel all future payments</li>
                     </ul>
                     <legend class="form-label-bold">! Do not stop completed apprenticeships.</legend>
 
