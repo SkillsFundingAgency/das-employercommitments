@@ -46,7 +46,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
                     case FlashMessageSeverityLevel.Warning:
                         return "warning-summary";
                     case FlashMessageSeverityLevel.Okay:
-                        return "panel panel-border-wide alert-default flash-alert";
+                        return "govuk-box-highlight";
                     default:
                         return "panel panel-info";
                 }

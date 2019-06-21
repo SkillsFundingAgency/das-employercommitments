@@ -22,10 +22,9 @@
                 {
                     if (viewModel.FlashMessage.Severity == FlashMessageSeverityLevel.Okay)
                     {
-                        <p>
-                            <i class="icon-green-tick"></i>
+                        <h1 class="heading-xlarge">
                             @Html.Raw(viewModel.FlashMessage.Message)
-                        </p>
+                        </h1>
                     }
                     else
                     {
