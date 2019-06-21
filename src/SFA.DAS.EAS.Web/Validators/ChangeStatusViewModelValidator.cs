@@ -39,8 +39,24 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 
             RuleSet("Confirm", () =>
             {
-                RuleFor(x => x.ChangeConfirmed)
-                    .NotNull().WithMessage("Select an option");
+                When(x => x.ChangeType == ChangeStatusType.Stop, () =>
+                {
+                    RuleFor(x => x.ChangeConfirmed)
+                    .NotNull().WithMessage("Select whether to stop this apprenticeship or not");
+                });
+
+                When(x => x.ChangeType == ChangeStatusType.Pause, () =>
+                {
+                    RuleFor(x => x.ChangeConfirmed)
+                    .NotNull().WithMessage("Select whether to pause this apprenticeship or not");
+                });
+
+                When(x => x.ChangeType == ChangeStatusType.Resume, () =>
+                {
+                    RuleFor(x => x.ChangeConfirmed)
+                        .NotNull().WithMessage("Select whether to resume this apprenticeship or not");
+                });
+
             });
 
         }
