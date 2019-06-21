@@ -550,13 +550,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             switch (model.Value)
             {
                 case ChangeStatusType.Pause:
-                    return "Apprentice paused.";
+                    return "Apprentice paused";
                 case ChangeStatusType.Stop:
-                    var surveyLink = GenerateStopSurveyLink();
-                    return $"Apprentice stopped.<br/>{surveyLink} to help us improve how you stop an apprenticeship.";                           
+                    return "Apprentice stopped";                           
                 case ChangeStatusType.Resume:
+                    return "Apprentice resumed";
                 case ChangeStatusType.None:
-                    return "Apprentice resumed.";
+                    return "Apprentice resumed";
             }
             return string.Empty;
         }
