@@ -78,7 +78,7 @@
                 <tr>
                     <th scope="row">Status</th>
                     <td>@Model.Data.Status</td>
-                    <td id="editStatusLink">
+                    <td id="editStatusLink" class="link-right">
                         @if (Model.Data.CanEditStatus)
                         {
                             @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
