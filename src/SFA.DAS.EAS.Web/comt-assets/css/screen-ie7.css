@@ -3089,6 +3089,7 @@ table.details-list-new {
 }
 
 table.details-list-new th {
+  width: 30%;
   font-weight: 700;
 }
 
