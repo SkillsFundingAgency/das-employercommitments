@@ -3032,13 +3032,17 @@ table.details-list {
   border-top: 1px solid #bfc1c3;
 }
 
-/*not ready to make the change site-wide yet, thus...*/
+table.details-list th {
+  width: 55%;
+  font-weight: normal;
+}
+
 table.details-list-new {
-    border-top: none;
+  border-top: none;
 }
 
 table.details-list th {
-  width: 55%;
+  font-weight: 700;
 }
 
 td.highlight, th.highlight {

@@ -85,6 +85,9 @@ table.details-list {
 /*not ready to make the change site-wide yet, thus...*/
 table.details-list-new {
     border-top: none;
+    th {
+        font-weight: 700;
+    }
 }
 
 td, th {
