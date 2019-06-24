@@ -3554,8 +3554,13 @@ table.details-list {
   border-top: 1px solid #bfc1c3;
 }
 
+/*not ready to make the change site-wide yet, thus...*/
+table.details-list-new {
+    border-top: none;
+}
+
 table.details-list th {
-  width: 55%;
+    width: 55%;
 }
 
 td.highlight, th.highlight {
@@ -4533,10 +4538,6 @@ span.helpText {
 .select2-container--default .select2-selection--single .select2-selection__arrow b,
 .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
   border-color: #0b0c0c transparent;
-}
-
-#app-status td {
-  border-top: 1px solid #bfc1c3;
 }
 
 table .float-right, h2 .float-right {

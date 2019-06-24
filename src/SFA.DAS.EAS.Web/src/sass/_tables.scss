@@ -82,7 +82,10 @@ table.details-list {
     }
 }
 
-
+/*not ready to make the change site-wide yet, thus...*/
+table.details-list-new {
+    border-top: none;
+}
 
 td, th {
     &.highlight {
