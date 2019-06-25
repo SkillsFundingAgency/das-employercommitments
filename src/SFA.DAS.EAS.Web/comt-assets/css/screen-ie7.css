@@ -3089,8 +3089,13 @@ table.details-list-new {
 }
 
 table.details-list-new th {
-  width: 30%;
   font-weight: 700;
+}
+
+@media (min-width: 641px) {
+  table.details-list-new th {
+    width: 30%;
+  }
 }
 
 td.highlight, th.highlight {

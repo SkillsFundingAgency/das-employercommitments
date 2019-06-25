@@ -86,10 +86,18 @@ table.details-list {
 table.details-list-new {
     border-top: none;
     th {
-        /*todo: check govuk-summary-list__key media queries */
-        /*SummaryList should use dl, not table*/
-        width: 30%;
+        // designers want the details-list to look like a summary-list, see https://design-system.service.gov.uk/components/summary-list/ (SummaryList should use dl, not table)
         font-weight: 700;
+    }
+}
+
+@include media(tablet) {
+    table.details-list-new {
+        th {
+            //copying govuk-summary-list__key media query
+            //see https://github.com/alphagov/govuk-frontend/blob/063cd8e2470b62b824c6e50ca66342ac7a95d2d8/src/govuk/components/summary-list/_summary-list.scss
+            width: 30%;
+        }
     }
 }
 
