@@ -102,30 +102,16 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
 
         [Test]
-        public async Task ThenEarliestDateShouldBeStartDate()
+        public async Task ThenEarliestDateShouldBeApprenticeshipStartDate()
         {
             _testApprenticeship.PaymentStatus = PaymentStatus.Active;
             _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(-1).Date;
 
             OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Stop, "user123");
 
-            response.Data.EarliestDate.Should().Be(_testApprenticeship.StartDate.Value);
+            response.Data.ApprenticeStartDate.Should().Be(_testApprenticeship.StartDate.Value);
         }
        
-        [TestCase("2016-03-01", "2017-10-19 18:00:01", "2017-08-01", Description = "R14 date has passed")]
-        [TestCase("2016-03-01", "2017-10-17 18:00:00", "2016-03-01", Description = "R14 date has not passed")]
-        public async Task ThenIfR14DateHasPassedThenEarliestDateShouldBeStartOfAcademicYear(DateTime startDate, DateTime now, DateTime expectedEarliestDate)
-        {
-            _testApprenticeship.PaymentStatus = PaymentStatus.Active;
-            _testApprenticeship.StartDate = startDate;
-            MockDateTime.Setup(x => x.Now).Returns(now);
-
-            OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Stop, "user123");
-
-            response.Data.EarliestDate.Should().Be(expectedEarliestDate);
-        }
-
-
         [Test]
         public async Task IfStoppingThenStartedTrainingAndImmediateChangeSpecifiedShouldSetDateOfChangeToTodaysDate()
         {

@@ -1,8 +1,6 @@
 ﻿using System;
 using FluentValidation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Infrastructure.Services;
-using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 
 namespace SFA.DAS.EmployerCommitments.Web.Validators
@@ -22,18 +20,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
             {
                 When(x => x.ChangeType == ChangeStatusType.Stop, () =>
                 {
-                    RuleFor(x => x.WhenToMakeChange)
-                        .NotNull().WithMessage("Select an option")
-                        .IsInEnum().WithMessage("Select an option");
-
-                    When(x => x.WhenToMakeChange == WhenToMakeChangeOptions.SpecificDate, () =>
-                    {
-                        RuleFor(r => r.DateOfChange)
-                                .Cascade(CascadeMode.StopOnFirstFailure)
-                                .NotNull().WithMessage("Date is not valid")
-                                .Must(ValidateDateOfBirth).WithMessage("Date is not valid")
-                                .Must(d => d.DateTime < _currentDateTime.Now.Date.AddDays(1)).WithMessage("Date must be a date in the past");
-                    });
+                    RuleFor(r => r.DateOfChange)
+                               .Cascade(CascadeMode.StopOnFirstFailure)
+                               .Must(d => d.DateTime.HasValue).WithMessage("Enter the stop date for this apprenticeship")
+                               .Must(d => d.DateTime <= new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1)).WithMessage("The stop date cannot be in the future");
                 });
             });
 
@@ -43,14 +33,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                     .NotNull().WithMessage("Select an option");
             });
 
-        }
-
-        private bool ValidateDateOfBirth(DateTimeViewModel date)
-        {
-            // Check the day has value as the view model supports just month and year entry
-            if (date.DateTime == null || !date.Day.HasValue) return false;
-
-            return true;
         }
     }
 }
