@@ -3092,6 +3092,20 @@ table.details-list th {
   font-weight: normal;
 }
 
+table.details-list-new {
+  border-top: none;
+}
+
+table.details-list-new th {
+  font-weight: 700;
+}
+
+@media (min-width: 641px) {
+  table.details-list-new th {
+    width: 30%;
+  }
+}
+
 td.highlight, th.highlight {
   background: #dee0e2;
 }
