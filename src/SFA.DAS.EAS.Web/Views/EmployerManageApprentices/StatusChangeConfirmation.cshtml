@@ -91,22 +91,22 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <th scope="row" class="bold">Name</th>
+                        <th scope="row">Name</th>
                         <td>@Model.Data.ApprenticeName</td>
                     </tr>
                 <tr>
-                    <th scope="row" class="bold">Unique learner number</th>
+                    <th scope="row">Unique learner number</th>
                     <td>@Model.Data.ApprenticeULN</td>
                 </tr>
                 <tr>
-                    <th scope="row" class="bold">Apprenticeship course</th>
+                    <th scope="row">Apprenticeship course</th>
                     <td>@Model.Data.ApprenticeCourse</td>
                 </tr>
 
                     @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Pause)
                     {
                         <tr>
-                            <th scope="row" class="bold">Date change takes effect</th>
+                            <th scope="row">Date change takes effect</th>
                             <td>
                                 @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormat()
                             </td>
@@ -117,13 +117,13 @@
                     @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Resume)
                     {
                         <tr>
-                            <th scope="row" class="bold">Pause date</th>
+                            <th scope="row">Pause date</th>
                             <td>
                                 @Model.Data.ChangeStatusViewModel.PauseDate.DateTime.Value.ToGdsFormat()
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row" class="bold">Resume date</th>
+                            <th scope="row">Resume date</th>
                             <td>
                                 @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormat()
                             </td>
@@ -133,7 +133,7 @@
                     @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Stop)
                     {
                         <tr>
-                            <th scope="row" class="bold">Proposed stop date</th>
+                            <th scope="row">Proposed stop date</th>
                             <td>
                                 @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormatLongMonthNameWithoutDay()
                             </td>
