@@ -23,9 +23,9 @@
             <h1 class="heading-xlarge">@ViewBag.Title</h1>
             <fieldset>
                 <legend class="visually-hidden" aria-hidden="true">Select stop date</legend>
-                <p>The earliest date you can enter is this apprenticeship's start date of @Model.Data.ApprenticeStartDate.ToGdsFormatWithoutDayAbbrMonth().  Any outstanding payments will be made for activity up to this date.</p>
+                <p>The earliest date you can enter is this apprenticeship's start date of @Model.Data.ApprenticeStartDate.ToGdsFormatWithoutDay().  Any outstanding payments will be made for activity up to this date.</p>
 
-                <p style="color:#6f777b">For example, 6 2018</p>
+                <p class="text-secondary">For example, 6 2018</p>
                 <div class="form-group">
 
                     <div class="form-date">
