@@ -1,7 +1,7 @@
 ﻿@model ModelStateDictionary
 
-<div class='@(Html.ViewData.ModelState.IsValid ? "validation-summary-valid" : "validation-summary-errors") error-summary' role="group" data-valmsg-summary="true" >
-    <h2 id="error-summary" class="heading-medium error-summary-heading">
+<div class='@(Html.ViewData.ModelState.IsValid ? "validation-summary-valid" : "validation-summary-errors") error-summary' role="group" data-valmsg-summary="true">
+    <h2 id="error-summary" class="govuk-error-summary__title heading-medium error-summary-heading">
         There is a problem
     </h2>
 
@@ -14,8 +14,7 @@
             foreach (var error in stateItem.Value.Errors)
             {
                 <li>
-                    <a href="#error-message-@elementId"  data-focuses="error-message-@elementId">@error.ErrorMessage </a> 
-                    <!-- comment to lee :  to modify error message control-->
+                    <a href="#error-message-@elementId" data-focuses="error-message-@elementId">@error.ErrorMessage </a>
                 </li>
             }
         }

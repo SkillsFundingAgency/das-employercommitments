@@ -3302,6 +3302,16 @@ table.responsive tr th.tw-70 {
   font-weight: 600;
 }
 
+.govuk-error-summary__title {
+    margin-bottom: 15px;
+}
+
+@media (min-width: 40.0625em) {
+    .govuk-error-summary__title {
+        margin-bottom: 20px;
+    }
+}
+
 .agreement {
   overflow: hidden;
 }
