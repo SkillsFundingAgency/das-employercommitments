@@ -77,6 +77,7 @@
                                         This apprenticeship record cannot be restarted once stopped.
                                     </strong>
                                 </div>
+                                <br>
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(Model.Data.ChangeStatusViewModel.ChangeType), "Not a valid value");
@@ -158,12 +159,12 @@
                     @Html.ValidationMessage("ChangeConfirmed", "Select whether to "+pageAction+" this apprenticeship status or not", new { id = "error-message-ChangeConfirmed" })
                     <label for=@($"ChangeConfirmed-True") class="block-label selection-button-radio">
                         @Html.RadioButton("ChangeConfirmed", true, new { id = $"ChangeConfirmed-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
-                        Yes, @pageAction this apprentice
+                        Yes, @pageAction this apprenticeship
                     </label>
 
                     <label for=@($"ChangeConfirmed-False") class="block-label selection-button-radio">
                         @Html.RadioButton("ChangeConfirmed", false, new { id = $"ChangeConfirmed-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
-                        No, don't @pageAction this apprentice
+                        No, go back to apprentice details
                     </label>
                 </fieldset>
             </div>
