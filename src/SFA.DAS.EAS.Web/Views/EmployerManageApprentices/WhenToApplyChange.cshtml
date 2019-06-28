@@ -20,35 +20,37 @@
             @Html.AntiForgeryToken()
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
 
-            <h1 class="heading-xlarge">@ViewBag.Title</h1>
-            <fieldset>
-                <legend class="visually-hidden" aria-hidden="true">Select stop date</legend>
-                <p>The earliest date you can enter is this apprenticeship's start date of @Model.Data.ApprenticeStartDate.ToGdsFormatWithoutDay().  Any outstanding payments will be made for activity up to this date.</p>
+            <div class="form-group">
+                <div class="@Html.AddClassIfPropertyInError("DateOfChange","error")">
 
-                <p class="text-secondary">For example, 6 2018</p>
-                <div class="form-group @Html.AddClassIfPropertyInError("DateOfChange","error")">
+                    <h1 class="heading-xlarge">@ViewBag.Title</h1>
+                    <fieldset>
+                        <legend class="visually-hidden" aria-hidden="true">Select stop date</legend>
 
-                    <div class="form-date">
-                        @Html.ValidationMessage("DateOfChange", new { id = "error-message-DateOfChange", @class = "error-message" })
-                        <div class="form-group form-group-month">
-                            <label for="DateOfChange.Month">
-                                Month
-                            </label>
-                            @Html.TextBox("DateOfChange.Month", Model.Data.ChangeStatusViewModel.DateOfChange.Month, new { @class = "form-control length-limit " + Html.AddClassIfPropertyInError("DateOfChange", "form-control-error"), type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "DateOfChange.Month" })
+                        <p>The earliest date you can enter is this apprenticeship's start date of @Model.Data.ApprenticeStartDate.ToGdsFormatWithoutDay().  Any outstanding payments will be made for activity up to this date.</p>
+
+                        <p class="text-secondary">For example, 6 2018</p>
+
+                        <div class="form-date">
+                            @Html.ValidationMessage("DateOfChange", new { id = "error-message-DateOfChange", @class = "error-message" })
+                            <div class="form-group form-group-month">
+                                <label for="DateOfChange.Month">
+                                    Month
+                                </label>
+                                @Html.TextBox("DateOfChange.Month", Model.Data.ChangeStatusViewModel.DateOfChange.Month, new { @class = "form-control length-limit " + Html.AddClassIfPropertyInError("DateOfChange", "form-control-error"), type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "DateOfChange.Month" })
+                            </div>
+                            <div class="form-group form-group-year">
+                                <label for="DateOfChange.Year">
+                                    Year
+                                </label>
+                                @Html.TextBox("DateOfChange.Year", Model.Data.ChangeStatusViewModel.DateOfChange.Year, new { @class = "form-control length-limit " + Html.AddClassIfPropertyInError("DateOfChange", "form-control-error"), type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "DateOfChange.Year" })
+                            </div>
                         </div>
-                        <div class="form-group form-group-year">
-                            <label for="DateOfChange.Year">
-                                Year
-                            </label>
-                            @Html.TextBox("DateOfChange.Year", Model.Data.ChangeStatusViewModel.DateOfChange.Year, new { @class = "form-control length-limit " + Html.AddClassIfPropertyInError("DateOfChange", "form-control-error"), type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "DateOfChange.Year" })
-                        </div>
-                    </div>
+                    </fieldset>
                 </div>
+            </div>
+            <button class="button" type="submit" id="submit-apply-change">Save and Continue</button>
 
-                <div class="form-group">
-                    <button class="button" type="submit" id="submit-apply-change">Save and Continue</button>
-                </div>
-            </fieldset>
         </form>
     </div>
 </div>
