@@ -2595,7 +2595,8 @@ a#link-settings:focus {
 }
 
 .success-summary {
-  border-color: #28a197;
+    border-color: #28a197;
+    text-align: center;
 }
 
 .success-summary .success-summary-list a {
