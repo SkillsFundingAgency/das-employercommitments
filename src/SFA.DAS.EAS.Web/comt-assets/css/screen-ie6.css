@@ -3024,7 +3024,6 @@ table td.numeric {
 td.link-right {
   text-align: right;
   padding-right: 0;
-  width: 10%;
 }
 
 td.link-action {
@@ -3090,6 +3089,20 @@ table.details-list {
 table.details-list th {
   width: 55%;
   font-weight: normal;
+}
+
+table.details-list-new {
+  border-top: none;
+}
+
+table.details-list-new th {
+  font-weight: 700;
+}
+
+@media (min-width: 641px) {
+  table.details-list-new th {
+    width: 30%;
+  }
 }
 
 td.highlight, th.highlight {
@@ -4003,10 +4016,6 @@ span.helpText {
 .select2-container--default .select2-selection--single .select2-selection__arrow b,
 .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
   border-color: #0b0c0c transparent;
-}
-
-#app-status td {
-  border-top: 1px solid #bfc1c3;
 }
 
 table .float-right, h2 .float-right {
