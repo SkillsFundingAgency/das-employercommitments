@@ -13,7 +13,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
         {
             _currentDateTime = currentDateTime;
             RuleFor(x => x.ChangeType)
-                .NotNull().WithMessage("Select an option")
+                .NotNull().WithMessage("Select whether to change this apprenticeship status or not")
                 .IsInEnum().WithMessage("Select an option");
 
             RuleSet("Date", () => 
