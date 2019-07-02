@@ -1,5 +1,4 @@
-﻿@using System.Collections.Specialized
-@using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types
+﻿@using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types
 @using SFA.DAS.EmployerCommitments.Web.Extensions
 @using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 @model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<ApprenticeshipDetailsViewModel>
@@ -11,7 +10,6 @@
 }
 <div class="grid-row">
     <div class="column-two-thirds">
-        <h1 class="heading-xlarge" id="learnerName">@Model.Data.FirstName @Model.Data.LastName</h1>
 
         @if (Model.Data.PendingChanges == PendingChanges.ReadyForApproval)
         {
@@ -63,30 +61,26 @@
             </div>
         }
 
+        <h1 class="heading-xlarge" id="learnerName">@Model.Data.FirstName @Model.Data.LastName</h1>
+
+        <p>
+            Edit details if there's a change in apprentice or apprenticeship circumstances.
+        </p>
+
         <h2 class="heading-medium visually-hidden">Apprentice status</h2>
-        <table id="app-status" class="details-list">
+        <table id="app-status" class="details-list details-list-new">
             <tbody>
-            <tr>
-                <th scope="row">Status</th>
-                <td>@Model.Data.Status</td>
-                <td id="editStatusLink">
-                    @if (Model.Data.CanEditStatus)
-                    {
-                        @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
-                    }
-                </td>
-            </tr>
-            @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)
-            {
                 <tr>
-                    <th scope="row">Stopped date</th>
-                    <td id="stopDate">
-                        @if (Model.Data.StopDate.HasValue)
+                    <th scope="row">Status</th>
+                    <td>@Model.Data.Status</td>
+                    <td id="editStatusLink" class="link-right">
+                        @if (Model.Data.CanEditStatus)
                         {
-                            @Model.Data.StopDate.Value.ToGdsFormat()
+                            @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
                         }
                     </td>
-                    
+                    <th scope="row">Stopped date</th>
+                    <td id="stopDate">@if (Model.Data.StopDate.HasValue)</td>
                     @if (Model.Data.CanEditStopDate)
                     {
                         <td id="editStopDateLink">@Html.RouteLink("Edit", "EditStopDateOption")</td>
@@ -96,32 +90,48 @@
                         <td></td>
                     }
                 </tr>
-            }
-            </tbody>
-        </table>
+                @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)
+                {
+                    <tr>
+                        <th scope="row">Stop applies from</th>
+                        <td id="stopDate">
+                            @if (Model.Data.StopDate.HasValue)
+                            {
+                                @Model.Data.StopDate.Value.ToGdsFormatWithoutDay()
+                            }
+                        </td>
 
-        <h2 class="heading-medium">Overview</h2>
-        <table class="details-list">
-            <tbody>
+                        @if (Model.Data.CanEditStopDate)
+                        {
+                            <td id="editStopDateLink">@Html.RouteLink("Edit stop date", "EditStopDateOption")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    </tr>
+                }
                 <tr>
                     <th scope="row">Training provider</th>
                     <td>@Model.Data.ProviderName</td>
+                    <td></td>
                 </tr>
                 <tr>
                     <th scope="row">Cohort reference</th>
                     <td>@Model.Data.CohortReference</td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>
 
         <h2 class="heading-medium">
-            Apprentice
+            Apprentice details
             @if (Model.Data.EnableEdit)
             {
                 <a href="@Url.RouteUrl("EditApprenticeship")" class="float-right">Edit</a>
             }
         </h2>
-        <table class="details-list">
+        <table class="details-list details-list-new">
             <tbody>
                 <tr>
                     <th scope="row">Name</th>
@@ -140,55 +150,54 @@
                         }
                     </td>
                 </tr>
+            </tbody>
+        </table>
+
+        <h2 class="heading-medium">
+            Apprenticeship details
+        </h2>
+        <table class="details-list details-list-new">
+            <tbody>
                 <tr>
                     <th scope="row">Apprenticeship training course </th>
                     <td>@Model.Data.TrainingName </td>
                 </tr>
-                @*<tr>
-                        <th>End-point assessor </th>
-                        <td>@Model.Data.EndPointAssessor</td>
-                    </tr>*@
                 <tr>
-                    <th scope="row">Training start date </th>
+                    <th scope="row">Planned training start date</th>
                     <td>
                         @if (@Model.Data.StartDate.HasValue)
                         {
-                            @Model.Data.StartDate.Value.ToGdsFormat()
+                            @Model.Data.StartDate.Value.ToGdsFormatWithoutDay()
                         }
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Training end date </th>
+                    <th scope="row">Planned training finish date</th>
                     <td>
                         @if (Model.Data.EndDate.HasValue)
                         {
-                            @Model.Data.EndDate.Value.ToGdsFormat()
+                            @Model.Data.EndDate.Value.ToGdsFormatWithoutDay()
                         }
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Total cost of training </th>
-                    <td>@FormatCost(Model.Data.Cost) </td>
+                    <th scope="row">Total agreed apprenticeship price</th>
+                    <td>@FormatCost(Model.Data.Cost) excluding VAT</td>
                 </tr>
                 <tr>
                     <th scope="row">Reference </th>
                     <td>@Model.Data.EmployerReference</td>
                 </tr>
+                @if (Model.Data.TrainingType == TrainingType.Standard)
+                {
+                    <tr>
+                        <th scope="row">End-point assessor</th>
+                        <td>@(Model.Data.EndpointAssessorName ?? "The end-point assessor has not been declared")</td>
+                    </tr>
+                }
             </tbody>
         </table>
-        
-        @if (Model.Data.TrainingType == TrainingType.Standard)
-        {
-            <h2 class="heading-medium">End Point Assessor</h2>
-            <table class="details-list">
-                <tbody>
-                <tr>
-                    <th scope="row">End point assessor</th>
-                    <td>@(Model.Data.EndpointAssessorName ?? "The end point assessor has not been declared")</td>
-                </tr>
-                </tbody>
-            </table>
-        }
+
     </div>
 </div>
 

@@ -390,44 +390,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 CheckApprenticeshipStateValidForChange(data.Apprenticeship);
 
-
-                var earliestDate = data.Apprenticeship.StartDate.Value;
-
-                var resuming = changeType == ChangeStatusType.Resume;
-
-                var pausedDate = data.Apprenticeship.PauseDate.HasValue
-                    ? data.Apprenticeship.PauseDate.Value
-                    : _currentDateTime.Now.Date;
-
-                var mustInvokeAcademicYearFundingRule = _academicYearValidator.Validate(pausedDate) == AcademicYearValidationResult.Success;
-
-                if (resuming && data.Apprenticeship.IsWaitingToStart(_currentDateTime))
-                {
-                    earliestDate = data.Apprenticeship.PauseDate.Value;
-                }
-                else if (resuming)
-                {
-                    earliestDate = mustInvokeAcademicYearFundingRule ? _academicYearDateProvider.CurrentAcademicYearStartDate : data.Apprenticeship.PauseDate.Value;
-                }
-                else
-                {
-                    earliestDate = _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod
-                                       && data.Apprenticeship.StartDate.Value < _academicYearDateProvider.CurrentAcademicYearStartDate
-                        ? _academicYearDateProvider.CurrentAcademicYearStartDate
-                        : data.Apprenticeship.StartDate.Value;
-                }
-
                 return new OrchestratorResponse<WhenToMakeChangeViewModel>
                 {
                     Data = new WhenToMakeChangeViewModel
                     {
-                        EarliestDate = earliestDate,
+                        ApprenticeStartDate = data.Apprenticeship.StartDate.Value,
                         SkipStep = CanChangeDateStepBeSkipped(changeType, data),
                         ChangeStatusViewModel = new ChangeStatusViewModel
                         {
                             ChangeType = changeType
                         },
-                        EarliestDateIsStartDate = earliestDate.Equals(data.Apprenticeship.StartDate.Value),
                         ApprenticeshipULN = data.Apprenticeship.ULN,
                         ApprenticeshipName = data.Apprenticeship.ApprenticeshipName,
                         TrainingName = data.Apprenticeship.TrainingName
@@ -496,6 +468,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         ApprenticeName = data.Apprenticeship.ApprenticeshipName,
                         ApprenticeULN = data.Apprenticeship.ULN,
                         DateOfBirth = data.Apprenticeship.DateOfBirth.Value,
+                        ApprenticeCourse = data.Apprenticeship.TrainingName,
+
                         ChangeStatusViewModel = new ChangeStatusViewModel
                         {
                             DateOfChange = DetermineChangeDate(changeType, data.Apprenticeship, whenToMakeChange, dateOfChange),
