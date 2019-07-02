@@ -79,21 +79,11 @@
                             @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
                         }
                     </td>
-                    <th scope="row">Stopped date</th>
-                    <td id="stopDate">@if (Model.Data.StopDate.HasValue)</td>
-                    @if (Model.Data.CanEditStopDate)
-                    {
-                        <td id="editStopDateLink">@Html.RouteLink("Edit", "EditStopDateOption")</td>
-                    }
-                    else
-                    {
-                        <td></td>
-                    }
                 </tr>
                 @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)
                 {
                     <tr>
-                        <th scope="row">Stop applies from</th>
+                        <th scope="row">Stopped date</th>
                         <td id="stopDate">
                             @if (Model.Data.StopDate.HasValue)
                             {
