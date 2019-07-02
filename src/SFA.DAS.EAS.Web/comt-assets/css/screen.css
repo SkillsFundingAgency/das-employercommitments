@@ -1866,6 +1866,10 @@ input[type=number] {
   border: 4px solid #b10e1e;
 }
 
+.form-control-error {
+    border: 4px solid #b10e1e;
+}
+
 @media (min-width: 641px) {
   .error {
     border-left: 5px solid #b10e1e;
@@ -3491,7 +3495,6 @@ table td.numeric {
 td.link-right {
   text-align: right;
   padding-right: 0;
-  width: 10%;
 }
 
 td.link-action {
@@ -3765,6 +3768,16 @@ table.responsive tr.total {
 
 .panel-warning p {
   font-weight: 600;
+}
+
+.govuk-error-summary__title {
+  margin-bottom: 15px;
+}
+
+@media (min-width: 40.0625em) {
+  .govuk-error-summary__title {
+    margin-bottom: 20px;
+  }
 }
 
 .agreement {
@@ -4548,10 +4561,6 @@ span.helpText {
 .select2-container--default .select2-selection--single .select2-selection__arrow b,
 .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
   border-color: #0b0c0c transparent;
-}
-
-#app-status td {
-  border-top: 1px solid #bfc1c3;
 }
 
 table .float-right, h2 .float-right {

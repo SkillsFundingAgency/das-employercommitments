@@ -81,23 +81,15 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
                 }
                 else
                 {
-                    if (command.DateOfChange > _currentDateTime.Now.Date)
+                    if (command.DateOfChange > new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1))
                     {
-                        validationResult.AddError(nameof(command.DateOfChange), "Date must be a date in the past");
+                        validationResult.AddError(nameof(command.DateOfChange), "The stop date cannot be in the future");
                         throw new InvalidRequestException(validationResult.ValidationDictionary);
                     }
 
-                    if (apprenticeship.StartDate > command.DateOfChange)
+                    if (new DateTime(apprenticeship.StartDate.Value.Year, apprenticeship.StartDate.Value.Month, 1) > command.DateOfChange)
                     {
-                        validationResult.AddError(nameof(command.DateOfChange), "Date cannot be earlier than training start date");
-                        throw new InvalidRequestException(validationResult.ValidationDictionary);
-                    }
-
-                    if (_academicYearValidator.Validate(command.DateOfChange) == AcademicYearValidationResult.NotWithinFundingPeriod)
-                    {
-                        var earliestDate = _academicYearDateProvider.CurrentAcademicYearStartDate.ToString("dd MM yyyy");
-
-                        validationResult.AddError(nameof(command.DateOfChange), $"The earliest date you can stop this apprentice is {earliestDate}");
+                        validationResult.AddError(nameof(command.DateOfChange), "The stop month cannot be before the apprenticeship started");
                         throw new InvalidRequestException(validationResult.ValidationDictionary);
                     }
                 }

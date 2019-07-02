@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
                 ApprenticeshipId = 4L,
                 UserId = "externalUserId",
                 ChangeType = ChangeStatusType.Stop,
-                DateOfChange = DateTime.UtcNow.Date,
+                DateOfChange = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1),
                 UserEmailAddress = "test@email.com",
                 UserDisplayName = "Bob"
             };
@@ -75,7 +75,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
         [TestCase(ChangeStatusType.Resume, PaymentStatus.Active)]
         public async Task ThenTheCommitmentApiShouldBeCalledWithCorrectStatus(ChangeStatusType type, PaymentStatus expectedStatus)
         {
-            _validCommand.ChangeType = type;
+            _validCommand.ChangeType = type;            
             await _handler.Handle(_validCommand);
 
             _mockCommitmentApi.Verify(x => x.PatchEmployerApprenticeship(
