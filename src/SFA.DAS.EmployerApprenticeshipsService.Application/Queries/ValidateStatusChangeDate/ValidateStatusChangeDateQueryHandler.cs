@@ -40,23 +40,17 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDa
                 await _commitmentsApi.GetEmployerApprenticeship(message.AccountId, message.ApprenticeshipId);
 
             var changeDateToUse = DetermineActualChangeDate(message, apprenticeship);
-
-            if (changeDateToUse > _currentDate.Now.Date)
+            
+            if (changeDateToUse > new DateTime(_currentDate.Now.Year, _currentDate.Now.Month, 1))
             {
-                validationResult.AddError(nameof(message.DateOfChange), "Date must be a date in the past");
+                validationResult.AddError(nameof(message.DateOfChange), "The stop date cannot be in the future");
 
                 return new ValidateStatusChangeDateQueryResponse { ValidationResult = validationResult };
             }
 
-            if (apprenticeship.StartDate > changeDateToUse)
+            if (new DateTime(apprenticeship.StartDate.Value.Year, apprenticeship.StartDate.Value.Month, 1) > changeDateToUse)
             {
-                validationResult.AddError(nameof(message.DateOfChange),"Date cannot be earlier than training start date");
-                return new ValidateStatusChangeDateQueryResponse { ValidationResult = validationResult };
-            }
-
-            if (_academicYearValidator.Validate(changeDateToUse) == AcademicYearValidationResult.NotWithinFundingPeriod)
-            {
-                validationResult.AddError(nameof(message.DateOfChange), "Date can't be in previous academic year");
+                validationResult.AddError(nameof(message.DateOfChange), "The stop month cannot be before the apprenticeship started");
                 return new ValidateStatusChangeDateQueryResponse { ValidationResult = validationResult };
             }
 
