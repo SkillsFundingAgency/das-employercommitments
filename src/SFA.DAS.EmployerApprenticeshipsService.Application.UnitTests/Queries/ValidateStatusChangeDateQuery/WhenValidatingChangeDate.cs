@@ -53,42 +53,19 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.ValidateStat
             var response = await _handler.Handle(_testQuery);
 
             response.ValidationResult.IsValid().Should().BeFalse();
-            response.ValidationResult.ValidationDictionary.Should().ContainValue("Date must be a date in the past");
+            response.ValidationResult.ValidationDictionary.Should().ContainValue("The stop date cannot be in the future");
         }
 
         [Test]
-        public async Task WhenDateIsEarlierThanTrainingStartDateAValidationErrorReturned()
+        public async Task WhenDateIsInEarlierMonthThanApprenticeshipStartDateAValidationErrorReturned()
         {
             _apprenticeship.StartDate = new DateTime(2017, 5, 1);
-            _testQuery.DateOfChange = new DateTime(2017, 4, 28); // Change date before Training start date.
+            _testQuery.DateOfChange = _apprenticeship.StartDate.Value.AddMonths(-1); // Change date before apprenticeship start date.
 
             var response = await _handler.Handle(_testQuery);
 
             response.ValidationResult.IsValid().Should().BeFalse();
-            response.ValidationResult.ValidationDictionary.Should().ContainValue("Date cannot be earlier than training start date");
-        }
-
-        [TestCase(AcademicYearValidationResult.Success, true)]
-        [TestCase(AcademicYearValidationResult.NotWithinFundingPeriod, false)]
-        public async Task WhenDateIsInPreviousAcademicYearAndAfterR14DateThenValidationFails(
-            AcademicYearValidationResult academicYearValidationResult, bool expectedPassValidation)
-        {
-            //Arrange
-            _apprenticeship.StartDate = new DateTime(2016, 3, 1);
-            _testQuery.DateOfChange = new DateTime(2016, 5, 1);
-
-            _academicYearValidator.Setup(x => x.Validate(It.IsAny<DateTime>())).Returns(academicYearValidationResult);
-
-            //Act
-            var response = await _handler.Handle(_testQuery);
-            
-            //Assert
-            response.ValidationResult.IsValid().Should().Be(expectedPassValidation);
-
-            if (!expectedPassValidation)
-            {
-                response.ValidationResult.ValidationDictionary.Should().ContainValue("Date can't be in previous academic year");
-            }
+            response.ValidationResult.ValidationDictionary.Should().ContainValue("The stop month cannot be before the apprenticeship started");
         }
     }
 }

@@ -2,8 +2,8 @@
     p, li {
         font-size: 14px;
         @include media(tablet) {
-            font-size: 16px;    
-        }      
+            font-size: 16px;
+        }
     }
 
     @include media(tablet) {
@@ -45,3 +45,12 @@
     }
 }
 
+.govuk-error-summary__title {
+    margin-bottom: 15px;
+}
+
+@include media($min-width:40.0625em) {
+    .govuk-error-summary__title {
+        margin-bottom: 20px;
+    }
+}
