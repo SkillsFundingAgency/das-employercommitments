@@ -117,7 +117,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                     model,
                     userId, OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
 
-                SetOkayMessage("New stop date confirmed.");
+                SetOkayMessage("New stop date confirmed");
 
                 return RedirectToRoute("OnProgrammeApprenticeshipDetails");
             }
