@@ -73,7 +73,7 @@
             <tr>
                 <th scope="row">Status</th>
                 <td>@Model.Data.Status</td>
-                <td id="editStatusLink">
+                <td id="editStatusLink" class="link-right">
                     @if (Model.Data.CanEditStatus)
                     {
                         @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
@@ -93,7 +93,7 @@
                     
                     @if (Model.Data.CanEditStopDate)
                     {
-                        <td id="editStopDateLink" style="text-align:right">@Html.RouteLink("Edit", "EditStopDateOption")</td>
+                        <td id="editStopDateLink" class="link-right">@Html.RouteLink("Edit", "EditStopDateOption")</td>
                     }
                     else
                     {
