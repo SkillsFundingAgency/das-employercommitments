@@ -107,6 +107,7 @@ $warning-colour:    $orange;
 // Success notification styles
 .success-summary {
   border-color:$success-colour;
+  text-align:center;
   .success-summary-list {
     a {
       color: $success-colour;

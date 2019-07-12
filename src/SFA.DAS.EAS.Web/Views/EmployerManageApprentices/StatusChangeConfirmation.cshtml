@@ -24,7 +24,7 @@
         case ChangeStatusType.Stop:
             pageTitle = "Apprenticeship stopped";
             pageId = "apprentice-stopped";
-            pageHeading = "Stop apprentice";
+            pageHeading = "Confirm apprenticeship stop";
             pageAction = "stop";
             break;
         default:
@@ -66,23 +66,25 @@
                             You're about to resume this apprentice and any payments
                             you've authorised to their training provider.
                         </p>
-                        break;
-                    case ChangeStatusType.Stop:
-                        <p class="lede">
-                            You're about to stop this apprentice and any future payments you've
-                            authorised to their training provider.
-                        </p>
+                                break;
+                            case ChangeStatusType.Stop:
 
-                        <div class="panel panel-border-wide">
-                            <p>You won't be able to undo this change.</p>
-                        </div>
+                                <div class="notice">
+                                    <i class="icon icon-important">
+                                        <span class="visually-hidden">Warning</span>
+                                    </i>
+                                    <strong class="bold-small">
+                                        This apprenticeship record cannot be restarted once stopped.
+                                    </strong>
+                                </div>
+                                <br>
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(Model.Data.ChangeStatusViewModel.ChangeType), "Not a valid value");
                 }
             }
 
-            <table class="apprentice-to-stop">
+            <table class="details-list details-list-new">
                 <thead>
                     <tr>
                         <th colspan="2" class="visually-hidden">Confirm the apprentice to @pageAction</th>
@@ -90,19 +92,23 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Name</td>
-                        <td class="bold">@Model.Data.ApprenticeName</td>
+                        <th scope="row">Name</th>
+                        <td>@Model.Data.ApprenticeName</td>
                     </tr>
-                    <tr>
-                        <td>Unique learner number</td>
-                        <td class="bold">@Model.Data.ApprenticeULN</td>
-                    </tr>
+                <tr>
+                    <th scope="row">Unique learner number</th>
+                    <td>@Model.Data.ApprenticeULN</td>
+                </tr>
+                <tr>
+                    <th scope="row">Apprenticeship course</th>
+                    <td>@Model.Data.ApprenticeCourse</td>
+                </tr>
 
                     @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Pause)
                     {
                         <tr>
-                            <td>Date change takes effect</td>
-                            <td class="bold">
+                            <th scope="row">Date change takes effect</th>
+                            <td>
                                 @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormat()
                             </td>
                         </tr>
@@ -112,14 +118,14 @@
                     @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Resume)
                     {
                         <tr>
-                            <td>Pause date</td>
-                            <td class="bold">
+                            <th scope="row">Pause date</th>
+                            <td>
                                 @Model.Data.ChangeStatusViewModel.PauseDate.DateTime.Value.ToGdsFormat()
                             </td>
                         </tr>
                         <tr>
-                            <td>Resume date</td>
-                            <td class="bold">
+                            <th scope="row">Resume date</th>
+                            <td>
                                 @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormat()
                             </td>
                         </tr>
@@ -128,9 +134,9 @@
                     @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Stop)
                     {
                         <tr>
-                            <td>Date change takes effect</td>
-                            <td class="bold">
-                                @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormat()
+                            <th scope="row">Proposed stop date</th>
+                            <td>
+                                @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormatLongMonthNameWithoutDay()
                             </td>
                         </tr>
                     }
@@ -146,28 +152,19 @@
 
                 </div>
             }
-            <div class="form-group">
+            <div class="form-group @Html.AddClassIfPropertyInError("ChangeConfirmed","error")">
                 <fieldset>
 
-                    @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Resume)
-                    {
-                        <legend class="form-label-bold">Would you like to @Model.Data.ChangeStatusViewModel.ChangeType.Value.ToString().ToLower() this apprentice?</legend>
-                    }
-                    else
-                    {
-                        <legend class="form-label-bold">Would you like to @pageAction this apprentice?</legend>
-                    }
 
-
-                    @Html.ValidationMessage("ChangeConfirmed", "Please choose an option", new { id = "error-message-ChangeConfirmed" })
+                    @Html.ValidationMessage("ChangeConfirmed", "Select whether to "+pageAction+" this apprenticeship status or not", new { id = "error-message-ChangeConfirmed" })
                     <label for=@($"ChangeConfirmed-True") class="block-label selection-button-radio">
                         @Html.RadioButton("ChangeConfirmed", true, new { id = $"ChangeConfirmed-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
-                        Yes, @pageAction this apprentice
+                        Yes, @pageAction this apprenticeship
                     </label>
 
                     <label for=@($"ChangeConfirmed-False") class="block-label selection-button-radio">
                         @Html.RadioButton("ChangeConfirmed", false, new { id = $"ChangeConfirmed-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
-                        No, don't @pageAction this apprentice
+                        No, go back to apprentice details
                     </label>
                 </fieldset>
             </div>
@@ -176,7 +173,7 @@
             @Html.Hidden("DateOfChange.Month", Model.Data.ChangeStatusViewModel.DateOfChange.Month)
             @Html.Hidden("DateOfChange.Year", Model.Data.ChangeStatusViewModel.DateOfChange.Year)
 
-            <button class="button" type="submit" id="submit-status-change">Confirm</button>
+            <button class="button" type="submit" id="submit-status-change">Save and confirm</button>
         </form>
 
     </div>

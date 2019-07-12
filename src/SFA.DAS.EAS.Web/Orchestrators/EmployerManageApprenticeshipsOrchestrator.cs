@@ -467,7 +467,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     {
                         ApprenticeName = data.Apprenticeship.ApprenticeshipName,
                         ApprenticeULN = data.Apprenticeship.ULN,
-                        DateOfBirth = data.Apprenticeship.DateOfBirth,
+                        DateOfBirth = data.Apprenticeship.DateOfBirth.Value,
+                        ApprenticeCourse = data.Apprenticeship.TrainingName,
+
                         ChangeStatusViewModel = new ChangeStatusViewModel
                         {
                             DateOfChange = DetermineChangeDate(changeType, data.Apprenticeship, whenToMakeChange, dateOfChange),
