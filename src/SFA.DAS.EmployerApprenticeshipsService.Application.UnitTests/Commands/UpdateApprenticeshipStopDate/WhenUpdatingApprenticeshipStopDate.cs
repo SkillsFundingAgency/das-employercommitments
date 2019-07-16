@@ -81,7 +81,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
         }
 
         [Test]
-        [Ignore("Temp Ignore")]
         public void ShouldThrowValidationErrorIfStopDateGreaterThanTodayForLiveApprenticeship()
         {
             _validCommand.NewStopDate = DateTime.UtcNow.AddMonths(1); // Change date in the future
@@ -92,7 +91,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
         }
 
         [Test]
-        [Ignore("Temp Ignore")]
         public void ShouldThrowValidationErrorIfStopDateEarlierThanStartDateForLiveApprenticeship()
         {
             _validCommand.NewStopDate = DateTime.UtcNow.AddMonths(-3); // Change before start date
@@ -103,7 +101,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
         }
 
         [Test]
-        [Ignore("Temp Ignore")]
         public void ShouldThrowValidationErrorIfStopDateIsntTheSameAsStartDateForApprenticeshipWaitingToStart()
         {
             _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(2).Date;
