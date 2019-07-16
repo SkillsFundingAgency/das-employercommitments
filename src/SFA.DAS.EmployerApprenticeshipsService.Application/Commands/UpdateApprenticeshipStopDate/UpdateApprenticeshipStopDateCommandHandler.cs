@@ -70,26 +70,8 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
             }
             catch (Exception ex)
             {
-                var builder = new System.Text.StringBuilder();
-
-                builder.AppendLine("PutApprenticeshipStopDate error");
-                builder.AppendLine("EmployerAccountId:" + command.EmployerAccountId);
-                builder.AppendLine("CommitmentId:" + command.CommitmentId);
-                builder.AppendLine("ApprenticeshipId:" + command.ApprenticeshipId);
-                if (stopDate != null)
-                {
-                    builder.AppendLine("stopDate.UserId:" + stopDate.UserId);
-                    builder.AppendLine("stopDate.LastUpdatedByInfo.EmailAddress:" + stopDate.LastUpdatedByInfo.EmailAddress);
-                    builder.AppendLine("stopDate.LastUpdatedByInfo.Name:" + stopDate.LastUpdatedByInfo.Name);
-                    builder.AppendLine("stopDate.NewStopDate:" + stopDate.NewStopDate);
-                }
-
-                if (_commitmentsApi == null)
-                {
-                    builder.AppendLine("_commitmentsApi is null");
-                }
-
-                throw new Exception(builder.ToString(), ex);
+                var message = "PutApprenticeshipStopDate error";
+                throw new Exception(message, ex);
             }
 
             try
