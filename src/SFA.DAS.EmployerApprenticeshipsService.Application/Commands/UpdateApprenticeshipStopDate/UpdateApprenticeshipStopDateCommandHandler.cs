@@ -53,12 +53,56 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
             var apprenticeship = await
                 _commitmentsApi.GetEmployerApprenticeship(command.EmployerAccountId, command.ApprenticeshipId);
 
-            ValidateNewStopDate(command, apprenticeship);
+            try
+            {
 
-            await _commitmentsApi.PutApprenticeshipStopDate(command.EmployerAccountId, command.CommitmentId, command.ApprenticeshipId, stopDate);
-           
-            await _providerEmailNotificationService.SendProviderApprenticeshipStopEditNotification(apprenticeship,
-                command.NewStopDate);
+                ValidateNewStopDate(command, apprenticeship);
+            }
+            catch (Exception ex)
+            {
+                var message = "ValidateNewStopDate error";
+                throw new Exception(message, ex);
+            }
+
+            try
+            {
+                await _commitmentsApi.PutApprenticeshipStopDate(command.EmployerAccountId, command.CommitmentId, command.ApprenticeshipId, stopDate);
+            }
+            catch (Exception ex)
+            {
+                var message = "PutApprenticeshipStopDate error";
+                throw new Exception(message, ex);
+            }
+
+            try
+            {
+                await _providerEmailNotificationService.SendProviderApprenticeshipStopEditNotification(apprenticeship,
+                    command.NewStopDate);
+            }
+            catch (Exception ex)
+            {
+                var builder = new System.Text.StringBuilder();
+
+                builder.AppendLine("SendProviderApprenticeshipStopEditNotification error");
+                builder.AppendLine("Stop date = " + command.NewStopDate.ToString());
+
+                if(apprenticeship != null)
+                {
+                    builder.AppendLine("apprenticeship is not null");
+                }
+
+                if(_providerEmailNotificationService == null)
+                {
+                    builder.AppendLine("_providerEmailNotificationService is null");
+                }
+
+                builder.AppendLine("LegalEntityName : " + apprenticeship.LegalEntityName);
+                var stopdate = apprenticeship.StopDate.HasValue == true ? apprenticeship.StopDate.Value.ToString("dd/MM/yyyy") : "not set" ;
+                builder.AppendLine("OLDDATE : " + stopdate);
+                builder.AppendLine("ProviderId : " + apprenticeship.ProviderId);
+
+                throw new Exception(builder.ToString(), ex);
+            }
         }
 
         private void ValidateNewStopDate(UpdateApprenticeshipStopDateCommand command, Apprenticeship apprenticeship)
