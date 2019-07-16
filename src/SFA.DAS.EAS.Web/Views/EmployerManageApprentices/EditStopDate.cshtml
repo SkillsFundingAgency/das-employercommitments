@@ -36,13 +36,13 @@
                                 <label for="NewStopDate.Month">
                                     Month
                                 </label>
-                                @Html.TextBox("NewStopDate.Month", Model.Data.NewStopDate.Month, new { @class = "form-control length-limit " + Html.AddClassIfPropertyInError("", "form-control-error"), type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "NewStopDate.Month" })
+                                @Html.TextBox("NewStopDate.Month", Model.Data.NewStopDate.Month, new { @class = "form-control length-limit " + Html.AddClassIfPropertyInError("NewStopDate", "form-control-error"), type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "NewStopDate.Month" })
                             </div>
                             <div class="form-group form-group-year">
                                 <label for="NewStopDate.Year">
                                     Year
                                 </label>
-                                @Html.TextBox("NewStopDate.Year", Model.Data.NewStopDate.Year, new { @class = "form-control length-limit " + Html.AddClassIfPropertyInError("", "form-control-error"), type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "NewStopDate.Year" })
+                                @Html.TextBox("NewStopDate.Year", Model.Data.NewStopDate.Year, new { @class = "form-control length-limit " + Html.AddClassIfPropertyInError("NewStopDate", "form-control-error"), type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "NewStopDate.Year" })
                             </div>
                         </div>
                     </fieldset>
