@@ -195,16 +195,5 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
 
             Assert.IsTrue(TestHelper.EnumerablesAreEqual(new[] {new KeyValuePair<string,string>("0", "Cost for Tit") }, result.Data.Warnings.AsEnumerable()));
         }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public async Task ThenEmployerCommitmentsV2FeaturesShouldBeToggled(bool featureEnabled)
-        {
-            MockEmployerCommitmentsV2FeatureToggleOn.Setup(t => t.FeatureEnabled).Returns(featureEnabled);
-
-            var result = await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
-
-            Assert.AreEqual(featureEnabled, result.Data.IsEmployerCommitmentsV2Enabled);
-        }
     }
 }

@@ -7,12 +7,12 @@ using SFA.DAS.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Configuration.FileStorage;
 using SFA.DAS.EmployerCommitments.Domain.Attributes;
+using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.Messaging;
 using SFA.DAS.Messaging.AzureServiceBus;
 using SFA.DAS.Messaging.FileSystem;
 using StructureMap;
 using StructureMap.Pipeline;
-using IConfiguration = SFA.DAS.EmployerCommitments.Domain.Interfaces.IConfiguration;
 
 namespace SFA.DAS.EmployerCommitments.Infrastructure.DependencyResolution
 {

@@ -39,8 +39,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         protected Mock<IMediator> MockMediator;
         protected EmployerCommitmentsOrchestrator EmployerCommitmentOrchestrator;
         protected Mock<IFeatureToggleService> MockFeatureToggleService;
-        protected Mock<IFeatureToggle> MockEmployerCommitmentsV2FeatureToggleOn;
-        protected Mock<IFeatureToggle> MockTransfersFeatureToggleOn;
+        protected Mock<IFeatureToggle> MockFeatureToggleOn;
         protected CommitmentView CommitmentView;
 
         [SetUp]
@@ -52,13 +51,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockApprenticeshipCoreValidator = new Mock<IApprenticeshipCoreValidator>();
             MockCommitmentMapper = new Mock<ICommitmentMapper>();
 
-            MockEmployerCommitmentsV2FeatureToggleOn = new Mock<IFeatureToggle>();
-            MockEmployerCommitmentsV2FeatureToggleOn.Setup(x => x.FeatureEnabled).Returns(true);
-            MockTransfersFeatureToggleOn = new Mock<IFeatureToggle>();
-            MockTransfersFeatureToggleOn.Setup(x => x.FeatureEnabled).Returns(true);
+            MockFeatureToggleOn = new Mock<IFeatureToggle>();
+            MockFeatureToggleOn.Setup(x => x.FeatureEnabled).Returns(true);
             MockFeatureToggleService = new Mock<IFeatureToggleService>();
-            MockFeatureToggleService.Setup(x => x.Get<EmployerCommitmentsV2>()).Returns(MockEmployerCommitmentsV2FeatureToggleOn.Object);
-            MockFeatureToggleService.Setup(x => x.Get<Transfers>()).Returns(MockTransfersFeatureToggleOn.Object);
+            MockFeatureToggleService.Setup(x => x.Get<Transfers>()).Returns(MockFeatureToggleOn.Object);
 
             MockHashingService = new Mock<IHashingService>();
             MockHashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);

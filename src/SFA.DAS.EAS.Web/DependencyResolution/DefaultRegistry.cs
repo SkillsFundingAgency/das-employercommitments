@@ -44,16 +44,17 @@ using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
-using SFA.DAS.HashingService;
 using SFA.DAS.Http;
 using SFA.DAS.Notifications.Api.Client;
 using SFA.DAS.Http.TokenGenerators;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Notifications.Api.Client.Configuration;
 using StructureMap;
+using StructureMap.Graph;
 using StructureMap.TypeRules;
 using IConfiguration = SFA.DAS.EmployerCommitments.Domain.Interfaces.IConfiguration;
 using NotificationsApiClientConfiguration = SFA.DAS.EmployerCommitments.Domain.Configuration.NotificationsApiClientConfiguration;
+using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 {

@@ -968,8 +968,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                                     ? "Review your cohort"
                                     : "View your cohort";
 
-                var isEmployerCommitmentsV2Enabled = _featureToggleService.Get<EmployerCommitmentsV2>().FeatureEnabled;
-
                 var viewModel = new CommitmentDetailsViewModel
                 {
                     HashedId = HashingService.HashValue(data.Commitment.Id),
@@ -987,9 +985,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Warnings = warnings,
                     Errors = errors,
                     PageTitle = pageTitle,
-                    HideDeleteButton = data.Commitment.TransferSender?.Id != null,
-                    HashedAccountId = hashedAccountId,
-                    IsEmployerCommitmentsV2Enabled = isEmployerCommitmentsV2Enabled
+                    HideDeleteButton = data.Commitment.TransferSender?.Id != null
                 };
 
                 return new OrchestratorResponse<CommitmentDetailsViewModel>
