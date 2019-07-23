@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.SessionState;
@@ -16,6 +17,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Views
     {
         private static readonly ConcurrentDictionary<Assembly, ViewRenderer> Cache
             = new ConcurrentDictionary<Assembly, ViewRenderer>();
+
+        static ViewRenderer()
+        {
+            AntiForgeryConfig.SuppressXFrameOptionsHeader = true;
+        }
 
         /// <summary>
         /// Gets instance of ViewRenderer for executing views in the Assembly of
