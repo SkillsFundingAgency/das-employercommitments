@@ -272,7 +272,14 @@
                                         <td>
                                             @if (!Model.Data.IsReadOnly)
                                             {
-                                                <a href="@Url.Action("EditApprenticeship", new {hashedApprenticeshipId = apprenticeship.HashedApprenticeshipId})" aria-label="Edit @apprenticeship.ApprenticeName">Edit</a>
+                                                if (Model.Data.IsEmployerCommitmentsV2Enabled)
+                                                {
+                                                    <a href="@Url.CommitmentsV2Link($"{Model.Data.HashedAccountId}/unapproved/{Model.Data.HashedId}/apprentices/{apprenticeship.HashedApprenticeshipId}/edit")" aria-label="Edit @apprenticeship.ApprenticeName">Edit</a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="@Url.Action("EditApprenticeship", new {hashedApprenticeshipId = apprenticeship.HashedApprenticeshipId})" aria-label="Edit @apprenticeship.ApprenticeName">Edit</a>
+                                                }
                                             }
                                             else
                                             {

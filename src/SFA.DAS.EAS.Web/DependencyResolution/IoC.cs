@@ -18,6 +18,7 @@
 
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Infrastructure.DependencyResolution;
+using SFA.DAS.EmployerUrlHelper.DependencyResolution;
 using StructureMap;
 
 namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
@@ -37,6 +38,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
                 c.Policies.Add<CurrentDatePolicy>();
                 c.Policies.Add(new MessagePolicy<EmployerCommitmentsServiceConfiguration>(ServiceName));
                 c.Policies.Add(new ExecutionPolicyPolicy());
+                c.AddRegistry<EmployerUrlHelperRegistry>();
                 c.AddRegistry<ValidationRegistry>();
                 c.AddRegistry<DefaultRegistry>();
             });
