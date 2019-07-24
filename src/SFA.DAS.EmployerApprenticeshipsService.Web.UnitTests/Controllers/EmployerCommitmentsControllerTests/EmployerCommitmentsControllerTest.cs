@@ -23,7 +23,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
             Orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).ReturnsAsync(true);
 
             Controller = new EmployerCommitmentsController(Orchestrator.Object, Mock.Of<IOwinWrapper>(), Mock.Of<IMultiVariantTestingService>(),
-                Mock.Of<ICookieStorageService<FlashMessageViewModel>>(), Mock.Of<ICookieStorageService<string>>());
+                Mock.Of<ICookieStorageService<FlashMessageViewModel>>(), Mock.Of<ICookieStorageService<string>>(), Mock.Of<IFeatureToggleService>());
         }
     }
 }
