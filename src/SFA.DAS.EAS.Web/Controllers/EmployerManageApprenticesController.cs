@@ -66,6 +66,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 .GetApprenticeship(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
             var flashMessage = GetFlashMessageViewModelFromCookie();
 
+            if(flashMessage == null && model.Data.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase))
+            {
+                flashMessage = new FlashMessageViewModel { Message = "Apprenticeship stopped", Severity = FlashMessageSeverityLevel.Okay};
+            }            
+
             if (flashMessage != null)
             {
                 model.FlashMessage = flashMessage;
@@ -117,7 +122,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                     model,
                     userId, OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
 
-                SetOkayMessage("New stop date confirmed.");
+                SetOkayMessage("New stop date confirmed");
 
                 return RedirectToRoute("OnProgrammeApprenticeshipDetails");
             }
