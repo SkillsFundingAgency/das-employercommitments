@@ -968,6 +968,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                                     ? "Review your cohort"
                                     : "View your cohort";
 
+                var transferSenderPublicHashedId = data.Commitment.TransferSender?.Id == null ? null : _publicHashingService.HashValue(data.Commitment.TransferSender.Id.Value);
                 var isEmployerCommitmentsV2Enabled = _featureToggleService.Get<EmployerCommitmentsV2>().FeatureEnabled;
 
                 var viewModel = new CommitmentDetailsViewModel
@@ -989,6 +990,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     PageTitle = pageTitle,
                     HideDeleteButton = data.Commitment.TransferSender?.Id != null,
                     HashedAccountId = hashedAccountId,
+                    AccountLegalEntityPublicHashedId = data.Commitment.AccountLegalEntityPublicHashedId,
+                    TransferSenderPublicHashedId = transferSenderPublicHashedId,
                     IsEmployerCommitmentsV2Enabled = isEmployerCommitmentsV2Enabled
                 };
 
