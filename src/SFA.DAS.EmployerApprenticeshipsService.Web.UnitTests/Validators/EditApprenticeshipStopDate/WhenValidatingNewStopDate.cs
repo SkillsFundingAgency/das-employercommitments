@@ -54,7 +54,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.EditApprenticeshi
             _viewModel.NewStopDate = null;
             var result = _validator.Validate(_viewModel);
             Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage.Equals("Date is not valid")));
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage.Equals("Enter the stop date for this apprenticeship")));
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.EditApprenticeshi
             _viewModel.NewStopDate = new DateTimeViewModel(0,2,2018);
             var result = _validator.Validate(_viewModel);
             Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage.Equals("Date is not valid")));
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage.Equals("Enter the stop date for this apprenticeship")));
         }
 
         [Test]
@@ -72,20 +72,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.EditApprenticeshi
             _viewModel.NewStopDate = new DateTimeViewModel(_now.AddMonths(1));
             var result = _validator.Validate(_viewModel);
             Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage.Equals("New stop date must not be in future")));
-        }
-
-        [Test]
-        public void ThenDateCannotBeBeforeAcademicYearRestrictionDate()
-        {
-            //if training started in last a.y., and r14 has passed, stop date can't be before start of current a.y.
-            _viewModel.ApprenticeshipStartDate = new DateTime(2017,6,1);
-            _viewModel.NewStopDate = new DateTimeViewModel(1, 6, 2017);
-
-            var result = _validator.Validate(_viewModel);
-
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage.Equals("The earliest date you can stop this apprenticeship is 01 08 2017")));
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage.Equals("The stop date cannot be in the future")));
         }
 
         [Test]
@@ -96,18 +83,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.EditApprenticeshi
             var result = _validator.Validate(_viewModel);
 
             Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage.Equals("Date cannot be earlier than training start date")));
-        }
-
-        [Test]
-        public void ThenDateMustBeBeforeCurrentStopDate()
-        {
-            _viewModel.NewStopDate = new DateTimeViewModel(_viewModel.CurrentStopDate.AddMonths(1));
-
-            var result = _validator.Validate(_viewModel);
-
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage.Equals("Date must be before current stop date")));
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage.Equals("The stop month cannot be before the apprenticeship started")));
         }
     }
 }

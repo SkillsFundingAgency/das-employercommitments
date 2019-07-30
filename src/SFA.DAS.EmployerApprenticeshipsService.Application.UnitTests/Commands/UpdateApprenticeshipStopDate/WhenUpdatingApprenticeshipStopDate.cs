@@ -110,39 +110,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
 
             act.ShouldThrow<InvalidRequestException>().Which.Message.Contains("Date must the same as start date if training hasn't started");
         }
-
-        [TestCase(AcademicYearValidationResult.NotWithinFundingPeriod, false, Description = "Validation fails if date of change is in the previous academic year - if the R14 date has passed")]
-        [TestCase(AcademicYearValidationResult.Success, true)]
-        public void ShouldThrowValidationErrorAfterR14Close(AcademicYearValidationResult academicYearValidationResult, bool expectPassValidation)
-        {
-            _testApprenticeship.StartDate = new DateTime(2016, 3, 1); //early last academic year
-            _academicYearValidator.Setup(x => x.Validate(It.IsAny<DateTime>())).Returns(academicYearValidationResult);
-
-            Func<Task> act = async () => await _handler.Handle(_validCommand);
-
-            if (expectPassValidation)
-            {
-                act.ShouldNotThrow<InvalidRequestException>();
-            }
-            else
-            {
-                act.ShouldThrow<InvalidRequestException>().Where(x => x.ErrorMessages.Values.Contains("The earliest date you can stop this apprentice is 01 08 2016"));
-            }
-        }
-
-        [Test(Description = "Validation fails for both R14 having passed and change date before Start Date - Start Date error takes precedence")]
-        public void ShouldThrowStartDateValidationErrorAfterR14CloseAndStopDateBeforeStartDate()
-        {
-            _testApprenticeship.StartDate = new DateTime(2016, 3, 1);
-            _validCommand.NewStopDate = _testApprenticeship.StartDate.Value.AddMonths(-1);
-            _academicYearValidator.Setup(x => x.Validate(It.IsAny<DateTime>()))
-                .Returns(AcademicYearValidationResult.NotWithinFundingPeriod);
-
-            Func<Task> act = async () => await _handler.Handle(_validCommand);
-
-            act.ShouldThrow<InvalidRequestException>().Where(x => x.ErrorMessages.Values.Contains("Date cannot be earlier than training start date"));
-        }
-
+   
         [Test]
         public async Task ShouldSendProviderApprenticeshipStopEditNotification()
         {
