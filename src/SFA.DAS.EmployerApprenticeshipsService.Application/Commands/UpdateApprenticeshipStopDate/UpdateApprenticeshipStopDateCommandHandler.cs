@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
@@ -63,10 +64,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
         private void ValidateNewStopDate(UpdateApprenticeshipStopDateCommand command, Apprenticeship apprenticeship)
         {
             var validationResult = new ValidationResult();
-        
+
+            var startdate = new DateTime(apprenticeship.StartDate.Value.Year, apprenticeship.StartDate.Value.Month, 1);
+
             if (apprenticeship.IsWaitingToStart(_currentDateTime))
             {
-                if (!command.NewStopDate.Equals(apprenticeship.StartDate))
+                if (!command.NewStopDate.Equals(startdate))
                 {
                     validationResult.AddError(nameof(command.NewStopDate),
                         "Date must the same as start date if training hasn't started");
@@ -75,28 +78,17 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
             }
             else
             {
-                if (command.NewStopDate > _currentDateTime.Now.Date)
+                if (command.NewStopDate > new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1))
                 {
-                    validationResult.AddError(nameof(command.NewStopDate), "Date must be a date in the past");
+                    validationResult.AddError(nameof(command.NewStopDate), "The stop date cannot be in the future");
                     throw new InvalidRequestException(validationResult.ValidationDictionary);
                 }
 
-                if (apprenticeship.StartDate > command.NewStopDate)
+                if (startdate > command.NewStopDate)
                 {
-                    validationResult.AddError(nameof(command.NewStopDate),
-                        "Date cannot be earlier than training start date");
+                    validationResult.AddError(nameof(command.NewStopDate), "The stop month cannot be before the apprenticeship started");
                     throw new InvalidRequestException(validationResult.ValidationDictionary);
-                }
-
-                if (_academicYearValidator.Validate(command.NewStopDate) ==
-                    AcademicYearValidationResult.NotWithinFundingPeriod)
-                {
-                    var earliestDate = _academicYearDateProvider.CurrentAcademicYearStartDate.ToString("dd MM yyyy");
-
-                    validationResult.AddError(nameof(command.NewStopDate),
-                        $"The earliest date you can stop this apprentice is {earliestDate}");
-                    throw new InvalidRequestException(validationResult.ValidationDictionary);
-                }
+                }                
             }
         }
     }

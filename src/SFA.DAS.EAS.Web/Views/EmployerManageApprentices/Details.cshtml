@@ -63,9 +63,13 @@
 
         <h1 class="heading-xlarge" id="learnerName">@Model.Data.FirstName @Model.Data.LastName</h1>
 
-        <p>
-            Edit details if there's a change in apprentice or apprenticeship circumstances.
-        </p>
+        @{ if (!Model.Data.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase))
+            {
+                <p>
+                    Edit details if there's a change in apprentice or apprenticeship circumstances.
+                </p>
+            }
+        }
 
         <h2 class="heading-medium visually-hidden">Apprentice status</h2>
         <table id="app-status" class="details-list details-list-new">
@@ -93,7 +97,7 @@
 
                         @if (Model.Data.CanEditStopDate)
                         {
-                            <td id="editStopDateLink">@Html.RouteLink("Edit stop date", "EditStopDateOption")</td>
+                            <td id="editStopDateLink" class="link-right">@Html.RouteLink("Edit", "EditStopDateOption")</td>
                         }
                         else
                         {
