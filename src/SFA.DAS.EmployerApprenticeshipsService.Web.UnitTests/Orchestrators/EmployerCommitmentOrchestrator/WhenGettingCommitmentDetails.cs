@@ -196,6 +196,29 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             Assert.IsTrue(TestHelper.EnumerablesAreEqual(new[] {new KeyValuePair<string,string>("0", "Cost for Tit") }, result.Data.Warnings.AsEnumerable()));
         }
 
+        [Test]
+        public async Task ThenCommitmentDetailsShouldBeReturned()
+        {
+            MockHashingService.Setup(h => h.HashValue(CommitmentView.Id)).Returns("HashedCmtId");
+
+            var result = await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
+
+            Assert.AreEqual("HashedAccId", result.Data.HashedAccountId);
+            Assert.AreEqual("HashedCmtId", result.Data.HashedId);
+            Assert.AreEqual(CommitmentView.AccountLegalEntityPublicHashedId, result.Data.AccountLegalEntityPublicHashedId);
+        }
+
+        [Test]
+        public async Task ThenIfCohortIsFundedByTransferThenTransferSenderPublicHashedIdShouldBeReturned()
+        {
+            CommitmentView.TransferSender = new TransferSender { Id = 123, TransferApprovalStatus = TransferApprovalStatus.Pending };
+            MockPublicHashingService.Setup(h => h.HashValue(CommitmentView.TransferSender.Id.Value)).Returns("HashedTrnId");
+
+            var result = await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
+            
+            Assert.AreEqual("HashedTrnId", result.Data.TransferSenderPublicHashedId);
+        }
+
         [TestCase(true)]
         [TestCase(false)]
         public async Task ThenEmployerCommitmentsV2FeaturesShouldBeToggled(bool featureEnabled)
