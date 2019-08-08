@@ -72,7 +72,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 Id = 123,
                 LegalEntityId = "321",
                 EditStatus = EditStatus.EmployerOnly,
-                Messages = new List<MessageView>()
+                Messages = new List<MessageView>(),
+                AccountLegalEntityPublicHashedId = "ALE123"
             };
 
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetCommitmentQueryRequest>()))
