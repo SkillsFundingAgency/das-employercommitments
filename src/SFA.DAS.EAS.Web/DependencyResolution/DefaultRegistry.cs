@@ -54,6 +54,9 @@ using StructureMap;
 using StructureMap.TypeRules;
 using IConfiguration = SFA.DAS.EmployerCommitments.Domain.Interfaces.IConfiguration;
 using NotificationsApiClientConfiguration = SFA.DAS.EmployerCommitments.Domain.Configuration.NotificationsApiClientConfiguration;
+using SFA.DAS.Reservations.Api.Client;
+using SFA.DAS.Reservations.Api.Types;
+using SFA.DAS.Reservations.Api.Types.Configuration;
 
 namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 {
@@ -109,6 +112,8 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             RegisterAccountApi();
 
             RegisterPasAccountApi(config);
+
+            ConfigureReservationsApi();
         }
 
         private void RegisterAccountApi()
@@ -281,10 +286,10 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 
         private void RegisterLogger()
         {
-            For<IRequestContext>().Use(x => new RequestContext(new HttpContextWrapper(HttpContext.Current)));
+            For<IWebLoggingContext>().Use(x => new RequestContext(new HttpContextWrapper(HttpContext.Current)));
             For<ILog>().Use(x => new NLogLogger(
                 x.ParentType,
-                x.GetInstance<IRequestContext>(),
+                x.GetInstance<IWebLoggingContext>(),
                 null)).AlwaysUnique();
         }
 
@@ -294,5 +299,44 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<IPublicHashingService>().Use(x => new PublicHashingService.PublicHashingService(config.PublicAllowedHashstringCharacters, config.PublicHashstring));
         }
 
+        private string GetEnvironmentName()
+        {
+            var environment = Environment.GetEnvironmentVariable("DASENV");
+            if (string.IsNullOrEmpty(environment))
+            {
+                environment = CloudConfigurationManager.GetSetting("EnvironmentName");
+            }
+
+            return environment;
+        }
+
+        private void ConfigureReservationsApi()
+        {
+            var environment = GetEnvironmentName();
+            var configurationRepository = GetConfigurationRepository();
+
+            var configurationService = new ConfigurationService(configurationRepository,
+                new ConfigurationOptions(
+                    SFA.DAS.Reservations.Api.Types.Configuration.ConfigurationKeys.ReservationsClientApiConfiguration,
+                    environment, "1.0"));
+
+            var config = configurationService.Get<ReservationsClientAzureApiConfiguration>();
+
+            var bearerToken = new AzureADBearerTokenGenerator(config);
+
+            var httpClient = new HttpClientBuilder()
+                .WithBearerAuthorisationHeader(bearerToken)
+                .WithHandler(new NLog.Logger.Web.MessageHandlers.RequestIdMessageRequestHandler())
+                .WithHandler(new NLog.Logger.Web.MessageHandlers.SessionIdMessageRequestHandler())
+                .WithDefaultHeaders()
+                .Build();
+
+            For<ReservationsClientApiConfiguration>().Use(config);
+            For<IReservationsApiClient>().Use<ReservationsApiClient>().Ctor<HttpClient>().Is(httpClient).Singleton();
+            For<IReservationHelper>().Use<ReservationHelper>().Singleton();
+        }
+    }
+    public class ReservationsClientAzureApiConfiguration : ReservationsClientApiConfiguration, IAzureADClientConfiguration
+    {
     }
 }
