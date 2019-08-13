@@ -141,6 +141,9 @@
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.43242, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.43242\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.Reservations.Api.Types, Version=4.1.32.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Reservations.Api.Types.4.1.32\lib\netstandard2.0\SFA.DAS.Reservations.Api.Types.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap, Version=4.2.0.402, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\structuremap.4.2.0.402\lib\net40\StructureMap.dll</HintPath>
     </Reference>

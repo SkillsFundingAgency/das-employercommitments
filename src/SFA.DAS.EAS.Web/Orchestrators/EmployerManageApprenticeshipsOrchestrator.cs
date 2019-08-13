@@ -316,13 +316,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         public async Task<IDictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship, UpdateApprenticeshipViewModel updatedModel)
         {
             ConcurrentDictionary<string, string> errors = new ConcurrentDictionary<string, string>();
-            await Task.WhenAll(AddOverlapValidationErrors(errors, apprenticeship, updatedModel), AddReservationValidationErrors(errors, apprenticeship));
+            await Task.WhenAll(AddOverlapAndDateValidationErrors(errors, apprenticeship, updatedModel), AddReservationValidationErrors(errors, apprenticeship));
 
             return errors;
         }
 
         public async Task<OrchestratorResponse<ChangeStatusChoiceViewModel>> GetChangeStatusChoiceNavigation(string hashedAccountId, string hashedApprenticeshipId, string externalUserId)
-
         {
             var accountId = HashingService.DecodeValue(hashedAccountId);
             var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
@@ -721,7 +720,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 }, hashedAccountId, user);
         }
 
-        private async Task AddOverlapValidationErrors(ConcurrentDictionary<string, string> errors, ApprenticeshipViewModel apprenticeship, UpdateApprenticeshipViewModel updatedModel)
+        private async Task AddOverlapAndDateValidationErrors(ConcurrentDictionary<string, string> errors, ApprenticeshipViewModel apprenticeship, UpdateApprenticeshipViewModel updatedModel)
         {
             void AddToErrors(IDictionary<string, string> items)
             {
@@ -759,12 +758,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 return;
             }
 
-            DateTime startDate = model.StartDate.DateTime ?? throw new InvalidOperationException($"Unable to validate the reservation because the start date is absent");
+            if (model.StartDate?.DateTime == null)
+            {
+                Logger.Info($"Apprenticeship: {HashingService.DecodeValue(model.HashedApprenticeshipId)} Reservation-id:{model.ReservationId} start date required for reservation validation");
+                return;
+            }
 
             var response = await Mediator.SendAsync(
                     new GetReservationValidationRequest
                     {
-                        StartDate = startDate,
+                        StartDate = model.StartDate.DateTime.Value,
                         TrainingCode = model.TrainingCode,
                         ReservationId = model.ReservationId.Value
                     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Moq;
@@ -15,6 +16,8 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.HashingService;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetReservationValidation;
+using SFA.DAS.Reservations.Api.Types;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
@@ -42,6 +45,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             _mockValidator.Setup(m => m.ValidateApprovedEndDate(It.IsAny<UpdateApprenticeshipViewModel>()))
                 .Returns(new Dictionary<string, string>());
 
+            MockMediator.Setup(m => m.SendAsync(It.IsAny<GetOverlappingApprenticeshipsQueryRequest>()))
+                .ReturnsAsync(new GetOverlappingApprenticeshipsQueryResponse { Overlaps = new List<ApprenticeshipOverlapValidationResult>() });
+
             var academicYearDateProvider = Mock.Of<IAcademicYearDateProvider>();
             
             Orchestrator = new EmployerManageApprenticeshipsOrchestrator(
@@ -59,15 +65,12 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 );
         }
 
-
         [Test]
-        public async Task ShouldValidate()
+        public async Task ShouldValidateOverlapAndDateChecks()
         {
             var viewModel = new ApprenticeshipViewModel();
             var updateModel = new UpdateApprenticeshipViewModel();
 
-            MockMediator.Setup(m => m.SendAsync(It.IsAny<GetOverlappingApprenticeshipsQueryRequest>()))
-                .ReturnsAsync(new GetOverlappingApprenticeshipsQueryResponse { Overlaps = new List<ApprenticeshipOverlapValidationResult>()});
 
             await Orchestrator.ValidateApprenticeship(viewModel, updateModel);
             
@@ -76,6 +79,48 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             _mockValidator.Verify(m => m.ValidateToDictionary(It.IsAny<ApprenticeshipViewModel>()), Times.Once, failMessage: "Should validate apprenticeship");
             _mockValidator.Verify(m => m.ValidateAcademicYear(It.IsAny<UpdateApprenticeshipViewModel>()), Times.Once, failMessage: "Should validate academic year");
             _mockValidator.Verify(m => m.ValidateApprovedEndDate(It.IsAny<UpdateApprenticeshipViewModel>()), Times.Once, failMessage: "Should validate end date");
+        }
+
+        [Test]
+        public async Task ShouldValidateDateButNotCallReservationValidationsBecauseStartDateIsBlank()
+        {
+            var viewModel = new ApprenticeshipViewModel();
+            viewModel.ReservationId = Guid.NewGuid();
+            var updateModel = new UpdateApprenticeshipViewModel();
+
+            _mockValidator.Setup(m => m.ValidateAcademicYear(It.Is<UpdateApprenticeshipViewModel>(p=>p.StartDate == null)))
+                .Returns(new Dictionary<string, string>{ {"StartDate", "Start Date cannot be empty"} });
+
+            var result = await Orchestrator.ValidateApprenticeship(viewModel, updateModel);
+
+            Assert.IsTrue(result.ContainsKey("StartDate"));
+            Assert.AreEqual("Start Date cannot be empty", result["StartDate"]);
+
+            MockMediator.Verify(m=>m.SendAsync(It.IsAny<GetReservationValidationRequest>()), Times.Never);
+        }
+
+        [Test]
+        public async Task ShouldCallReservationValidationsAndReturnErrors()
+        {
+            var viewModel = new ApprenticeshipViewModel();
+            viewModel.ReservationId = Guid.NewGuid();
+            viewModel.StartDate = new DateTimeViewModel(1,1,2001);
+
+            var updateModel = new UpdateApprenticeshipViewModel();
+
+            MockMediator.Setup(m => m.SendAsync(It.IsAny<GetReservationValidationRequest>()))
+                .ReturnsAsync(new GetReservationValidationResponse
+                {
+                    Data = new ReservationValidationResult(new List<ReservationValidationError>
+                        {new ReservationValidationError("Reservation", "A reservation issue")})
+                });
+
+            var result = await Orchestrator.ValidateApprenticeship(viewModel, updateModel);
+
+            Assert.IsTrue(result.ContainsKey("Reservation"));
+            Assert.AreEqual("A reservation issue", result["Reservation"]);
+
+            MockMediator.Verify(m => m.SendAsync(It.IsAny<GetReservationValidationRequest>()), Times.Once);
         }
     }
 }

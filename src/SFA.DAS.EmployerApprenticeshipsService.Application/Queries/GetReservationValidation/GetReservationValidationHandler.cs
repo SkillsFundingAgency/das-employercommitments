@@ -25,6 +25,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetReservationValidati
 
             var result = await _reservationClient.ValidateReservation(validationReservationMessage, CancellationToken.None);
 
+
             return new GetReservationValidationResponse
             {
                 Data = result
