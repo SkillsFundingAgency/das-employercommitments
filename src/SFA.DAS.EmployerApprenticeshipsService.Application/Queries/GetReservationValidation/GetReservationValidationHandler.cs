@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Reservations.Api.Types;
@@ -24,23 +23,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetReservationValidati
                 ReservationId = request.ReservationId
             };
 
-            try
+            var result = await _reservationClient.ValidateReservation(validationReservationMessage, CancellationToken.None);
+
+            return new GetReservationValidationResponse
             {
-
-                var result =
-                    await _reservationClient.ValidateReservation(validationReservationMessage, CancellationToken.None);
-
-                return new GetReservationValidationResponse
-                {
-                    Data = result
-                };
-
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
+                Data = result
+            };
         }
     }
 }

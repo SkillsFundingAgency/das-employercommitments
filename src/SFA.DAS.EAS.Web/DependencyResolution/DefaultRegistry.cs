@@ -322,14 +322,24 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 
             var config = configurationService.Get<ReservationsClientAzureApiConfiguration>();
 
-            var bearerToken = new AzureADBearerTokenGenerator(config);
+            HttpClient httpClient;
 
-            var httpClient = new HttpClientBuilder()
-                .WithBearerAuthorisationHeader(bearerToken)
-                .WithHandler(new NLog.Logger.Web.MessageHandlers.RequestIdMessageRequestHandler())
-                .WithHandler(new NLog.Logger.Web.MessageHandlers.SessionIdMessageRequestHandler())
-                .WithDefaultHeaders()
-                .Build();
+            if (config.UseStub && environment.Equals("local", StringComparison.InvariantCultureIgnoreCase))
+            {
+                httpClient = new HttpClient();
+                config.ApiBaseUrl = "https://sfa-stub-reservations.herokuapp.com";
+            }
+            else
+            {
+                var bearerToken = new AzureADBearerTokenGenerator(config);
+
+                httpClient = new HttpClientBuilder()
+                    .WithBearerAuthorisationHeader(bearerToken)
+                    .WithHandler(new NLog.Logger.Web.MessageHandlers.RequestIdMessageRequestHandler())
+                    .WithHandler(new NLog.Logger.Web.MessageHandlers.SessionIdMessageRequestHandler())
+                    .WithDefaultHeaders()
+                    .Build();
+            }
 
             For<ReservationsClientApiConfiguration>().Use(config);
             For<IReservationsApiClient>().Use<ReservationsApiClient>().Ctor<HttpClient>().Is(httpClient).Singleton();
