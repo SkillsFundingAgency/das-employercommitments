@@ -27,6 +27,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string PageTitle { get; set; }
         public bool HideDeleteButton { get; set; }
         public string HashedAccountId { get; set; }
+        public string AccountLegalEntityPublicHashedId { get; set; }
+        public string TransferSenderPublicHashedId { get; set; }
         public bool IsEmployerCommitmentsV2Enabled { get; set; }
     }
 }

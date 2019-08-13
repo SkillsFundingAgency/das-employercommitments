@@ -118,7 +118,14 @@
                         <div class="emptyStateButton">
                             <hr class="hr-top">
                             <a class="button finishEditingBtn" href="@Url.Action("FinishedEditing")" aria-label="@finishEditingText">@finishEditingText</a>
-                            <a href="@Url.Action("CreateApprenticeshipEntry")" class="button button-secondary" aria-label="Add an apprentice">Add an apprentice</a>
+                            @if (Model.Data.IsEmployerCommitmentsV2Enabled)
+                            {
+                                <a href="@Url.ReservationsLink($"accounts/{Model.Data.HashedAccountId}/reservations/{Model.Data.AccountLegalEntityPublicHashedId}/select?cohortReference={Model.Data.HashedId}&transferSenderId={Model.Data.TransferSenderPublicHashedId}")" class="button button-secondary" aria-label="Add an apprentice">Add an apprentice</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("CreateApprenticeshipEntry")" class="button button-secondary" aria-label="Add an apprentice">Add an apprentice</a>
+                            }
                         </div>
                     </div>
                 </div>

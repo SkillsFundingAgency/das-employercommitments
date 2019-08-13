@@ -8,6 +8,7 @@ using FluentValidation.Mvc;
 using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Domain.Models.UserProfile;
 using SFA.DAS.EmployerCommitments.Web.Authentication;
 using SFA.DAS.EmployerCommitments.Web.Enums;
@@ -17,6 +18,7 @@ using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerUsers.WebClientComponents;
 using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
+using SFA.DAS.EmployerUrlHelper.Mvc;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
@@ -24,11 +26,18 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     [CommitmentsRoutePrefix("accounts/{hashedaccountId}/apprentices")]
     public class EmployerCommitmentsController : BaseEmployerController
     {
+        private readonly IFeatureToggleService _featureToggleService;
 
-        public EmployerCommitmentsController(IEmployerCommitmentsOrchestrator orchestrator, IOwinWrapper owinWrapper,
-            IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage, ICookieStorageService<string> lastCohortCookieStorageService)
+        public EmployerCommitmentsController(
+            IEmployerCommitmentsOrchestrator orchestrator,
+            IOwinWrapper owinWrapper,
+            IMultiVariantTestingService multiVariantTestingService,
+            ICookieStorageService<FlashMessageViewModel> flashMessage,
+            ICookieStorageService<string> lastCohortCookieStorageService,
+            IFeatureToggleService featureToggleService)
             : base(orchestrator, owinWrapper, multiVariantTestingService, flashMessage, lastCohortCookieStorageService)
         {
+            _featureToggleService = featureToggleService;
         }
 
         [HttpGet]
@@ -859,6 +868,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 AddFlashMessageToCookie(flashMessage);
                 
                 return RedirectToAction("Details", new { viewModel.HashedAccountId, viewModel.HashedCommitmentId });
+            }
+
+            if (_featureToggleService.Get<EmployerCommitmentsV2>().FeatureEnabled)
+            {
+                 return Redirect(Url.CommitmentsV2Link($"{viewModel.HashedAccountId}/unapproved/{viewModel.HashedCommitmentId}/apprentices/{viewModel.HashedApprenticeshipId}/edit"));
             }
 
             return RedirectToAction("EditApprenticeship", new { viewModel.HashedAccountId, viewModel.HashedCommitmentId, viewModel.HashedApprenticeshipId });
