@@ -145,7 +145,7 @@
                             }
                             else
                             {
-                                <p>You haven’t added any apprentices yet - <a href="@Url.Action("CreateApprenticeshipEntry")"> add an apprentice </a></p>
+                                <p>You haven’t added any apprentices yet - <a href="@Url.ReservationsLink($"accounts/{Model.Data.HashedAccountId}/reservations/{Model.Data.AccountLegalEntityPublicHashedId}/select?cohortReference={Model.Data.HashedId}&transferSenderId={Model.Data.TransferSenderPublicHashedId}")">add an apprentice</a></p>
                             }
 
                         </div>
