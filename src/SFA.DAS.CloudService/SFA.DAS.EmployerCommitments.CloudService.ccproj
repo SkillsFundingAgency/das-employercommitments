@@ -45,10 +45,6 @@
   <ItemGroup>
     <Folder Include="Profiles" />
     <Folder Include="Configuration" />
-    <Folder Include="SFA.DAS.EmployerCommitments.WebContent" />
-  </ItemGroup>
-  <ItemGroup>
-    <DiagnosticsConfiguration Include="SFA.DAS.EmployerCommitments.WebContent\diagnostics.wadcfgx" />
   </ItemGroup>
   <ItemGroup>
     <PublishProfile Include="Profiles\das-at-employercommitments-cs (stage).azurePubxml" />
