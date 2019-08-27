@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-
 using FluentValidation;
 using MediatR;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
@@ -22,11 +22,11 @@ using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
+using SFA.DAS.EmployerCommitments.Application.Queries.GetReservationValidation;
 using SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDate;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
-using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
@@ -34,6 +34,7 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.NLog.Logger;
 using ChangeStatusType = SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships.ChangeStatusType;
 using SFA.DAS.HashingService;
+using SFA.DAS.Reservations.Api.Types;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
@@ -312,36 +313,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 , hashedAccountId, userId);
         }
 
-        public async Task<Dictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship, UpdateApprenticeshipViewModel updatedModel)
+        public async Task<IDictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship, UpdateApprenticeshipViewModel updatedModel)
         {
-            var overlappingErrors = await Mediator.SendAsync(
-                    new GetOverlappingApprenticeshipsQueryRequest
-                    {
-                        Apprenticeship = new List<Apprenticeship> { await _apprenticeshipMapper.MapFrom(apprenticeship) }
-                    });
+            ConcurrentDictionary<string, string> errors = new ConcurrentDictionary<string, string>();
+            await Task.WhenAll(AddOverlapAndDateValidationErrors(errors, apprenticeship, updatedModel), AddReservationValidationErrors(errors, apprenticeship));
 
-            var result = _approvedApprenticeshipValidator.MapOverlappingErrors(overlappingErrors);
-
-            foreach (var error in _approvedApprenticeshipValidator.ValidateToDictionary(apprenticeship))
-            {
-                result.AddIfNotExists(error.Key, error.Value);
-            }
-
-            foreach (var error in _approvedApprenticeshipValidator.ValidateAcademicYear(updatedModel))
-            {
-                result.AddIfNotExists(error.Key, error.Value);
-            }
-
-            foreach (var error in _approvedApprenticeshipValidator.ValidateApprovedEndDate(updatedModel))
-            {
-                result.AddIfNotExists(error.Key, error.Value);
-            }
-
-            return result;
+            return errors;
         }
 
         public async Task<OrchestratorResponse<ChangeStatusChoiceViewModel>> GetChangeStatusChoiceNavigation(string hashedAccountId, string hashedApprenticeshipId, string externalUserId)
-
         {
             var accountId = HashingService.DecodeValue(hashedAccountId);
             var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
@@ -738,6 +718,62 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     });
 
                 }, hashedAccountId, user);
+        }
+
+        private async Task AddOverlapAndDateValidationErrors(ConcurrentDictionary<string, string> errors, ApprenticeshipViewModel apprenticeship, UpdateApprenticeshipViewModel updatedModel)
+        {
+            void AddToErrors(IDictionary<string, string> items)
+            {
+                foreach (var error in items)
+                {
+                    errors.TryAdd(error.Key, error.Value);
+                }
+            }
+
+            var overlappingErrors = await Mediator.SendAsync(
+                new GetOverlappingApprenticeshipsQueryRequest
+                {
+                    Apprenticeship = new List<Apprenticeship> { await _apprenticeshipMapper.MapFrom(apprenticeship) }
+                });
+
+            AddToErrors(_approvedApprenticeshipValidator.MapOverlappingErrors(overlappingErrors));
+            AddToErrors(_approvedApprenticeshipValidator.ValidateToDictionary(apprenticeship));
+            AddToErrors(_approvedApprenticeshipValidator.ValidateAcademicYear(updatedModel));
+            AddToErrors(_approvedApprenticeshipValidator.ValidateApprovedEndDate(updatedModel));
+        }
+
+        private async Task AddReservationValidationErrors(ConcurrentDictionary<string, string> errors, ApprenticeshipViewModel model)
+        {
+            void AddToErrors(ReservationValidationResult data)
+            {
+                foreach (var error in data.ValidationErrors)
+                {
+                    errors.TryAdd(error.PropertyName, error.Reason);
+                }
+            }
+
+            if (model.ReservationId == null)
+            {
+                Logger.Info($"Apprenticeship: {HashingService.DecodeValue(model.HashedApprenticeshipId)} Reservation-id:null - no reservation validation required");
+                return;
+            }
+
+            if (model.StartDate?.DateTime == null)
+            {
+                Logger.Info($"Apprenticeship: {HashingService.DecodeValue(model.HashedApprenticeshipId)} Reservation-id:{model.ReservationId} start date required for reservation validation");
+                return;
+            }
+
+            var response = await Mediator.SendAsync(
+                    new GetReservationValidationRequest
+                    {
+                        StartDate = model.StartDate.DateTime.Value,
+                        TrainingCode = model.TrainingCode,
+                        ReservationId = model.ReservationId.Value
+                    }
+                );
+
+            AddToErrors(response.Data);
         }
     }
 }

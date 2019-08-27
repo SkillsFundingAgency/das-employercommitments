@@ -88,7 +88,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 CanEditStatus = !(new List<PaymentStatus> { PaymentStatus.Completed, PaymentStatus.Withdrawn }).Contains(apprenticeship.PaymentStatus),
                 CanEditStopDate = (apprenticeship.PaymentStatus == PaymentStatus.Withdrawn && apprenticeship.StartDate != apprenticeship.StopDate),
                 EndpointAssessorName = apprenticeship.EndpointAssessorName,
-                TrainingType = apprenticeship.TrainingType
+                TrainingType = apprenticeship.TrainingType,
+                ReservationId = apprenticeship.ReservationId
             };
             
             //if not already disabled, check if uln has been reused. disable param is a short term workaround due to mapper reuse in search result page
@@ -181,7 +182,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 IsPaidForByTransfer = commitment.TransferSender != null,
                 IsInTransferRejectedCohort = commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Rejected,
                 IsUpdateLockedForStartDateAndCourse = isUpdateLockedForStartDateAndCourse,
-                IsEndDateLockedForUpdate = isEndDateLockedForUpdate
+                IsEndDateLockedForUpdate = isEndDateLockedForUpdate,
+                ReservationId =  apprenticeship.ReservationId
             };
         }
 

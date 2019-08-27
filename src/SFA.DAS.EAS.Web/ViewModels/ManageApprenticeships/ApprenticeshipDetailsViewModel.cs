@@ -55,6 +55,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public string EndpointAssessorName { get; set; }
 
         public ApprenticeshipFiltersViewModel SearchFiltersForListView { get; set; }
+
+        public Guid? ReservationId { get; set; }
     }
 
     public enum PendingChanges

@@ -3,7 +3,7 @@ using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web
 {
-    public sealed class RequestContext : IRequestContext
+    public sealed class RequestContext : IWebLoggingContext
     {
         public RequestContext(HttpContextBase context)
         {

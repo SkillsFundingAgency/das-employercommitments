@@ -19,6 +19,7 @@
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
 using SFA.DAS.EmployerCommitments.Infrastructure.DependencyResolution;
 using SFA.DAS.EmployerUrlHelper.DependencyResolution;
+using SFA.DAS.Reservations.Api.Client.DependencyResolution;
 using StructureMap;
 
 namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
@@ -40,6 +41,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
                 c.Policies.Add(new ExecutionPolicyPolicy());
                 c.AddRegistry<EmployerUrlHelperRegistry>();
                 c.AddRegistry<ValidationRegistry>();
+                c.AddRegistry<ReservationsApiClientRegistry>();
                 c.AddRegistry<DefaultRegistry>();
             });
         }

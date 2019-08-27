@@ -54,6 +54,9 @@ using StructureMap;
 using StructureMap.TypeRules;
 using IConfiguration = SFA.DAS.EmployerCommitments.Domain.Interfaces.IConfiguration;
 using NotificationsApiClientConfiguration = SFA.DAS.EmployerCommitments.Domain.Configuration.NotificationsApiClientConfiguration;
+using SFA.DAS.Reservations.Api.Client;
+using SFA.DAS.Reservations.Api.Types;
+using SFA.DAS.Reservations.Api.Types.Configuration;
 
 namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 {
@@ -93,7 +96,9 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 
             For<IBooleanToggleValueProvider>().Use<CloudConfigurationBooleanValueProvider>();
             For<IFeatureToggleService>().Use<FeatureToggleService>();
-          
+
+            For<IConfigurationRepository>().Use(() => GetConfigurationRepository());
+
             ConfigureNotificationsApi();
 
             RegisterMapper();
@@ -281,10 +286,10 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 
         private void RegisterLogger()
         {
-            For<IRequestContext>().Use(x => new RequestContext(new HttpContextWrapper(HttpContext.Current)));
+            For<IWebLoggingContext>().Use(x => new RequestContext(new HttpContextWrapper(HttpContext.Current)));
             For<ILog>().Use(x => new NLogLogger(
                 x.ParentType,
-                x.GetInstance<IRequestContext>(),
+                x.GetInstance<IWebLoggingContext>(),
                 null)).AlwaysUnique();
         }
 
@@ -293,6 +298,5 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<IHashingService>().Use(x => new HashingService.HashingService(config.AllowedHashstringCharacters, config.Hashstring));
             For<IPublicHashingService>().Use(x => new PublicHashingService.PublicHashingService(config.PublicAllowedHashstringCharacters, config.PublicHashstring));
         }
-
     }
 }

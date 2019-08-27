@@ -100,11 +100,11 @@
     <Reference Include="SFA.DAS.Audit.Types, Version=1.0.0.20553, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Audit.Client.1.0.0.20553\lib\net45\SFA.DAS.Audit.Types.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=3.0.113.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.3.0.113\lib\net462\SFA.DAS.Commitments.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=4.1.70.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.4.1.70\lib\net462\SFA.DAS.Commitments.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=3.0.113.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.3.0.113\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=4.1.70.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.4.1.70\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Common.Domain, Version=1.4.43.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.4.43\lib\net462\SFA.DAS.Common.Domain.dll</HintPath>
@@ -121,9 +121,8 @@
     <Reference Include="SFA.DAS.Messaging.AzureServiceBus, Version=2.0.0.8280, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Messaging.AzureServiceBus.2.0.0.8280\lib\net45\SFA.DAS.Messaging.AzureServiceBus.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.39208, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.39208\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.43242, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.43242\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Notifications.Api.Client, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Notifications.Api.Client.2.0.0.35919\lib\net45\SFA.DAS.Notifications.Api.Client.dll</HintPath>
@@ -139,6 +138,9 @@
     </Reference>
     <Reference Include="SFA.DAS.Provider.Events.Api.Types, Version=2.0.0.33572, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.0.0.33572\lib\net45\SFA.DAS.Provider.Events.Api.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.Reservations.Api.Types, Version=4.1.70.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Reservations.Api.Types.4.1.70\lib\netstandard2.0\SFA.DAS.Reservations.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.TimeProvider, Version=1.0.0.3956, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -218,6 +220,7 @@
     <Compile Include="Queries\GetApprenticeshipDetails\WhenIValidateTheRequest.cs" />
     <Compile Include="Queries\GetApprenticeshipPriceHistory\WhenGettingApprenticeshipPriceHistory.cs" />
     <Compile Include="Queries\GetCommitment\WhenIGetACommitment.cs" />
+    <Compile Include="Queries\GetReservationValidation\WhenIGetReservationValidation.cs" />
     <Compile Include="Queries\GetTrainingProgrammesTests\WhenIGetTrainingProgrammes.cs" />
     <Compile Include="Queries\GetUserAccountRoleQueryTests\WhenIGetUserAccountDetails.cs" />
     <Compile Include="Queries\GetUserAccountRoleQueryTests\WhenIValidateTheRequest.cs" />

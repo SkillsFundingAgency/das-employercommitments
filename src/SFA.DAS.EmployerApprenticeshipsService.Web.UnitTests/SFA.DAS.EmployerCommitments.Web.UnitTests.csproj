@@ -120,8 +120,8 @@
       <HintPath>..\packages\ReflectionMagic.2.0.0\lib\net40\ReflectionMagic.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=3.0.113.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.3.0.113\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=4.1.70.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.4.1.70\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Common.Domain, Version=1.4.43.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.4.43\lib\net462\SFA.DAS.Common.Domain.dll</HintPath>
@@ -138,9 +138,11 @@
     <Reference Include="SFA.DAS.Messaging.AzureServiceBus, Version=2.0.0.8280, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Messaging.AzureServiceBus.2.0.0.8280\lib\net45\SFA.DAS.Messaging.AzureServiceBus.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.39208, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.39208\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.43242, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.43242\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.Reservations.Api.Types, Version=4.1.70.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Reservations.Api.Types.4.1.70\lib\netstandard2.0\SFA.DAS.Reservations.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap, Version=4.2.0.402, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\structuremap.4.2.0.402\lib\net40\StructureMap.dll</HintPath>

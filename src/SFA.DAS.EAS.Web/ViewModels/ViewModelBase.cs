@@ -32,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
             }
         }
 
-        public void AddErrorsFromDictionary(Dictionary<string, string> errorDictionary)
+        public void AddErrorsFromDictionary(IDictionary<string, string> errorDictionary)
         {
             if (errorDictionary == null) return;
 
