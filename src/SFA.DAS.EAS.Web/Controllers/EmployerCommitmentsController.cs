@@ -415,11 +415,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Route("{hashedCommitmentId}/details")]
         public async Task<ActionResult> Details(string hashedAccountId, string hashedCommitmentId)
         {
+
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
             var model = await Orchestrator.GetCommitmentDetails(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
-            
+
+            if (!model.Data.IsReadOnly && _featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
+                return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/{hashedCommitmentId}"));
+
             model.Data.BackLinkUrl = GetReturnToListUrl(hashedAccountId);
             SetFlashMessageOnModel(model);
 
