@@ -218,16 +218,5 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             
             Assert.AreEqual("HashedTrnId", result.Data.TransferSenderPublicHashedId);
         }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public async Task ThenEmployerCommitmentsV2FeaturesShouldBeToggled(bool featureEnabled)
-        {
-            MockEmployerCommitmentsV2FeatureToggleOn.Setup(t => t.FeatureEnabled).Returns(featureEnabled);
-
-            var result = await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
-
-            Assert.AreEqual(featureEnabled, result.Data.IsEmployerCommitmentsV2Enabled);
-        }
     }
 }
