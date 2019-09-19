@@ -250,6 +250,7 @@
     <Compile Include="Models\Apprenticeship\ChangeStatusType.cs" />
     <Compile Include="Models\Apprenticeship\FundingStatus.cs" />
     <Compile Include="Models\Apprenticeship\RecordStatus.cs" />
+    <Compile Include="Models\FeatureToggles\EnhancedApprovals.cs" />
     <Compile Include="Models\FeatureToggles\EmployerCommitmentsV2.cs" />
     <Compile Include="Models\FeatureToggles\PublicSectorReporting.cs" />
     <Compile Include="Models\FeatureToggles\Transfers.cs" />
