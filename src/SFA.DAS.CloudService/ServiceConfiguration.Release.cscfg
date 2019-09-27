@@ -23,6 +23,7 @@
       <Setting name="FeatureToggle.PublicSectorReporting" value="__FeatureToggle.PublicSectorReporting__" />
       <Setting name="FeatureToggle.TransfersRejectOption" value="__FeatureToggle.TransfersRejectOption__" />
       <Setting name="FeatureToggle.EmployerCommitmentsV2" value="__FeatureToggle.EmployerCommitmentsV2__" />
+      <Setting name="FeatureToggle.EnhancedApprovals" value="__FeatureToggle.EnhancedApprovals__" />
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="WebSslCert" thumbprint="BF55F64F778FC5F4E4EEBAE6493E37464B3E2AD7" thumbprintAlgorithm="sha1" />
