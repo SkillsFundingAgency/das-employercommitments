@@ -249,19 +249,26 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("provider/create")]
-        public async Task<ActionResult> SearchProvider(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string cohortRef)
+        public ActionResult SearchProvider(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string cohortRef)
         {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
+            //convert legalEntityCode here and redirect to v2:
+            //but won't have a reservation Id so will have to change v2 to go to reservations after assign post
 
-            if (string.IsNullOrWhiteSpace(legalEntityCode) || string.IsNullOrWhiteSpace(cohortRef))
-            {
-                return RedirectToAction("Inform", new {hashedAccountId});
-            }
+            return Redirect(
+                "https://localhost:44376/VNR6P9/unapproved/add/select-provider?AccountLegalEntityHashedId=X9JE72&StartMonthYear=072020&CourseCode=398");
 
-            var response = await Orchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), transferConnectionCode, legalEntityCode, cohortRef);
 
-            return View(response);
+            //if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+            //    return View("AccessDenied");
+
+            //if (string.IsNullOrWhiteSpace(legalEntityCode) || string.IsNullOrWhiteSpace(cohortRef))
+            //{
+            //    return RedirectToAction("Inform", new {hashedAccountId});
+            //}
+
+            //var response = await Orchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), transferConnectionCode, legalEntityCode, cohortRef);
+
+            //return View(response);
         }
 
         [HttpPost]
