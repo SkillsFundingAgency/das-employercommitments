@@ -874,12 +874,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return RedirectToAction("Details", new { viewModel.HashedAccountId, viewModel.HashedCommitmentId });
             }
 
-            if (_featureToggleService.Get<EmployerCommitmentsV2>().FeatureEnabled)
-            {
-                 return Redirect(Url.CommitmentsV2Link($"{viewModel.HashedAccountId}/unapproved/{viewModel.HashedCommitmentId}/apprentices/{viewModel.HashedApprenticeshipId}/edit"));
-            }
-
-            return RedirectToAction("EditApprenticeship", new { viewModel.HashedAccountId, viewModel.HashedCommitmentId, viewModel.HashedApprenticeshipId });
+            return Redirect(Url.CommitmentsV2Link($"{viewModel.HashedAccountId}/unapproved/{viewModel.HashedCommitmentId}/apprentices/{viewModel.HashedApprenticeshipId}/edit"));
         }
 
         private async Task<ActionResult> RedisplayCreateApprenticeshipView(ApprenticeshipViewModel apprenticeship)

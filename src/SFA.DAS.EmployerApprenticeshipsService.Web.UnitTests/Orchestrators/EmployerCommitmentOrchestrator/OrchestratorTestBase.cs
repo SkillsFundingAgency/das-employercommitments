@@ -57,7 +57,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockTransfersFeatureToggleOn = new Mock<IFeatureToggle>();
             MockTransfersFeatureToggleOn.Setup(x => x.FeatureEnabled).Returns(true);
             MockFeatureToggleService = new Mock<IFeatureToggleService>();
-            MockFeatureToggleService.Setup(x => x.Get<EmployerCommitmentsV2>()).Returns(MockEmployerCommitmentsV2FeatureToggleOn.Object);
             MockFeatureToggleService.Setup(x => x.Get<Transfers>()).Returns(MockTransfersFeatureToggleOn.Object);
 
             MockHashingService = new Mock<IHashingService>();
