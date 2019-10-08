@@ -36,6 +36,7 @@
       <Setting name="FeatureToggle.PublicSectorReporting" />
       <Setting name="FeatureToggle.TransfersRejectOption" />
       <Setting name="FeatureToggle.EmployerCommitmentsV2" />
+      <Setting name="FeatureToggle.EnhancedApprovals" />
     </ConfigurationSettings>
     <Endpoints>
       <InputEndpoint name="HttpsIn" protocol="https" port="443" certificate="WebSslCert" />

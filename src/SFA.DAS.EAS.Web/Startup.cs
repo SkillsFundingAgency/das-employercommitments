@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IdentityModel.Tokens;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
@@ -34,6 +35,7 @@ namespace SFA.DAS.EmployerCommitments.Web
 
         public void Configuration(IAppBuilder app)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             var config = GetConfigurationObject();
             
             //var authenticationOrchestrator = StructuremapMvc.StructureMapDependencyScope.Container.GetInstance<AuthenticationOrchestraor>();
