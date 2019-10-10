@@ -468,7 +468,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             var flashmessage = new FlashMessageViewModel
             {
-                Message = "Cohort deleted",
+                Message = "Records deleted",
                 Severity = FlashMessageSeverityLevel.Okay
             };
 
