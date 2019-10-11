@@ -18,6 +18,7 @@ using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerUsers.WebClientComponents;
 using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
+using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.EmployerUrlHelper.Mvc;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
@@ -27,6 +28,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     public class EmployerCommitmentsController : BaseEmployerController
     {
         private readonly IFeatureToggleService _featureToggleService;
+        private readonly ILinkGenerator _linkGenerator;
 
         public EmployerCommitmentsController(
             IEmployerCommitmentsOrchestrator orchestrator,
@@ -34,10 +36,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             IMultiVariantTestingService multiVariantTestingService,
             ICookieStorageService<FlashMessageViewModel> flashMessage,
             ICookieStorageService<string> lastCohortCookieStorageService,
-            IFeatureToggleService featureToggleService)
+            IFeatureToggleService featureToggleService,
+            ILinkGenerator linkGenerator)
             : base(orchestrator, owinWrapper, multiVariantTestingService, flashMessage, lastCohortCookieStorageService)
         {
             _featureToggleService = featureToggleService;
+            _linkGenerator = linkGenerator;
         }
 
         [HttpGet]
@@ -460,7 +464,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             if (viewModel.DeleteConfirmed == null || !viewModel.DeleteConfirmed.Value)
             {
-                return RedirectToAction("Details", new { viewModel.HashedAccountId, viewModel.HashedCommitmentId } );
+                return Redirect(_linkGenerator.CommitmentsV2Link($"{viewModel.HashedAccountId}/unapproved/{viewModel.HashedCommitmentId}"));
             }
 
             await Orchestrator
