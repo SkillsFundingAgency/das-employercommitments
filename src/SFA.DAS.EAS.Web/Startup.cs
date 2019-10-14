@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IdentityModel.Tokens;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
@@ -80,7 +81,9 @@ namespace SFA.DAS.EmployerCommitments.Web
             });
 
             ConfigurationFactory.Current = new IdentityServerConfigurationFactory(config);
-            
+
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
         }
 
         private static Func<X509Certificate2> GetSigningCertificate(bool useCertificate)

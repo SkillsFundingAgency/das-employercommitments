@@ -249,13 +249,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("provider/create")]
-        public ActionResult SearchProvider(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string cohortRef)
+        public async Task<ActionResult> SearchProvider(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string cohortRef)
         {
             //convert legalEntityCode here and redirect to v2:
             //but won't have a reservation Id so will have to change v2 to go to reservations after assign post
 
+            var legalEntities = await Orchestrator.GetLegalEntities(hashedAccountId, string.Empty, string.Empty, OwinWrapper.GetClaimValue(@"sub"));
+            var legalEntity = legalEntities.Data.LegalEntities.Single(x => x.Code == legalEntityCode);
+            var hashedAleId = legalEntity.AccountLegalEntityPublicHashedId;
+            
             return Redirect(
-                "https://localhost:44376/VNR6P9/unapproved/add/select-provider?AccountLegalEntityHashedId=X9JE72&StartMonthYear=072020&CourseCode=398");
+                $"https://localhost:44376/{hashedAccountId}/unapproved/add/select-provider?AccountLegalEntityHashedId={hashedAleId}&transferSenderHashedId={transferConnectionCode}");
 
 
             //if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -263,7 +267,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             //if (string.IsNullOrWhiteSpace(legalEntityCode) || string.IsNullOrWhiteSpace(cohortRef))
             //{
-            //    return RedirectToAction("Inform", new {hashedAccountId});
+            //    return RedirectToAction("Inform", new { hashedAccountId });
             //}
 
             //var response = await Orchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), transferConnectionCode, legalEntityCode, cohortRef);

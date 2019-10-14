@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.Apprenticeships.Api.Types.Exceptions;
@@ -58,6 +59,10 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
         {
             try
             {
+                //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                var p = ServicePointManager.SecurityProtocol;
+
                 var api = new Providers.Api.Client.ProviderApiClient(_configuration.BaseUrl);
                 var provider = api.Get(ukPrn);
                 return _mapper.MapFrom(provider);
