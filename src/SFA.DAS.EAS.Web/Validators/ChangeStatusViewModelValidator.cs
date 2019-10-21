@@ -18,7 +18,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 
             RuleSet("Date", () => 
             {
-                When(x => x.ChangeType == ChangeStatusType.Stop, () =>
+                When(x => x.ChangeType == ChangeStatusType.Stop && x.ChangeConfirmed != false, () =>
                 {
                     RuleFor(r => r.DateOfChange)
                                .Cascade(CascadeMode.StopOnFirstFailure)
