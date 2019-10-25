@@ -419,14 +419,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Route("{hashedCommitmentId}/details")]
         public async Task<ActionResult> Details(string hashedAccountId, string hashedCommitmentId)
         {
-
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model = await Orchestrator.GetCommitmentDetails(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
-
-            if (!model.Data.IsReadOnly && _featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
+            if (_featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
                 return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/{hashedCommitmentId}"));
+
+            var model = await Orchestrator.GetCommitmentDetails(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
 
             model.Data.BackLinkUrl = GetReturnToListUrl(hashedAccountId);
             SetFlashMessageOnModel(model);
@@ -435,6 +434,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             return View(model);
         }
+
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/details/delete")]
