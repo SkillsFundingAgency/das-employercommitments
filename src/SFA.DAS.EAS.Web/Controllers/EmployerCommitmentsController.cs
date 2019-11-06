@@ -18,6 +18,7 @@ using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerUsers.WebClientComponents;
 using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
+using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.EmployerUrlHelper.Mvc;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
@@ -27,6 +28,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     public class EmployerCommitmentsController : BaseEmployerController
     {
         private readonly IFeatureToggleService _featureToggleService;
+        private ILinkGenerator _linkGenerator;
 
         public EmployerCommitmentsController(
             IEmployerCommitmentsOrchestrator orchestrator,
@@ -34,10 +36,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             IMultiVariantTestingService multiVariantTestingService,
             ICookieStorageService<FlashMessageViewModel> flashMessage,
             ICookieStorageService<string> lastCohortCookieStorageService,
-            IFeatureToggleService featureToggleService)
+            IFeatureToggleService featureToggleService, ILinkGenerator linkGenerator)
             : base(orchestrator, owinWrapper, multiVariantTestingService, flashMessage, lastCohortCookieStorageService)
         {
             _featureToggleService = featureToggleService;
+            _linkGenerator = linkGenerator;
         }
 
         [HttpGet]
@@ -251,28 +254,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Route("provider/create")]
         public async Task<ActionResult> SearchProvider(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string cohortRef)
         {
-            //convert legalEntityCode here and redirect to v2:
-            //but won't have a reservation Id so will have to change v2 to go to reservations after assign post
-
             var legalEntities = await Orchestrator.GetLegalEntities(hashedAccountId, string.Empty, string.Empty, OwinWrapper.GetClaimValue(@"sub"));
             var legalEntity = legalEntities.Data.LegalEntities.Single(x => x.Code == legalEntityCode);
             var hashedAleId = legalEntity.AccountLegalEntityPublicHashedId;
-            
-            return Redirect(
-                $"https://localhost:44376/{hashedAccountId}/unapproved/add/select-provider?AccountLegalEntityHashedId={hashedAleId}&transferSenderHashedId={transferConnectionCode}");
 
-
-            //if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-            //    return View("AccessDenied");
-
-            //if (string.IsNullOrWhiteSpace(legalEntityCode) || string.IsNullOrWhiteSpace(cohortRef))
-            //{
-            //    return RedirectToAction("Inform", new { hashedAccountId });
-            //}
-
-            //var response = await Orchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), transferConnectionCode, legalEntityCode, cohortRef);
-
-            //return View(response);
+            var url = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/unapproved/add/select-provider?AccountLegalEntityHashedId={hashedAleId}&transferSenderId={transferConnectionCode}");
+            return Redirect(url);
         }
 
         [HttpPost]
