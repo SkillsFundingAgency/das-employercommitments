@@ -59,10 +59,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
         {
             try
             {
-                //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                var p = ServicePointManager.SecurityProtocol;
-
                 var api = new Providers.Api.Client.ProviderApiClient(_configuration.BaseUrl);
                 var provider = api.Get(ukPrn);
                 return _mapper.MapFrom(provider);

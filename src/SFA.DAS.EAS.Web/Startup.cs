@@ -81,9 +81,6 @@ namespace SFA.DAS.EmployerCommitments.Web
             });
 
             ConfigurationFactory.Current = new IdentityServerConfigurationFactory(config);
-
-            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
         }
 
         private static Func<X509Certificate2> GetSigningCertificate(bool useCertificate)
