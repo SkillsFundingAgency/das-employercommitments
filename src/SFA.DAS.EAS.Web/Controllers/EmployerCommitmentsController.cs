@@ -28,7 +28,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     public class EmployerCommitmentsController : BaseEmployerController
     {
         private readonly IFeatureToggleService _featureToggleService;
-        private ILinkGenerator _linkGenerator;
 
         public EmployerCommitmentsController(
             IEmployerCommitmentsOrchestrator orchestrator,
@@ -36,7 +35,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             IMultiVariantTestingService multiVariantTestingService,
             ICookieStorageService<FlashMessageViewModel> flashMessage,
             ICookieStorageService<string> lastCohortCookieStorageService,
-            IFeatureToggleService featureToggleService, ILinkGenerator linkGenerator)
+            IFeatureToggleService featureToggleService,
+            ILinkGenerator linkGenerator)
             : base(orchestrator, owinWrapper, multiVariantTestingService, flashMessage, lastCohortCookieStorageService)
         {
             _featureToggleService = featureToggleService;
@@ -413,14 +413,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Route("{hashedCommitmentId}/details")]
         public async Task<ActionResult> Details(string hashedAccountId, string hashedCommitmentId)
         {
-
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model = await Orchestrator.GetCommitmentDetails(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
-
-            if (!model.Data.IsReadOnly && _featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
+            if (_featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
                 return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/{hashedCommitmentId}"));
+
+            var model = await Orchestrator.GetCommitmentDetails(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
 
             model.Data.BackLinkUrl = GetReturnToListUrl(hashedAccountId);
             SetFlashMessageOnModel(model);
@@ -429,6 +428,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             return View(model);
         }
+
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/details/delete")]
@@ -458,7 +458,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             if (viewModel.DeleteConfirmed == null || !viewModel.DeleteConfirmed.Value)
             {
-                return RedirectToAction("Details", new { viewModel.HashedAccountId, viewModel.HashedCommitmentId } );
+                return Redirect(_linkGenerator.CommitmentsV2Link($"{viewModel.HashedAccountId}/unapproved/{viewModel.HashedCommitmentId}"));
             }
 
             await Orchestrator
@@ -466,7 +466,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             var flashmessage = new FlashMessageViewModel
             {
-                Message = "Cohort deleted",
+                Message = "Records deleted",
                 Severity = FlashMessageSeverityLevel.Okay
             };
 
@@ -872,12 +872,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return RedirectToAction("Details", new { viewModel.HashedAccountId, viewModel.HashedCommitmentId });
             }
 
-            if (_featureToggleService.Get<EmployerCommitmentsV2>().FeatureEnabled)
-            {
-                 return Redirect(Url.CommitmentsV2Link($"{viewModel.HashedAccountId}/unapproved/{viewModel.HashedCommitmentId}/apprentices/{viewModel.HashedApprenticeshipId}/edit"));
-            }
-
-            return RedirectToAction("EditApprenticeship", new { viewModel.HashedAccountId, viewModel.HashedCommitmentId, viewModel.HashedApprenticeshipId });
+            return Redirect(Url.CommitmentsV2Link($"{viewModel.HashedAccountId}/unapproved/{viewModel.HashedCommitmentId}/apprentices/{viewModel.HashedApprenticeshipId}/edit"));
         }
 
         private async Task<ActionResult> RedisplayCreateApprenticeshipView(ApprenticeshipViewModel apprenticeship)

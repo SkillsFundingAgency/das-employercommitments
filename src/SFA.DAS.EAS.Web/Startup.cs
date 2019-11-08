@@ -35,6 +35,7 @@ namespace SFA.DAS.EmployerCommitments.Web
 
         public void Configuration(IAppBuilder app)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             var config = GetConfigurationObject();
             
             //var authenticationOrchestrator = StructuremapMvc.StructureMapDependencyScope.Container.GetInstance<AuthenticationOrchestraor>();

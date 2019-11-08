@@ -969,7 +969,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                                     : "View your cohort";
 
                 var transferSenderPublicHashedId = data.Commitment.TransferSender?.Id == null ? null : _publicHashingService.HashValue(data.Commitment.TransferSender.Id.Value);
-                var isEmployerCommitmentsV2Enabled = _featureToggleService.Get<EmployerCommitmentsV2>().FeatureEnabled;
 
                 var viewModel = new CommitmentDetailsViewModel
                 {
@@ -991,8 +990,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     HideDeleteButton = data.Commitment.TransferSender?.Id != null,
                     HashedAccountId = hashedAccountId,
                     AccountLegalEntityPublicHashedId = data.Commitment.AccountLegalEntityPublicHashedId,
-                    TransferSenderPublicHashedId = transferSenderPublicHashedId,
-                    IsEmployerCommitmentsV2Enabled = isEmployerCommitmentsV2Enabled
+                    TransferSenderPublicHashedId = transferSenderPublicHashedId
                 };
 
                 return new OrchestratorResponse<CommitmentDetailsViewModel>

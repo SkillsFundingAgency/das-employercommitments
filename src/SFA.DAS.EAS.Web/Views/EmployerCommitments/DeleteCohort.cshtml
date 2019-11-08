@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.EmployerCommitments.Web.Extensions
+@using SFA.DAS.EmployerUrlHelper
 @model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<SFA.DAS.EmployerCommitments.Web.ViewModels.DeleteCommitmentViewModel>
 
 @{
@@ -14,8 +15,8 @@
             @Html.AntiForgeryToken()
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
 
-            <h1 class="heading-xlarge">Confirm cohort deletion</h1>
-            <p>You are about to delete the following cohort:</p>
+            <h1 class="heading-xlarge">Confirm deletion</h1>
+            <p>You are about to delete the following apprentice records:</p>
 
             <table id="delete-cohort-summary">
                 <tr>
@@ -23,7 +24,7 @@
                     <td class="strong">@Model.Data.ProviderName</td>
                 </tr>
                 <tr>
-                    <td>Cohort reference</td>
+                    <td>Reference</td>
                     <td class="strong">@Model.Data.HashedCommitmentId</td>
                 </tr>
                 <tr>
@@ -54,7 +55,7 @@
             </table>
 
             <h2 class="heading-medium">
-                Are you sure you want to delete this entire cohort and all the apprentices in it?
+                Are you sure you want to delete these apprentice records?
             </h2>
 
         <div class="form-error-group form-group @Html.AddClassIfPropertyInError("DeleteConfirmed", "error")">
@@ -63,29 +64,29 @@
                 </div>
                 <fieldset>
                     <legend class="visually-hidden">
-                        Are you sure you want to delete this entire cohort and all the apprentices in it?
+                        Are you sure you want to delete these apprentice records?
                     </legend>
 
                     <label class="block-label selection-button-radio" for="@Html.IdFor(m => m.Data.DeleteConfirmed)-True">
                         @Html.RadioButton("DeleteConfirmed", true, Model.Data.DeleteConfirmed == false, new { @id = Html.IdFor(m => m.Data.DeleteConfirmed) + "-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
-                        Yes, delete cohort
+                        Yes, delete records
                     </label>
                     <label class="block-label selection-button-radio" for="@Html.IdFor(m => m.Data.DeleteConfirmed)-False">
                         @Html.RadioButton("DeleteConfirmed", false, Model.Data.DeleteConfirmed == true, new { @id = Html.IdFor(m => m.Data.DeleteConfirmed) + "-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
-                        No, don't delete cohort
+                        No, don't delete records
                     </label>
                 </fieldset>
             </div>
-            <button type="submit" class="button" id="submit-delete-cohort">Continue</button>
+            <button type="submit" class="button" id="submit-delete-cohort">Save and continue</button>
         </form>
 
     </div>
 </div>
 
 @section breadcrumb {
-    <div class="breadcrumbs">
-        <a href="@Url.Action("Details", "EmployerCommitments", new { Model.Data.HashedAccountId, Model.Data.HashedCommitmentId })" aria-label="Back to Cohort" class="back-link">
-            Back to Cohort
+    <div class="breadcrumbs">        
+        <a href="@Url.CommitmentsV2Link($"{Model.Data.HashedAccountId}/unapproved/{Model.Data.HashedCommitmentId}")" aria-label="Back to Cohort" class="back-link">
+            Back
         </a>
     </div>
 }
