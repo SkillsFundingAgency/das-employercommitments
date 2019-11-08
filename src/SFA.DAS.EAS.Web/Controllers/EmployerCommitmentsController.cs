@@ -28,6 +28,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     public class EmployerCommitmentsController : BaseEmployerController
     {
         private readonly IFeatureToggleService _featureToggleService;
+        private readonly ILinkGenerator _linkGenerator;
 
         public EmployerCommitmentsController(
             IEmployerCommitmentsOrchestrator orchestrator,
