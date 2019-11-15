@@ -987,7 +987,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Warnings = warnings,
                     Errors = errors,
                     PageTitle = pageTitle,
-                    HideDeleteButton = data.Commitment.TransferSender?.Id != null,
+                    HideDeleteButton = false,
                     HashedAccountId = hashedAccountId,
                     AccountLegalEntityPublicHashedId = data.Commitment.AccountLegalEntityPublicHashedId,
                     TransferSenderPublicHashedId = transferSenderPublicHashedId

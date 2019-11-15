@@ -110,7 +110,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
 
         [TestCase(TransferApprovalStatus.Pending)]
         [TestCase(TransferApprovalStatus.Rejected)]
-        public async Task ThenIfTheCohortIsFundedByATransferThenDeleteButtonShouldBeHidden(TransferApprovalStatus status)
+        public async Task ThenIfTheCohortIsFundedByATransferThenDeleteButtonShouldNotBeHidden(TransferApprovalStatus status)
         {
             CommitmentView.AgreementStatus = AgreementStatus.BothAgreed;
             CommitmentView.EditStatus = EditStatus.EmployerOnly;
@@ -122,7 +122,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
 
             var result = await EmployerCommitmentOrchestrator.GetCommitmentDetails("HashedAccId", "HashedCmtId", "ExtUserId");
 
-            Assert.IsTrue(result.Data.HideDeleteButton);
+            Assert.IsFalse(result.Data.HideDeleteButton);
         }
 
         [Test]
