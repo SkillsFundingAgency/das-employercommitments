@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
 
         private RequestStatus GetEmployerOnlyStatus(LastAction lastAction, AgreementStatus? overallAgreementStatus)
         {
-            if (lastAction == LastAction.None || lastAction == LastAction.AmendAfterRejected)
+            if (lastAction == LastAction.None)
                 return RequestStatus.NewRequest;
 
             // LastAction.Approve > LastAction.Amend, but then AgreementStatus >= ProviderAgreed, so no need for > on LastAction??
@@ -85,7 +85,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Domain.Commitment
                 case TransferApprovalStatus.Rejected:
                     if (edit != EditStatus.EmployerOnly)
                         throw new InvalidStateException($"{invalidStateExceptionMessagePrefix}If just rejected by sender, must be with receiver");
-                    return RequestStatus.RejectedBySender;
+                    return RequestStatus.ReadyForReview;
 
                 default:
                     throw new Exception("Unexpected TransferApprovalStatus");
