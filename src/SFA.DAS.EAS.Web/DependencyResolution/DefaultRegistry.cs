@@ -45,18 +45,11 @@ using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.HashingService;
-using SFA.DAS.Http;
-using SFA.DAS.Notifications.Api.Client;
-using SFA.DAS.Http.TokenGenerators;
 using SFA.DAS.NLog.Logger;
-using SFA.DAS.Notifications.Api.Client.Configuration;
 using StructureMap;
 using StructureMap.TypeRules;
 using IConfiguration = SFA.DAS.EmployerCommitments.Domain.Interfaces.IConfiguration;
-using NotificationsApiClientConfiguration = SFA.DAS.EmployerCommitments.Domain.Configuration.NotificationsApiClientConfiguration;
-using SFA.DAS.Reservations.Api.Client;
-using SFA.DAS.Reservations.Api.Types;
-using SFA.DAS.Reservations.Api.Types.Configuration;
+
 
 namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 {
@@ -92,14 +85,14 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<IValidateApprovedApprenticeship>().Use<ApprovedApprenticeshipViewModelValidator>().Singleton();
 
             ConfigureHashingService(config);
-            SetUpCommitmentApi(config);
+            //SetUpCommitmentApi(config);
 
             For<IBooleanToggleValueProvider>().Use<CloudConfigurationBooleanValueProvider>();
             For<IFeatureToggleService>().Use<FeatureToggleService>();
 
             For<IConfigurationRepository>().Use(() => GetConfigurationRepository());
 
-            ConfigureNotificationsApi();
+            //ConfigureNotificationsApi();
 
             RegisterMapper();
 
@@ -137,50 +130,50 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             For<PAS.Account.Api.Client.IPasAccountApiClient>().Use<PAS.Account.Api.Client.PasAccountApiClient>();
         }
 
-        private void SetUpCommitmentApi(EmployerCommitmentsServiceConfiguration config)
-        {
-            var bearerToken = (IGenerateBearerToken)new JwtBearerTokenGenerator(config.CommitmentsApi);
+        //private void SetUpCommitmentApi(EmployerCommitmentsServiceConfiguration config)
+        //{
+        //    var bearerToken = (IGenerateBearerToken)new JwtBearerTokenGenerator(config.CommitmentsApi);
 
-            var httpClient = new HttpClientBuilder()
-                .WithBearerAuthorisationHeader(bearerToken)
-                .WithHandler(new NLog.Logger.Web.MessageHandlers.RequestIdMessageRequestHandler())
-                .WithHandler(new NLog.Logger.Web.MessageHandlers.SessionIdMessageRequestHandler())
-                .WithDefaultHeaders()
-                .Build();
+        //    var httpClient = new HttpClientBuilder()
+        //        .WithBearerAuthorisationHeader(bearerToken)
+        //        .WithHandler(new NLog.Logger.Web.MessageHandlers.RequestIdMessageRequestHandler())
+        //        .WithHandler(new NLog.Logger.Web.MessageHandlers.SessionIdMessageRequestHandler())
+        //        .WithDefaultHeaders()
+        //        .Build();
 
-            For<IEmployerCommitmentApi>().Use<EmployerCommitmentApi>()
-                .Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
-                .Ctor<HttpClient>().Is(httpClient);
+        //    For<IEmployerCommitmentApi>().Use<EmployerCommitmentApi>()
+        //        .Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
+        //        .Ctor<HttpClient>().Is(httpClient);
 
-            For<IValidationApi>().Use<ValidationApi>()
-                .Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
-                .Ctor<HttpClient>().Is(httpClient);
-        }
+        //    For<IValidationApi>().Use<ValidationApi>()
+        //        .Ctor<ICommitmentsApiClientConfiguration>().Is(config.CommitmentsApi)
+        //        .Ctor<HttpClient>().Is(httpClient);
+        //}
 
-        private void ConfigureNotificationsApi()
-        {
-            var config = Infrastructure.DependencyResolution.ConfigurationHelper.GetConfiguration
-                <NotificationsApiClientConfiguration>($"{ServiceName}.Notifications");
+        //private void ConfigureNotificationsApi()
+        //{
+        //    var config = Infrastructure.DependencyResolution.ConfigurationHelper.GetConfiguration
+        //        <NotificationsApiClientConfiguration>($"{ServiceName}.Notifications");
 
-            HttpClient httpClient;
+        //    HttpClient httpClient;
 
-            if (string.IsNullOrWhiteSpace(config.ClientId))
-            {
-                httpClient = new Http.HttpClientBuilder()
-                .WithBearerAuthorisationHeader(new JwtBearerTokenGenerator(config))
-                .Build();
-            }
-            else
-            {
-                httpClient = new Http.HttpClientBuilder()
-                .WithBearerAuthorisationHeader(new AzureADBearerTokenGenerator(config))
-                .Build();
-            }
+        //    if (string.IsNullOrWhiteSpace(config.ClientId))
+        //    {
+        //        httpClient = new Http.HttpClientBuilder()
+        //        .WithBearerAuthorisationHeader(new JwtBearerTokenGenerator(config))
+        //        .Build();
+        //    }
+        //    else
+        //    {
+        //        httpClient = new Http.HttpClientBuilder()
+        //        .WithBearerAuthorisationHeader(new AzureADBearerTokenGenerator(config))
+        //        .Build();
+        //    }
 
-            For<INotificationsApi>().Use<NotificationsApi>().Ctor<HttpClient>().Is(httpClient);
+        //    For<INotificationsApi>().Use<NotificationsApi>().Ctor<HttpClient>().Is(httpClient);
 
-            For<INotificationsApiClientConfiguration>().Use(config);
-        }
+        //    For<INotificationsApiClientConfiguration>().Use(config);
+        //}
 
         private void RegisterExecutionPolicies()
         {
