@@ -3,6 +3,6 @@
     public static class ConfigurationKeys
     {
         public const string CommitmentsApiClient = "SFA.DAS.CommitmentsAPI";
-        public const string NotificationsApiClient = "SFA.DAS.EmployerAccounts.Notifications";
+        public const string NotificationsApiClient = "SFA.DAS.EmployerCommitments.Notifications";
     }
 }

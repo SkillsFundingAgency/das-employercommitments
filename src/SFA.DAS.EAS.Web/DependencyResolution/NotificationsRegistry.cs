@@ -5,8 +5,6 @@ using SFA.DAS.Http.TokenGenerators;
 using SFA.DAS.Notifications.Api.Client;
 using SFA.DAS.Notifications.Api.Client.Configuration;
 using StructureMap;
-using StructureMap.Configuration;
-
 
 namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 {
