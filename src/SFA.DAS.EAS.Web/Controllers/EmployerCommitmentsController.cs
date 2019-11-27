@@ -255,17 +255,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Route("provider/create")]
         public async Task<ActionResult> SearchProvider(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string cohortRef)
         {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
+            var legalEntities = await Orchestrator.GetLegalEntities(hashedAccountId, string.Empty, string.Empty, OwinWrapper.GetClaimValue(@"sub"));
+            var legalEntity = legalEntities.Data.LegalEntities.Single(x => x.Code == legalEntityCode);
+            var hashedAleId = legalEntity.AccountLegalEntityPublicHashedId;
 
-            if (string.IsNullOrWhiteSpace(legalEntityCode) || string.IsNullOrWhiteSpace(cohortRef))
-            {
-                return RedirectToAction("Inform", new {hashedAccountId});
-            }
-
-            var response = await Orchestrator.GetProviderSearch(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), transferConnectionCode, legalEntityCode, cohortRef);
-
-            return View(response);
+            var url = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/unapproved/add/select-provider?AccountLegalEntityHashedId={hashedAleId}&transferSenderId={transferConnectionCode}");
+            return Redirect(url);
         }
 
         [HttpPost]

@@ -15,9 +15,9 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.StatusCalculator
         [TestCase(RequestStatus.NewRequest, EditStatus.EmployerOnly, TransferApprovalStatus.Pending, LastAction.None, TestName = "With receiving employer")]
         [TestCase(RequestStatus.SentForReview, EditStatus.ProviderOnly, TransferApprovalStatus.Pending, LastAction.Amend, TestName = "With provider")]
         [TestCase(RequestStatus.WithSenderForApproval, EditStatus.Both, TransferApprovalStatus.Pending , LastAction.None, TestName = "With sender but not yet actioned by them")]
-        [TestCase(RequestStatus.RejectedBySender, EditStatus.EmployerOnly, TransferApprovalStatus.Rejected, LastAction.None, TestName = "With sender, rejected by them, but not yet saved or edited")]
+        [TestCase(RequestStatus.ReadyForReview, EditStatus.EmployerOnly, TransferApprovalStatus.Rejected, LastAction.None, TestName = "With sender, rejected by them, but not yet saved or edited")]
         [TestCase(RequestStatus.None, EditStatus.Both, TransferApprovalStatus.Approved, LastAction.None, TestName = "Approved by all 3 parties")]
-        [TestCase(RequestStatus.NewRequest, EditStatus.EmployerOnly, TransferApprovalStatus.Pending, LastAction.AmendAfterRejected, TestName = "Returned to draft following edit of rejected cohort")]
+        [TestCase(RequestStatus.ReadyForReview, EditStatus.EmployerOnly, TransferApprovalStatus.Pending, LastAction.AmendAfterRejected, TestName = "Returned to ready for review following edit of rejected cohort")]
         public void CommitmentIsTransferFundedAndInValidState(RequestStatus expectedResult, EditStatus editStatus, TransferApprovalStatus transferApprovalStatus, LastAction lastAction)
         {
             var commitment = new CommitmentListItem
