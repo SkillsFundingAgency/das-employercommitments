@@ -177,7 +177,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CreateApprenticeshipTests\WhenCreatingAnApprenticeship.cs" />
     <Compile Include="Commands\CreateCommitmentTests\WhenCreatingCommitment.cs" />
     <Compile Include="Commands\SendNotificationTests\WhenHandlingTheCommand.cs" />
     <Compile Include="Commands\TransferApprovalTests\WhenApprovingOrRejectingATransfer.cs" />
@@ -186,7 +185,6 @@
     <Compile Include="Commands\UpdateApprenticeshipStatusTests\WhenUpdatingApprenticeshipStatus.cs" />
     <Compile Include="Commands\AuditCommandTests\WhenIProcessTheCommand.cs" />
     <Compile Include="Commands\AuditCommandTests\WhenIValidateTheCommand.cs" />
-    <Compile Include="Commands\CreateApprenticeshipTests\WhenValidatingCreateApprenticeshipCommand.cs" />
     <Compile Include="Commands\CreateApprenticeshipUpdate\WhenCreatingApprenticeshipUpdate.cs" />
     <Compile Include="Commands\CreateApprenticeshipUpdate\WhenValidatingCommand.cs" />
     <Compile Include="Commands\CreateCommitmentTests\WhenValidatingTheCreateCommitmentCommand.cs" />

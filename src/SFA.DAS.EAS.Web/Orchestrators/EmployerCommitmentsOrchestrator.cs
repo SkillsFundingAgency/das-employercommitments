@@ -8,7 +8,6 @@ using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
-using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteApprentice;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteCommitment;

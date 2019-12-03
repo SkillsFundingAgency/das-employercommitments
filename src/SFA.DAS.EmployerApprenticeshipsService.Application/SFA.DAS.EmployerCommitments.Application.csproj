@@ -226,9 +226,6 @@
     <Compile Include="Commands\CreateApprenticeshipUpdate\CreateApprenticeshipUpdateCommand.cs" />
     <Compile Include="Commands\CreateApprenticeshipUpdate\CreateApprenticeshipUpdateCommandHandler.cs" />
     <Compile Include="Commands\CreateApprenticeshipUpdate\CreateApprenticeshipUpdateCommandValidator.cs" />
-    <Compile Include="Commands\CreateApprenticeship\CreateApprenticeshipCommand.cs" />
-    <Compile Include="Commands\CreateApprenticeship\CreateApprenticeshipCommandHandler.cs" />
-    <Compile Include="Commands\CreateApprenticeship\CreateApprenticeshipCommandValidator.cs" />
     <Compile Include="Commands\CreateCommitment\CreateCommitmentCommand.cs" />
     <Compile Include="Commands\CreateCommitment\CreateCommitmentCommandResponse.cs" />
     <Compile Include="Commands\CreateCommitment\CreateCommitmentCommandValidator.cs" />
