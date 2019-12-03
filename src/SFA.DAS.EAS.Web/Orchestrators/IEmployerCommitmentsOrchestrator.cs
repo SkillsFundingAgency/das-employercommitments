@@ -41,9 +41,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         Task<OrchestratorResponse<ExtendedApprenticeshipViewModel>> GetSkeletonApprenticeshipDetails(
             string hashedAccountId, string externalUserId, string hashedCommitmentId);
 
-        Task CreateApprenticeship(ApprenticeshipViewModel apprenticeship, string externalUserId, string userName,
-            string userEmail);
-
         Task<OrchestratorResponse<ExtendedApprenticeshipViewModel>> GetApprenticeship(string hashedAccountId,
             string externalUserId, string hashedCommitmentId, string hashedApprenticeshipId);
 

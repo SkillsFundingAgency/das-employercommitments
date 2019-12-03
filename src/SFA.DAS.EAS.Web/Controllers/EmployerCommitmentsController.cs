@@ -491,63 +491,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
-        [Route("{hashedCommitmentId}/apprenticeships/create")]
-        public async Task<ActionResult> CreateApprenticeshipEntry(string hashedAccountId, string hashedCommitmentId)
-        {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            var response = await Orchestrator.GetSkeletonApprenticeshipDetails(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId);
-
-            return View(response);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("{hashedCommitmentId}/apprenticeships/create")]
-        public async Task<ActionResult> CreateApprenticeship(ApprenticeshipViewModel apprenticeship)
-        {
-            if (!ModelState.IsValid)
-            {
-                apprenticeship.AddErrorsFromModelState(ModelState);
-            }
-
-            var validatorResult = await Orchestrator.ValidateApprenticeship(apprenticeship);
-            if (validatorResult.Any())
-            {
-                apprenticeship.AddErrorsFromDictionary(validatorResult);
-            }
-
-            if (apprenticeship.ErrorDictionary.Any())
-            {
-                return await RedisplayCreateApprenticeshipView(apprenticeship);
-            }
-
-            try
-            {
-                await Orchestrator.CreateApprenticeship(apprenticeship, OwinWrapper.GetClaimValue(@"sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
-                    OwinWrapper.GetClaimValue(DasClaimTypes.Email));
-            }
-            catch (InvalidRequestException ex)
-            {
-                apprenticeship.AddErrorsFromDictionary(ex.ErrorMessages);
-                return await RedisplayCreateApprenticeshipView(apprenticeship);
-            }
-
-            if (apprenticeship.IsInTransferRejectedCohort)
-            {
-                AddFlashMessageToCookie(new FlashMessageViewModel
-                {
-                    Severity = FlashMessageSeverityLevel.Success,
-                    Message = "You have successfully edited your cohort.  This will now be available within your Drafts."
-                });
-            }
-
-            return RedirectToAction("Details", new { hashedAccountId = apprenticeship.HashedAccountId, hashedCommitmentId = apprenticeship.HashedCommitmentId });
-        }
-
-        [HttpGet]
-        [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/apprenticeships/{hashedApprenticeshipId}/view")]
         public async Task<ActionResult> ViewApprenticeship(string hashedAccountId, string hashedCommitmentId, string hashedApprenticeshipId)
         {
@@ -818,44 +761,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
 
             return Redirect(Url.CommitmentsV2Link($"{viewModel.HashedAccountId}/unapproved/{viewModel.HashedCommitmentId}/apprentices/{viewModel.HashedApprenticeshipId}/edit"));
-        }
-
-        private async Task<ActionResult> RedisplayCreateApprenticeshipView(ApprenticeshipViewModel apprenticeship)
-        {
-            var response = await Orchestrator.GetSkeletonApprenticeshipDetails(apprenticeship.HashedAccountId, OwinWrapper.GetClaimValue(@"sub"), apprenticeship.HashedCommitmentId);
-            response.Data.Apprenticeship = apprenticeship;
-
-            if (response.Data.Apprenticeship.ErrorDictionary.Any())
-            {
-                response.FlashMessage = new FlashMessageViewModel
-                {
-                    Headline = "There are errors on this page that need your attention",
-                    Message = "Check the following details:",
-                    ErrorMessages = apprenticeship.ErrorDictionary,
-                    Severity = FlashMessageSeverityLevel.Error
-                };
-            }
-
-            return View("CreateApprenticeshipEntry", response);
-        }
-
-        private async Task<ActionResult> RedisplayEditApprenticeshipView(ApprenticeshipViewModel apprenticeship)
-        {
-            var response = await Orchestrator.GetSkeletonApprenticeshipDetails(apprenticeship.HashedAccountId, OwinWrapper.GetClaimValue(@"sub"), apprenticeship.HashedCommitmentId);
-            response.Data.Apprenticeship = apprenticeship;
-
-            if (response.Data.Apprenticeship.ErrorDictionary.Any())
-            {
-                response.FlashMessage = new FlashMessageViewModel
-                {
-                    Headline = "There are errors on this page that need your attention",
-                    Message = "Check the following details:",
-                    ErrorMessages = apprenticeship.ErrorDictionary,
-                    Severity = FlashMessageSeverityLevel.Error
-                };
-            }
-
-            return View("EditApprenticeshipEntry", response);
         }
 
         private string GetReturnUrl(RequestStatus status, string hashedAccountId)

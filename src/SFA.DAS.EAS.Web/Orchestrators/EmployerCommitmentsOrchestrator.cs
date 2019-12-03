@@ -383,27 +383,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task CreateApprenticeship(ApprenticeshipViewModel apprenticeship, string externalUserId, string userName, string userEmail)
-        {
-            var accountId = HashingService.DecodeValue(apprenticeship.HashedAccountId);
-            var commitmentId = HashingService.DecodeValue(apprenticeship.HashedCommitmentId);
-            Logger.Info($"Creating Apprenticeship, Account: {accountId}, CommitmentId: {commitmentId}");
-
-            await CheckUserAuthorization(async () =>
-            {
-                await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
-
-                await Mediator.SendAsync(new CreateApprenticeshipCommand
-                {
-                    AccountId = HashingService.DecodeValue(apprenticeship.HashedAccountId),
-                    Apprenticeship = await _apprenticeshipMapper.MapFrom(apprenticeship),
-                    UserId = externalUserId,
-                    UserEmailAddress = userEmail,
-                    UserDisplayName = userName
-                });
-            }, apprenticeship.HashedAccountId, externalUserId);
-        }
-
         public async Task<OrchestratorResponse<ExtendedApprenticeshipViewModel>> GetApprenticeship(string hashedAccountId, string externalUserId, string hashedCommitmentId, string hashedApprenticeshipId)
         {
             var accountId = HashingService.DecodeValue(hashedAccountId);
