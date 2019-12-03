@@ -247,9 +247,6 @@
     <Compile Include="Commands\UndoApprenticeshipUpdate\UndoApprenticeshipUpdateCommand.cs" />
     <Compile Include="Commands\UndoApprenticeshipUpdate\UndoApprenticeshipUpdateCommandHandler.cs" />
     <Compile Include="Commands\UndoApprenticeshipUpdate\UndoApprenticeshipUpdateCommandValidator.cs" />
-    <Compile Include="Commands\UpdateApprenticeship\UpdateApprenticeshipCommand.cs" />
-    <Compile Include="Commands\UpdateApprenticeship\UpdateApprenticeshipCommandHandler.cs" />
-    <Compile Include="Commands\UpdateApprenticeship\UpdateApprenticeshipCommandValidator.cs" />
     <Compile Include="Commands\SendNotification\SendNotificationCommand.cs" />
     <Compile Include="Commands\SendNotification\SendNotificationCommandHandler.cs" />
     <Compile Include="Commands\SendNotification\SendNotificationCommandValidator.cs" />

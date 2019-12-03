@@ -548,19 +548,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
-        [Route("{hashedCommitmentId}/apprenticeships/{hashedApprenticeshipId}/edit")]
-        public async Task<ActionResult> EditApprenticeship(string hashedAccountId, string hashedCommitmentId, string hashedApprenticeshipId)
-        {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            var model = await Orchestrator.GetApprenticeship(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId, hashedApprenticeshipId);
-            AddErrorsToModelState(model.Data.ValidationErrors);
-            return View("EditApprenticeshipEntry", model);
-        }
-
-        [HttpGet]
-        [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/apprenticeships/{hashedApprenticeshipId}/view")]
         public async Task<ActionResult> ViewApprenticeship(string hashedAccountId, string hashedCommitmentId, string hashedApprenticeshipId)
         {
@@ -569,49 +556,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             var model = await Orchestrator.GetApprenticeshipViewModel(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId, hashedApprenticeshipId);
             return View("ViewApprenticeshipEntry", model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("{hashedCommitmentId}/apprenticeships/{HashedApprenticeshipId}/edit")]
-        public async Task<ActionResult> EditApprenticeship(ApprenticeshipViewModel apprenticeship)
-        {
-            if (!ModelState.IsValid)
-            {
-                apprenticeship.AddErrorsFromModelState(ModelState);
-            }
-
-            var validatorResult = await Orchestrator.ValidateApprenticeship(apprenticeship);
-            if (validatorResult.Any())
-            {
-                apprenticeship.AddErrorsFromDictionary(validatorResult);
-            }
-
-            if (apprenticeship.ErrorDictionary.Any())
-            {
-                return await RedisplayEditApprenticeshipView(apprenticeship);
-            }
-
-            try
-            {
-                await Orchestrator.UpdateApprenticeship(apprenticeship, OwinWrapper.GetClaimValue(@"sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
-            }
-            catch (InvalidRequestException ex)
-            {
-                apprenticeship.AddErrorsFromDictionary(ex.ErrorMessages);
-                return await RedisplayEditApprenticeshipView(apprenticeship);
-            }
-
-            if (apprenticeship.IsInTransferRejectedCohort)
-            {
-                AddFlashMessageToCookie(new FlashMessageViewModel
-                {
-                    Severity = FlashMessageSeverityLevel.Success,
-                    Message = "You have successfully edited your cohort.  This will now be available within your Drafts."
-                });
-            }
-
-            return RedirectToAction("Details", new { hashedAccountId = apprenticeship.HashedAccountId, hashedCommitmentId = apprenticeship.HashedCommitmentId });
         }
 
         [HttpGet]

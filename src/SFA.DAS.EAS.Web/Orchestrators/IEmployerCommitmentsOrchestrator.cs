@@ -50,9 +50,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         Task<OrchestratorResponse<ApprenticeshipViewModel>> GetApprenticeshipViewModel(string hashedAccountId,
             string externalUserId, string hashedCommitmentId, string hashedApprenticeshipId);
 
-        Task UpdateApprenticeship(ApprenticeshipViewModel apprenticeship, string externalUserId, string userName,
-            string userEmail);
-
         Task<OrchestratorResponse<FinishEditingViewModel>> GetFinishEditingViewModel(string hashedAccountId,
             string externalUserId, string hashedCommitmentId);
 

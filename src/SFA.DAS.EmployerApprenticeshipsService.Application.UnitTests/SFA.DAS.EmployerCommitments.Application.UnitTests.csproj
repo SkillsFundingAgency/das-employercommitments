@@ -198,7 +198,6 @@
     <Compile Include="Commands\UndoApprenticeshipUpdate\WhenValidatingCommand.cs" />
     <Compile Include="Commands\UndoApprenticeshipUpdate\WhenUndoingApprenticeshipUpdate.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStopDate\WhenUpdatingApprenticeshipStopDate.cs" />
-    <Compile Include="Commands\UpdateApprenticeshipTests\WhenUpdatingAnApprenticeship.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\WhenValidationUpdateProviderPaymentPriority.cs" />
     <Compile Include="Extensions\DateTimeExtensions\WhenGettingFirstOfMonth.cs" />
     <Compile Include="Extensions\ITrainingProgrammeExtensionsTest\WhenDeterminingWhetherACourseIsActive.cs" />

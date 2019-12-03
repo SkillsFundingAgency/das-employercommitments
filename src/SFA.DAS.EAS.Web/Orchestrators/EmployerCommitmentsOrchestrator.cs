@@ -14,7 +14,6 @@ using SFA.DAS.EmployerCommitments.Application.Commands.DeleteApprentice;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus;
-using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
@@ -481,28 +480,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = apprenticeship
                 };
             }, hashedAccountId, externalUserId);
-        }
-
-        public async Task UpdateApprenticeship(ApprenticeshipViewModel apprenticeship, string externalUserId, string userName, string userEmail)
-        {
-            var accountId = HashingService.DecodeValue(apprenticeship.HashedAccountId);
-            var apprenticeshipId = HashingService.DecodeValue(apprenticeship.HashedCommitmentId);
-            var commitmentId = HashingService.DecodeValue(apprenticeship.HashedCommitmentId);
-            Logger.Info($"Updating Apprenticeship, Account: {accountId}, ApprenticeshipId: {apprenticeshipId}");
-
-            await CheckUserAuthorization(async () =>
-            {
-                await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
-
-                await Mediator.SendAsync(new UpdateApprenticeshipCommand
-                {
-                    AccountId = accountId,
-                    Apprenticeship = await _apprenticeshipMapper.MapFrom(apprenticeship),
-                    UserId = externalUserId,
-                    UserName = userName,
-                    UserEmail = userEmail
-                });
-            }, apprenticeship.HashedAccountId, externalUserId);
         }
 
         public async Task<OrchestratorResponse<FinishEditingViewModel>> GetFinishEditingViewModel(string hashedAccountId, string externalUserId, string hashedCommitmentId)
