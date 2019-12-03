@@ -307,7 +307,6 @@
     <Compile Include="Controllers\ControllerTest.cs" />
     <Compile Include="Controllers\ControllerTestBase.cs" />
     <Compile Include="Controllers\EmployerCommitmentsControllerTests\EmployerCommitmentsControllerTest.cs" />
-    <Compile Include="Controllers\EmployerCommitmentsControllerTests\WhenCreatingCommitment.cs" />
     <Compile Include="Controllers\EmployerCommitmentsControllerTests\WhenSelectingLegalEntity.cs" />
     <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenGettingEditStopDateDetails.cs" />
     <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenUpdatingApprenticeshipStopDate.cs" />
@@ -318,9 +317,6 @@
     <Compile Include="MoqCustomisedAutoDataAttribute.cs" />
     <Compile Include="Orchestrators\DataLockOrchestratorTests\WhenGettingDataLockChangeStatus.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\CheckingForAnyCohortsForCurrentStatus.cs" />
-    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCallingGetSubmitNewCommitmentModel.cs" />
-    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingEmployerAssignedCommitment.cs" />
-    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingProviderAssignedCommitment.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenCreatingSummary.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingAllWithProvider.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingApprenticeship.cs" />

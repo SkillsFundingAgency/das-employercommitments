@@ -8,7 +8,6 @@ using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
-using SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteApprentice;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.SubmitCommitment;
@@ -98,24 +97,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new CommitmentInformViewModel
                     {
                         HashedAccountId = hashedAccountId
-                    }
-                });
-            }, hashedAccountId, externalUserId);
-        }
-
-        public async Task<OrchestratorResponse<SelectProviderViewModel>> GetProviderSearch(string hashedAccountId,
-            string externalUserId, string transferConnectionCode, string legalEntityCode, string cohortRef)
-        {
-            return await CheckUserAuthorization(() =>
-            {
-                return Task.FromResult(new OrchestratorResponse<SelectProviderViewModel>
-                {
-                    Status = HttpStatusCode.OK,
-                    Data = new SelectProviderViewModel
-                    {
-                        TransferConnectionCode = transferConnectionCode,
-                        LegalEntityCode = legalEntityCode,
-                        CohortRef = cohortRef
                     }
                 });
             }, hashedAccountId, externalUserId);
@@ -265,86 +246,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     }
                 };
             }, hashedAccountId, externalUserId);
-        }
-
-        public async Task<OrchestratorResponse<string>> CreateEmployerAssignedCommitment(CreateCommitmentViewModel model, string externalUserId, string userDisplayName, string userEmail)
-        {
-            var accountId = HashingService.DecodeValue(model.HashedAccountId);
-            Logger.Info($"Creating Employer assigned commitment. AccountId: {accountId}, Provider: {model.ProviderId}");
-
-            return await CheckUserAuthorization(async () =>
-            {
-                (long? transferSenderId, string transferSenderName) = await GetTransferConnectionInfo(model.HashedAccountId, model.TransferConnectionCode, externalUserId);
-
-                var response = await Mediator.SendAsync(new CreateCommitmentCommand
-                {
-                    Commitment = new Commitment
-                    {
-                        Reference = model.CohortRef,
-                        EmployerAccountId = accountId,
-                        TransferSenderId = transferSenderId,
-                        TransferSenderName = transferSenderName,
-                        LegalEntityId = model.LegalEntityCode,
-                        LegalEntityName = model.LegalEntityName,
-                        LegalEntityAddress = model.LegalEntityAddress,
-                        LegalEntityOrganisationType = (OrganisationType)model.LegalEntitySource,
-                        AccountLegalEntityPublicHashedId = model.AccountLegalEntityPublicHashedId,
-                        ProviderId = model.ProviderId,
-                        ProviderName = model.ProviderName,
-                        CommitmentStatus = CommitmentStatus.New,
-                        EditStatus = EditStatus.EmployerOnly,
-                        EmployerLastUpdateInfo = new LastUpdateInfo { Name = userDisplayName, EmailAddress = userEmail }
-                    },
-                    UserId = externalUserId
-                });
-
-                return new OrchestratorResponse<string>
-                {
-                    Data = HashingService.HashValue(response.CommitmentId)
-                };
-
-            }, model.HashedAccountId, externalUserId);
-        }
-
-        public async Task<OrchestratorResponse<string>> CreateProviderAssignedCommitment(SubmitCommitmentViewModel model, string externalUserId, string userDisplayName, string userEmail)
-        {
-            var accountId = HashingService.DecodeValue(model.HashedAccountId);
-            Logger.Info($"Creating Provider assigned Commitment. AccountId: {accountId}, Provider: {model.ProviderId}");
-
-            return await CheckUserAuthorization(async () =>
-            {
-                (long? transferSenderId, string transferSenderName) = await GetTransferConnectionInfo(model.HashedAccountId, model.TransferConnectionCode, externalUserId);
-
-                var response = await Mediator.SendAsync(new CreateCommitmentCommand
-                {
-                    Message = model.Message,
-                    Commitment = new Commitment
-                    {
-                        Reference = model.CohortRef,
-                        EmployerAccountId = accountId,
-                        TransferSenderId = transferSenderId,
-                        TransferSenderName = transferSenderName,
-                        LegalEntityId = model.LegalEntityCode,
-                        LegalEntityName = model.LegalEntityName,
-                        LegalEntityAddress = model.LegalEntityAddress,
-                        LegalEntityOrganisationType = (OrganisationType)model.LegalEntitySource,
-                        AccountLegalEntityPublicHashedId = model.AccountLegalEntityPublicHashedId,
-                        ProviderId = long.Parse(model.ProviderId),
-                        ProviderName = model.ProviderName,
-                        CommitmentStatus = CommitmentStatus.Active,
-                        EditStatus = EditStatus.ProviderOnly,
-                        EmployerLastUpdateInfo = new LastUpdateInfo { Name = userDisplayName, EmailAddress = userEmail }
-                    },
-                    UserId = externalUserId,
-                    LastAction = LastAction.Amend
-                });
-
-                return new OrchestratorResponse<string>
-                {
-                    Data = response.CohortReference
-                };
-
-            }, model.HashedAccountId, externalUserId);
         }
 
         public async Task<OrchestratorResponse<ExtendedApprenticeshipViewModel>> GetSkeletonApprenticeshipDetails(string hashedAccountId, string externalUserId, string hashedCommitmentId)
@@ -570,31 +471,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     UserEmail = userEmail,
                     UserName = userDisplayName
                 });
-            }, hashedAccountId, externalUserId);
-        }
-
-        //todo: too many params!
-        public async Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitNewCommitmentModel(string hashedAccountId, string externalUserId, string transferConnectionCode, string legalEntityCode, string legalEntityName, string legalEntityAddress, short legalEntitySource, string accountLegalEntityPublicHashedId, string providerId, string providerName, string cohortRef, SaveStatus saveStatus)
-        {
-            var accountId = HashingService.DecodeValue(hashedAccountId);
-            Logger.Info($"Getting Submit New Commitment ViewModel, Account: {accountId}");
-
-            return await CheckUserAuthorization(() => new OrchestratorResponse<SubmitCommitmentViewModel>
-            {
-                Data = new SubmitCommitmentViewModel
-                {
-                    HashedAccountId = hashedAccountId,
-                    TransferConnectionCode = transferConnectionCode,
-                    LegalEntityCode = legalEntityCode,
-                    LegalEntityName = legalEntityName,
-                    LegalEntityAddress = legalEntityAddress,
-                    LegalEntitySource = legalEntitySource,
-                    AccountLegalEntityPublicHashedId = accountLegalEntityPublicHashedId,
-                    ProviderId = providerId,
-                    ProviderName = providerName,
-                    CohortRef = cohortRef,
-                    SaveStatus = saveStatus
-                }
             }, hashedAccountId, externalUserId);
         }
 

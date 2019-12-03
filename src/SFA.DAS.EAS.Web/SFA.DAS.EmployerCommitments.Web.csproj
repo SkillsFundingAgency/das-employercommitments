@@ -1052,13 +1052,9 @@
     </Content>
     <Content Include="Views\Shared\FeatureNotEnabled.cshtml" />
     <Content Include="Views\Shared\UserNotAllowed.cshtml" />
-    <Content Include="Views\EmployerCommitments\SubmitCommitmentEntry.cshtml" />
     <Content Include="Views\EmployerCommitments\Inform.cshtml" />
-    <Content Include="Views\EmployerCommitments\SearchProvider.cshtml" />
-    <Content Include="Views\EmployerCommitments\ChoosePath.cshtml" />
     <Content Include="Views\Shared\NotFound.cshtml" />
     <Content Include="Views\Shared\ValidationSummary.cshtml" />
-    <Content Include="Views\EmployerCommitments\SelectProvider.cshtml" />
     <Content Include="Views\EmployerCommitments\Index.cshtml" />
     <Content Include="Views\EmployerCommitments\FinishedEditing.cshtml" />
     <Content Include="Views\EmployerCommitments\Acknowledgement.cshtml" />
@@ -1221,6 +1217,7 @@
     </Content>
     <Content Include="Views\EmployerCommitments\TransferFundedCohorts.cshtml" />
     <Content Include="Views\EmployerCommitments\RejectedTransferFundedCohorts.cshtml" />
+    <Content Include="Views\EmployerCommitments\SubmitCommitmentEntry.cshtml" />
     <None Include="Views\razorgenerator.directives" />
   </ItemGroup>
   <ItemGroup>
