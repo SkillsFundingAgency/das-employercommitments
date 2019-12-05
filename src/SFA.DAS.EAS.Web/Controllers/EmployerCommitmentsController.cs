@@ -107,6 +107,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
+            if (_featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
+                return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/with-training-provider"));
+
             SaveRequestStatusInCookie(RequestStatus.WithProviderForApproval);
 
             var model = await Orchestrator.GetAllWithProvider(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
