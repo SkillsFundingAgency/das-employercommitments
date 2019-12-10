@@ -46,14 +46,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("home", Name = "CommitmentsHome")]
-        public async Task<ActionResult> Index(string hashedAccountId)
+        public ActionResult Index(string hashedAccountId)
         {
-            ViewBag.HashedAccountId = hashedAccountId;
-
-            var response = await Orchestrator.GetIndexViewModel(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
-            SetFlashMessageOnModel(response);
-
-            return View(response);
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}"));
         }
 
         [HttpGet]

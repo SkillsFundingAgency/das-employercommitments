@@ -522,7 +522,6 @@
     <Compile Include="Validators\TransferConfirmationViewModelValidator.cs" />
     <Compile Include="Validators\TransferApprovalConfirmationViewModelValidator.cs" />
     <Compile Include="Validators\ProviderPriorityReOrderListValidator.cs" />
-    <Compile Include="ViewModels\CommitmentsIndexViewModel.cs" />
     <Compile Include="ViewModels\TransferRequestViewModel.cs" />
     <Compile Include="ViewModels\TransferConfirmationViewModel.cs" />
     <Compile Include="ViewModels\TransferApprovalConfirmationViewModel.cs" />
@@ -1060,7 +1059,6 @@
     <Content Include="Views\Shared\NotFound.cshtml" />
     <Content Include="Views\Shared\ValidationSummary.cshtml" />
     <Content Include="Views\EmployerCommitments\SelectProvider.cshtml" />
-    <Content Include="Views\EmployerCommitments\Index.cshtml" />
     <Content Include="Views\EmployerCommitments\FinishedEditing.cshtml" />
     <Content Include="Views\EmployerCommitments\Acknowledgement.cshtml" />
     <Content Include="Views\EmployerCommitments\EditApprenticeshipEntry.cshtml" />

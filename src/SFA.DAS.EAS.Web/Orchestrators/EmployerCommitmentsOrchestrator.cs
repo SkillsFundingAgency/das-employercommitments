@@ -71,25 +71,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _featureToggleService = featureToggleService;
         }
 
-        public async Task<OrchestratorResponse<CommitmentsIndexViewModel>> GetIndexViewModel(string hashedAccountId, string externalUserId)
-        {
-            return await CheckUserAuthorization(async () =>
-            {
-                var accountId = HashingService.DecodeValue(hashedAccountId);
-
-                var response = await Mediator.SendAsync(new GetProviderPaymentPriorityRequest { AccountId = accountId });
-
-                return new OrchestratorResponse<CommitmentsIndexViewModel>
-                {
-                    Data = new CommitmentsIndexViewModel
-                    {
-                        ShowSetPaymentPriorityLink = response.Data != null && response.Data.Count > 1,
-                        ShowPublicSectorReportingLink = _featureToggleService.Get<PublicSectorReporting>().FeatureEnabled
-                    }
-                };
-            }, hashedAccountId, externalUserId);
-        }
-
         public async Task<OrchestratorResponse<CommitmentInformViewModel>> GetInform(string hashedAccountId, string externalUserId)
         {
             return await CheckUserAuthorization(() =>
