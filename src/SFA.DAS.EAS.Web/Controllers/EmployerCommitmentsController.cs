@@ -59,9 +59,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("cohorts")]
-        public ActionResult YourCohorts(string hashedAccountId)
+        public async Task<ActionResult> YourCohorts(string hashedAccountId)
         {
-            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/unapproved"));
+            if (_featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
+                return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/unapproved"));
+
+            // otherwise call existing code
+            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+                return View("AccessDenied");
+
+            var model = await Orchestrator.GetYourCohorts(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
+
+            SetFlashMessageOnModel(model);
+            return View(model);
         }
 
         [HttpGet]
