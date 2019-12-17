@@ -82,7 +82,6 @@ namespace SFA.DAS.EmployerCommitments.Web
             });
 
             ConfigurationFactory.Current = new IdentityServerConfigurationFactory(config);
-            
         }
 
         private static Func<X509Certificate2> GetSigningCertificate(bool useCertificate)

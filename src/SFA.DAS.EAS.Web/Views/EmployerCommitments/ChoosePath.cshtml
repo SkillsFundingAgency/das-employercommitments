@@ -26,11 +26,11 @@
 
                     <label class="block-label selection-button-radio" for="SelectedRoute-Employer">
                         @Html.RadioButton("SelectedRoute", "employer", new { id = "SelectedRoute-Employer", dataOptionName = "Employer To Add", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Employer To Add')" })
-                        I will add apprentices
+                        <span class="govuk-radios__label">I will add apprentices</span>
                     </label>
                     <label class="block-label selection-button-radio" for="SelectedRoute-Provider">
                         @Html.RadioButton("SelectedRoute", "provider", new { id = "SelectedRoute-Provider", dataOptionName = "Provider To Add", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Provider To Add')" })
-                        I would like my provider to add apprentices
+                        <span class="govuk-radios__label">I would like my provider to add apprentices</span>
                     </label>
                 </div>
             </fieldset>
@@ -43,7 +43,7 @@
             @Html.Hidden("AccountLegalEntityPublicHashedId", Model.Data.AccountLegalEntityPublicHashedId)
             @Html.Hidden("ProviderId", Model.Data.ProviderId)
             @Html.Hidden("ProviderName", Model.Data.ProviderName)
-            <button type="submit" class="button" id="submit-choose-path">Continue</button>
+            <button type="submit" class="button govuk-button" id="submit-choose-path">Continue</button>
         </form>
     </div>
     <div class="column-one-third"></div>

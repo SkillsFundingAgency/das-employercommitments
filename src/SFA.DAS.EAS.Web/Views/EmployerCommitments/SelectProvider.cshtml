@@ -33,11 +33,11 @@
                     </div>
                     <label class="block-label selection-button-radio" for="Confirmation-True">
                         @Html.RadioButton("Confirmation", "True", new { id = "Confirmation-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
-                        Yes, use @Model.Data.Provider.ProviderName
+                        <span class="govuk-radios__label">Yes, use @Model.Data.Provider.ProviderName</span>
                     </label>
                     <label class="block-label selection-button-radio" for="Confirmation-False">
                         @Html.RadioButton("Confirmation", "False", new { id = "Confirmation-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
-                        No, change UK Provider Reference Number
+                        <span class="govuk-radios__label">No, change UK Provider Reference Number</span>
                     </label>
                 </div>
             </fieldset>
@@ -47,7 +47,7 @@
             @Html.Hidden("LegalEntityCode", Model.Data.LegalEntityCode)
             @Html.Hidden("CohortRef", Model.Data.CohortRef)
             @Html.Hidden("ProviderId", Model.Data.ProviderId)
-            <button class="button" type="submit" id="submit-select-provider">Continue</button>
+            <button class="button govuk-button" type="submit" id="submit-select-provider">Continue</button>
         </form>
         }
         else
