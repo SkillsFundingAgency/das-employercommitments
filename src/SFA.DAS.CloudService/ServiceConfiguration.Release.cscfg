@@ -26,7 +26,7 @@
       <Setting name="FeatureToggle.EnhancedApprovals" value="__FeatureToggle.EnhancedApprovals__" />
     </ConfigurationSettings>
     <Certificates>
-      <Certificate name="WebSslCert" thumbprint="BF55F64F778FC5F4E4EEBAE6493E37464B3E2AD7" thumbprintAlgorithm="sha1" />
+      <Certificate name="WebSslCert" thumbprint="364F20C0C4581E1222B7F4EDD9946A6D7107B032" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>
   <NetworkConfiguration>

@@ -24,7 +24,7 @@
                 @Html.ValidationMessage("ProviderId", "Number not recognised. Check the number you've entered is correct or contact your training provider for help.", new { id = "error-message-ProviderId" })
                 @Html.ValidationMessage("NotFound", "Number not recognised. Check the number you've entered is correct or contact your training provider for help.", new { id = "error-message-NotFound" })
 
-                @Html.TextBox("ProviderId", Model.Data.ProviderId, new { @class = "form-control trainingProvider", aria_required = "true", aria_labelledby = "ProviderId" })
+                @Html.TextBox("ProviderId", Model.Data.ProviderId, new { @class = "form-control trainingProvider govuk-input", aria_required = "true", aria_labelledby = "ProviderId" })
             </div>
 
             <details class="ukprn-help">
@@ -37,7 +37,7 @@
             </details>
 
 
-            <button type="submit" class="button" id="submit-search-provider">Continue</button>
+            <button type="submit" class="button govuk-button" id="submit-search-provider">Continue</button>
 
             @Html.Hidden("TransferConnectionCode", Model.Data.TransferConnectionCode)
             @Html.Hidden("LegalEntityCode", Model.Data.LegalEntityCode)

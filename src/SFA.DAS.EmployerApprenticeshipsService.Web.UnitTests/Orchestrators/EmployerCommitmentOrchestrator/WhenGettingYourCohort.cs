@@ -55,8 +55,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/1, /*expectedRejectedTransferFundedCohortsCount = */ 0,
             ValidTransferSenderId, TransferApprovalStatus.Pending, AgreementStatus.BothAgreed,
             EditStatus.Both, LastAction.Approve, 1, TestName = "With sender but not yet actioned by them")]
-        [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
-            /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/0, /*expectedRejectedTransferFundedCohortsCount = */ 1,
+        [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/1,
+            /*expectedWithProviderCount=*/0, /*expectedTransferFundedCohortsCount=*/0, /*expectedRejectedTransferFundedCohortsCount = */ 0,
             ValidTransferSenderId, TransferApprovalStatus.Rejected, AgreementStatus.NotAgreed,
             EditStatus.EmployerOnly, LastAction.None, 1, TestName = "With sender, rejected by them, but not yet saved or edited")]
         [TestCase(/*expectedDraftCount=*/0, /*expectedReadyForReviewCount=*/0,
