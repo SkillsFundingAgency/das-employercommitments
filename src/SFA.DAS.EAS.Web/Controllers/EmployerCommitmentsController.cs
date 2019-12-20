@@ -62,15 +62,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         public ActionResult YourCohorts(string hashedAccountId)
         {
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/unapproved"));
-
-            //// otherwise call existing code
-            //if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-            //    return View("AccessDenied");
-
-            //var model = await Orchestrator.GetYourCohorts(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
-
-            //SetFlashMessageOnModel(model);
-            //return View(model);
         }
 
         [HttpGet]
@@ -79,14 +70,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         public ActionResult Draft(string hashedAccountId)
         {
             return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/draft"));
-
-            //if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-            //    return View("AccessDenied");
-
-            //var model = await Orchestrator.GetAllDraft(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
-            //SetFlashMessageOnModel(model);
-            //SaveRequestStatusInCookie(RequestStatus.NewRequest);
-            //return View("RequestList", model);
         }
 
         [HttpGet]
@@ -94,27 +77,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         public ActionResult ReadyForReview(string hashedAccountId)
         {
             return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/review"));
-
-            //var model = await Orchestrator.GetAllReadyForReview(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
-            //SetFlashMessageOnModel(model);
-            //SaveRequestStatusInCookie(RequestStatus.ReadyForReview);
-            //return View("RequestList", model);
         }
 
         [HttpGet]
         [Route("cohorts/provider")]
-        public async Task<ActionResult> WithProvider(string hashedAccountId)
+        public ActionResult WithProvider(string hashedAccountId)
         {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            if (_featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
-                return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/with-training-provider"));
-
-            SaveRequestStatusInCookie(RequestStatus.WithProviderForApproval);
-
-            var model = await Orchestrator.GetAllWithProvider(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
-            return View("RequestList", model);
+            return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/with-training-provider"));
         }
 
         [HttpGet]
@@ -122,14 +91,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         public ActionResult TransferFunded(string hashedAccountId)
         {
             return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/with-transfer-sender"));
-
-            ////todo: the pattern seems to be pick one of the statuses associated with a bingo box and save that in the cookie
-            //// to represent e.g. which page to go back to after delete. we could refactor this, perhaps introduce a new enum.
-            //// also, subsequent transfer stories will need to check for this status when they GetRequestStatusFromCookie()
-            //SaveRequestStatusInCookie(RequestStatus.WithSenderForApproval);
-
-            //var model = await Orchestrator.GetAllTransferFunded(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
-            //return View("TransferFundedCohorts", model);
         }
 
         [HttpGet]
@@ -137,14 +98,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         public ActionResult RejectedTransfers(string hashedAccountId)
         {
             return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/review"));
-
-            //if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-            //    return View("AccessDenied");
-
-            //SaveRequestStatusInCookie(RequestStatus.RejectedBySender);
-
-            //var model = await Orchestrator.GetAllRejectedTransferFunded(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
-            //return View("RejectedTransferFundedCohorts", model);
         }
 
         [HttpGet]
@@ -438,18 +391,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return View(model);
         }
 
-        //[HttpGet]
-        //[OutputCache(CacheProfile = "NoCache")]
-        //[Route("{hashedCommitmentId}/details/delete")]
-        //public async Task<ActionResult> DeleteCohort(string hashedAccountId, string hashedCommitmentId)
-        //{
-        //    if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-        //        return View("AccessDenied");
-
-        //    var model = await Orchestrator.GetDeleteCommitmentModel(hashedAccountId, hashedCommitmentId, OwinWrapper.GetClaimValue(@"sub"));
-
-        //    return View(model);
-        //}
 
         //[HttpPost]
         //[OutputCache(CacheProfile = "NoCache")]
@@ -843,84 +784,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
             return acknowledgementContent;
         }
-
-        [HttpGet]
-        [OutputCache(CacheProfile = "NoCache")]
-        [Route("{hashedCommitmentId}/Apprenticeships/{hashedApprenticeshipId}/Delete")]
-        public async Task<ActionResult> DeleteApprenticeshipConfirmation(string hashedAccountId, string hashedCommitmentId, string hashedApprenticeshipId)
-        {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-            {
-                return View("AccessDenied");
-            }
-
-            var response = await Orchestrator.GetDeleteApprenticeshipViewModel(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"), hashedCommitmentId, hashedApprenticeshipId);
-
-            return View(response);
-        }
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[Route("{hashedCommitmentId}/Apprenticeships/{hashedApprenticeshipId}/Delete")]
-        //public async Task<ActionResult> DeleteApprenticeshipConfirmation(DeleteApprenticeshipConfirmationViewModel viewModel)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        var errorResponse = await Orchestrator.GetDeleteApprenticeshipViewModel(viewModel.HashedAccountId, OwinWrapper.GetClaimValue(@"sub"), viewModel.HashedCommitmentId, viewModel.HashedApprenticeshipId);
-
-        //        return View(errorResponse);
-        //    }
-
-        //    if (viewModel.DeleteConfirmed.HasValue && viewModel.DeleteConfirmed.Value)
-        //    {
-        //        await Orchestrator.DeleteApprenticeship(viewModel, OwinWrapper.GetClaimValue(@"sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
-
-        //        var flashMessage = new FlashMessageViewModel { Severity = FlashMessageSeverityLevel.Okay, Message = string.Format($"Apprentice record for {viewModel.ApprenticeshipName} deleted") };
-        //        AddFlashMessageToCookie(flashMessage);
-                
-        //        return RedirectToAction("Details", new { viewModel.HashedAccountId, viewModel.HashedCommitmentId });
-        //    }
-
-        //    return Redirect(Url.CommitmentsV2Link($"{viewModel.HashedAccountId}/unapproved/{viewModel.HashedCommitmentId}/apprentices/{viewModel.HashedApprenticeshipId}/edit"));
-        //}
-
-        //private async Task<ActionResult> RedisplayCreateApprenticeshipView(ApprenticeshipViewModel apprenticeship)
-        //{
-        //    var response = await Orchestrator.GetSkeletonApprenticeshipDetails(apprenticeship.HashedAccountId, OwinWrapper.GetClaimValue(@"sub"), apprenticeship.HashedCommitmentId);
-        //    response.Data.Apprenticeship = apprenticeship;
-
-        //    if (response.Data.Apprenticeship.ErrorDictionary.Any())
-        //    {
-        //        response.FlashMessage = new FlashMessageViewModel
-        //        {
-        //            Headline = "There are errors on this page that need your attention",
-        //            Message = "Check the following details:",
-        //            ErrorMessages = apprenticeship.ErrorDictionary,
-        //            Severity = FlashMessageSeverityLevel.Error
-        //        };
-        //    }
-
-        //    return View("CreateApprenticeshipEntry", response);
-        //}
-
-        //private async Task<ActionResult> RedisplayEditApprenticeshipView(ApprenticeshipViewModel apprenticeship)
-        //{
-        //    var response = await Orchestrator.GetSkeletonApprenticeshipDetails(apprenticeship.HashedAccountId, OwinWrapper.GetClaimValue(@"sub"), apprenticeship.HashedCommitmentId);
-        //    response.Data.Apprenticeship = apprenticeship;
-
-        //    if (response.Data.Apprenticeship.ErrorDictionary.Any())
-        //    {
-        //        response.FlashMessage = new FlashMessageViewModel
-        //        {
-        //            Headline = "There are errors on this page that need your attention",
-        //            Message = "Check the following details:",
-        //            ErrorMessages = apprenticeship.ErrorDictionary,
-        //            Severity = FlashMessageSeverityLevel.Error
-        //        };
-        //    }
-
-        //    return View("EditApprenticeshipEntry", response);
-        //}
 
         private string GetReturnUrl(RequestStatus status, string hashedAccountId)
         {

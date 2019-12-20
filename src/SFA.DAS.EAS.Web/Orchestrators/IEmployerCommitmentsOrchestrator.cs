@@ -76,34 +76,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         Task<OrchestratorResponse<AcknowledgementViewModel>> GetAcknowledgementModelForExistingCommitment(
             string hashedAccountId, string hashedCommitmentId, string externalUserId);
-
-        Task<OrchestratorResponse<YourCohortsViewModel>> GetYourCohorts(string hashedAccountId, string externalUserId);
-
-        Task<OrchestratorResponse<CommitmentListViewModel>> GetAllDraft(string hashedAccountId, string externalUserId);
-
-        Task<OrchestratorResponse<CommitmentListViewModel>> GetAllReadyForReview(string hashedAccountId,
-            string externalUserId);
-
-        Task<OrchestratorResponse<CommitmentListViewModel>> GetAllWithProvider(string hashedAccountId,
-            string externalUserId);
-
-        Task<OrchestratorResponse<TransferFundedCohortsViewModel>> GetAllTransferFunded(string hashedAccountId,
-            string externalUserId);
-
-        Task<OrchestratorResponse<TransferFundedCohortsViewModel>> GetAllRejectedTransferFunded(string hashedAccountId,
-            string externalUserId);
-
+        
         Task<OrchestratorResponse<CommitmentDetailsViewModel>> GetCommitmentDetails(string hashedAccountId,
             string hashedCommitmentId, string externalUserId);
-
-        Task<OrchestratorResponse<DeleteCommitmentViewModel>> GetDeleteCommitmentModel(string hashedAccountId,
-            string hashedCommitmentId, string externalUserId);
-
-        Task DeleteCommitment(string hashedAccountId, string hashedCommitmentId, string externalUserId, string userName,
-            string userEmail);
-
-        Task<OrchestratorResponse<DeleteApprenticeshipConfirmationViewModel>> GetDeleteApprenticeshipViewModel(
-            string hashedAccountId, string externalUserId, string hashedCommitmentId, string hashedApprenticeshipId);
 
         Task<bool> AnyCohortsForCurrentStatus(string hashedAccountId, params RequestStatus[] requestStatusFromSession);
 
@@ -112,9 +87,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             string userId);
 
         Task<Dictionary<string, string>> ValidateApprenticeship(ApprenticeshipViewModel apprenticeship);
-
-        Task DeleteApprenticeship(DeleteApprenticeshipConfirmationViewModel model, string externalUser, string userName,
-            string userEmail);
 
         Task<OrchestratorResponse<TransferRequestViewModel>> GetTransferRequestDetails(
             string hashedTransferAccountId, Application.Queries.GetTransferRequest.CallerType callerType,

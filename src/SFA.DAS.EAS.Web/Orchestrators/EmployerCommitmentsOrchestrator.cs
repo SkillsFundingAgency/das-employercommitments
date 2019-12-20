@@ -732,49 +732,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<YourCohortsViewModel>> GetYourCohorts(string hashedAccountId, string externalUserId)
-        {
-            var accountId = HashingService.DecodeValue(hashedAccountId);
-            Logger.Info($"Getting your cohorts for Account: {accountId}");
-
-            return await CheckUserAuthorization(async () =>
-            {
-                var commitmentStatuses = (await GetAllCommitments(accountId)).Select(c => c.GetStatus()).ToArray();
-
-                //todo: call into commitments api or db to get counts, seems excessive to fetch all cohorts data just to count
-
-                return new OrchestratorResponse<YourCohortsViewModel>
-                {
-                    // The count of transfer funded cohorts in the bingo box doesn't actually
-                    // refer to all transfer funded cohorts, but rather to just those
-                    // transfer funded cohorts that are with the sender for approval
-                    // or have been rejected by the sender.
-                    // Transfer funded cohorts that are with the receiver or provider
-                    // after having been rejected by the sender (and edited by the receiver)
-                    // are counted as Draft cohorts instead.
-
-                    Data = new YourCohortsViewModel
-                    {
-                        DraftCount = commitmentStatuses.Count(m =>
-                             m == RequestStatus.NewRequest),
-                        ReadyForReviewCount = commitmentStatuses.Count(m =>
-                                m == RequestStatus.ReadyForReview
-                             || m == RequestStatus.ReadyForApproval),
-                        WithProviderCount = commitmentStatuses.Count(m =>
-                             m == RequestStatus.WithProviderForApproval
-                          || m == RequestStatus.SentToProvider
-                          || m == RequestStatus.SentForReview),
-                        TransferFundedCohortsCount = _featureToggleService.Get<Transfers>().FeatureEnabled
-                            ? commitmentStatuses.Count(m => 
-                                m == RequestStatus.WithSenderForApproval) : (int?)null,
-                        RejectedTransferFundedCohortsCount = commitmentStatuses.Count(m =>
-                            m == RequestStatus.RejectedBySender)
-                    }
-                };
-
-            }, hashedAccountId, externalUserId);
-        }
-
         public async Task<OrchestratorResponse<CommitmentListViewModel>> GetAllDraft(string hashedAccountId, string externalUserId)
         {
             var accountId = HashingService.DecodeValue(hashedAccountId);
@@ -799,102 +756,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     };
 
                 }, hashedAccountId, externalUserId);
-        }
-
-        public async Task<OrchestratorResponse<CommitmentListViewModel>> GetAllReadyForReview(string hashedAccountId, string externalUserId)
-        {
-            var accountId = HashingService.DecodeValue(hashedAccountId);
-            Logger.Info($"Getting your cohorts ready for review for Account: {accountId}");
-
-            return await CheckUserAuthorization(async () =>
-            {
-                var commitments = (await GetAllCommitmentsOfStatus(accountId,
-                    RequestStatus.ReadyForReview, RequestStatus.ReadyForApproval)).ToArray();
-
-                return new OrchestratorResponse<CommitmentListViewModel>
-                {
-                    Data = new CommitmentListViewModel
-                    {
-                        AccountHashId = hashedAccountId,
-                        Commitments = MapFrom(commitments, true),
-                        PageTitle = "Cohorts for review",
-                        PageId = "ready-for-review",
-                        PageHeading = "Cohorts for review",
-                        PageHeading2 = $"You have <strong>{commitments.Length}</strong> cohort{_addPluralizationSuffix(commitments.Length)} ready for review:"
-                    }
-                };
-
-            }, hashedAccountId, externalUserId);
-        }
-
-        public async Task<OrchestratorResponse<CommitmentListViewModel>> GetAllWithProvider(string hashedAccountId, string externalUserId)
-        {
-            var accountId = HashingService.DecodeValue(hashedAccountId);
-            Logger.Info($"Getting your cohorts with the provider sent for Account: {accountId}");
-
-            return await CheckUserAuthorization(async () =>
-            {
-                var commitments = (await GetAllCommitmentsOfStatus(accountId, 
-                    RequestStatus.WithProviderForApproval,
-                    RequestStatus.SentForReview,
-                    RequestStatus.SentToProvider)).ToArray();
-
-                return new OrchestratorResponse<CommitmentListViewModel>
-                {
-                    Data = new CommitmentListViewModel
-                    {
-                        AccountHashId = hashedAccountId,
-                        Commitments = MapFrom(commitments, false),
-                        PageTitle = "Cohorts with training providers",
-                        PageId = "with-the-provider",
-                        PageHeading = "Cohorts with training providers",
-                        PageHeading2 = $"You have <strong>{commitments.Length}</strong> cohort{_addPluralizationSuffix(commitments.Length)} with training providers for them to add apprentices, or review and approve details:"
-                    }
-                };
-
-            }, hashedAccountId, externalUserId);
-        }
-
-        public async Task<OrchestratorResponse<TransferFundedCohortsViewModel>> GetAllTransferFunded(string hashedAccountId, string externalUserId)
-        {
-            var accountId = HashingService.DecodeValue(hashedAccountId);
-            Logger.Info($"Getting your transfer-funded cohorts for Account: {accountId}");
-
-            return await CheckUserAuthorization(async () =>
-            {
-                var transferFundedCommitments = await GetAllCommitmentsOfStatus(accountId,
-                    RequestStatus.WithSenderForApproval);
-
-                return new OrchestratorResponse<TransferFundedCohortsViewModel>
-                {
-                    Data = new TransferFundedCohortsViewModel
-                    {
-                        Commitments = MapFrom(transferFundedCommitments)
-                    }
-                };
-
-            }, hashedAccountId, externalUserId);
-        }
-
-        public async Task<OrchestratorResponse<TransferFundedCohortsViewModel>> GetAllRejectedTransferFunded(string hashedAccountId, string externalUserId)
-        {
-            var accountId = HashingService.DecodeValue(hashedAccountId);
-            Logger.Info($"Getting your transfer-funded cohorts for Account: {accountId}");
-
-            return await CheckUserAuthorization(async () =>
-            {
-                var transferFundedCommitments = await GetAllCommitmentsOfStatus(accountId,
-                    RequestStatus.RejectedBySender);
-
-                return new OrchestratorResponse<TransferFundedCohortsViewModel>
-                {
-                    Data = new TransferFundedCohortsViewModel
-                    {
-                        Commitments = MapFrom(transferFundedCommitments)
-                    }
-                };
-
-            }, hashedAccountId, externalUserId);
         }
 
         private async Task<IEnumerable<CommitmentListItem>> GetAllCommitmentsOfStatus(long accountId, params RequestStatus[] statuses)
@@ -1000,93 +861,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<DeleteCommitmentViewModel>> GetDeleteCommitmentModel(string hashedAccountId, string hashedCommitmentId, string externalUserId)
-        {
-            var accountId = HashingService.DecodeValue(hashedAccountId);
-            var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
-
-            return await CheckUserAuthorization(
-                async () =>
-                    {
-                        var commitmentData = await Mediator.SendAsync(new GetCommitmentQueryRequest
-                        {
-                            AccountId = accountId,
-                            CommitmentId = commitmentId
-                        });
-
-                        CheckCommitmentIsVisibleToEmployer(commitmentData.Commitment);
-
-                        Func<string, string> textOrDefault = txt => !string.IsNullOrEmpty(txt) ? txt : "without training course details";
-                        var programmeSummary = commitmentData.Commitment.Apprenticeships
-                                .GroupBy(m => m.TrainingName)
-                                .Select(m => $"{m.Count()} {textOrDefault(m.Key)}")
-                                .ToList();
-
-                        return new OrchestratorResponse<DeleteCommitmentViewModel>
-                        {
-                            Data = new DeleteCommitmentViewModel
-                            {
-                                HashedAccountId = hashedAccountId,
-                                HashedCommitmentId = hashedCommitmentId,
-                                ProviderName = commitmentData.Commitment.ProviderName,
-                                NumberOfApprenticeships = commitmentData.Commitment.Apprenticeships.Count,
-                                ProgrammeSummaries = programmeSummary
-                            }
-                        };
-                    }, hashedAccountId, externalUserId);
-        }
-
-        public async Task DeleteCommitment(string hashedAccountId, string hashedCommitmentId, string externalUserId, string userName, string userEmail)
-        {
-            var accountId = HashingService.DecodeValue(hashedAccountId);
-            var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
-
-            Logger.Info($"Deleting commitment {hashedCommitmentId} Account: {accountId}, CommitmentId: {commitmentId}");
-
-            await CheckUserAuthorization(async () =>
-            {
-                await Mediator.SendAsync(new DeleteCommitmentCommand
-                {
-                    AccountId = accountId,
-                    CommitmentId = commitmentId,
-                    UserId = externalUserId,
-                    UserDisplayName = userName,
-                    UserEmailAddress = userEmail
-                });
-            }, hashedAccountId, externalUserId);
-        }
-
-        public async Task<OrchestratorResponse<DeleteApprenticeshipConfirmationViewModel>> GetDeleteApprenticeshipViewModel(string hashedAccountId, string externalUserId, string hashedCommitmentId, string hashedApprenticeshipId)
-        {
-            var accountId = HashingService.DecodeValue(hashedAccountId);
-            var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
-            var commitmentId = HashingService.DecodeValue(hashedCommitmentId);
-
-            return await CheckUserAuthorization(async () =>
-            {
-                var apprenticeship = await Mediator.SendAsync(new GetApprenticeshipQueryRequest
-                {
-                    AccountId = accountId,
-                    ApprenticeshipId = apprenticeshipId
-                });
-
-                await CheckCommitmentIsVisibleToEmployer(commitmentId, accountId);
-
-                return new OrchestratorResponse<DeleteApprenticeshipConfirmationViewModel>
-                {
-                    Data = new DeleteApprenticeshipConfirmationViewModel
-                    {
-                        HashedAccountId = hashedAccountId,
-                        HashedCommitmentId = hashedCommitmentId,
-                        HashedApprenticeshipId = hashedApprenticeshipId,
-                        ApprenticeshipName = apprenticeship.Apprenticeship.ApprenticeshipName,
-                        DateOfBirth = apprenticeship.Apprenticeship.DateOfBirth.HasValue ? apprenticeship.Apprenticeship.DateOfBirth.Value.ToGdsFormat() : string.Empty
-                    }
-                };
-
-            }, hashedAccountId, externalUserId);
-        }
-
         public async Task<bool> AnyCohortsForCurrentStatus(string hashedAccountId, params RequestStatus[] requestStatusFromSession)
         {
             var accountId = HashingService.DecodeValue(hashedAccountId);
@@ -1146,25 +920,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }
 
             return errors;
-        }
-
-        public async Task DeleteApprenticeship(DeleteApprenticeshipConfirmationViewModel model, string externalUser, string userName, string userEmail)
-        {
-            var accountId = HashingService.DecodeValue(model.HashedAccountId);
-            var apprenticeshipId = HashingService.DecodeValue(model.HashedApprenticeshipId);
-
-            await CheckUserAuthorization(async () =>
-                    {
-                        await Mediator.SendAsync(new DeleteApprenticeshipCommand
-                        {
-                            AccountId = accountId,
-                            ApprenticeshipId = apprenticeshipId,
-                            UserId = externalUser,
-                            UserDisplayName = userName,
-                            UserEmailAddress = userEmail
-                        });
-
-                    }, model.HashedAccountId, externalUser);
         }
 
         public async Task<OrchestratorResponse<TransferRequestViewModel>> GetTransferRequestDetails(
