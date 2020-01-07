@@ -78,6 +78,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
+            if (_featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
+                return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/draft"));
+
             var model = await Orchestrator.GetAllDraft(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
             SetFlashMessageOnModel(model);
             SaveRequestStatusInCookie(RequestStatus.NewRequest);
