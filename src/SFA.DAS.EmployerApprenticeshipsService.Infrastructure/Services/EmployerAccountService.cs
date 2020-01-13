@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EAS.Account.Api.Client;
+using SFA.DAS.EmployerCommitments.Domain.Extensions;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AccountTeam;
 using SFA.DAS.EmployerCommitments.Domain.Models.Organisation;
@@ -17,6 +19,19 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
         public EmployerAccountService(IAccountApiClient client)
         {
             _client = client;
+        }
+
+        public async Task<Account> GetAccount(long accountId)
+        {
+            var account = await _client.GetAccount(accountId);
+
+            var response = new Account
+            {
+                Id = account.AccountId,
+                ApprenticeshipEmployerType = account.ApprenticeshipEmployerType.ToEnum<ApprenticeshipEmployerType>()
+            };
+
+            return response;
         }
 
         public async Task<List<LegalEntity>> GetLegalEntitiesForAccount(string accountId)
