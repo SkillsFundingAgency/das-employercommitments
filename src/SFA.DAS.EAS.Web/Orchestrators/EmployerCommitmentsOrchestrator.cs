@@ -1182,12 +1182,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             if (isTransfer)
             {
                 return legalEntity.Agreements.Any(a =>
-                    a.Status == EmployerAgreementStatus.Signed && a.TemplateVersionNumber == 2);
+                    a.Status == EmployerAgreementStatus.Signed && a.TemplateVersionNumber >= 2);
             }
 
             return legalEntity.Agreements.Any(a =>
-                    a.Status == EmployerAgreementStatus.Signed &&
-                    (a.TemplateVersionNumber == 1 || a.TemplateVersionNumber == 2));
+                    a.Status == EmployerAgreementStatus.Signed && a.TemplateVersionNumber >= 1);
         }
     }
 }
