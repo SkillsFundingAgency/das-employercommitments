@@ -106,6 +106,9 @@
     <Reference Include="SFA.DAS.Commitments.Api.Types, Version=4.1.70.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.4.1.70\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.CommitmentsV2.Types, Version=4.1.606.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Types.4.1.606\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Types.dll</HintPath>
+    </Reference>
     <Reference Include="SFA.DAS.Common.Domain, Version=1.4.276.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.4.276\lib\net462\SFA.DAS.Common.Domain.dll</HintPath>
     </Reference>
@@ -251,6 +254,7 @@
     <Compile Include="Services\AcademicYearTests\WhenValidatingAcademicYear.cs" />
     <Compile Include="Services\AuditServiceTests\WhenISendAnAuditMessage.cs" />
     <Compile Include="Services\CookieStorageTests\WhenIUseTheCookieStorageService.cs" />
+    <Compile Include="Services\EmployerAccountServiceTests\WhenIGetEmployerAccount.cs" />
     <Compile Include="Services\EmployerAccountServiceTests\WhenICheckAUserIsConnectedToAnAccount.cs" />
     <Compile Include="Services\EmployerAccountServiceTests\WhenIGetTransferringEntitiesLinkedToAnAccount.cs" />
     <Compile Include="Services\EmployerAccountServiceTests\WhenIGetLegalEntitiesLinkedToAnAccount.cs" />

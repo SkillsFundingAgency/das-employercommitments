@@ -49,7 +49,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 Mock.Of<IApprenticeshipMapper>(), 
                 Mock.Of<ICommitmentMapper>(),
                 logger.Object,
-                _featureToggleService.Object);
+                _featureToggleService.Object,
+                Mock.Of<IEmployerAccountService>());
         }
 
         [Test]

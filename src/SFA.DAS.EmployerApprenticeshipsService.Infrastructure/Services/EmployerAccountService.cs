@@ -24,7 +24,6 @@ namespace SFA.DAS.EmployerCommitments.Infrastructure.Services
         public async Task<Account> GetAccount(long accountId)
         {
             var account = await _client.GetAccount(accountId);
-
             var response = new Account
             {
                 Id = account.AccountId,

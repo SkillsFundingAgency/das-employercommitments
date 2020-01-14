@@ -150,6 +150,9 @@
     <Reference Include="SFA.DAS.Commitments.Api.Types, Version=4.1.70.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.4.1.70\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.CommitmentsV2.Types, Version=4.1.606.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Types.4.1.606\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Types.dll</HintPath>
+    </Reference>
     <Reference Include="SFA.DAS.Common.Domain, Version=1.4.276.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.4.276\lib\net462\SFA.DAS.Common.Domain.dll</HintPath>
     </Reference>
@@ -342,6 +345,7 @@
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingTransferRequestViewModelForTransferSender.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingSkeletonApprenticeshipDetails.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingAcknowledgementModelForExistingCommitment.cs" />
+    <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingApprenticeshipEmployerType.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenSettingATransferRequestApproval.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingYourCohort.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingTransferConnections.cs" />
