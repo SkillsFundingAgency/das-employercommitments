@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         public async Task ShouldReturnAccount()
         {
             var result = await EmployerCommitmentOrchestrator.GetApprenticeshipEmployerType(HashedAccountId);
-            Assert.AreEqual(Account, result);
+            Assert.AreEqual(Account.ApprenticeshipEmployerType, result);
         }
     }
 }
