@@ -73,6 +73,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
+            if (_featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
+                return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/draft"));
+
             var model = await Orchestrator.GetAllDraft(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
             SetFlashMessageOnModel(model);
             SaveRequestStatusInCookie(RequestStatus.NewRequest);
@@ -85,6 +88,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor ))
                 return View("AccessDenied");
+
+            if (_featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
+                return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/review"));
 
             var model = await Orchestrator.GetAllReadyForReview(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
             SetFlashMessageOnModel(model);
@@ -99,6 +105,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
+            if (_featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
+                return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/with-training-provider"));
+
             SaveRequestStatusInCookie(RequestStatus.WithProviderForApproval);
 
             var model = await Orchestrator.GetAllWithProvider(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
@@ -111,6 +120,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
+
+            if (_featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
+                return Redirect(Url.CommitmentsV2Link($"{hashedAccountId}/unapproved/with-transfer-sender"));
 
             //todo: the pattern seems to be pick one of the statuses associated with a bingo box and save that in the cookie
             // to represent e.g. which page to go back to after delete. we could refactor this, perhaps introduce a new enum.
