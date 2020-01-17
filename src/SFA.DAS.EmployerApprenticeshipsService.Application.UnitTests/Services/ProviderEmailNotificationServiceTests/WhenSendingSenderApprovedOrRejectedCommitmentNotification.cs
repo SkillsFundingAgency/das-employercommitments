@@ -160,7 +160,7 @@ Funds for apprenticeship training won’t be available until the receiving emplo
 
 You need to contact the receiving employer to discuss what steps to take next. To view cohort ((cohort_reference)), follow the link below.
 
-https://providers.apprenticeships.sfa.bis.gov.uk/((ukprn))/apprentices/cohorts/transferfunded
+https://providers.apprenticeships.education.gov.uk/((ukprn))/apprentices/cohorts/transferfunded
 
 This is an automated message. Please do not reply to this email.
 
@@ -176,7 +176,7 @@ Funds for apprenticeship training won’t be available until the receiving emplo
 
 You need to contact the receiving employer to discuss what steps to take next. To view cohort {CohortReference}, follow the link below.
 
-https://providers.apprenticeships.sfa.bis.gov.uk/{ProviderId}/apprentices/cohorts/transferfunded
+https://providers.apprenticeships.education.gov.uk/{ProviderId}/apprentices/cohorts/transferfunded
 
 This is an automated message. Please do not reply to this email.
 
