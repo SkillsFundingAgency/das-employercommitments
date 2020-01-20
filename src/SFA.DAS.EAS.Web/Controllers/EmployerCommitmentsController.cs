@@ -56,6 +56,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Route("cohorts")]
         public async Task<ActionResult> YourCohorts(string hashedAccountId)
         {
+            if (_featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
+                return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/unapproved"));
+
+            // otherwise call existing code
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
