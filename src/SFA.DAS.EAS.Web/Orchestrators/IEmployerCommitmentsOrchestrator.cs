@@ -9,8 +9,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
     public interface IEmployerCommitmentsOrchestrator
     {
-        Task<OrchestratorResponse<CommitmentsIndexViewModel>> GetIndexViewModel(string hashedAccountId, string externalUserId);
-
         Task<OrchestratorResponse<CommitmentInformViewModel>> GetInform(string hashedAccountId, string externalUserId);
 
         Task<OrchestratorResponse<SelectProviderViewModel>> GetProviderSearch(string hashedAccountId,
