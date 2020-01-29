@@ -17,8 +17,16 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
         {
             For<CommitmentsApiClientConfiguration>().Use(c => c.GetInstance<IAutoConfigurationService>().Get<CommitmentsApiClientConfiguration>(ConfigurationKeys.CommitmentsApiClient)).Singleton();
             For<ICommitmentsApiClientConfiguration>().Use(c => c.GetInstance<CommitmentsApiClientConfiguration>());
-            For<IEmployerCommitmentApi>().Use<EmployerCommitmentApi>().Ctor<HttpClient>().Is(c => GetHttpClient(c));
-            For<IValidationApi>().Use<ValidationApi>();
+
+            For<HttpClient>().Use(x => GetHttpClient(x));
+
+            For<IEmployerCommitmentApi>().Use<EmployerCommitmentApi>().Ctor<HttpClient>().Is(c => c.GetInstance<HttpClient>());
+
+            For<IValidationApi>().Use<ValidationApi>()
+                .Ctor<ICommitmentsApiClientConfiguration>()
+                .Is(c => c.GetInstance<EmployerCommitmentsServiceConfiguration>().CommitmentsApi)
+                .Ctor<HttpClient>()
+                .Is(c => c.GetInstance<HttpClient>());
         }
 
         private HttpClient GetHttpClient(IContext context)
