@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 
             For<IValidationApi>().Use<ValidationApi>()
                 .Ctor<ICommitmentsApiClientConfiguration>()
-                .Is(c => c.GetInstance<EmployerCommitmentsServiceConfiguration>().CommitmentsApi)
+                .Is(c => c.GetInstance<CommitmentsApiClientConfiguration>())
                 .Ctor<HttpClient>()
                 .Is(c => c.GetInstance<HttpClient>());
         }
