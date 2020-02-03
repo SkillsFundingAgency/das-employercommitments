@@ -503,7 +503,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return (await Orchestrator.GetApprenticeshipEmployerType(viewModel.HashedAccountId)) == ApprenticeshipEmployerType.Levy;
             }
 
-            viewModel.ShowContinueAnywayLink = await IsLevyEmployer();
+            viewModel.CanContinueAnyway = await IsLevyEmployer();
             return View(viewModel);
         }
 

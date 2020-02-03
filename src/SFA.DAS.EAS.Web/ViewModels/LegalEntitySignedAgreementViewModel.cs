@@ -10,6 +10,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public string CohortRef { get; set; }
         public bool HasSignedAgreement { get; set; }
         public string LegalEntityName { get; set; }
-        public bool ShowContinueAnywayLink { get; set; } 
+        public bool CanContinueAnyway { get; set; } 
     }
 }
