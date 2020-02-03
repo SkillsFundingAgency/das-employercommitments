@@ -7,8 +7,6 @@ using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatus;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Configuration;
-using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApprovalTests
 {
@@ -18,8 +16,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
         #region Setup
 
         private Mock<IEmployerCommitmentApi> _mockCommitmentApi;
-        private Mock<IProviderEmailNotificationService> _providerEmailNotificationService;
-        private Mock<IEmployerEmailNotificationService> _employerEmailNotificationService;
 
         private CommitmentView _repositoryCommitment;
         private TransferApprovalCommandHandler _sut;
@@ -53,18 +49,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
                 CommitmentNotification = new CommitmentNotificationConfiguration {SendEmail = true}
             };
 
-            _providerEmailNotificationService = new Mock<IProviderEmailNotificationService>();
-            _providerEmailNotificationService
-                .Setup(x => x.SendSenderApprovedOrRejectedCommitmentNotification(It.IsAny<CommitmentView>(), It.IsAny<TransferApprovalStatus>()))
-                .Returns(() => Task.CompletedTask);
-
-            _employerEmailNotificationService = new Mock<IEmployerEmailNotificationService>();
-            _employerEmailNotificationService
-                .Setup(x => x.SendSenderApprovedOrRejectedCommitmentNotification(It.IsAny<CommitmentView>(), It.IsAny<TransferApprovalStatus>()))
-                .Returns(() => Task.CompletedTask);
-
-            _sut = new TransferApprovalCommandHandler(_mockCommitmentApi.Object, config,
-                Mock.Of<ILog>(), _providerEmailNotificationService.Object, _employerEmailNotificationService.Object);
+            _sut = new TransferApprovalCommandHandler(_mockCommitmentApi.Object);
         }
 
         #endregion Setup
@@ -102,37 +87,5 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
         }
 
         #endregion Core Functionality
-
-        #region Notifications
-
-        [TestCase(TransferApprovalStatus.Approved)]
-        [TestCase(TransferApprovalStatus.Rejected)]
-        public async Task ThenProviderIsNotifiedWhenEmailEnabled(TransferApprovalStatus transferApprovalStatus)
-        {
-            _command.TransferStatus = transferApprovalStatus;
-
-            await _sut.Handle(_command);
-
-            _providerEmailNotificationService.Verify(pens =>
-                pens.SendSenderApprovedOrRejectedCommitmentNotification(
-                    It.IsAny<CommitmentView>(), It.Is<TransferApprovalStatus>(s => s == transferApprovalStatus)),
-                    Times.Once);
-        }
-
-        [TestCase(TransferApprovalStatus.Approved)]
-        [TestCase(TransferApprovalStatus.Rejected)]
-        public async Task ThenEmployerIsNotifiedWhenEmailEnabled(TransferApprovalStatus transferApprovalStatus)
-        {
-            _command.TransferStatus = transferApprovalStatus;
-
-            await _sut.Handle(_command);
-
-            _employerEmailNotificationService.Verify(pens =>
-                    pens.SendSenderApprovedOrRejectedCommitmentNotification(
-                        It.IsAny<CommitmentView>(), It.Is<TransferApprovalStatus>(s => s == transferApprovalStatus)),
-                Times.Once);
-        }
-
-        #endregion Notifications
     }
 }
