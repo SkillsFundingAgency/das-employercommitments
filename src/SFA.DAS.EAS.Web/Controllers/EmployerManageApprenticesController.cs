@@ -9,6 +9,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using FluentValidation.Mvc;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Domain.Models.UserProfile;
 using SFA.DAS.EmployerCommitments.Web.Authentication;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
@@ -17,6 +18,7 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.EmployerUsers.WebClientComponents;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
+using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
@@ -25,15 +27,21 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     public class EmployerManageApprenticesController : BaseController
     {
         private readonly IEmployerManageApprenticeshipsOrchestrator _orchestrator;
+        private readonly ILinkGenerator _linkGenerator;
+        private readonly IFeatureToggleService _featureToggleService;
 
         public EmployerManageApprenticesController(
             IEmployerManageApprenticeshipsOrchestrator orchestrator,
             IOwinWrapper owinWrapper,
             IMultiVariantTestingService multiVariantTestingService,
-            ICookieStorageService<FlashMessageViewModel> flashMessage)
+            ICookieStorageService<FlashMessageViewModel> flashMessage,
+            ILinkGenerator linkGenerator,
+            IFeatureToggleService featureToggleService)
                 : base(owinWrapper, multiVariantTestingService, flashMessage)
         {
             _orchestrator = orchestrator;
+            _linkGenerator = linkGenerator;
+            _featureToggleService = featureToggleService;
         }
 
         [HttpGet]
@@ -41,6 +49,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [OutputCache(CacheProfile = "NoCache")]
         public async Task<ActionResult> ListAll(string hashedAccountId, ApprenticeshipFiltersViewModel filtersViewModel)
         {
+            if (_featureToggleService.Get<EmployerManageApprenticesV2>().FeatureEnabled)
+                return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices"));
+
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 

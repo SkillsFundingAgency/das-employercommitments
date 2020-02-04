@@ -41,14 +41,14 @@
       <HintPath>..\packages\AngleSharp.0.9.9\lib\net45\AngleSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="AutoFixture, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.4.5.0\lib\net452\AutoFixture.dll</HintPath>
+    <Reference Include="AutoFixture, Version=4.8.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.4.8.0\lib\net452\AutoFixture.dll</HintPath>
     </Reference>
-    <Reference Include="AutoFixture.AutoMoq, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.AutoMoq.4.5.0\lib\net452\AutoFixture.AutoMoq.dll</HintPath>
+    <Reference Include="AutoFixture.AutoMoq, Version=4.8.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.AutoMoq.4.8.0\lib\net452\AutoFixture.AutoMoq.dll</HintPath>
     </Reference>
-    <Reference Include="AutoFixture.NUnit3, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.NUnit3.4.5.0\lib\net452\AutoFixture.NUnit3.dll</HintPath>
+    <Reference Include="AutoFixture.NUnit3, Version=4.8.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.NUnit3.4.8.0\lib\net452\AutoFixture.NUnit3.dll</HintPath>
     </Reference>
     <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
@@ -182,6 +182,9 @@
     </Reference>
     <Reference Include="SFA.DAS.Reservations.Api.Types, Version=4.1.70.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Reservations.Api.Types.4.1.70\lib\netstandard2.0\SFA.DAS.Reservations.Api.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.Testing.AutoFixture, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Testing.AutoFixture.3.0.165\lib\netstandard2.0\SFA.DAS.Testing.AutoFixture.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StructureMap.4.7.0\lib\net45\StructureMap.dll</HintPath>
@@ -326,6 +329,7 @@
     <Compile Include="Controllers\EmployerCommitmentsControllerTests\WhenCreatingCommitment.cs" />
     <Compile Include="Controllers\EmployerCommitmentsControllerTests\WhenSelectingLegalEntity.cs" />
     <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenGettingEditStopDateDetails.cs" />
+    <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenGettingListAll.cs" />
     <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenUpdatingApprenticeshipStopDate.cs" />
     <Compile Include="Infrastructure\StructureMapRegistrationTests\WhenAddingLogging.cs" />
     <Compile Include="Infrastructure\StructureMapRegistrationTests\WhenAddingMessaging.cs" />
