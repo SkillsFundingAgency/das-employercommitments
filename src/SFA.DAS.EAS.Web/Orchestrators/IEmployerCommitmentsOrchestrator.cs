@@ -120,5 +120,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         //todo: probably belongs in a base inerface
         Task<bool> AuthorizeRole(string hashedAccountId, string externalUserId, Role[] roles);
+        Task<CommitmentsV2.Types.ApprenticeshipEmployerType> GetApprenticeshipEmployerType(string hashedAccountId);
     }
 }

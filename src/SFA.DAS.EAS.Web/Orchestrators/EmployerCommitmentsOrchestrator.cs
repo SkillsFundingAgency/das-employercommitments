@@ -8,6 +8,7 @@ using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
+using SFA.DAS.Common.Domain.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateCommitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.DeleteApprentice;
@@ -53,6 +54,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly IApprenticeshipMapper _apprenticeshipMapper;
         private readonly ICommitmentMapper _commitmentMapper;
         private readonly IFeatureToggleService _featureToggleService;
+        private readonly IEmployerAccountService _employerAccountService;
 
         public EmployerCommitmentsOrchestrator(
             IMediator mediator,
@@ -62,13 +64,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IApprenticeshipMapper apprenticeshipMapper,
             ICommitmentMapper commitmentMapper,
             ILog logger,
-            IFeatureToggleService featureToggleService) : base(mediator, hashingService, logger)
+            IFeatureToggleService featureToggleService,
+            IEmployerAccountService employerAccountService) : base(mediator, hashingService, logger)
         {
             _publicHashingService = publicHashingService;
             _apprenticeshipCoreValidator = apprenticeshipCoreValidator;
             _apprenticeshipMapper = apprenticeshipMapper;
             _commitmentMapper = commitmentMapper;
             _featureToggleService = featureToggleService;
+            _employerAccountService = employerAccountService;
         }
 
         public async Task<OrchestratorResponse<CommitmentInformViewModel>> GetInform(string hashedAccountId, string externalUserId)
@@ -128,6 +132,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     }
                 };
             }, hashedAccountId, externalUserId);
+        }
+
+
+        public async Task<CommitmentsV2.Types.ApprenticeshipEmployerType> GetApprenticeshipEmployerType(string hashedAccountId)
+        {
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            return (await _employerAccountService.GetAccount(accountId)).ApprenticeshipEmployerType;
         }
 
         public async Task<OrchestratorResponse<SelectTransferConnectionViewModel>> GetTransferConnections(
