@@ -27,6 +27,7 @@
       <Setting name="TokenCertificateThumbprint"/>
       <Setting name="MyaBaseUrl" />
       <Setting name="PsrBaseUrl" />
+      <Setting name="CommitmentsV2BaseUrl" />
       <Setting name="RecruitBaseUrl" />
       <Setting name="CommitmentsRoutePrefix" />
       <Setting name="CurrentTime" />
