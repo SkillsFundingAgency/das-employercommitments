@@ -128,7 +128,7 @@ else
 
 @section breadcrumb {
     <div class="breadcrumbs">
-        <a href="@Url.Action("Index", "EmployerCommitments")" aria-label="Back to apprentices" class="back-link">Back to apprentices</a>
+        <a href="@Url.CommitmentsV2Link(Model.Data.HashedAccountId)" aria-label="Back to apprentices" class="back-link">Back to apprentices</a>
     </div>
 }
 
