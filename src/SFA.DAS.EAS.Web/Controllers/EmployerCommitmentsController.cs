@@ -47,6 +47,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("home", Name = "CommitmentsHome")]
+        [Deprecated]
         public ActionResult Index(string hashedAccountId)
         {
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}"));
@@ -55,6 +56,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("cohorts")]
+        [Deprecated]
         public async Task<ActionResult> YourCohorts(string hashedAccountId)
         {
             if (_featureToggleService.Get<EnhancedApprovals>().FeatureEnabled)
@@ -73,6 +75,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("cohorts/draft")]
+        [Deprecated]
         public async Task<ActionResult> Draft(string hashedAccountId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -89,6 +92,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("cohorts/review")]
+        [Deprecated]
         public async Task<ActionResult> ReadyForReview(string hashedAccountId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor ))
@@ -105,6 +109,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("cohorts/provider")]
+        [Deprecated]
         public async Task<ActionResult> WithProvider(string hashedAccountId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -121,6 +126,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("cohorts/transferFunded")]
+        [Deprecated]
         public async Task<ActionResult> TransferFunded(string hashedAccountId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -140,6 +146,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("cohorts/rejectedTransfers")]
+        [Deprecated]
         public async Task<ActionResult> RejectedTransfers(string hashedAccountId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -424,6 +431,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/details")]
+        [Deprecated]
         public async Task<ActionResult> Details(string hashedAccountId, string hashedCommitmentId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
