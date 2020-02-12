@@ -172,14 +172,14 @@
     {
         if (string.IsNullOrWhiteSpace(ViewBag.HideNav))
         {
+            var accountId = HttpContext.Current.Request.RequestContext.RouteData.Values["hashedAccountId"].ToString();
             <div class="header-organisation" role="navigation">
-
                 <nav class="header-inner">
                     <ul role="menubar" id="global-nav-links">
                         <li><a href="@Url.ExternalMyaUrlAction("teams")" class="@(ViewBag.Section == "home" ? "selected" : "")" role="menuitem">Home</a></li>
                         <li><a href="@Url.ExternalMyaUrlAction("balance")" class="@(ViewBag.Section == "finance" ? "selected" : "")" role="menuitem">Finance</a></li>
                         <li><a href="@Url.ExternalRecruitUrlAction()" class="@(ViewBag.Section == "recruit" ? "selected" : "")" role="menuitem">Recruitment</a></li>
-                        <li><a href="@Url.ExternalCommitmentsV2UrlAction()" class="@(ViewBag.Section == "apprentices" ? "selected" : "")" role="menuitem">Apprentices</a></li>
+                        <li><a href="@Url.CommitmentsV2Link(accountId)" class="@(ViewBag.Section == "apprentices" ? "selected" : "")" role="menuitem">Apprentices</a></li>                        
                         <li><a href="@Url.ExternalMyaUrlAction("teams", "view")" class="@(ViewBag.Section == "team" ? "selected" : "")" role="menuitem">Your team</a></li>
                         <li><a href="@Url.ExternalMyaUrlAction("agreements")" class="@(ViewBag.Section == "organisations" ? "selected" : "")" role="menuitem">Your organisations and agreements</a></li>
                         <li><a href="@Url.ExternalMyaUrlAction("schemes")" class="@(ViewBag.Section == "paye" ? "selected" : "")" role="menuitem">PAYE schemes</a></li>

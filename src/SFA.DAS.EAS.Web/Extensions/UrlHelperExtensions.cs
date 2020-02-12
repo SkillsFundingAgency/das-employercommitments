@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using Microsoft.Azure;
+using SFA.DAS.EmployerUrlHelper.Mvc;
 
 namespace SFA.DAS.EmployerCommitments.Web.Extensions
 {
@@ -23,12 +24,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Extensions
             return BuildExternalUrl(helper, baseUrl, controllerName, actionName, ignoreAccountId);
         }
 
-        public static string ExternalCommitmentsV2UrlAction(this UrlHelper helper, string controllerName = "", string actionName = "", bool ignoreAccountId = false)
-        {
-            var baseUrl = GetCommitmentsV2BaseUrl();
-            return BuildCommitmentsV2Url(helper, baseUrl, controllerName, actionName, ignoreAccountId);
-        }
-
         private static string GetMyaBaseUrl()
         {
             return GetBaseUrl("MyaBaseUrl");
@@ -44,11 +39,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Extensions
             return GetBaseUrl("RecruitBaseUrl");
         }
 
-        private static string GetCommitmentsV2BaseUrl()
-        {
-            return GetBaseUrl("CommitmentsV2BaseUrl");
-        }
-
         private static string GetBaseUrl(string configKey)
         {
             return CloudConfigurationManager.GetSetting(configKey).EndsWith("/")
@@ -62,14 +52,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Extensions
 
             return ignoreAccountId ? $"{baseUrl}{controllerName}{(string.IsNullOrWhiteSpace(controllerName) ? "" : "/")}{actionName}"
                 : $"{baseUrl}accounts/{accountId}/{controllerName}{(string.IsNullOrWhiteSpace(controllerName) ? "" : "/")}{actionName}";
-        }
-
-        private static string BuildCommitmentsV2Url(UrlHelper helper, string baseUrl, string controllerName, string actionName = "", bool ignoreAccountId = false)
-        {
-            var accountId = helper.RequestContext.RouteData.Values["hashedAccountId"];
-
-            return ignoreAccountId ? $"{baseUrl}{controllerName}{(string.IsNullOrWhiteSpace(controllerName) ? "" : "/")}{actionName}"
-                : $"{baseUrl}{accountId}/{controllerName}{(string.IsNullOrWhiteSpace(controllerName) ? "" : "/")}{actionName}";
         }
     }
 }

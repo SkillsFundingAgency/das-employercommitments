@@ -15,7 +15,6 @@
       <Setting name="MyaBaseUrl" value="https://at-eas.apprenticeships.education.gov.uk/" />
       <Setting name="PsrBaseUrl" value="https://at-reporting.manage-apprenticeships.education.gov.uk" />
       <Setting name="RecruitBaseUrl" value="https://recruit.at-eas.apprenticeships.education.gov.uk" />
-      <Setting name="CommitmentsV2BaseUrl" value="https://localhost:44376" />
       <Setting name="CommitmentsRoutePrefix" value="commitments" />
       <Setting name="CurrentTime" value="" />
       <Setting name="UseAccountApiTransfersStub" value="false" />
