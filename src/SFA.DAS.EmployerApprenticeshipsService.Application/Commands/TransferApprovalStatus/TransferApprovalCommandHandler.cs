@@ -61,7 +61,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.TransferApprovalStatu
             {
                 TransferApprovalStatus = message.TransferStatus,
                 TransferReceiverId = commitment.EmployerAccountId,
-                //UserId = message.UserId,
+                UserId = message.UserId,
                 UserEmail = message.UserEmail,
                 UserName = message.UserName
             };
