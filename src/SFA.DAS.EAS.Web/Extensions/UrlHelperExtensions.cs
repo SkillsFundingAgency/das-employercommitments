@@ -1,6 +1,5 @@
 ﻿using System.Web.Mvc;
 using Microsoft.Azure;
-using SFA.DAS.EmployerUrlHelper.Mvc;
 
 namespace SFA.DAS.EmployerCommitments.Web.Extensions
 {
