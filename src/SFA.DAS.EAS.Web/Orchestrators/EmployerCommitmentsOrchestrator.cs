@@ -604,6 +604,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     TransferSenderId = transferSenderId,
                     TransferRequestId = transferRequestId,
                     TransferStatus = model.ApprovalConfirmed == true ? TransferApprovalStatus.Approved : TransferApprovalStatus.Rejected,
+                    UserId = externalUserId,
                     UserEmail = userEmail,
                     UserName = userDisplayName
                 });
