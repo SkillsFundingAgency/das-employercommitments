@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using SFA.DAS.CommitmentsV2.Types;
 using SFA.DAS.EmployerCommitments.Application.Domain.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -225,7 +226,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 });
             }
 
-            return RedirectToAction("AgreementNotSigned", new LegalEntitySignedAgreementViewModel
+            return RedirectToAction("AgreementNotSigned", new 
             {
                 HashedAccountId = hashedAccountId,
                 LegalEntityCode = autoSelectLegalEntity.Code,
@@ -346,8 +347,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("{legalEntityCode}/AgreementNotSigned")]
-        public ActionResult AgreementNotSigned(LegalEntitySignedAgreementViewModel viewModel)
+        public async Task<ActionResult> AgreementNotSigned(LegalEntitySignedAgreementViewModel viewModel)
         {
+            async Task<bool> IsLevyEmployer()
+            {
+                return (await Orchestrator.GetApprenticeshipEmployerType(viewModel.HashedAccountId)) == ApprenticeshipEmployerType.Levy;
+            }
+
+            viewModel.CanContinueAnyway = await IsLevyEmployer();
             return View(viewModel);
         }
 

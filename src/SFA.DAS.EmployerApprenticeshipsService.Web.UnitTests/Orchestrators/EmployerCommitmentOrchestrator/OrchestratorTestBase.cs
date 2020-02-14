@@ -41,6 +41,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         protected Mock<IFeatureToggleService> MockFeatureToggleService;
         protected Mock<IFeatureToggle> MockEmployerCommitmentsV2FeatureToggleOn;
         protected Mock<IFeatureToggle> MockTransfersFeatureToggleOn;
+        protected Mock<IEmployerAccountService> MockEmployerAccountService;
+
         protected CommitmentView CommitmentView;
 
         [SetUp]
@@ -65,6 +67,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockHashingService.Setup(x => x.DecodeValue("ABC456")).Returns(456L);
 
             MockPublicHashingService = new Mock<IPublicHashingService>();
+            MockEmployerAccountService = new Mock<IEmployerAccountService>();
 
             CommitmentView = new CommitmentView
             {
@@ -108,7 +111,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                 MockApprenticeshipMapper.Object,
                 MockCommitmentMapper.Object,
                 MockLogger.Object,
-                MockFeatureToggleService.Object);
+                MockFeatureToggleService.Object,
+                MockEmployerAccountService.Object);
         }
 
         protected CommitmentListItem GetTestCommitmentOfStatus(long id, RequestStatus requestStatus)

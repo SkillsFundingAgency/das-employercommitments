@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.EmployerCommitments.Web.ViewModels
+﻿using SFA.DAS.CommitmentsV2.Types;
+
+namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 {
     public class LegalEntitySignedAgreementViewModel
     {
@@ -8,5 +10,6 @@
         public string CohortRef { get; set; }
         public bool HasSignedAgreement { get; set; }
         public string LegalEntityName { get; set; }
+        public bool CanContinueAnyway { get; set; } 
     }
 }
