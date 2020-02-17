@@ -78,7 +78,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetReservati
         public GetReservationValidationFixture SetupApiToReturn(ReservationValidationResult result)
         {
             MockReservationApiClient
-                .Setup(x => x.ValidateReservation(It.IsAny<ValidationReservationMessage>(),
+                .Setup(x => x.ValidateReservation(It.IsAny<ReservationValidationMessage>(),
                     It.IsAny<CancellationToken>())).ReturnsAsync(result);
             return this;
         }
@@ -88,7 +88,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetReservati
             MockReservationApiClient
                 .Verify(
                     x => x.ValidateReservation(
-                        It.Is<ValidationReservationMessage>(p =>
+                        It.Is<ReservationValidationMessage>(p =>
                             p.StartDate == input.StartDate && p.CourseCode == input.TrainingCode &&
                             p.ReservationId == input.ReservationId), It.IsAny<CancellationToken>()), Times.Once);
         }
