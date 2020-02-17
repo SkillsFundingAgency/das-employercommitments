@@ -228,13 +228,6 @@
     <Compile Include="Commands\CreateApprenticeshipUpdate\CreateApprenticeshipUpdateCommand.cs" />
     <Compile Include="Commands\CreateApprenticeshipUpdate\CreateApprenticeshipUpdateCommandHandler.cs" />
     <Compile Include="Commands\CreateApprenticeshipUpdate\CreateApprenticeshipUpdateCommandValidator.cs" />
-    <Compile Include="Commands\CreateApprenticeship\CreateApprenticeshipCommand.cs" />
-    <Compile Include="Commands\CreateApprenticeship\CreateApprenticeshipCommandHandler.cs" />
-    <Compile Include="Commands\CreateApprenticeship\CreateApprenticeshipCommandValidator.cs" />
-    <Compile Include="Commands\CreateCommitment\CreateCommitmentCommand.cs" />
-    <Compile Include="Commands\CreateCommitment\CreateCommitmentCommandResponse.cs" />
-    <Compile Include="Commands\CreateCommitment\CreateCommitmentCommandValidator.cs" />
-    <Compile Include="Commands\CreateCommitment\CreateCommitmentCommandHandler.cs" />
     <Compile Include="Commands\DeleteApprentice\DeleteApprenticeshipCommand.cs" />
     <Compile Include="Commands\DeleteApprentice\DeleteApprenticeshipCommandHandler.cs" />
     <Compile Include="Commands\DeleteCommitment\DeleteCommitmentCommand.cs" />
@@ -249,9 +242,6 @@
     <Compile Include="Commands\UndoApprenticeshipUpdate\UndoApprenticeshipUpdateCommand.cs" />
     <Compile Include="Commands\UndoApprenticeshipUpdate\UndoApprenticeshipUpdateCommandHandler.cs" />
     <Compile Include="Commands\UndoApprenticeshipUpdate\UndoApprenticeshipUpdateCommandValidator.cs" />
-    <Compile Include="Commands\UpdateApprenticeship\UpdateApprenticeshipCommand.cs" />
-    <Compile Include="Commands\UpdateApprenticeship\UpdateApprenticeshipCommandHandler.cs" />
-    <Compile Include="Commands\UpdateApprenticeship\UpdateApprenticeshipCommandValidator.cs" />
     <Compile Include="Commands\SendNotification\SendNotificationCommand.cs" />
     <Compile Include="Commands\SendNotification\SendNotificationCommandHandler.cs" />
     <Compile Include="Commands\SendNotification\SendNotificationCommandValidator.cs" />

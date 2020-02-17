@@ -202,8 +202,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CreateApprenticeshipTests\WhenCreatingAnApprenticeship.cs" />
-    <Compile Include="Commands\CreateCommitmentTests\WhenCreatingCommitment.cs" />
     <Compile Include="Commands\SendNotificationTests\WhenHandlingTheCommand.cs" />
     <Compile Include="Commands\TransferApprovalTests\WhenApprovingOrRejectingATransfer.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStatusTests\WhenUpdatingApprenticeshipStatusToStopped.cs" />
@@ -211,10 +209,8 @@
     <Compile Include="Commands\UpdateApprenticeshipStatusTests\WhenUpdatingApprenticeshipStatus.cs" />
     <Compile Include="Commands\AuditCommandTests\WhenIProcessTheCommand.cs" />
     <Compile Include="Commands\AuditCommandTests\WhenIValidateTheCommand.cs" />
-    <Compile Include="Commands\CreateApprenticeshipTests\WhenValidatingCreateApprenticeshipCommand.cs" />
     <Compile Include="Commands\CreateApprenticeshipUpdate\WhenCreatingApprenticeshipUpdate.cs" />
     <Compile Include="Commands\CreateApprenticeshipUpdate\WhenValidatingCommand.cs" />
-    <Compile Include="Commands\CreateCommitmentTests\WhenValidatingTheCreateCommitmentCommand.cs" />
     <Compile Include="Commands\DeleteApprenticeTests\WhenIDeleteAnApprentice.cs" />
     <Compile Include="Commands\DeleteApprenticeTests\WhenIValidateTheRequest.cs" />
     <Compile Include="Commands\ReviewApprenticeshipUpdate\WhenValidatingCommand.cs" />
@@ -223,7 +219,6 @@
     <Compile Include="Commands\UndoApprenticeshipUpdate\WhenValidatingCommand.cs" />
     <Compile Include="Commands\UndoApprenticeshipUpdate\WhenUndoingApprenticeshipUpdate.cs" />
     <Compile Include="Commands\UpdateApprenticeshipStopDate\WhenUpdatingApprenticeshipStopDate.cs" />
-    <Compile Include="Commands\UpdateApprenticeshipTests\WhenUpdatingAnApprenticeship.cs" />
     <Compile Include="Commands\UpdateProviderPaymentPriority\WhenValidationUpdateProviderPaymentPriority.cs" />
     <Compile Include="Extensions\DateTimeExtensions\WhenGettingFirstOfMonth.cs" />
     <Compile Include="Extensions\ITrainingProgrammeExtensionsTest\WhenDeterminingWhetherACourseIsActive.cs" />
