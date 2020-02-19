@@ -9,6 +9,7 @@ using SFA.DAS.EmployerCommitments.Web.Controllers;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
+using SFA.DAS.EmployerUrlHelper;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageApprenticeControllerTests
 {
@@ -29,7 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
             _orchestrator = new Mock<IEmployerManageApprenticeshipsOrchestrator>();
 
             _controller = new EmployerManageApprenticesController(_orchestrator.Object, Mock.Of<IOwinWrapper>(), Mock.Of<IMultiVariantTestingService>(),
-                Mock.Of<ICookieStorageService<FlashMessageViewModel>>());
+                Mock.Of<ICookieStorageService<FlashMessageViewModel>>(), Mock.Of<ILinkGenerator>(), Mock.Of<IFeatureToggleService>());
         }
 
         [Test]
