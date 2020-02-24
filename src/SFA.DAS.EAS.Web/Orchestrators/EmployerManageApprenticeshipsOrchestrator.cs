@@ -580,7 +580,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
             if (apprenticeship.IsWaitingToStart(_currentDateTime))
             {
-                return new DateTimeViewModel(apprenticeship.StartDate);
+                //return new DateTimeViewModel(apprenticeship.StartDate);
+                return new DateTimeViewModel(_currentDateTime.Now.Date);
             }
 
             if (whenToMakeChange == WhenToMakeChangeOptions.Immediately)
