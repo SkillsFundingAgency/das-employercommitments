@@ -11,9 +11,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
     {
         Task<OrchestratorResponse<CommitmentInformViewModel>> GetInform(string hashedAccountId, string externalUserId);
 
-        Task<OrchestratorResponse<SelectProviderViewModel>> GetProviderSearch(string hashedAccountId,
-            string externalUserId, string transferConnectionCode, string legalEntityCode, string cohortRef);
-
         Task<OrchestratorResponse<SelectLegalEntityViewModel>> GetLegalEntities(string hashedAccountId,
             string transferConnectionCode, string cohortRef, string externalUserId);
 
@@ -30,26 +27,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             string transferConnectionCode, string legalEntityCode, string providerId, string cohortRef,
             string externalUserId);
 
-        Task<OrchestratorResponse<string>> CreateEmployerAssignedCommitment(CreateCommitmentViewModel model,
-            string externalUserId, string userDisplayName, string userEmail);
-
-        Task<OrchestratorResponse<string>> CreateProviderAssignedCommitment(SubmitCommitmentViewModel model,
-            string externalUserId, string userDisplayName, string userEmail);
-
         Task<OrchestratorResponse<ExtendedApprenticeshipViewModel>> GetSkeletonApprenticeshipDetails(
             string hashedAccountId, string externalUserId, string hashedCommitmentId);
-
-        Task CreateApprenticeship(ApprenticeshipViewModel apprenticeship, string externalUserId, string userName,
-            string userEmail);
 
         Task<OrchestratorResponse<ExtendedApprenticeshipViewModel>> GetApprenticeship(string hashedAccountId,
             string externalUserId, string hashedCommitmentId, string hashedApprenticeshipId);
 
         Task<OrchestratorResponse<ApprenticeshipViewModel>> GetApprenticeshipViewModel(string hashedAccountId,
             string externalUserId, string hashedCommitmentId, string hashedApprenticeshipId);
-
-        Task UpdateApprenticeship(ApprenticeshipViewModel apprenticeship, string externalUserId, string userName,
-            string userEmail);
 
         Task<OrchestratorResponse<FinishEditingViewModel>> GetFinishEditingViewModel(string hashedAccountId,
             string externalUserId, string hashedCommitmentId);
@@ -60,11 +45,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         Task SetTransferRequestApprovalStatus(string hashedAccountId, string hashedCommitmentId,
             string hashedTransferRequestId, TransferApprovalConfirmationViewModel model, string externalUserId,
             string userDisplayName, string userEmail);
-
-        Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitNewCommitmentModel(string hashedAccountId,
-            string externalUserId, string transferConnectionCode, string legalEntityCode, string legalEntityName,
-            string legalEntityAddress, short legalEntitySource, string accountLegalEntityPublicHashedId,
-            string providerId, string providerName, string cohortRef, SaveStatus saveStatus);
 
         Task<OrchestratorResponse<SubmitCommitmentViewModel>> GetSubmitCommitmentModel(string hashedAccountId,
             string externalUserId, string hashedCommitmentId, SaveStatus saveStatus);
