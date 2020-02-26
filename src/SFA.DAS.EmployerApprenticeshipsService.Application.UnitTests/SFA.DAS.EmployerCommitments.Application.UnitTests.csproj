@@ -127,8 +127,11 @@
     <Reference Include="SFA.DAS.Audit.Types, Version=1.0.0.20553, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Audit.Client.1.0.0.20553\lib\net45\SFA.DAS.Audit.Types.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=4.1.70.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.4.1.70\lib\net462\SFA.DAS.Commitments.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.Authentication.Extensions.Legacy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Authentication.Extensions.Legacy.1.0.22\lib\netstandard2.0\SFA.DAS.Authentication.Extensions.Legacy.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=4.1.494.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.4.1.494\lib\netstandard2.0\SFA.DAS.Commitments.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Commitments.Api.Types, Version=4.1.1012.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.4.1.1012\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
