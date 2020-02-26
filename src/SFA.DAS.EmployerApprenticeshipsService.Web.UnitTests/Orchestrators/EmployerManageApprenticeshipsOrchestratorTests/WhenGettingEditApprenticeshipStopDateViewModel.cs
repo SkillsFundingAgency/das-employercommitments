@@ -65,16 +65,16 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 , Times.Once());
         }
 
-        [Test]
-        public async Task ThenShouldCallMediatorToCheckAuthorisation()
-        {
-            await Orchestrator.GetEditApprenticeshipStopDateViewModel(HashedAccountId, HashedApprenticeshipId, ExternalUserId);
+        //[Test]
+        //public async Task ThenShouldCallMediatorToCheckAuthorisation()
+        //{
+        //    await Orchestrator.GetEditApprenticeshipStopDateViewModel(HashedAccountId, HashedApprenticeshipId, ExternalUserId);
 
-            MockMediator.Verify(x => x.SendAsync(It.Is<GetUserAccountRoleQuery>(c =>
-                            c.HashedAccountId.Equals(HashedAccountId) &&
-                            c.UserId == ExternalUserId
-                    )), Times.Once);
-        }
+        //    MockMediator.Verify(x => x.SendAsync(It.Is<GetUserAccountRoleQuery>(c =>
+        //                    c.HashedAccountId.Equals(HashedAccountId) &&
+        //                    c.UserId == ExternalUserId
+        //            )), Times.Once);
+        //}
 
         [Test]
         public async Task ThenShouldCallMediatorToGetApprenticeshipDetails()
