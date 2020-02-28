@@ -69,12 +69,12 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
 
             if (apprenticeship.IsWaitingToStart(_currentDateTime))
             {
-                //if (!command.NewStopDate.Equals(startdate))
-                //{
-                //    validationResult.AddError(nameof(command.NewStopDate),
-                //        "Date must the same as start date if training hasn't started");
-                //    throw new InvalidRequestException(validationResult.ValidationDictionary);
-                //}
+                if (!command.NewStopDate.Equals(startdate))
+                {
+                    validationResult.AddError(nameof(command.NewStopDate),
+                        "Date must the same as start date if training hasn't started");
+                    throw new InvalidRequestException(validationResult.ValidationDictionary);
+                }
             }
             else
             {

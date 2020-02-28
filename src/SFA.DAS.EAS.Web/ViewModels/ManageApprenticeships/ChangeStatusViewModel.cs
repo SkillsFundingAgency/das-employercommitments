@@ -1,5 +1,7 @@
 ﻿using FluentValidation.Attributes;
+using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.EmployerCommitments.Web.Validators;
+using System;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 {
@@ -14,6 +16,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public ChangeStatusType? ChangeType { get; set; }
 
         public WhenToMakeChangeOptions WhenToMakeChange { get; set; }
+
+        public DateTime? StartDate { get; set; }
 
         public DateTimeViewModel DateOfChange { get; set; }
 

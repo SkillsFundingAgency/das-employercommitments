@@ -66,18 +66,18 @@
                             You're about to resume this apprentice and any payments
                             you've authorised to their training provider.
                         </p>
-                                break;
-                            case ChangeStatusType.Stop:
+                        break;
+                    case ChangeStatusType.Stop:
 
-                                <div class="notice">
-                                    <i class="icon icon-important">
-                                        <span class="visually-hidden">Warning</span>
-                                    </i>
-                                    <strong class="bold-small">
-                                        This apprenticeship record cannot be restarted once stopped.
-                                    </strong>
-                                </div>
-                                <br>
+                        <div class="notice">
+                            <i class="icon icon-important">
+                                <span class="visually-hidden">Warning</span>
+                            </i>
+                            <strong class="bold-small">
+                                This apprenticeship record cannot be restarted once stopped.
+                            </strong>
+                        </div>
+                        <br>
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(Model.Data.ChangeStatusViewModel.ChangeType), "Not a valid value");
@@ -95,14 +95,14 @@
                         <th scope="row">Name</th>
                         <td>@Model.Data.ApprenticeName</td>
                     </tr>
-                <tr>
-                    <th scope="row">Unique learner number</th>
-                    <td>@Model.Data.ApprenticeULN</td>
-                </tr>
-                <tr>
-                    <th scope="row">Apprenticeship course</th>
-                    <td>@Model.Data.ApprenticeCourse</td>
-                </tr>
+                    <tr>
+                        <th scope="row">Unique learner number</th>
+                        <td>@Model.Data.ApprenticeULN</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Apprenticeship course</th>
+                        <td>@Model.Data.ApprenticeCourse</td>
+                    </tr>
 
                     @if (Model.Data.ChangeStatusViewModel.ChangeType == ChangeStatusType.Pause)
                     {
@@ -156,7 +156,7 @@
                 <fieldset>
 
 
-                    @Html.ValidationMessage("ChangeConfirmed", "Select whether to "+pageAction+" this apprenticeship status or not", new { id = "error-message-ChangeConfirmed" })
+                    @Html.ValidationMessage("ChangeConfirmed", "Select whether to " + pageAction + " this apprenticeship status or not", new { id = "error-message-ChangeConfirmed" })
                     <label for=@($"ChangeConfirmed-True") class="block-label selection-button-radio">
                         @Html.RadioButton("ChangeConfirmed", true, new { id = $"ChangeConfirmed-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
                         Yes, @pageAction this apprenticeship
@@ -171,7 +171,8 @@
             @Html.Hidden("WhenToMakeChange", Model.Data.ChangeStatusViewModel.WhenToMakeChange)
             @Html.Hidden("DateOfChange.Day", Model.Data.ChangeStatusViewModel.DateOfChange.Day)
             @Html.Hidden("DateOfChange.Month", Model.Data.ChangeStatusViewModel.DateOfChange.Month)
-            @Html.Hidden("DateOfChange.Year", Model.Data.ChangeStatusViewModel.DateOfChange.Year)
+            @Html.Hidden("DateOfChange.Year", Model.Data.ChangeStatusViewModel.DateOfChange.Year)            
+            @Html.Hidden("StartDate", Model.Data.ChangeStatusViewModel.StartDate)            
 
             <button class="button" type="submit" id="submit-status-change">Save and confirm</button>
         </form>
