@@ -23,13 +23,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                     RuleFor(r => r.DateOfChange)
                                .Cascade(CascadeMode.StopOnFirstFailure)
                                .Must(d => d.DateTime.HasValue).WithMessage("Enter the stop date for this apprenticeship");
-                });
-
-                When(x => x.ChangeType == ChangeStatusType.Stop && x.StartDate < new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1) && x.ChangeConfirmed != false, () =>
-                {
-                    RuleFor(r => r.DateOfChange)
-                               .Cascade(CascadeMode.StopOnFirstFailure)
-                               .Must(d => d.DateTime <= new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1)).WithMessage("The stop date cannot be in the future");
+                    When(x => x.StartDate < new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1), () =>
+                    {
+                        RuleFor(r => r.DateOfChange)
+                                   .Cascade(CascadeMode.StopOnFirstFailure)
+                                   .Must(d => d.DateTime <= new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1)).WithMessage("The stop date cannot be in the future");
+                    });
                 });
 
             });
