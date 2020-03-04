@@ -75,6 +75,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             var model = await _orchestrator
                 .GetApprenticeship(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
+
             var flashMessage = GetFlashMessageViewModelFromCookie();
 
             if(flashMessage == null && model.Data.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase))
@@ -86,6 +87,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             {
                 model.FlashMessage = flashMessage;
             }
+
+            if (_featureToggleService.Get<EmployerManageApprenticesV2>().FeatureEnabled)
+                model.Data.ManageApprenticeshipV2PageLink = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices");
 
             return View(model);
         }
