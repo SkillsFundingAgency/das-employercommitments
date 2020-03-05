@@ -34,7 +34,6 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
             {
                 c.Policies.Add(new ConfigurationPolicy<EmployerCommitmentsServiceConfiguration>(ServiceName));
                 c.Policies.Add(new ConfigurationPolicy<AuditApiClientConfiguration>("SFA.DAS.AuditApiClient"));
-                c.Policies.Add(new ConfigurationPolicy<NotificationsApiClientConfiguration>($"{ServiceName}.Notifications"));
                 c.Policies.Add(new ConfigurationPolicy<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI"));
                 c.Policies.Add<CurrentDatePolicy>();
                 c.Policies.Add(new MessagePolicy<EmployerCommitmentsServiceConfiguration>(ServiceName));
@@ -42,6 +41,8 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
                 c.AddRegistry<EmployerUrlHelperRegistry>();
                 c.AddRegistry<ValidationRegistry>();
                 c.AddRegistry<ReservationsApiClientRegistry>();
+                c.AddRegistry<CommitmentsRegistry>();
+                c.AddRegistry<NotificationsRegistry>();
                 c.AddRegistry<DefaultRegistry>();
             });
         }
