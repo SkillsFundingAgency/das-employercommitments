@@ -69,9 +69,17 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
             UpdateApprenticeshipStatusCommand command,
             ValidationResult validationResult)
         {
-            if (command.ChangeType == ChangeStatusType.Stop) // Only need to validate date for stop currently
+
+            if (apprenticeship.IsWaitingToStart(_currentDateTime))
             {
-          
+                //if (!command.DateOfChange.Equals(apprenticeship.StartDate))
+                //{
+                //    validationResult.AddError(nameof(command.DateOfChange), "Date must the same as start date if training hasn't started");
+                //    throw new InvalidRequestException(validationResult.ValidationDictionary);
+                //}
+            }
+            else
+            {
                 if (command.DateOfChange > new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1))
                 {
                     validationResult.AddError(nameof(command.DateOfChange), "The stop date cannot be in the future");
@@ -83,7 +91,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
                     validationResult.AddError(nameof(command.DateOfChange), "The stop month cannot be before the apprenticeship started");
                     throw new InvalidRequestException(validationResult.ValidationDictionary);
                 }
-                
             }
         }
 
