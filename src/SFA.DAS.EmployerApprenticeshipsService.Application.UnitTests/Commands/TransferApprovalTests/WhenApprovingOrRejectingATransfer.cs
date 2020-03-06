@@ -83,7 +83,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.TransferApp
                 _command.TransferRequestId,
                 It.Is<TransferApprovalRequest>(p =>
                     p.TransferApprovalStatus == _command.TransferStatus &&
-                    p.UserEmail == _command.UserEmail && p.UserName == _command.UserName)));
+                    p.UserId == _command.UserId && p.UserEmail == _command.UserEmail && p.UserName == _command.UserName)));
         }
 
         [Test]

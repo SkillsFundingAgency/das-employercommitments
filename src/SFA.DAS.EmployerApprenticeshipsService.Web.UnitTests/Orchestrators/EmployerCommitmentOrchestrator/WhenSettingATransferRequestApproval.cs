@@ -37,7 +37,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
 
             //Assert
             MockMediator.Verify(x => x.SendAsync(It.Is<TransferApprovalCommand>(c =>
-                c.TransferSenderId == TransferSenderId && c.CommitmentId == CommitmentId  && c.TransferRequestId == TransferRequestId && c.UserName == "UserName" && c.UserEmail == "UserEmail")), Times.Once);
+                c.TransferSenderId == TransferSenderId && c.CommitmentId == CommitmentId  && c.TransferRequestId == TransferRequestId && c.UserId == "UserId" && c.UserName == "UserName" && c.UserEmail == "UserEmail")), Times.Once);
         }
     }
 }
