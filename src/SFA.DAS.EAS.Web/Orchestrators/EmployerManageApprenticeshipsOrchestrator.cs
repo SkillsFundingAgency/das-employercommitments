@@ -373,7 +373,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 return new OrchestratorResponse<WhenToMakeChangeViewModel>
                 {
                     Data = new WhenToMakeChangeViewModel
-                    {
+                    {                        
                         ApprenticeStartDate = data.Apprenticeship.StartDate.Value,
                         SkipStep = CanChangeDateStepBeSkipped(changeType, data),
                         ChangeStatusViewModel = new ChangeStatusViewModel
@@ -448,14 +448,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         ApprenticeName = data.Apprenticeship.ApprenticeshipName,
                         ApprenticeULN = data.Apprenticeship.ULN,
                         DateOfBirth = data.Apprenticeship.DateOfBirth.Value,
-                        ApprenticeCourse = data.Apprenticeship.TrainingName,
+                        ApprenticeCourse = data.Apprenticeship.TrainingName,                         
 
                         ChangeStatusViewModel = new ChangeStatusViewModel
                         {
                             DateOfChange = DetermineChangeDate(changeType, data.Apprenticeship, whenToMakeChange, dateOfChange),
                             ChangeType = changeType,
                             WhenToMakeChange = whenToMakeChange,
-                            ChangeConfirmed = false
+                            ChangeConfirmed = false,
+                            StartDate = data.Apprenticeship.StartDate
                         }
                     }
                 };

@@ -93,18 +93,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
             Func<Task> act = async () => await _handler.Handle(_validCommand);
 
             act.ShouldThrow<InvalidRequestException>().Which.Message.Contains("Date cannot be earlier than training start date");
-        }
-
-        [Test]
-        public void ShouldThrowValidationErrorIfChangeDateIsntTheSameAsStartDateForApprenticeshipWaitingToStart()
-        {
-            _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(2).Date;
-            _validCommand.DateOfChange = DateTime.UtcNow.AddMonths(2).AddDays(1).Date;
-
-            Func<Task> act = async () => await _handler.Handle(_validCommand);
-
-            act.ShouldThrow<InvalidRequestException>().Which.Message.Contains("Date must the same as start date if training hasn't started");
-        }
+        }        
 
         [Test]
         public async Task ShouldRetrieveApprenticeship()

@@ -71,15 +71,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
         {
             if (command.ChangeType == ChangeStatusType.Stop) // Only need to validate date for stop currently
             {
-                if (apprenticeship.IsWaitingToStart(_currentDateTime))
-                {
-                    if (!command.DateOfChange.Equals(apprenticeship.StartDate))
-                    {
-                        validationResult.AddError(nameof(command.DateOfChange), "Date must the same as start date if training hasn't started");
-                        throw new InvalidRequestException(validationResult.ValidationDictionary);
-                    }
-                }
-                else
+                if (!apprenticeship.IsWaitingToStart(_currentDateTime))
                 {
                     if (command.DateOfChange > new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1))
                     {

@@ -110,7 +110,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
 
             act.ShouldThrow<InvalidRequestException>().Which.Message.Contains("Date must the same as start date if training hasn't started");
         }
-   
+
         [Test]
         public async Task ShouldSendProviderApprenticeshipStopEditNotification()
         {

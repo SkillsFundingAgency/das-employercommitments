@@ -372,6 +372,7 @@
     <Compile Include="Controllers\ControllerTestBase.cs" />
     <Compile Include="Controllers\EmployerCommitmentsControllerTests\EmployerCommitmentsControllerTest.cs" />
     <Compile Include="Controllers\EmployerCommitmentsControllerTests\WhenSelectingLegalEntity.cs" />
+    <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenConfirmingTheStatusChangedToStop.cs" />
     <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenGettingEditStopDateDetails.cs" />
     <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenGettingListAll.cs" />
     <Compile Include="Controllers\EmployerManageApprenticeControllerTests\WhenUpdatingApprenticeshipStopDate.cs" />
