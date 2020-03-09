@@ -69,21 +69,23 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
             UpdateApprenticeshipStatusCommand command,
             ValidationResult validationResult)
         {
-
-            if (!apprenticeship.IsWaitingToStart(_currentDateTime))
+            if (command.ChangeType == ChangeStatusType.Stop) // Only need to validate date for stop currently
             {
-                if (command.DateOfChange > new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1))
+                if (!apprenticeship.IsWaitingToStart(_currentDateTime))
                 {
-                    validationResult.AddError(nameof(command.DateOfChange), "The stop date cannot be in the future");
-                    throw new InvalidRequestException(validationResult.ValidationDictionary);
-                }
+                    if (command.DateOfChange > new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1))
+                    {
+                        validationResult.AddError(nameof(command.DateOfChange), "The stop date cannot be in the future");
+                        throw new InvalidRequestException(validationResult.ValidationDictionary);
+                    }
 
-                if (new DateTime(apprenticeship.StartDate.Value.Year, apprenticeship.StartDate.Value.Month, 1) > command.DateOfChange)
-                {
-                    validationResult.AddError(nameof(command.DateOfChange), "The stop month cannot be before the apprenticeship started");
-                    throw new InvalidRequestException(validationResult.ValidationDictionary);
+                    if (new DateTime(apprenticeship.StartDate.Value.Year, apprenticeship.StartDate.Value.Month, 1) > command.DateOfChange)
+                    {
+                        validationResult.AddError(nameof(command.DateOfChange), "The stop month cannot be before the apprenticeship started");
+                        throw new InvalidRequestException(validationResult.ValidationDictionary);
+                    }
                 }
-            }           
+            }
         }
 
         private static PaymentStatus DeterminePaymentStatusForChange(ChangeStatusType changeType)
