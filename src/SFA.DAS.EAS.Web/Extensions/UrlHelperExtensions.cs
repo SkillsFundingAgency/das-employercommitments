@@ -22,7 +22,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Extensions
             var baseUrl = GetRecruitBaseUrl();
             return BuildExternalUrl(helper, baseUrl, controllerName, actionName, ignoreAccountId);
         }
-        
+
         private static string GetMyaBaseUrl()
         {
             return GetBaseUrl("MyaBaseUrl");
