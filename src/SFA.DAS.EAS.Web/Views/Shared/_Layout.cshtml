@@ -37,6 +37,7 @@
     <!--[if IE 8]><link href="@Styles.Url("~/comt-assets/bundles/screenie8")" media="screen" rel="stylesheet" /><![endif]-->
     <!--[if gt IE 8]><!-->
     <link href="@Styles.Url("~/comt-assets/bundles/screen")" media="all" rel="stylesheet" />
+    <link href="@Styles.Url("~/comt-assets/css/cookiebanner.css")" media="all" rel="stylesheet" />
     <!--<![endif]-->
 
     <script>
@@ -95,19 +96,15 @@
         </div>
     </div>
 
-    <!--[if lt IE 8]>
+<!--[if lt IE 8]>
     <div id="unsupported-browser-message" aria-hidden="true">
         <p>
             You're using a web browser that we don't support. Upgrade to one of the <a href="https://www.gov.uk/help/browsers" target="_blank">browsers that we do support</a> to access all the site's features.
         </p>
     </div>
-    <![endif]-->
+<![endif]-->
 
-    <div id="global-cookie-message">
-        <p>
-            GOV.UK uses cookies to make the site simpler. <a href="@Url.ExternalMyaUrlAction("service", "privacy",true)">Find out more about cookies</a>
-        </p>
-    </div>
+    @Html.Partial("_CookieConsentBanner")
 
     <header role="banner" id="global-header" class="with-proposition">
         <div class="header-wrapper">
