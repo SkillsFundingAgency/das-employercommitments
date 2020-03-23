@@ -59,9 +59,14 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
 
             await _commitmentsApi.PatchEmployerApprenticeship(command.EmployerAccountId, command.ApprenticeshipId, apprenticeshipSubmission);
 
-            if (command.ChangeType == ChangeStatusType.Stop)
+            switch (command.ChangeType)
             {
-                await _providerEmailNotificationService.SendProviderApprenticeshipStopNotification(apprenticeship, command.DateOfChange);
+                case ChangeStatusType.Stop: await _providerEmailNotificationService.SendProviderApprenticeshipStopNotification(apprenticeship, command.DateOfChange);
+                    break;
+                case ChangeStatusType.Pause: await _providerEmailNotificationService.SendProviderApprenticeshipPauseNotification(apprenticeship, command.DateOfChange);
+                    break;
+                case ChangeStatusType.Resume: await _providerEmailNotificationService.SendProviderApprenticeshipResumeNotification(apprenticeship, command.DateOfChange);
+                    break;
             }
         }
 

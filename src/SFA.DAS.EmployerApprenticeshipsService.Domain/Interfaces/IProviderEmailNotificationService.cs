@@ -14,5 +14,7 @@ namespace SFA.DAS.EmployerCommitments.Domain.Interfaces
         Task SendProviderApprenticeshipStopEditNotification(Apprenticeship apprenticeship, DateTime newStopDate);
         Task SendSenderApprovedOrRejectedCommitmentNotification(CommitmentView commitment,
             TransferApprovalStatus newTransferApprovalStatus);
+        Task SendProviderApprenticeshipPauseNotification(Apprenticeship apprenticeship, DateTime pausedDate);
+        Task SendProviderApprenticeshipResumeNotification(Apprenticeship apprenticeship, DateTime resumeDate);
     }
 }
