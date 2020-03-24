@@ -1,6 +1,7 @@
 ﻿@using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types
 @using SFA.DAS.EmployerCommitments.Web.Extensions
 @using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
+@using SFA.DAS.EmployerUrlHelper
 @model SFA.DAS.EmployerCommitments.Web.OrchestratorResponse<ApprenticeshipDetailsViewModel>
 
 @{
@@ -197,7 +198,14 @@
 
 @section breadcrumb {
     <div class="breadcrumbs">
-        <a href="@Url.Action("ListAll", "EmployerManageApprentices")?@Model.Data.SearchFiltersForListView.ToQueryString()" aria-label="Back to manage your apprentices" class="back-link">Back to manage your apprentices</a>
+        @if (!string.IsNullOrWhiteSpace(Model.Data.ManageApprenticeshipV2PageLink))
+        {
+            <a href="@Model.Data.ManageApprenticeshipV2PageLink" aria-label="Back to manage your apprentices" class="back-link">Back to manage your apprentices</a>
+        }
+        else
+        {
+            <a href="@Url.Action("ListAll", "EmployerManageApprentices")?@Model.Data.SearchFiltersForListView.ToQueryString()" aria-label="Back to manage your apprentices" class="back-link">Back to manage your apprentices</a>
+        }
     </div>
 }
 
