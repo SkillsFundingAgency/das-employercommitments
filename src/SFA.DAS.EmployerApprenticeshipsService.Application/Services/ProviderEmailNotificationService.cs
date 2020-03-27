@@ -157,5 +157,61 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
                     Tokens = tokens
                 });
         }
+
+        public async Task SendProviderApprenticeshipPauseNotification(Apprenticeship apprenticeship, DateTime pausedDate)
+        {
+            if (!_configuration.CommitmentNotification.SendEmail)
+            {
+                Logger.Info("Sending email notifications disabled by config.");
+                return;
+            }
+
+            var emailMessage = new EmailMessage
+            {
+                TemplateId = "ProviderApprenticeshipPauseNotification",
+                Tokens = new Dictionary<string, string>
+                {
+                    {"EMPLOYER", apprenticeship.LegalEntityName},
+                    {"APPRENTICE", apprenticeship.ApprenticeshipName },
+                    {"DATE", pausedDate.ToString("dd/MM/yyyy") },
+                    {"URL", $"{apprenticeship.ProviderId}/apprentices/manage/{HashingService.HashValue(apprenticeship.Id)}/details" }
+                }
+            };
+
+            Logger.Info($"Sending email to all provider recipients for Provider {apprenticeship.ProviderId}, template {emailMessage.TemplateId}");
+
+            await _providerEmailService.SendEmailToAllProviderRecipients(
+                apprenticeship.ProviderId,
+                string.Empty,
+                emailMessage);
+        }
+
+        public async Task SendProviderApprenticeshipResumeNotification(Apprenticeship apprenticeship, DateTime resumeDate)
+        {
+            if (!_configuration.CommitmentNotification.SendEmail)
+            {
+                Logger.Info("Sending email notifications disabled by config.");
+                return;
+            }
+
+            var emailMessage = new EmailMessage
+            {
+                TemplateId = "ProviderApprenticeshipResumeNotification",
+                Tokens = new Dictionary<string, string>
+                {
+                    {"EMPLOYER", apprenticeship.LegalEntityName},
+                    {"APPRENTICE", apprenticeship.ApprenticeshipName },
+                    {"DATE", resumeDate.ToString("dd/MM/yyyy") },
+                    {"URL", $"{apprenticeship.ProviderId}/apprentices/manage/{HashingService.HashValue(apprenticeship.Id)}/details" }
+                }
+            };
+
+            Logger.Info($"Sending email to all provider recipients for Provider {apprenticeship.ProviderId}, template {emailMessage.TemplateId}");
+
+            await _providerEmailService.SendEmailToAllProviderRecipients(
+                apprenticeship.ProviderId,
+                string.Empty,
+                emailMessage);
+        }
     }
 }
