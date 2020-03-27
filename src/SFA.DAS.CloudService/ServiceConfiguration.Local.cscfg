@@ -24,7 +24,7 @@
       <Setting name="FeatureToggle.TransfersRejectOption" value="true" />
       <Setting name="FeatureToggle.EmployerCommitmentsV2" value="true" />
       <Setting name="FeatureToggle.EnhancedApprovals" value="true" />
-      <Setting name="FeatureToggle.EmployerManageApprenticesV2" value="false" />
+      <Setting name="FeatureToggle.EmployerManageApprenticesV2" value="true" />
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="WebSslCert" thumbprint="f4dddca9a2863480b0c9648928434f2e959e8d89" thumbprintAlgorithm="sha1" />
