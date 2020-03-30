@@ -75,16 +75,29 @@
         <h2 class="heading-medium visually-hidden">Apprentice status</h2>
         <table id="app-status" class="details-list details-list-new">
             <tbody>
-                <tr>
-                    <th scope="row">Status</th>
-                    <td>@Model.Data.Status</td>
-                    <td id="editStatusLink" class="link-right">
-                        @if (Model.Data.CanEditStatus)
-                        {
-                            @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
-                        }
-                    </td>
-                </tr>
+            <tr>
+                <th scope="row">Status</th>
+                <td>@Model.Data.Status</td>
+                <td id="editStatusLink" class="link-right">
+                    @if (Model.Data.CanEditStatus)
+                    {
+                        @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
+                    }
+                </td>
+            </tr>
+                @if (@Model.Data.PaymentStatus == PaymentStatus.Paused)
+                {
+                    <tr>
+                        <th scope="row">Apprenticeship pause date</th>
+                        <td id="pauseDate">
+                            @if (Model.Data.PauseDate.HasValue)
+                            {
+                                @Model.Data.PauseDate.Value.ToGdsFormat()
+                            }
+                        </td>
+                        <td></td>
+                    </tr>
+                }
                 @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)
                 {
                     <tr>
