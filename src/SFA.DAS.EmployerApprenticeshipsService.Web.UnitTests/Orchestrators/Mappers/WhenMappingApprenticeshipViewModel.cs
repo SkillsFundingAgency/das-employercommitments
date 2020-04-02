@@ -7,6 +7,7 @@ using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
+using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
@@ -189,6 +190,20 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             Assert.AreEqual(endpointAssessorName, viewModel.EndpointAssessorName);
         }
+
+        [TestCase(ApprenticeshipEmployerType.Levy)]
+        [TestCase(ApprenticeshipEmployerType.NonLevy)]
+        [TestCase(null)]
+        public void ThenApprenticeshipTypeOnApprovalIsMapped(ApprenticeshipEmployerType? apprenticeshipEmployerType)
+        {
+            var apprenticeship = new Apprenticeship();
+            var commitment = new CommitmentView{  ApprenticeshipEmployerTypeOnApproval = apprenticeshipEmployerType };
+
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, commitment);
+
+            Assert.AreEqual(commitment.ApprenticeshipEmployerTypeOnApproval, viewModel.ApprenticeshipEmployerTypeOnApproval);
+        }
+
 
         [TestCase(TrainingType.Standard)]
         [TestCase(TrainingType.Framework)]

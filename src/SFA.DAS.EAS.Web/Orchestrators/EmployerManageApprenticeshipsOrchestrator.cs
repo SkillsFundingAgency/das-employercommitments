@@ -8,6 +8,7 @@ using FluentValidation;
 using MediatR;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
+using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.ReviewApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UndoApprenticeshipUpdate;
@@ -206,12 +207,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 apprenticeship.HashedAccountId = hashedAccountId;
 
+                var includeFrameworks = commitmentData.Commitment.ApprenticeshipEmployerTypeOnApproval != ApprenticeshipEmployerType.NonLevy;
+
                 return new OrchestratorResponse<ExtendedApprenticeshipViewModel>
                 {
                     Data = new ExtendedApprenticeshipViewModel
                     {
                         Apprenticeship = apprenticeship,
-                        ApprenticeshipProgrammes = await GetTrainingProgrammes(true)
+                        ApprenticeshipProgrammes = await GetTrainingProgrammes(includeFrameworks)
                     }
                 };
             }, hashedAccountId, externalUserId);

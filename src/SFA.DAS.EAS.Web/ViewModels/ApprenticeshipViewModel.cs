@@ -2,6 +2,7 @@
 using FluentValidation.Attributes;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
+using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels
@@ -65,5 +66,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         public bool IsLockedForUpdate { get; set; }
         public bool IsInTransferRejectedCohort { get; set; }
         public Guid? ReservationId { get; set; }
+        public ApprenticeshipEmployerType? ApprenticeshipEmployerTypeOnApproval { get; set; }
     }
 }
