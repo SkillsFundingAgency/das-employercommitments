@@ -204,7 +204,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             Assert.AreEqual(commitment.ApprenticeshipEmployerTypeOnApproval, viewModel.ApprenticeshipEmployerTypeOnApproval);
         }
 
-
         [TestCase(TrainingType.Standard)]
         [TestCase(TrainingType.Framework)]
         public async Task ThenTrainingTypeIsMapped(TrainingType trainingType)
