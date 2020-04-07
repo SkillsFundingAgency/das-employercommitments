@@ -185,5 +185,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
             viewModel.CanEditStopDate.Should().BeTrue();
         }
+
+        [TestCase(null)]
+        [TestCase("2020-01-02")]
+        public void PausedDateIsMappedCorrectly(DateTime? pauseDate)
+        {
+            var apprenticeship = new Apprenticeship
+            {
+                PauseDate = pauseDate
+            };
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
+            viewModel.PauseDate.Should().Be(pauseDate);
+        }
     }
 }
