@@ -23,6 +23,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Extensions
             return BuildExternalUrl(helper, baseUrl, controllerName, actionName, ignoreAccountId);
         }
 
+        public static string ExternalPrivacyAction(this UrlHelper helper, string controllerName, string actionName = "")
+        {
+            var baseUrl = GetMyaBaseUrl();
+            var accountId = helper.RequestContext.RouteData.Values["hashedAccountId"];
+            return $"{baseUrl}{controllerName}/{accountId}/{actionName}";
+        }
+
         private static string GetMyaBaseUrl()
         {
             return GetBaseUrl("MyaBaseUrl");
