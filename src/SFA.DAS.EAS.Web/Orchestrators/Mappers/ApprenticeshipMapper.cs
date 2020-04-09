@@ -70,6 +70,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 EndDate = apprenticeship.EndDate,
                 StopDate = apprenticeship.StopDate,
                 PauseDate = apprenticeship.PauseDate,
+                CompletionDate = apprenticeship.CompletionDate,
                 TrainingName = apprenticeship.TrainingName,
                 Cost = apprenticeship.Cost,
                 PaymentStatus = apprenticeship.PaymentStatus,
