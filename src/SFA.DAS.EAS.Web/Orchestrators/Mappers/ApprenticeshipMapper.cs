@@ -184,7 +184,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 IsInTransferRejectedCohort = commitment.TransferSender?.TransferApprovalStatus == TransferApprovalStatus.Rejected,
                 IsUpdateLockedForStartDateAndCourse = isUpdateLockedForStartDateAndCourse,
                 IsEndDateLockedForUpdate = isEndDateLockedForUpdate,
-                ReservationId =  apprenticeship.ReservationId
+                ReservationId =  apprenticeship.ReservationId,
+                ApprenticeshipEmployerTypeOnApproval = commitment.ApprenticeshipEmployerTypeOnApproval
             };
         }
 
