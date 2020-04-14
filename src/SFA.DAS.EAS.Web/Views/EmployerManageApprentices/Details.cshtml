@@ -65,7 +65,7 @@
         <h1 class="heading-xlarge" id="learnerName">@Model.Data.FirstName @Model.Data.LastName</h1>
 
         @{ if (!Model.Data.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) &&
-               !Model.Data.Status.Equals(nameof(PaymentStatus.Completed), StringComparison.InvariantCultureIgnoreCase))
+               Model.Data.PaymentStatus != PaymentStatus.Completed)
             {
                 <p>
                     Edit details if there's a change in apprentice or apprenticeship circumstances.
