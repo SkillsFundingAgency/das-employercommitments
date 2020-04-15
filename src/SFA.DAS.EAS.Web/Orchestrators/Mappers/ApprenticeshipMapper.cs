@@ -437,7 +437,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 case PaymentStatus.Withdrawn:
                     return "Stopped";
                 case PaymentStatus.Completed:
-                    return "Finished";
+                    return "Completed";
                 case PaymentStatus.Deleted:
                     return "Deleted";
                 default:
