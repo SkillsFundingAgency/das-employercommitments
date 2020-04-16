@@ -123,6 +123,18 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             Assert.AreEqual(expectedStopDate, viewModel.StopDate);
         }
 
+        [Test]
+        public void ThenCompletionDateIsMapped()
+        {
+            var expectedCompletionDate = new DateTime(2020, 02, 20);
+
+            var apprenticeship = new Apprenticeship { CompletionDate = expectedCompletionDate };
+
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
+
+            Assert.AreEqual(expectedCompletionDate, viewModel.CompletionDate);
+        }
+
         [TestCase(TransferApprovalStatus.Rejected, true)]
         [TestCase(TransferApprovalStatus.Pending, false)]
         public void ThenCohortTransferRejectionIsIndicated(TransferApprovalStatus status, bool expectRejectionIndicated)
