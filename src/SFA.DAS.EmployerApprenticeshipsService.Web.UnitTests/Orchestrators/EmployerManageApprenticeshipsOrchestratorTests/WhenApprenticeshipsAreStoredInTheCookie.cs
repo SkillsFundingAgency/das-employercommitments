@@ -13,6 +13,7 @@ using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
+using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.HashingService;
 
@@ -25,6 +26,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         private Mock<IApprenticeshipMapper> _apprenticeshipMapper;
         private Mock<ILog> _logger;
         private Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>  _cookieStorageService;
+        private Mock<ILinkGenerator> _linkGenerator;
         private EmployerManageApprenticeshipsOrchestrator _orchestrator;
 
         protected readonly Mock<ICurrentDateTime> CurrentDateTime = new Mock<ICurrentDateTime>();
@@ -40,6 +42,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             _apprenticeshipMapper = new Mock<IApprenticeshipMapper>();
             _logger = new Mock<ILog>();
             _cookieStorageService = new Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>();
+            _linkGenerator = new Mock<ILinkGenerator>();
 
             CurrentDateTime.Setup(x => x.Now).Returns(new DateTime(2018, 5, 1));
             var academicYearProvider = new AcademicYearDateProvider(CurrentDateTime.Object);
@@ -62,7 +65,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 Mock.Of<IFiltersCookieManager>(),
                 Mock.Of<IApprenticeshipFiltersMapper>(),
                 Mock.Of<IAcademicYearDateProvider>(), 
-                new AcademicYearValidator(CurrentDateTime.Object, academicYearProvider));
+                new AcademicYearValidator(CurrentDateTime.Object, academicYearProvider),
+                _linkGenerator.Object);
         }
 
        

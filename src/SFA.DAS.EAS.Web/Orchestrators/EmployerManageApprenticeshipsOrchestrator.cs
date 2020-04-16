@@ -32,6 +32,7 @@ using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
+using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.NLog.Logger;
 using ChangeStatusType = SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships.ChangeStatusType;
 using SFA.DAS.HashingService;
@@ -44,6 +45,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly IApprenticeshipMapper _apprenticeshipMapper;
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IApprenticeshipFiltersMapper _apprenticeshipFiltersMapper;
+        private readonly ILinkGenerator _linkGenerator;
 
         private readonly IValidateApprovedApprenticeship _approvedApprenticeshipValidator;
         private readonly IAcademicYearDateProvider _academicYearDateProvider;
@@ -67,7 +69,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             IFiltersCookieManager filtersCookieManager,
             IApprenticeshipFiltersMapper apprenticeshipFiltersMapper,
             IAcademicYearDateProvider academicYearDateProvider,
-            IAcademicYearValidator academicYearValidator)
+            IAcademicYearValidator academicYearValidator,
+            ILinkGenerator linkGenerator)
             : base(mediator, hashingService, logger)
         {
             _apprenticeshipMapper = apprenticeshipMapper;
@@ -79,6 +82,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _searchPlaceholderText = "Enter a name";
             _academicYearDateProvider = academicYearDateProvider;
             _academicYearValidator = academicYearValidator;
+            _linkGenerator = linkGenerator;
         }
 
         public async Task<OrchestratorResponse<ManageApprenticeshipsViewModel>> GetApprenticeships(
@@ -451,7 +455,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         ApprenticeName = data.Apprenticeship.ApprenticeshipName,
                         ApprenticeULN = data.Apprenticeship.ULN,
                         DateOfBirth = data.Apprenticeship.DateOfBirth.Value,
-                        ApprenticeCourse = data.Apprenticeship.TrainingName,                         
+                        ApprenticeCourse = data.Apprenticeship.TrainingName,
+                        ViewTransactionsLink = _linkGenerator.FinanceLink($"accounts/{hashedAccountId}/finance/{_currentDateTime.Now.Year}/{_currentDateTime.Now.Month}"),
 
                         ChangeStatusViewModel = new ChangeStatusViewModel
                         {
