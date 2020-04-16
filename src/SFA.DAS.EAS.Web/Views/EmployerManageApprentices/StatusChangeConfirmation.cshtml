@@ -12,7 +12,7 @@
         case ChangeStatusType.Pause:
             pageTitle = "Apprenticeship paused";
             pageId = "apprentice-paused";
-            pageHeading = "Pause apprentice";
+            pageHeading = "Pause apprenticeship";
             pageAction = "pause";
             break;
         case ChangeStatusType.Resume:
@@ -50,15 +50,14 @@
                 switch (Model.Data.ChangeStatusViewModel.ChangeType.Value)
                 {
                     case ChangeStatusType.Pause:
-                        <p class="lede">
-                            You're about to pause this apprentice and any future
-                            payments to their training provider. Any outstanding
-                            payments for training up to this point will still be made.
+                        <p class="govuk-body">
+                            You’re about to pause this apprenticeship and all payments to the training provider. Any payments previously made to the training provider are unaffected.
                         </p>
-                        <p class="lede">
-                            You'll be able to return and resume the apprentice again
-                            later.
+                        <p class="govuk-body">
+                            <a class="govuk-link govuk-body" target="_blank" href="@Model.Data.ViewTransactionsLink" id="view-transactions-link">View your transactions</a> to confirm all payments are up-to-date before pausing.
                         </p>
+
+                        <p class="govuk-body">You can return and resume the apprenticeship at any time.</p>
 
                         break;
                     case ChangeStatusType.Resume:
@@ -100,7 +99,7 @@
                         <td>@Model.Data.ApprenticeULN</td>
                     </tr>
                     <tr>
-                        <th scope="row">Apprenticeship course</th>
+                        <th scope="row">Apprenticeship training course</th>
                         <td>@Model.Data.ApprenticeCourse</td>
                     </tr>
 
@@ -171,8 +170,8 @@
             @Html.Hidden("WhenToMakeChange", Model.Data.ChangeStatusViewModel.WhenToMakeChange)
             @Html.Hidden("DateOfChange.Day", Model.Data.ChangeStatusViewModel.DateOfChange.Day)
             @Html.Hidden("DateOfChange.Month", Model.Data.ChangeStatusViewModel.DateOfChange.Month)
-            @Html.Hidden("DateOfChange.Year", Model.Data.ChangeStatusViewModel.DateOfChange.Year)            
-            @Html.Hidden("StartDate", Model.Data.ChangeStatusViewModel.StartDate)            
+            @Html.Hidden("DateOfChange.Year", Model.Data.ChangeStatusViewModel.DateOfChange.Year)
+            @Html.Hidden("StartDate", Model.Data.ChangeStatusViewModel.StartDate)
 
             <button class="button" type="submit" id="submit-status-change">Save and confirm</button>
         </form>
