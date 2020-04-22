@@ -116,7 +116,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             var result = await Orchestrator.GetApprenticeship("hashedAccountId", "hashedApprenticeshipId", "UserId");
 
-            result.Data.Status.Should().Be("Finished");
+            result.Data.Status.Should().Be("Completed");
         }
 
         [Test]

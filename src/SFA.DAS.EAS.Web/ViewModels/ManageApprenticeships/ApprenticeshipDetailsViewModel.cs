@@ -22,6 +22,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public DateTime? StopDate { get; set; }
         public DateTime? PauseDate { get; set; }
+        public DateTime? CompletionDate { get; set; }
 
         public TrainingType TrainingType { get; set; }
 

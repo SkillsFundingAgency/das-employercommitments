@@ -64,7 +64,8 @@
 
         <h1 class="heading-xlarge" id="learnerName">@Model.Data.FirstName @Model.Data.LastName</h1>
 
-        @{ if (!Model.Data.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase))
+        @{ if (!Model.Data.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) &&
+               Model.Data.PaymentStatus != PaymentStatus.Completed)
             {
                 <p>
                     Edit details if there's a change in apprentice or apprenticeship circumstances.
@@ -98,6 +99,21 @@
                         <td></td>
                     </tr>
                 }
+
+                @if (@Model.Data.PaymentStatus == PaymentStatus.Completed)
+                {
+                    <tr>
+                        <th scope="row">Completion payment month</th>
+                        <td id="completionDate">
+                            @if (Model.Data.CompletionDate.HasValue)
+                            {
+                                @Model.Data.CompletionDate.Value.ToGdsFormatLongMonthNameWithoutDay();
+                            }
+                        </td>
+                        <td></td>
+                    </tr>
+                }
+
                 @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)
                 {
                     <tr>
