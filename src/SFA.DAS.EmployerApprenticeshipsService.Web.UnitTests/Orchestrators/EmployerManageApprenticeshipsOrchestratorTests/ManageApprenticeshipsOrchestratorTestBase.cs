@@ -13,6 +13,7 @@ using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
+using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.HashingService;
 
@@ -26,6 +27,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         protected Mock<IMediator> MockMediator;
         protected EmployerManageApprenticeshipsOrchestrator Orchestrator;
         protected Mock<ICurrentDateTime> MockDateTime;
+        protected Mock<ILinkGenerator> MockLinkGenerator;
 
         public IValidateApprovedApprenticeship Validator;
         protected Mock<IAcademicYearDateProvider> AcademicYearDateProvider;
@@ -45,6 +47,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             MockDateTime = new Mock<ICurrentDateTime>();
             MockDateTime.Setup(x => x.Now).Returns(DateTime.UtcNow);
+
+            MockLinkGenerator = new Mock<ILinkGenerator>();
+            MockLinkGenerator
+                .Setup(x => x.FinanceLink($"accounts/{HashedAccountId}/finance/{MockDateTime.Object.Now.Year}/{MockDateTime.Object.Now.Month}"))
+                .Returns("testLink");
 
             AcademicYearDateProvider = new Mock<IAcademicYearDateProvider>();
             AcademicYearDateProvider.Setup(x => x.CurrentAcademicYearStartDate).Returns(new DateTime(2017, 8, 1));
@@ -90,7 +97,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 Mock.Of<IFiltersCookieManager>(),
                 ApprenticeshipFiltersMapper.Object,
                 AcademicYearDateProvider.Object,
-                AcademicYearValidator);
+                AcademicYearValidator,
+                MockLinkGenerator.Object);
         }
     }
 }

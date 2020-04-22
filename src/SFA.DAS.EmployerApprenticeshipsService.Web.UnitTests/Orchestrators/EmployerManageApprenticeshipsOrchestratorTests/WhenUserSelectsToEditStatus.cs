@@ -111,7 +111,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             response.Data.ApprenticeStartDate.Should().Be(_testApprenticeship.StartDate.Value);
         }
-       
+
         [Test]
         public async Task IfStoppingThenStartedTrainingAndImmediateChangeSpecifiedShouldSetDateOfChangeToTodaysDate()
         {
@@ -165,7 +165,23 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             response.Data.ChangeStatusViewModel.DateOfChange.DateTime.Should().Be(DateTime.UtcNow.Date);
         }
 
-     
+        [Test]
+        public async Task IfPausingThenViewTransactionsLinkIsSet()
+        {
+            var expectedLink = "testLink";
+
+            _testApprenticeship.StartDate = DateTime.UtcNow.AddMonths(2); // Apprenticeship is waiting to start
+
+            OrchestratorResponse<ConfirmationStateChangeViewModel> response = await Orchestrator.GetChangeStatusConfirmationViewModel(
+                HashedAccountId,
+                "CDE321",
+                ChangeStatusType.Pause,
+                WhenToMakeChangeOptions.Immediately,
+                null,
+                "user123");
+
+            response.Data.ViewTransactionsLink.Should().Be(expectedLink);
+        }
 
     }
 }
