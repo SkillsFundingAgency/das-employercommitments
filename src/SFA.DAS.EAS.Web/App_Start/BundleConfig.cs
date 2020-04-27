@@ -15,7 +15,8 @@ namespace SFA.DAS.EmployerCommitments.Web
                       "~/comt-assets/javascripts/selection-buttons.js",
                       "~/comt-assets/javascripts/showhide-content.js",
                       "~/comt-assets/javascripts/stacker.js",
-                      "~/comt-assets/javascripts/app.js"));
+                      "~/comt-assets/javascripts/app.js",
+                      "~/comt-assets/javascripts/cookiebanner.js"));
 
             bundles.Add(new ScriptBundle("~/comt-assets/bundles/apprentice").Include(
                       "~/comt-assets/javascripts/apprentice/select2.min.js",
