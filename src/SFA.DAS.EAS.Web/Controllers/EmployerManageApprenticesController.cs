@@ -47,22 +47,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [Route("all")]
         [OutputCache(CacheProfile = "NoCache")]
-        public async Task<ActionResult> ListAll(string hashedAccountId, ApprenticeshipFiltersViewModel filtersViewModel)
+        public ActionResult ListAll(string hashedAccountId)
         {
-            if (_featureToggleService.Get<EmployerManageApprenticesV2>().FeatureEnabled)
-                return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices"));
-
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            var model = await _orchestrator
-                .GetApprenticeships(hashedAccountId,
-                filtersViewModel,
-                OwinWrapper.GetClaimValue(@"sub"));
-
-            RemoveFlashMessageFromCookie();
-            
-            return View(model);
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices"));
         }
 
         [HttpGet]

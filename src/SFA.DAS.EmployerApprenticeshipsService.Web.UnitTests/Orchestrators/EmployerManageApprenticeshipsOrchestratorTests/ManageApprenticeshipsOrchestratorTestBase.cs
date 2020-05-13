@@ -23,7 +23,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
     {
         protected Mock<IHashingService> MockHashingService;
         protected ApprenticeshipMapper ApprenticeshipMapper;
-        protected Mock<IApprenticeshipFiltersMapper> ApprenticeshipFiltersMapper;
         protected Mock<IMediator> MockMediator;
         protected EmployerManageApprenticeshipsOrchestrator Orchestrator;
         protected Mock<ICurrentDateTime> MockDateTime;
@@ -73,8 +72,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                     User = new TeamMember() { AccountId = AccountId, HashedAccountId = HashedAccountId, Email = Email, Name = Name }
                 });
 
-            ApprenticeshipFiltersMapper = new Mock<IApprenticeshipFiltersMapper>();
-
             var academicYearProvider = new AcademicYearDateProvider(MockDateTime.Object);
 
             Validator = new ApprovedApprenticeshipViewModelValidator(
@@ -94,8 +91,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 MockDateTime.Object,
                 new Mock<ILog>().Object, 
                 new Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>().Object,
-                Mock.Of<IFiltersCookieManager>(),
-                ApprenticeshipFiltersMapper.Object,
                 AcademicYearDateProvider.Object,
                 AcademicYearValidator,
                 MockLinkGenerator.Object);

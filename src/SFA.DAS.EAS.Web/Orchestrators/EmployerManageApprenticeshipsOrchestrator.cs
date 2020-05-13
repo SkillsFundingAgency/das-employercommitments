@@ -44,7 +44,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
     {
         private readonly IApprenticeshipMapper _apprenticeshipMapper;
         private readonly ICurrentDateTime _currentDateTime;
-        private readonly IApprenticeshipFiltersMapper _apprenticeshipFiltersMapper;
         private readonly ILinkGenerator _linkGenerator;
 
         private readonly IValidateApprovedApprenticeship _approvedApprenticeshipValidator;
@@ -52,9 +51,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         private readonly IAcademicYearValidator _academicYearValidator;
         private readonly ICookieStorageService<UpdateApprenticeshipViewModel>
             _apprenticeshipsViewModelCookieStorageService;
-
-        private readonly IFiltersCookieManager _filtersCookieManager;
-        private readonly string _searchPlaceholderText;
 
         private const string CookieName = "sfa-das-employerapprenticeshipsservice-apprentices";
 
@@ -66,8 +62,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             ICurrentDateTime currentDateTime,
             ILog logger,
             ICookieStorageService<UpdateApprenticeshipViewModel> apprenticeshipsViewModelCookieStorageService,
-            IFiltersCookieManager filtersCookieManager,
-            IApprenticeshipFiltersMapper apprenticeshipFiltersMapper,
             IAcademicYearDateProvider academicYearDateProvider,
             IAcademicYearValidator academicYearValidator,
             ILinkGenerator linkGenerator)
@@ -77,63 +71,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             _currentDateTime = currentDateTime;
             _approvedApprenticeshipValidator = approvedApprenticeshipValidator;
             _apprenticeshipsViewModelCookieStorageService = apprenticeshipsViewModelCookieStorageService;
-            _filtersCookieManager = filtersCookieManager;
-            _apprenticeshipFiltersMapper = apprenticeshipFiltersMapper;
-            _searchPlaceholderText = "Enter a name";
             _academicYearDateProvider = academicYearDateProvider;
             _academicYearValidator = academicYearValidator;
             _linkGenerator = linkGenerator;
-        }
-
-        public async Task<OrchestratorResponse<ManageApprenticeshipsViewModel>> GetApprenticeships(
-            string hashedAccountId, ApprenticeshipFiltersViewModel filters, string externalUserId)
-        {
-            var accountId = HashingService.DecodeValue(hashedAccountId);
-            Logger.Info($"Getting On-programme apprenticeships for employer: {accountId}");
-
-            return await CheckUserAuthorization(async () =>
-            {
-                if (filters.SearchInput?.Trim() == _searchPlaceholderText.Trim())
-                    filters.SearchInput = string.Empty;
-
-                _filtersCookieManager.SetCookie(filters);
-
-                var searchQuery = _apprenticeshipFiltersMapper.MapToApprenticeshipSearchQuery(filters);
-
-                var searchResponse = await Mediator.SendAsync(new ApprenticeshipSearchQueryRequest
-                {
-                    HashedLegalEntityId = hashedAccountId,
-                    Query = searchQuery
-                });
-
-                var apprenticeships =
-                searchResponse.Apprenticeships
-                    .OrderBy(m => m.ApprenticeshipName)
-                    .Select(async m => await _apprenticeshipMapper.MapToApprenticeshipDetailsViewModel(m, true))
-                    .ToList();
-
-                var filterOptions = _apprenticeshipFiltersMapper.Map(searchResponse.Facets);
-                filterOptions.SearchInput = searchResponse.SearchKeyword;
-
-                var model = new ManageApprenticeshipsViewModel
-                {
-                    HashedAccountId = hashedAccountId,
-                    Apprenticeships = await Task.WhenAll(apprenticeships),
-                    Filters = filterOptions,
-                    TotalResults = searchResponse.TotalApprenticeships,
-                    PageNumber = searchResponse.PageNumber,
-                    TotalPages = searchResponse.TotalPages,
-                    TotalApprenticeshipsBeforeFilter = searchResponse.TotalApprenticeshipsBeforeFilter,
-                    PageSize = searchResponse.PageSize,
-                    SearchInputPlaceholder = _searchPlaceholderText
-                };
-
-                return new OrchestratorResponse<ManageApprenticeshipsViewModel>
-                {
-                    Data = model
-                };
-
-            }, hashedAccountId, externalUserId);
         }
 
         public async Task<OrchestratorResponse<EditApprenticeshipStopDateViewModel>> GetEditApprenticeshipStopDateViewModel(string hashedAccountId, string hashedApprenticeshipId, string externalUserId)
@@ -174,8 +114,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 detailsViewModel.PendingDataLockRestart = data.Apprenticeship.DataLockCourseTriaged;
                 detailsViewModel.PendingDataLockChange = data.Apprenticeship.DataLockPriceTriaged || data.Apprenticeship.DataLockCourseChangeTriaged;
-
-                detailsViewModel.SearchFiltersForListView = _filtersCookieManager.GetCookie();
 
                 return new OrchestratorResponse<ApprenticeshipDetailsViewModel> { Data = detailsViewModel };
             }, hashedAccountId, externalUserId);
