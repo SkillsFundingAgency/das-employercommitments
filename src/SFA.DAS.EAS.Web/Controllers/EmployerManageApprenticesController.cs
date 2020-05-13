@@ -75,8 +75,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 model.FlashMessage = flashMessage;
             }
 
-            if (_featureToggleService.Get<EmployerManageApprenticesV2>().FeatureEnabled)
-                model.Data.ManageApprenticeshipV2PageLink = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices?fromSearch=true");
+            model.Data.ManageApprenticeshipV2PageLink = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices?fromSearch=true");
 
             return View(model);
         }
