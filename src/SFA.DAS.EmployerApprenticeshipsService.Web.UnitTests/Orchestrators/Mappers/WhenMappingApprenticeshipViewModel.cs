@@ -111,6 +111,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             Assert.AreEqual(uln, viewModel.ULN);
         }
 
+        [TestCase(null, false)]
+        [TestCase(1, true)]
+        public void ThenIsContinuationIsMapped(int? continuationOfId, bool expectIsContinuation)
+        {
+            var apprenticeship = new Apprenticeship {ContinuationOfId = continuationOfId};
+
+            var viewModel = Sut.MapToApprenticeshipViewModel(apprenticeship, new CommitmentView());
+
+            Assert.AreEqual(expectIsContinuation, viewModel.IsContinuation);
+        }
+
         [Test]
         public void ThenStopDateIsMapped()
         {

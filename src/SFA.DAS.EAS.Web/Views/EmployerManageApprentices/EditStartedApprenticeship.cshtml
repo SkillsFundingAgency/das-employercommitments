@@ -5,26 +5,54 @@
 @model ExtendedApprenticeshipViewModel
 
 <div id="edit-started-apprentice">
+
+@if (Model.Apprenticeship.IsContinuation)
+{
+    <div class="form-group">
+        <hr />
+        <label class="form-label-bold" for="FirstName">First name</label>
+        <span>@Model.Apprenticeship.FirstName</span>
+    </div>
+    @Html.Hidden("FirstName", Model.Apprenticeship.FirstName)
+
+    <div class="form-group">
+        <hr />
+        <label class="form-label-bold" for="LastName">Last name</label>
+        <span>@Model.Apprenticeship.LastName</span>
+    </div>
+    @Html.Hidden("LastName", Model.Apprenticeship.LastName)
+
+    <div class="form-group">
+        <hr />
+        <label class="form-label-bold" for="DateOfBirth">Date of birth</label>
+        <span>@Model.Apprenticeship.DateOfBirth.DateTime.Value.ToGdsFormat()</span>
+    </div>
+    @Html.Hidden("DateOfBirth.Day", Model.Apprenticeship.DateOfBirth.Day)
+    @Html.Hidden("DateOfBirth.Month", Model.Apprenticeship.DateOfBirth.Month)
+    @Html.Hidden("DateOfBirth.Year", Model.Apprenticeship.DateOfBirth.Year)
+}
+else
+{
     <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.FirstNameError) ? "error" : "")">
-        @Html.Label("FirstName", "First name", new { @class = "form-label form-label-bold" })
+        @Html.Label("FirstName", "First name", new {@class = "form-label form-label-bold"})
         @if (!string.IsNullOrEmpty(Model.Apprenticeship.FirstNameError))
         {
             <span class="error-message" id="error-message-firstname">@Model.Apprenticeship.FirstNameError</span>
         }
-        @Html.TextBox("FirstName", Model.Apprenticeship.FirstName, new { @class = "form-control form-control-3-4" })
+        @Html.TextBox("FirstName", Model.Apprenticeship.FirstName, new {@class = "form-control form-control-3-4"})
     </div>
 
     <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.LastNameError) ? "error" : "")">
-        @Html.Label("LastName", "Last name", new { @class = "form-label form-label-bold" })
+        @Html.Label("LastName", "Last name", new {@class = "form-label form-label-bold"})
         @if (!string.IsNullOrEmpty(Model.Apprenticeship.LastNameError))
         {
             <span class="error-message" id="error-message-lastname">@Model.Apprenticeship.LastNameError</span>
         }
-        @Html.TextBox("LastName", Model.Apprenticeship.LastName, new { @class = "form-control form-control-3-4" })
+        @Html.TextBox("LastName", Model.Apprenticeship.LastName, new {@class = "form-control form-control-3-4"})
     </div>
 
     <div class="form-error-group form-group @(!string.IsNullOrEmpty(Model.Apprenticeship.DateOfBirthError) ? "error" : "")">
-	<hr />
+        <hr/>
         <span class="form-label-bold">Date of birth</span>
         <span class="form-hint">For example, 08 12 2001</span>
 
@@ -40,7 +68,7 @@
                     Day
                 </label>
 
-                @Html.TextBox("DateOfBirth.Day", Model.Apprenticeship.DateOfBirth.Day, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "31", aria_labelledby = "DateOfBirth.Day" })
+                @Html.TextBox("DateOfBirth.Day", Model.Apprenticeship.DateOfBirth.Day, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "31", aria_labelledby = "DateOfBirth.Day"})
 
             </div>
             <div class="form-group form-group-month">
@@ -48,7 +76,7 @@
                     Month
                 </label>
 
-                @Html.TextBox("DateOfBirth.Month", Model.Apprenticeship.DateOfBirth.Month, new { @class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "DateOfBirth.Month" })
+                @Html.TextBox("DateOfBirth.Month", Model.Apprenticeship.DateOfBirth.Month, new {@class = "form-control length-limit", type = "number", maxlength = "2", min = "1", max = "12", aria_labelledby = "DateOfBirth.Month"})
 
             </div>
             <div class="form-group form-group-year">
@@ -56,10 +84,11 @@
                     Year
                 </label>
 
-                @Html.TextBox("DateOfBirth.Year", Model.Apprenticeship.DateOfBirth.Year, new { @class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "DateOfBirth.Year" })
+                @Html.TextBox("DateOfBirth.Year", Model.Apprenticeship.DateOfBirth.Year, new {@class = "form-control length-limit", type = "number", maxlength = "4", min = "1900", max = "9999", aria_labelledby = "DateOfBirth.Year"})
             </div>
         </div>
     </div>
+}
 
     <div id="form-error-group form-group">
         <div class="form-group">
@@ -69,7 +98,7 @@
         </div>
     </div>
 
-    @if (Model.Apprenticeship.IsLockedForUpdate || Model.Apprenticeship.IsUpdateLockedForStartDateAndCourse)
+    @if (Model.Apprenticeship.IsLockedForUpdate || Model.Apprenticeship.IsUpdateLockedForStartDateAndCourse || Model.Apprenticeship.IsContinuation)
     {
         <div class="form-group">
             <hr />
@@ -101,7 +130,7 @@
         </div>
     }
 
-    @if (Model.Apprenticeship.IsLockedForUpdate || Model.Apprenticeship.IsUpdateLockedForStartDateAndCourse)
+    @if (Model.Apprenticeship.IsLockedForUpdate || Model.Apprenticeship.IsUpdateLockedForStartDateAndCourse || Model.Apprenticeship.IsContinuation)
     {
         <div class="form-error-group form-group">
             <hr />
