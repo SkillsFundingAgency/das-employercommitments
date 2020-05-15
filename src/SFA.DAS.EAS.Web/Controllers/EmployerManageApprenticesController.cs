@@ -47,6 +47,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [Route("all")]
         [OutputCache(CacheProfile = "NoCache")]
+        [Deprecated]
         public ActionResult ListAll(string hashedAccountId)
         {
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices"));
