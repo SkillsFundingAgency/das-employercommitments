@@ -11,7 +11,7 @@
       <Setting name="RedisConnection" value="localhost" />
       <Setting name="LoggingRedisConnectionString" value="" />
       <Setting name="LoggingRedisKey" value="" />
-      <Setting name="TokenCertificateThumbprint" value="6B7ACC520305BFDB4F7252DAEB2177CC091FAAE1" />
+      <Setting name="TokenCertificateThumbprint" value="702F4DF8B8AE743C6080F0D1FD25C248711F9CFE" />
       <Setting name="MyaBaseUrl" value="https://at-eas.apprenticeships.education.gov.uk/" />
       <Setting name="PsrBaseUrl" value="https://at-reporting.manage-apprenticeships.education.gov.uk" />
       <Setting name="RecruitBaseUrl" value="https://recruit.at-eas.apprenticeships.education.gov.uk" />
