@@ -7,6 +7,7 @@ using SFA.DAS.EmployerCommitments.Web.Authentication;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
+using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.EmployerUsers.WebClientComponents;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
@@ -15,11 +16,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     [CommitmentsRoutePrefix("accounts/{hashedaccountId}")]
     public class TransferRequestController : BaseEmployerController
     {
+        private readonly ILinkGenerator _linkGenerator;
+
         public TransferRequestController(EmployerCommitmentsOrchestrator orchestrator, IOwinWrapper owinWrapper,
             IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage, 
-            ICookieStorageService<string> lastCohortCookieStorageService)
+            ICookieStorageService<string> lastCohortCookieStorageService, ILinkGenerator linkGenerator)
             : base(orchestrator, owinWrapper, multiVariantTestingService, flashMessage, lastCohortCookieStorageService)
         {
+            _linkGenerator = linkGenerator;
         }
 
         [HttpGet]
@@ -79,7 +83,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             {
                 return View("TransferConfirmation", request);
             }
-            return Redirect(request.UrlAddress);
+
+            var url = request.SelectedOption == TransferConfirmationViewModel.Option.Homepage
+                ? _linkGenerator.AccountsLink("team")
+                : _linkGenerator.AccountsLink("transfers");
+
+            return Redirect(url);
         }
     }
 }

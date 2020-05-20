@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.EmployerCommitments.Web.Extensions
+@using SFA.DAS.EmployerCommitments.Web.ViewModels
 @model SFA.DAS.EmployerCommitments.Web.ViewModels.TransferConfirmationViewModel
 
 @{
@@ -33,11 +34,11 @@
                         @Html.ValidationMessage("UrlAddress", "Please choose an option", new { id = "error-message-UrlAddress" })
                     </div>
                     <label class="block-label selection-button-radio" for="UrlAddress-Transfers">
-                        @Html.RadioButton("UrlAddress", Url.ExternalMyaUrlAction("transfers"), new { id = "UrlAddress-Transfers", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Transfers')" })
+                        @Html.RadioButton("SelectedOption", TransferConfirmationViewModel.Option.TransfersDashboard, new { id = "SelectedOption-Transfers", dataOptionName = "Transfers", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Transfers')" })
                         Go to the transfers dashboard
                     </label>
                     <label class="block-label selection-button-radio" for="UrlAddress-Home">
-                        @Html.RadioButton("UrlAddress", Url.ExternalMyaUrlAction("teams"), new { id = "UrlAddress-Home", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Home')" })
+                        @Html.RadioButton("SelectedOption", TransferConfirmationViewModel.Option.Homepage, new { id = "SelectedOption-Home", dataOptionName = "Homepage", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Home')" })
                         Go to the homepage
                     </label>
                 </div>

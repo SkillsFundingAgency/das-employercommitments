@@ -7,6 +7,12 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
     {
         public string TransferApprovalStatus { get; set; }
         public string TransferReceiverName { get; set; }
-        public string UrlAddress { get; set; }
+        public Option? SelectedOption { get; set; }
+
+        public enum Option
+        {
+            Homepage, TransfersDashboard
+        }
+
     }
 }
