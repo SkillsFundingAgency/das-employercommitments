@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -7,6 +8,7 @@ using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
+using SFA.DAS.Commitments.Api.Types.Validation;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStopDate;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Validation;
@@ -77,7 +79,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
                 _academicYearDateProvider.Object,
                 _academicYearValidator.Object,
                 _providerEmailNotificationService.Object
-                );
+            );
         }
 
         [Test]

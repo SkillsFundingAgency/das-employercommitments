@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             mockMapper
                 .Setup(mapper => mapper.MapToApprenticeshipDetailsViewModel(It.IsAny<Apprenticeship>(), false))
-                .ReturnsAsync(apprenticeshipDetailsViewModel);
+                .Returns(apprenticeshipDetailsViewModel);
 
             mockFilterCookieManager
                 .Setup(manager => manager.GetCookie())

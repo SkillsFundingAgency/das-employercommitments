@@ -10,7 +10,6 @@ using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.Commitments.Api.Types.ProviderPayment;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipsByUln;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
@@ -49,7 +48,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             _academicYearDateProvider = academicYearDateProvider;
         }
 
-        public async Task<ApprenticeshipDetailsViewModel> MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship, bool disableUlnReuseCheck=false)
+        public ApprenticeshipDetailsViewModel MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship, bool disableUlnReuseCheck=false)
         {
             var pendingChange = PendingChanges.None;
             if (apprenticeship.PendingUpdateOriginator == Originator.Employer)
@@ -88,30 +87,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                             && !apprenticeship.DataLockPriceTriaged
                             && new []{ PaymentStatus.Active, PaymentStatus.Paused  }.Contains(apprenticeship.PaymentStatus),
                 CanEditStatus = !(new List<PaymentStatus> { PaymentStatus.Completed, PaymentStatus.Withdrawn }).Contains(apprenticeship.PaymentStatus),
-                CanEditStopDate = (apprenticeship.PaymentStatus == PaymentStatus.Withdrawn && apprenticeship.StartDate != apprenticeship.StopDate),
+                CanEditStopDate = (apprenticeship.PaymentStatus == PaymentStatus.Withdrawn),
                 EndpointAssessorName = apprenticeship.EndpointAssessorName,
                 TrainingType = apprenticeship.TrainingType,
                 ReservationId = apprenticeship.ReservationId
             };
-            
-            //if not already disabled, check if uln has been reused. disable param is a short term workaround due to mapper reuse in search result page
-            if (result.CanEditStopDate && !disableUlnReuseCheck)
-            {
-                //todo: we're returning apprenticeship++, but we could just fetch a simple count
-                //todo: should this be using the validation api?
-                //todo: can we remove this? if stop date can only shorten the apprenticeship and not extend it, then
-                // we don't need to check if theres a potential overlap?? as was valid when approved (i.e. no overlap)
-                var apprenticeshipsResponse = await _mediator.SendAsync(new GetApprenticeshipsByUlnRequest
-                {
-                    AccountId = apprenticeship.EmployerAccountId,
-                    Uln = apprenticeship.ULN
-                });
-
-                if (apprenticeshipsResponse.Apprenticeships.Count > 1)
-                {
-                    result.CanEditStopDate = false;
-                }
-            }
 
             return result;
         }
@@ -295,7 +275,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                             || (string.IsNullOrEmpty(original.EmployerRef)  && string.IsNullOrEmpty(edited.EmployerRef))
                     ? null 
                     : edited.EmployerRef ?? "",
-                OriginalApprenticeship = await apprenticeshipDetailsViewModel
+                OriginalApprenticeship = apprenticeshipDetailsViewModel
             };
 
             if (!string.IsNullOrWhiteSpace(edited.TrainingCode) && original.TrainingCode != edited.TrainingCode)

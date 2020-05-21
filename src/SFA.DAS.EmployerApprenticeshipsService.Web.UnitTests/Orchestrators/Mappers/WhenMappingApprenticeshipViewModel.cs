@@ -106,7 +106,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             var apprenticeship = new Apprenticeship { ULN = uln };
 
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
 
             Assert.AreEqual(uln, viewModel.ULN);
         }
@@ -118,7 +118,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             var apprenticeship = new Apprenticeship { StopDate = expectedStopDate };
 
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
 
             Assert.AreEqual(expectedStopDate, viewModel.StopDate);
         }
@@ -130,7 +130,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             var apprenticeship = new Apprenticeship { CompletionDate = expectedCompletionDate };
 
-            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship).Result;
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
 
             Assert.AreEqual(expectedCompletionDate, viewModel.CompletionDate);
         }
@@ -192,13 +192,13 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         }
 
         [Test]
-        public async Task ThenEndpointAssessorNameIsMapped()
+        public void ThenEndpointAssessorNameIsMapped()
         {
             const string endpointAssessorName = "Bad Assess";
 
             var apprenticeship = new Apprenticeship { EndpointAssessorName = endpointAssessorName };
 
-            var viewModel = await Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
 
             Assert.AreEqual(endpointAssessorName, viewModel.EndpointAssessorName);
         }
@@ -218,11 +218,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
         [TestCase(TrainingType.Standard)]
         [TestCase(TrainingType.Framework)]
-        public async Task ThenTrainingTypeIsMapped(TrainingType trainingType)
+        public void ThenTrainingTypeIsMapped(TrainingType trainingType)
         {
             var apprenticeship = new Apprenticeship { TrainingType = trainingType };
 
-            var viewModel = await Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
 
             Assert.AreEqual(trainingType, viewModel.TrainingType);
         }

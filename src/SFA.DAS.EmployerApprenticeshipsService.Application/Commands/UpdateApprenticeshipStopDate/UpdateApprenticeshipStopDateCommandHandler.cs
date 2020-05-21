@@ -8,7 +8,6 @@ using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStopDate
 {
@@ -88,7 +87,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
                 {
                     validationResult.AddError(nameof(command.NewStopDate), "The stop month cannot be before the apprenticeship started");
                     throw new InvalidRequestException(validationResult.ValidationDictionary);
-                }                
+                }
             }
         }
     }
