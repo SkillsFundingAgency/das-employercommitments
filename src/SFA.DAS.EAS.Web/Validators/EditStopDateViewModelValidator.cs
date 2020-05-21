@@ -30,6 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                 .Must(d => d.DateTime.HasValue).WithMessage("Enter the stop date for this apprenticeship")
                 .Must(d => d.DateTime <= new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1)).WithMessage("The stop date cannot be in the future")
                 .Must((model, newStopDate) => newStopDate.DateTime >= new DateTime(model.ApprenticeshipStartDate.Year, model.ApprenticeshipStartDate.Month, 1)).WithMessage("The stop month cannot be before the apprenticeship started")
+                .Must((model, newStopDate) => newStopDate.DateTime != model.CurrentStopDate).WithMessage("Enter a date that is different to the current stopped date")
                 .MustAsync(NotOverlap).WithMessage("The date overlaps with existing dates for the same apprentice.");
         }
 
