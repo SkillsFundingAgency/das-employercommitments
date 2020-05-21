@@ -373,6 +373,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             {
                 ApprenticeshipULN = apprenticeship.ULN,
                 ApprenticeshipName = apprenticeship.ApprenticeshipName,
+                ApprenticeshipHashedId = _hashingService.HashValue(apprenticeship.Id),
                 ApprenticeshipStartDate = apprenticeship.StartDate.Value,
                 AcademicYearRestriction = _currentDateTime.Now > _academicYearDateProvider.LastAcademicYearFundingPeriod ? //if r14 grace period has past for last a.y.
                     _academicYearDateProvider.CurrentAcademicYearStartDate : default(DateTime?),
