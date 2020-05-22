@@ -16,22 +16,16 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
         private readonly IEmployerCommitmentApi _commitmentsApi;
         private readonly IValidator<UpdateApprenticeshipStopDateCommand> _validator;
         private readonly ICurrentDateTime _currentDateTime;
-        private readonly IAcademicYearDateProvider _academicYearDateProvider;
-        private readonly IAcademicYearValidator _academicYearValidator;
         private readonly IProviderEmailNotificationService _providerEmailNotificationService;
 
         public UpdateApprenticeshipStopDateCommandHandler(IEmployerCommitmentApi commitmentsApi,
             ICurrentDateTime currentDateTime,
             IValidator<UpdateApprenticeshipStopDateCommand> validator,
-            IAcademicYearDateProvider academicYearDateProvider,
-            IAcademicYearValidator academicYearValidator,
             IProviderEmailNotificationService providerEmailNotificationService)
         {
             _commitmentsApi = commitmentsApi;
             _currentDateTime = currentDateTime;
             _validator = validator;
-            _academicYearDateProvider = academicYearDateProvider;
-            _academicYearValidator = academicYearValidator;
             _providerEmailNotificationService = providerEmailNotificationService;
         }
 

@@ -26,8 +26,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
         private IValidator<UpdateApprenticeshipStopDateCommand> _validator = new UpdateApprenticeshipStopDateCommandValidator();
         private UpdateApprenticeshipStopDateCommand _validCommand;
         private Apprenticeship _testApprenticeship;
-        private Mock<IAcademicYearDateProvider> _academicYearDateProvider;
-        private Mock<IAcademicYearValidator> _academicYearValidator;
         private Mock<IProviderEmailNotificationService> _providerEmailNotificationService;
         private DateTime _newStopDate;
 
@@ -62,11 +60,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
             _mockCurrentDateTime = new Mock<ICurrentDateTime>();
             _mockCurrentDateTime.SetupGet(x => x.Now).Returns(DateTime.UtcNow);
 
-            _academicYearDateProvider = new Mock<IAcademicYearDateProvider>();
-            _academicYearDateProvider.Setup(x => x.CurrentAcademicYearStartDate).Returns(new DateTime(2016, 8, 1));
-
-            _academicYearValidator = new Mock<IAcademicYearValidator>();
-
             _providerEmailNotificationService = new Mock<IProviderEmailNotificationService>();
             _providerEmailNotificationService.Setup(x =>
                 x.SendProviderApprenticeshipStopEditNotification(It.IsAny<Apprenticeship>(), It.IsAny<DateTime>()))
@@ -76,8 +69,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
                 _mockCommitmentApi.Object,
                 _mockCurrentDateTime.Object,
                 _validator,
-                _academicYearDateProvider.Object,
-                _academicYearValidator.Object,
                 _providerEmailNotificationService.Object
             );
         }
