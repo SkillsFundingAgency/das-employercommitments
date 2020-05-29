@@ -85,8 +85,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
 
             var url = request.SelectedOption == TransferConfirmationViewModel.Option.Homepage
-                ? _linkGenerator.AccountsLink($"{hashedAccountId}/team")
-                : _linkGenerator.AccountsLink($"{hashedAccountId}/transfers");
+                ? _linkGenerator.AccountsLink($"accounts/{hashedAccountId}/teams")
+                : _linkGenerator.AccountsLink($"accounts/{hashedAccountId}/transfers");
 
             return Redirect(url);
         }
