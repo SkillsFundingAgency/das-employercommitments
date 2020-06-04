@@ -77,7 +77,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("sender/transfers/{hashedTransferRequestId}/confirmation")]
-        public ActionResult TransferConfirmation(TransferConfirmationViewModel request)
+        public ActionResult TransferConfirmation(string hashedAccountId, TransferConfirmationViewModel request)
         {
             if (!ModelState.IsValid)
             {
@@ -85,8 +85,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
 
             var url = request.SelectedOption == TransferConfirmationViewModel.Option.Homepage
-                ? _linkGenerator.AccountsLink("team")
-                : _linkGenerator.AccountsLink("transfers");
+                ? _linkGenerator.AccountsLink($"accounts/{hashedAccountId}/teams")
+                : _linkGenerator.AccountsLink($"accounts/{hashedAccountId}/transfers");
 
             return Redirect(url);
         }
