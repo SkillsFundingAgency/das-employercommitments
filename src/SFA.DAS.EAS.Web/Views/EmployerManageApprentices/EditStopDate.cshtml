@@ -50,6 +50,7 @@
             </div>
             <button class="button" type="submit" id="submit-apply-change">Save and confirm</button>
 
+            @Html.Hidden("ApprenticeshipHashedId", Model.Data.ApprenticeshipHashedId)
             @Html.Hidden("ApprenticeshipName", Model.Data.ApprenticeshipName)
             @Html.Hidden("ApprenticeshipULN", Model.Data.ApprenticeshipULN)
             @Html.Hidden("CurrentStopDate", Model.Data.CurrentStopDate.ToShortDateString())

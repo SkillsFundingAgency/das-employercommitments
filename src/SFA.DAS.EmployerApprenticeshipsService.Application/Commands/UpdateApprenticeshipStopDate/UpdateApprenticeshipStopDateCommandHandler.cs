@@ -8,7 +8,6 @@ using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStopDate
 {
@@ -17,22 +16,16 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
         private readonly IEmployerCommitmentApi _commitmentsApi;
         private readonly IValidator<UpdateApprenticeshipStopDateCommand> _validator;
         private readonly ICurrentDateTime _currentDateTime;
-        private readonly IAcademicYearDateProvider _academicYearDateProvider;
-        private readonly IAcademicYearValidator _academicYearValidator;
         private readonly IProviderEmailNotificationService _providerEmailNotificationService;
 
         public UpdateApprenticeshipStopDateCommandHandler(IEmployerCommitmentApi commitmentsApi,
             ICurrentDateTime currentDateTime,
             IValidator<UpdateApprenticeshipStopDateCommand> validator,
-            IAcademicYearDateProvider academicYearDateProvider,
-            IAcademicYearValidator academicYearValidator,
             IProviderEmailNotificationService providerEmailNotificationService)
         {
             _commitmentsApi = commitmentsApi;
             _currentDateTime = currentDateTime;
             _validator = validator;
-            _academicYearDateProvider = academicYearDateProvider;
-            _academicYearValidator = academicYearValidator;
             _providerEmailNotificationService = providerEmailNotificationService;
         }
 
@@ -88,7 +81,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
                 {
                     validationResult.AddError(nameof(command.NewStopDate), "The stop month cannot be before the apprenticeship started");
                     throw new InvalidRequestException(validationResult.ValidationDictionary);
-                }                
+                }
             }
         }
     }

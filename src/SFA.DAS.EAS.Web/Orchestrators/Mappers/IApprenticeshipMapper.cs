@@ -13,7 +13,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
     {
         Task<Apprenticeship> MapFrom(ApprenticeshipViewModel viewModel);
 
-        Task<ApprenticeshipDetailsViewModel> MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship, bool disableUlnReuseCheck=false);
+        ApprenticeshipDetailsViewModel MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship, bool disableUlnReuseCheck=false);
 
         ApprenticeshipViewModel MapToApprenticeshipViewModel(Apprenticeship apprenticeship, CommitmentView commitment);
 

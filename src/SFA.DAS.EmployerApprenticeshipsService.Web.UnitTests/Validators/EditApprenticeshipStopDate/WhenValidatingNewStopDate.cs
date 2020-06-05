@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Commitments.Api.Client.Interfaces;
+using SFA.DAS.Commitments.Api.Types.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
+using SFA.DAS.HashingService;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.EditApprenticeshipStopDate
 {
@@ -17,6 +21,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.EditApprenticeshi
         private DateTime _now;
         private EditApprenticeshipStopDateViewModel _viewModel;
         private Mock<IAcademicYearDateProvider> _academicYearDateProvider;
+        private Mock<IValidationApi> _validationApi;
+        private Mock<IHashingService> _hashingService;
 
         [SetUp]
         public void Arrange()
@@ -28,7 +34,14 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.EditApprenticeshi
             _academicYearDateProvider = new Mock<IAcademicYearDateProvider>();
             _academicYearDateProvider.Setup(x => x.CurrentAcademicYearStartDate).Returns(new DateTime(2017, 8, 1));
 
-            _validator = new EditApprenticeshipStopDateViewModelValidator(_currentDateTime.Object, _academicYearDateProvider.Object);
+            _validationApi = new Mock<IValidationApi>();
+            _validationApi.Setup(x => x.ValidateOverlapping(It.IsAny<ApprenticeshipOverlapValidationRequest>()))
+                .ReturnsAsync(new ApprenticeshipOverlapValidationResult());
+
+            _hashingService = new Mock<IHashingService>();
+            _hashingService.Setup(x => x.DecodeValue(It.IsAny<string>())).Returns(123);
+
+            _validator = new EditApprenticeshipStopDateViewModelValidator(_currentDateTime.Object, _academicYearDateProvider.Object, _validationApi.Object, _hashingService.Object);
 
             _viewModel = new EditApprenticeshipStopDateViewModel
             {
@@ -84,6 +97,38 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.EditApprenticeshi
 
             Assert.IsFalse(result.IsValid);
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage.Equals("The stop month cannot be before the apprenticeship started")));
+        }
+
+        [Test]
+        public void ThenNewStopDateCannotBeTheSameAsTheCurrentStopDate()
+        {
+            _viewModel.NewStopDate = new DateTimeViewModel(_viewModel.CurrentStopDate);
+
+            var result = _validator.Validate(_viewModel);
+
+            Assert.IsFalse(result.IsValid);
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage.Equals("Enter a date that is different to the current stopped date")));
+        }
+
+
+        [Test]
+        public void ThenNewStopDateCannotOverlapWithAnotherApprenticeshipWithTheSameUln()
+        {
+            _viewModel.CurrentStopDate = _viewModel.NewStopDate.DateTime.Value.AddMonths(-1);
+
+            _validationApi.Setup(x => x.ValidateOverlapping(It.IsAny<ApprenticeshipOverlapValidationRequest>()))
+                .ReturnsAsync(new ApprenticeshipOverlapValidationResult
+                {
+                    OverlappingApprenticeships = new List<OverlappingApprenticeship>
+                    {
+                        new OverlappingApprenticeship()
+                    }
+                });
+
+            var result = _validator.Validate(_viewModel);
+
+            Assert.IsFalse(result.IsValid);
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage.Equals("The date overlaps with existing dates for the same apprentice.")));
         }
     }
 }

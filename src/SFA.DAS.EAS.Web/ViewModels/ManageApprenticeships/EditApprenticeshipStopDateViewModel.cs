@@ -9,6 +9,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
     {
         public string ApprenticeshipULN { get; set; }
 
+        public string ApprenticeshipHashedId { get; set; }
         public string ApprenticeshipName { get; set; }
 
         public DateTime EarliestDate { get; set; }
