@@ -7,7 +7,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
     {
         public TransferConfirmationViewModelValidator()
         {
-            RuleFor(x => x.UrlAddress).NotNull().WithMessage("You must select an option");
+            RuleFor(x => x.SelectedOption).NotNull().WithMessage("You must select an option");
         }
     }
 }
