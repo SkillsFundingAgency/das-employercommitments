@@ -27,7 +27,7 @@
       <Setting name="FeatureToggle.EmployerManageApprenticesV2" value="__FeatureToggle.EmployerManageApprenticesV2__" />
     </ConfigurationSettings>
     <Certificates>
-      <Certificate name="WebSslCert" thumbprint="364F20C0C4581E1222B7F4EDD9946A6D7107B032" thumbprintAlgorithm="sha1" />
+      <Certificate name="WebSslCert" thumbprint="60F4C3C90D283A45E0AE740189217D51BD163453" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>
   <NetworkConfiguration>
