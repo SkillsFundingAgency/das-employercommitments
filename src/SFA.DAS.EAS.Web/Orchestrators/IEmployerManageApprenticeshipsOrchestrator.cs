@@ -9,9 +9,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 {
     public interface IEmployerManageApprenticeshipsOrchestrator
     {
-        Task<OrchestratorResponse<ManageApprenticeshipsViewModel>> GetApprenticeships(
-            string hashedAccountId, ApprenticeshipFiltersViewModel filters, string externalUserId);
-
         Task<OrchestratorResponse<EditApprenticeshipStopDateViewModel>> GetEditApprenticeshipStopDateViewModel(string hashedAccountId, string hashedApprenticeshipId, string externalUserId);
         Task<OrchestratorResponse<ApprenticeshipDetailsViewModel>> GetApprenticeship(string hashedAccountId, string hashedApprenticeshipId, string externalUserId);
 

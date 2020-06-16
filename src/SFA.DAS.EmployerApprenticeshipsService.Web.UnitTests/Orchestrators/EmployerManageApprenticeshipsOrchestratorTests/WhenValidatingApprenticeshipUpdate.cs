@@ -58,8 +58,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 _currentDateTime.Object,
                 new Mock<ILog>().Object,
                 new Mock<ICookieStorageService<UpdateApprenticeshipViewModel>>().Object,
-                Mock.Of<IFiltersCookieManager>(),
-                ApprenticeshipFiltersMapper.Object,
                 academicYearDateProvider, 
                 new AcademicYearValidator(_currentDateTime.Object, academicYearDateProvider),
                 MockLinkGenerator.Object);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.Execution;
 using MediatR;
 using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
@@ -166,7 +167,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 IsUpdateLockedForStartDateAndCourse = isUpdateLockedForStartDateAndCourse,
                 IsEndDateLockedForUpdate = isEndDateLockedForUpdate,
                 ReservationId =  apprenticeship.ReservationId,
-                ApprenticeshipEmployerTypeOnApproval = commitment.ApprenticeshipEmployerTypeOnApproval
+                ApprenticeshipEmployerTypeOnApproval = commitment.ApprenticeshipEmployerTypeOnApproval,
+                IsContinuation = apprenticeship.ContinuationOfId.HasValue
             };
         }
 

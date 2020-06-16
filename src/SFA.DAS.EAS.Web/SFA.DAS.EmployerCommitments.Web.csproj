@@ -252,14 +252,14 @@
     <Reference Include="SFA.DAS.AutoConfiguration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.AutoConfiguration.2.2.6\lib\net462\SFA.DAS.AutoConfiguration.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=4.1.1306.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.4.1.1306\lib\netstandard2.0\SFA.DAS.Commitments.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=4.1.1573.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.4.1.1573\lib\netstandard2.0\SFA.DAS.Commitments.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=4.1.1362.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.4.1.1362\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=4.1.1573.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.4.1.1573\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.CommitmentsV2.Types, Version=4.1.1012.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Types.4.1.1012\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.CommitmentsV2.Types, Version=4.1.1573.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Types.4.1.1573\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Common.Domain, Version=1.4.276.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.4.276\lib\net462\SFA.DAS.Common.Domain.dll</HintPath>
@@ -535,9 +535,7 @@
     <Compile Include="DependencyResolution\ConfigurationKeys.cs" />
     <Compile Include="DependencyResolution\NotificationsRegistry.cs" />
     <Compile Include="DependencyResolution\CommitmentsRegistry.cs" />
-    <Compile Include="Orchestrators\FiltersCookieManager.cs" />
     <Compile Include="Orchestrators\IEmployerCommitmentsOrchestrator.cs" />
-    <Compile Include="Orchestrators\IFiltersCookieManager.cs" />
     <Compile Include="Plumbing\Mvc\DeprecatedAttribute.cs" />
     <Compile Include="PublicHashingService\IPublicHashingService.cs" />
     <Compile Include="PublicHashingService\PublicHashingService.cs" />
@@ -548,8 +546,6 @@
     <Compile Include="Orchestrators\DataLockOrchestrator.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestrator.cs" />
     <Compile Include="Orchestrators\IEmployerManageApprenticeshipsOrchestrator.cs" />
-    <Compile Include="Orchestrators\Mappers\ApprenticeshipFiltersMapper.cs" />
-    <Compile Include="Orchestrators\Mappers\IApprenticeshipFiltersMapper.cs" />
     <Compile Include="Plumbing\GoogleAnalytics.cs" />
     <Compile Include="Plumbing\Mvc\CommitmentsRoutePrefix.cs" />
     <Compile Include="Plumbing\Mvc\GoogleTagManagerFilterAttribute.cs" />
@@ -569,7 +565,6 @@
     <Compile Include="ViewModels\CoreDetailsViewModel.cs" />
     <Compile Include="ViewModels\GoogleAnalyicsDetailsViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IPaginationViewModel.cs" />
-    <Compile Include="ViewModels\ManageApprenticeships\ApprenticeshipFiltersViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\ChangeStatusChoiceViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\CourseChange.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\DataLockStatusViewModel.cs" />
@@ -637,7 +632,6 @@
     <Compile Include="ViewModels\ConfirmProviderViewModel.cs" />
     <Compile Include="ViewModels\DeleteApprenticeshipConfirmationViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\ApprenticeshipDetailsViewModel.cs" />
-    <Compile Include="ViewModels\ManageApprenticeships\ManageApprenticeshipsViewModel.cs" />
     <Compile Include="ViewModels\FinishEditingViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
     <Compile Include="ViewModels\PrivacyViewModel.cs" />
@@ -710,11 +704,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ConfirmChanges.cshtml</DependentUpon>
     </Compile>
-    <Compile Include="Views\EmployerManageApprentices\Details.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Details.cshtml</DependentUpon>
-    </Compile>
     <Compile Include="Views\EmployerManageApprentices\EditStartedApprenticeship.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -725,11 +714,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EditStopDate.cshtml</DependentUpon>
     </Compile>
-    <Compile Include="Views\EmployerManageApprentices\ListAll.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ListAll.cshtml</DependentUpon>
-    </Compile>
     <Compile Include="Views\EmployerManageApprentices\ReviewChanges.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -739,11 +723,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ViewChanges.cshtml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Shared\ApprenticeshipFilters.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ApprenticeshipFilters.cshtml</DependentUpon>
     </Compile>
     <Compile Include="Views\Shared\ApprenticeshipUpdate.generated.cs">
       <AutoGen>True</AutoGen>
@@ -1216,10 +1195,6 @@
     <Content Include="Views\EmployerManageApprentices\WhenToApplyChange.cshtml" />
     <Content Include="src\sass\_notifications.scss" />
     <Content Include="src\sass\_navigation.scss" />
-    <Content Include="Views\Shared\ApprenticeshipFilters.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>ApprenticeshipFilters.generated.cs</LastGenOutput>
-    </Content>
     <Content Include="Views\EmployerManageApprentices\PaymentOrder.cshtml" />
     <Content Include="Views\EmployerCommitments\ViewApprenticeshipEntry.cshtml">
       <Generator>RazorGenerator</Generator>
