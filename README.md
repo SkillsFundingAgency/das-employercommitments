@@ -7,8 +7,22 @@ This solution represents the Employer Commitments product.
 * Clone das-employercommitments repo
 * Open das-employercommitments solution - set Startup projects as SFA.DAS.EmployerCommitments.CloudService
 * Obtain cloud config
+	- SFA.DAS.EmployerCommitments
+	- SFA.DAS.AuditApiClient
+	- SFA.DAS.EmployerAccountAPI
 * Workaround for "rosylyn csc exe error" - 'Update-Package Microsoft.CodeDom.Providers.DotNetCompilerPlatform -r'
-* Workaround for certificate (expired) error - use Edge
+* In SFA.DAS.CloudService/ServiceConfiguration.Local.cscfg change the certificate thumbprint with a cerificate whose Subject is Localhost.
+* Install the DasIDPCert (In the install wizard I selected Local Computer and let the wizard select the best store, it ended up in my Local Computer - Personal Certificate)
+* For dev env Update the SFA.DAS.EmployerAccountAPI with
+	{
+	   "ClientId": "0a25a495-140e-4f9f-807b-11e2fa115375",
+	   "ServiceBusConnectionString": "",
+	   "ApiBaseUrl": "https://sfa-stub-employeraccountapi.herokuapp.com",
+	   "IdentifierUri": "https://citizenazuresfabisgov.onmicrosoft.com/eas-api",
+	   "ClientSecret": "lP86XAzrbGY1Jd/uB0RWXTXyPtswU4gNM6CyGso//B8=",
+	    "DatabaseConnectionString": "Server=.;Database=SFA.DAS.EAS.Employer_Account.Database;Integrated Security=True;Trusted_Connection=True;Connection Timeout=30;",
+	   "Tenant": "citizenazuresfabisgov.onmicrosoft.com"
+	}
 * Start
 
 
