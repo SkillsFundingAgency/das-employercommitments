@@ -11,7 +11,7 @@ This solution represents the Employer Commitments product.
 	- SFA.DAS.AuditApiClient
 	- SFA.DAS.EmployerAccountAPI
 * Workaround for "rosylyn csc exe error" - 'Update-Package Microsoft.CodeDom.Providers.DotNetCompilerPlatform -r'
-* In SFA.DAS.CloudService/ServiceConfiguration.Local.cscfg change the certificate thumbprint with a cerificate whose Subject is Localhost.
+* In SFA.DAS.CloudService/ServiceConfiguration.Local.cscfg change the certificate thumbprint with a cerificate whose Subject is Localhost and Intended purpose is Server Authentication.
 * Install the DasIDPCert (In the install wizard I selected Local Computer and let the wizard select the best store, it ended up in my Local Computer - Personal Certificate)
 * For dev env Update the SFA.DAS.EmployerAccountAPI with
 	{
