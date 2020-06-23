@@ -686,7 +686,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             AddToErrors(_approvedApprenticeshipValidator.MapOverlappingErrors(overlappingErrors));
             AddToErrors(_approvedApprenticeshipValidator.ValidateToDictionary(apprenticeship));
             AddToErrors(_approvedApprenticeshipValidator.ValidateAcademicYear(updatedModel));
-            AddToErrors(_approvedApprenticeshipValidator.ValidateApprovedEndDate(updatedModel));
         }
 
         private async Task AddReservationValidationErrors(ConcurrentDictionary<string, string> errors, ApprenticeshipViewModel model)

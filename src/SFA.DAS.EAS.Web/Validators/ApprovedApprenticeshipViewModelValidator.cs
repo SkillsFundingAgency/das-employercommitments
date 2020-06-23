@@ -44,23 +44,5 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 
             return dict;
         }
-
-        public Dictionary<string, string> ValidateApprovedEndDate(UpdateApprenticeshipViewModel updatedApprenticeship)
-        {
-            var dict = new Dictionary<string, string>();
-
-            if (updatedApprenticeship.EndDate?.DateTime != null)
-            {
-                if (updatedApprenticeship.HasHadDataLockSuccess)
-                {
-                    //todo: helper for year and month only
-                    var now = CurrentDateTime.Now;
-                    if (new DateTime(updatedApprenticeship.EndDate.Year.Value, updatedApprenticeship.EndDate.Month.Value, 1) > new DateTime(now.Year, now.Month, 1))
-                        dict.Add($"{nameof(updatedApprenticeship.EndDate)}", ValidationText.EndDateBeforeOrIsCurrentMonth.Text);
-                }
-            }
-
-            return dict;
-        }
     }
 }
