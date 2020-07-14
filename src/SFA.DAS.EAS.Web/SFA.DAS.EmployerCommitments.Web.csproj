@@ -549,6 +549,7 @@
     <Compile Include="Plumbing\GoogleAnalytics.cs" />
     <Compile Include="Plumbing\Mvc\CommitmentsRoutePrefix.cs" />
     <Compile Include="Plumbing\Mvc\GoogleTagManagerFilterAttribute.cs" />
+    <Compile Include="Validators\RedundantApprenticeViewModelValidator.cs" />
     <Compile Include="Validators\ChangeStatusViewModelValidator.cs" />
     <Compile Include="Validators\DataLockStatusViewModelViewModelValidator.cs" />
     <Compile Include="Validators\EditStopDateViewModelValidator.cs" />
@@ -558,6 +559,7 @@
     <Compile Include="Validators\TransferConfirmationViewModelValidator.cs" />
     <Compile Include="Validators\TransferApprovalConfirmationViewModelValidator.cs" />
     <Compile Include="Validators\ProviderPriorityReOrderListValidator.cs" />
+    <Compile Include="ViewModels\ManageApprenticeships\RedundantApprenticeViewModel.cs" />
     <Compile Include="ViewModels\TransferRequestViewModel.cs" />
     <Compile Include="ViewModels\TransferConfirmationViewModel.cs" />
     <Compile Include="ViewModels\TransferApprovalConfirmationViewModel.cs" />
@@ -1234,6 +1236,7 @@
     <Content Include="Views\EmployerCommitments\TransferFundedCohorts.cshtml" />
     <Content Include="Views\EmployerCommitments\RejectedTransferFundedCohorts.cshtml" />
     <Content Include="Views\EmployerCommitments\SubmitCommitmentEntry.cshtml" />
+    <Content Include="Views\EmployerManageApprentices\HasApprenticeBeenMadeRedundant.cshtml" />
     <None Include="Views\razorgenerator.directives" />
   </ItemGroup>
   <ItemGroup>

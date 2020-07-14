@@ -1,0 +1,61 @@
+﻿@using SFA.DAS.EmployerCommitments.Web
+@using SFA.DAS.EmployerCommitments.Web.Extensions
+@using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
+@model OrchestratorResponse<RedundantApprenticeViewModel>
+
+@{
+    ViewBag.Title = "Has the apprentice been made redundant?";
+    ViewBag.PageId = "has-apprentice-made-redundant";
+    ViewBag.Section = "apprentices";
+}
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <form method="POST" action="@Url.Action("HasApprenticeBeenMadeRedundant")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
+            @Html.AntiForgeryToken()
+            @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
+
+            <h1 class="heading-xlarge">Has @Model.Data.ApprenticeshipName been made redundant?</h1>
+
+            <div class="form-error-group form-group @Html.AddClassIfPropertyInError("RedundancyConfirm", "error")">
+                <div>
+                    @Html.ValidationMessage("RedundancyConfirm", new { id = "error-message-RedundancyConfirm" })
+                </div>
+                <fieldset>
+                    <legend class="visually-hidden">Are you sure you want to delete the record for @Model.Data.ApprenticeshipName?</legend>
+
+                    <label class="block-label selection-button-radio" for="RedundancyConfirm-True">
+                        @Html.RadioButton("RedundancyConfirm", "True", Model.Data.RedundancyConfirm.HasValue && Model.Data.RedundancyConfirm.Value, new { Id = "RedundancyConfirm-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
+                        Yes
+                    </label>
+                    <label class="block-label selection-button-radio" for="RedundancyConfirm-False">
+                        @Html.RadioButton("RedundancyConfirm", "False", Model.Data.RedundancyConfirm.HasValue && !Model.Data.RedundancyConfirm.Value, new { Id = "RedundancyConfirm-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
+                        No
+                    </label>
+                </fieldset>
+            </div>
+
+            <button class="button" type="submit" id="submit-redundancy-confirm">Save and continue</button>
+        </form>
+    </div>
+</div>
+
+@section breadcrumb {
+    <div class="breadcrumbs">
+        <a href="#" class="back-link">Back</a>
+    </div>
+}
+
+
+@section gaDataLayer {
+    <script>
+        sfa.dataLayer.vpv = '/accounts/apprentices/manage/has-apprentice-made-redundant'
+    </script>
+}
+<script>
+    document.addEventListener('click', function (e) {
+        if (!e.target.matches('.back-link')) return;
+        e.preventDefault();
+        window.history.back();
+    }, false);
+</script>

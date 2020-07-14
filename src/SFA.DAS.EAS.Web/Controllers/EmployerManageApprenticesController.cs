@@ -9,7 +9,6 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using FluentValidation.Mvc;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Domain.Models.UserProfile;
 using SFA.DAS.EmployerCommitments.Web.Authentication;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
@@ -28,20 +27,17 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     {
         private readonly IEmployerManageApprenticeshipsOrchestrator _orchestrator;
         private readonly ILinkGenerator _linkGenerator;
-        private readonly IFeatureToggleService _featureToggleService;
 
         public EmployerManageApprenticesController(
             IEmployerManageApprenticeshipsOrchestrator orchestrator,
             IOwinWrapper owinWrapper,
             IMultiVariantTestingService multiVariantTestingService,
             ICookieStorageService<FlashMessageViewModel> flashMessage,
-            ILinkGenerator linkGenerator,
-            IFeatureToggleService featureToggleService)
+            ILinkGenerator linkGenerator)
                 : base(owinWrapper, multiVariantTestingService, flashMessage)
         {
             _orchestrator = orchestrator;
             _linkGenerator = linkGenerator;
-            _featureToggleService = featureToggleService;
         }
 
         [HttpGet]
@@ -66,10 +62,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             var flashMessage = GetFlashMessageViewModelFromCookie();
 
-            if(flashMessage == null && model.Data.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase))
+            if (flashMessage == null && model.Data.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase))
             {
-                flashMessage = new FlashMessageViewModel { Message = "Apprenticeship stopped", Severity = FlashMessageSeverityLevel.Okay};
-            }            
+                flashMessage = new FlashMessageViewModel { Message = "Apprenticeship stopped", Severity = FlashMessageSeverityLevel.Okay };
+            }
 
             if (flashMessage != null)
             {
@@ -203,8 +199,53 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return View(new OrchestratorResponse<WhenToMakeChangeViewModel>() { Data = viewResponse.Data });
             }
 
-            return RedirectToRoute("StatusChangeConfirmation", new { whenToMakeChange = model.WhenToMakeChange, dateOfChange = response.DateOfChange });
+            return
+                RedirectToRoute(
+                    "MadeRedundant", new { dateOfChange = response.DateOfChange });
         }
+
+        [HttpGet]
+        [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/maderedundant", Name = "MadeRedundant")]
+        [OutputCache(CacheProfile = "NoCache")]
+        public async Task<ActionResult> HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType)
+        {
+            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+                return View("AccessDenied");
+
+            var response = await _orchestrator.MakeApprenticeRedundant(hashedAccountId, hashedApprenticeshipId, changeType, OwinWrapper.GetClaimValue(@"sub"));
+
+            //if (response.Data.SkipStep)
+            //    return RedirectToRoute("StatusChangeConfirmation", new
+            //    {
+            //        changeType = response.Data.ChangeStatusViewModel.ChangeType.ToString().ToLower(),
+            //        whenToMakeChange = WhenToMakeChangeOptions.Immediately,
+            //        dateOfChange = default(DateTime?)
+            //    });
+
+            return View(new OrchestratorResponse<RedundantApprenticeViewModel>
+            {
+                Data = response.Data
+            });
+        }
+
+        [HttpPost]
+        [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/maderedundant")]
+        public async Task<ActionResult> HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, RedundantApprenticeViewModel model)
+        {
+            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+                return View("AccessDenied");
+
+            if (!ModelState.IsValid)
+            {
+                var viewResponse = await _orchestrator.MakeApprenticeRedundant(hashedAccountId, hashedApprenticeshipId, model.ChangeType.Value, OwinWrapper.GetClaimValue(@"sub"));
+                return View(new OrchestratorResponse<RedundantApprenticeViewModel>() { Data = viewResponse.Data });
+            }
+
+            return RedirectToRoute("StatusChangeConfirmation", new {
+                    changeType = model.ChangeType,
+                          whenToMakeChange = WhenToMakeChangeOptions.Immediately,
+                            dateOfChange = default(DateTime?) });
+            }
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/confirm", Name = "StatusChangeConfirmation")]
@@ -559,7 +600,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 case ChangeStatusType.Pause:
                     return "Apprenticeship paused";
                 case ChangeStatusType.Stop:
-                    return "Apprenticeship stopped";                           
+                    return "Apprenticeship stopped";
                 case ChangeStatusType.Resume:
                     return "Apprenticeship resumed";
                 case ChangeStatusType.None:

@@ -17,7 +17,6 @@ using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStopD
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateProviderPaymentPriority;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
-using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
@@ -329,6 +328,39 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         ApprenticeshipName = data.Apprenticeship.ApprenticeshipName,
                         TrainingName = data.Apprenticeship.TrainingName
 
+                    }
+                };
+
+            }, hashedAccountId, externalUserId);
+        }
+
+        public async Task<OrchestratorResponse<RedundantApprenticeViewModel>> MakeApprenticeRedundant(
+            string hashedAccountId, string hashedApprenticeshipId,
+            ChangeStatusType changeType, string externalUserId)
+        {
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
+
+            Logger.Info(
+                $"Determining navigation for type of change status selection. AccountId: {accountId}, ApprenticeshipId: {apprenticeshipId}");
+
+            return await CheckUserAuthorization(async () =>
+            {
+                var data =
+                    await
+                        Mediator.SendAsync(new GetApprenticeshipQueryRequest
+                        {
+                            AccountId = accountId,
+                            ApprenticeshipId = apprenticeshipId
+                        });
+
+                CheckApprenticeshipStateValidForChange(data.Apprenticeship);
+
+                return new OrchestratorResponse<RedundantApprenticeViewModel>
+                {
+                    Data = new RedundantApprenticeViewModel
+                    {
+                        ApprenticeshipName = data.Apprenticeship.ApprenticeshipName
                     }
                 };
 
