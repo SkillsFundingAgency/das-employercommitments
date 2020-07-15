@@ -39,7 +39,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
             _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(false));
 
             //Act
-            var result = await _controller.StatusChangeConfirmation(AccountId, ApprenticeshipId, ChangeStatusType.Stop, WhenToMakeChangeOptions.Immediately, DateTime.Now);
+            var result = await _controller.StatusChangeConfirmation(AccountId, ApprenticeshipId, ChangeStatusType.Stop, WhenToMakeChangeOptions.Immediately, DateTime.Now,null);
 
             //Assert
             Assert.AreEqual("AccessDenied", (result as ViewResult)?.ViewName);
@@ -51,16 +51,16 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
             //Arrange
             _owinWrapper.Setup(x => x.GetClaimValue(It.IsAny<string>())).Returns(string.Empty);
             _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(true));
-            _orchestrator.Setup(o => o.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), It.IsAny<string>())).Returns(Task.FromResult(new OrchestratorResponse<ConfirmationStateChangeViewModel>()));
+            _orchestrator.Setup(o => o.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), It.IsAny<bool>(),It.IsAny<string>())).Returns(Task.FromResult(new OrchestratorResponse<ConfirmationStateChangeViewModel>()));
 
             var response = new OrchestratorResponse<ConfirmationStateChangeViewModel> { Data = new ConfirmationStateChangeViewModel() };
-            _orchestrator.Setup(o => o.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), It.IsAny<string>())).Returns(Task.FromResult(response)).Verifiable();
+            _orchestrator.Setup(o => o.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), It.IsAny<bool>(),It.IsAny<string>())).Returns(Task.FromResult(response)).Verifiable();
 
             //Act
-            var result = await _controller.StatusChangeConfirmation(AccountId, ApprenticeshipId, ChangeStatusType.Stop, WhenToMakeChangeOptions.Immediately, DateTime.Now);
+            var result = await _controller.StatusChangeConfirmation(AccountId, ApprenticeshipId, ChangeStatusType.Stop, WhenToMakeChangeOptions.Immediately, DateTime.Now,null);
 
             //Assert
-            _orchestrator.Verify(x => x.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), It.IsAny<string>()));
+            _orchestrator.Verify(x => x.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), It.IsAny<bool>(),It.IsAny<string>()));
         }
     }
 }

@@ -9,7 +9,6 @@ using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
 
 namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStatus
@@ -19,22 +18,16 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
         private readonly IEmployerCommitmentApi _commitmentsApi;
         private readonly IValidator<UpdateApprenticeshipStatusCommand> _validator;
         private readonly ICurrentDateTime _currentDateTime;
-        private readonly IAcademicYearDateProvider _academicYearDateProvider;
-        private readonly IAcademicYearValidator _academicYearValidator;
         private readonly IProviderEmailNotificationService _providerEmailNotificationService;
 
         public UpdateApprenticeshipStatusCommandHandler(IEmployerCommitmentApi commitmentsApi,
             ICurrentDateTime currentDateTime,
             IValidator<UpdateApprenticeshipStatusCommand> validator,
-            IAcademicYearDateProvider academicYearDateProvider,
-            IAcademicYearValidator academicYearValidator,
             IProviderEmailNotificationService providerEmailNotificationService)
         {
             _commitmentsApi = commitmentsApi;
             _currentDateTime = currentDateTime;
             _validator = validator;
-            _academicYearDateProvider = academicYearDateProvider;
-            _academicYearValidator = academicYearValidator;
             _providerEmailNotificationService = providerEmailNotificationService;
         }
 
@@ -50,6 +43,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
                 PaymentStatus = DeterminePaymentStatusForChange(command.ChangeType),
                 DateOfChange = command.DateOfChange,
                 UserId = command.UserId,
+                MadeRedundant = command.MadeRedundant,
                 LastUpdatedByInfo = new LastUpdateInfo { EmailAddress = command.UserEmailAddress, Name = command.UserDisplayName }
             };
 

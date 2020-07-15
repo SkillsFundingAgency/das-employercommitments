@@ -33,7 +33,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         Task<ValidateWhenToApplyChangeResult> ValidateWhenToApplyChange(string hashedAccountId,
             string hashedApprenticeshipId, ChangeStatusViewModel model);
 
-        Task<OrchestratorResponse<ConfirmationStateChangeViewModel>> GetChangeStatusConfirmationViewModel(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange, string externalUserId);
+        Task<OrchestratorResponse<ConfirmationStateChangeViewModel>> GetChangeStatusConfirmationViewModel(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange, bool? madeRedundant, string externalUserId);
         Task UpdateStatus(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusViewModel model, string externalUserId, string userName, string userEmail);
         Task UpdateStopDate(string hashedAccountId, string hashedApprenticeshipId, EditApprenticeshipStopDateViewModel model, string externalUserId, string userName, string userEmail);
         Task CreateApprenticeshipUpdate(UpdateApprenticeshipViewModel apprenticeship, string hashedAccountId, string userId, string userName, string userEmail);
@@ -47,10 +47,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         Task<OrchestratorResponse<PaymentOrderViewModel>> GetPaymentOrder(string hashedAccountId, string user);
         Task UpdatePaymentOrder(string hashedAccountId, IEnumerable<long> paymentItems, string user, string userName, string userEmail);
         Task<bool> AuthorizeRole(string hashedAccountId, string externalUserId, Role[] roles);
-
         Task<OrchestratorResponse<RedundantApprenticeViewModel>> MakeApprenticeRedundant(
-            RedundantApprenticeViewModel model, string externalUserId);
-
-        Task UpdateApprenticeRedundancy(RedundantApprenticeViewModel model, string externalUserId, string userName, string userEmail);
+            string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, DateTime? dateOfChange, WhenToMakeChangeOptions whenToMakeChange, string externalUserId, bool? madeRedundant);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using FluentValidation.Attributes;
-using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using System;
 
@@ -22,6 +21,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public DateTimeViewModel DateOfChange { get; set; }
 
         public bool? ChangeConfirmed { get; set; }
+        public bool? MadeRedundant { get; set; }
 
         public bool AcademicYearBreakInTraining { get; set; }
 

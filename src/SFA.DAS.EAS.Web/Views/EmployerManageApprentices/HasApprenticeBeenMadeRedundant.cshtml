@@ -14,27 +14,28 @@
         <form method="POST" action="@Url.Action("HasApprenticeBeenMadeRedundant")" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
             @Html.AntiForgeryToken()
             @Html.Partial("ValidationSummary", Html.ViewData.ModelState)
-
+            @Html.Hidden("DateOfChange.Day", Model.Data.ChangeStatusViewModel.DateOfChange.Day)
+            @Html.Hidden("DateOfChange.Month", Model.Data.ChangeStatusViewModel.DateOfChange.Month)
+            @Html.Hidden("DateOfChange.Year", Model.Data.ChangeStatusViewModel.DateOfChange.Year)
             <h1 class="heading-xlarge">Has @Model.Data.ApprenticeshipName been made redundant?</h1>
 
-            <div class="form-error-group form-group @Html.AddClassIfPropertyInError("RedundancyConfirm", "error")">
+            <div class="form-error-group form-group @Html.AddClassIfPropertyInError("MadeRedundant", "error")">
                 <div>
-                    @Html.ValidationMessage("RedundancyConfirm", new { id = "error-message-RedundancyConfirm" })
+                    @Html.ValidationMessage("MadeRedundant", new { id = "error-message-MadeRedundant" })
                 </div>
                 <fieldset>
                     <legend class="visually-hidden">Are you sure you want to delete the record for @Model.Data.ApprenticeshipName?</legend>
 
-                    <label class="block-label selection-button-radio" for="RedundancyConfirm-True">
-                        @Html.RadioButton("RedundancyConfirm", "True", Model.Data.RedundancyConfirm.HasValue && Model.Data.RedundancyConfirm.Value, new { Id = "RedundancyConfirm-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
+                    <label class="block-label selection-button-radio" for="MadeRedundant-True">
+                        @Html.RadioButton("MadeRedundant", "True", Model.Data.ChangeStatusViewModel.MadeRedundant.HasValue && Model.Data.ChangeStatusViewModel.MadeRedundant.Value, new { Id = "MadeRedundant-True", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
                         Yes
                     </label>
-                    <label class="block-label selection-button-radio" for="RedundancyConfirm-False">
-                        @Html.RadioButton("RedundancyConfirm", "False", Model.Data.RedundancyConfirm.HasValue && !Model.Data.RedundancyConfirm.Value, new { Id = "RedundancyConfirm-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
+                    <label class="block-label selection-button-radio" for="MadeRedundant-False">
+                        @Html.RadioButton("MadeRedundant", "False", Model.Data.ChangeStatusViewModel.MadeRedundant.HasValue && !Model.Data.ChangeStatusViewModel.MadeRedundant.Value, new { Id = "MadeRedundant-False", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
                         No
                     </label>
                 </fieldset>
             </div>
-
             <button class="button" type="submit" id="submit-redundancy-confirm">Save and continue</button>
         </form>
     </div>

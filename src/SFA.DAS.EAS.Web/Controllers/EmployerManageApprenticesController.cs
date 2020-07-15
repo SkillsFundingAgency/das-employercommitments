@@ -199,69 +199,72 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return View(new OrchestratorResponse<WhenToMakeChangeViewModel>() { Data = viewResponse.Data });
             }
 
-            return RedirectToRoute("MadeRedundant", new { dateOfChange = response.DateOfChange });
+            return RedirectToRoute("MadeRedundant", new { whenToMakeChange = model.WhenToMakeChange, dateOfChange = response.DateOfChange });
         }
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/maderedundant", Name = "MadeRedundant")]
         [OutputCache(CacheProfile = "NoCache")]
-        public async Task<ActionResult> HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, DateTime? dateOfChange)
+        public async Task<ActionResult> HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, DateTime? dateOfChange, WhenToMakeChangeOptions whenToMakeChange)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var model=new RedundantApprenticeViewModel
-            {
-                HashedAccountId = hashedAccountId,
-                HashedApprenticeshipId = hashedApprenticeshipId,
-                ChangeType = changeType,
-                DateOfChange = dateOfChange
-            };
-            var response = await _orchestrator.MakeApprenticeRedundant(model, OwinWrapper.GetClaimValue(@"sub"));
+            var response = await _orchestrator.MakeApprenticeRedundant(hashedAccountId, hashedApprenticeshipId, changeType, dateOfChange, whenToMakeChange, OwinWrapper.GetClaimValue(@"sub"), null);
 
             return View(new OrchestratorResponse<RedundantApprenticeViewModel>
             {
                 Data = response.Data
             });
-            //return View();
         }
 
         [HttpPost]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/maderedundant")]
-        public async Task<ActionResult> HasApprenticeBeenMadeRedundant(RedundantApprenticeViewModel model)
+        public async Task<ActionResult> HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date")] ChangeStatusViewModel model)
         {
-            if (!await IsUserRoleAuthorized(model.HashedAccountId, Role.Owner, Role.Transactor))
+            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
             if (!ModelState.IsValid)
             {
-                var viewResponse = await _orchestrator.MakeApprenticeRedundant(model, OwinWrapper.GetClaimValue(@"sub"));
-                return View(new OrchestratorResponse<RedundantApprenticeViewModel>()
+                var viewResponse = await _orchestrator.MakeApprenticeRedundant(hashedAccountId, hashedApprenticeshipId, model.ChangeType.Value,
+                    model.DateOfChange.DateTime, model.WhenToMakeChange, OwinWrapper.GetClaimValue(@"sub"), model.MadeRedundant);
+                
+                return View(new OrchestratorResponse<RedundantApprenticeViewModel>
                 {
                     Data = viewResponse.Data
                 });
             }
 
-            await _orchestrator.UpdateApprenticeRedundancy(model, OwinWrapper.GetClaimValue(@"sub"),OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
-                OwinWrapper.GetClaimValue(DasClaimTypes.Email));
+            var response = await _orchestrator.ValidateWhenToApplyChange(hashedAccountId, hashedApprenticeshipId, model);
 
+            if (!response.ValidationResult.IsValid())
+            {
+                response.ValidationResult.AddToModelState(ModelState);
+
+                var viewResponse = await _orchestrator.MakeApprenticeRedundant(hashedAccountId, hashedApprenticeshipId, model.ChangeType.Value,
+                    model.DateOfChange.DateTime, model.WhenToMakeChange, OwinWrapper.GetClaimValue(@"sub"), model.MadeRedundant);
+
+                return View(new OrchestratorResponse<RedundantApprenticeViewModel>() { Data = viewResponse.Data });
+            }
             return RedirectToRoute("StatusChangeConfirmation", new
             {
                 changeType = model.ChangeType,
-                whenToMakeChange = WhenToMakeChangeOptions.Immediately,
-                dateOfChange = model.DateOfChange
+                whenToMakeChange = model.WhenToMakeChange,
+                dateOfChange = response.DateOfChange,
+                madeRedundant = model.MadeRedundant
             });
         }
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/confirm", Name = "StatusChangeConfirmation")]
         [OutputCache(CacheProfile = "NoCache")]
-        public async Task<ActionResult> StatusChangeConfirmation(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange)
+        public async Task<ActionResult> StatusChangeConfirmation(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange, bool? madeRedundant)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var response = await _orchestrator.GetChangeStatusConfirmationViewModel(hashedAccountId, hashedApprenticeshipId, changeType, whenToMakeChange, dateOfChange, OwinWrapper.GetClaimValue(@"sub"));
+            var response = await _orchestrator.GetChangeStatusConfirmationViewModel(hashedAccountId, hashedApprenticeshipId, changeType, whenToMakeChange, dateOfChange, madeRedundant, OwinWrapper.GetClaimValue(@"sub"));
 
             return View(response);
         }
@@ -276,7 +279,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                var response = await _orchestrator.GetChangeStatusConfirmationViewModel(hashedAccountId, hashedApprenticeshipId, model.ChangeType.Value, model.WhenToMakeChange, model.DateOfChange.DateTime, OwinWrapper.GetClaimValue(@"sub"));
+                var response = await _orchestrator.GetChangeStatusConfirmationViewModel(hashedAccountId, hashedApprenticeshipId, model.ChangeType.Value, model.WhenToMakeChange, model.DateOfChange.DateTime, model.MadeRedundant, OwinWrapper.GetClaimValue(@"sub"));
 
                 return View(response);
             }
