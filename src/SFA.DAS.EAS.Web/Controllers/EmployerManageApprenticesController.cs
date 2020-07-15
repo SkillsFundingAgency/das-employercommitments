@@ -199,53 +199,59 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return View(new OrchestratorResponse<WhenToMakeChangeViewModel>() { Data = viewResponse.Data });
             }
 
-            return
-                RedirectToRoute(
-                    "MadeRedundant", new { dateOfChange = response.DateOfChange });
+            return RedirectToRoute("MadeRedundant", new { dateOfChange = response.DateOfChange });
         }
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/maderedundant", Name = "MadeRedundant")]
         [OutputCache(CacheProfile = "NoCache")]
-        public async Task<ActionResult> HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType)
+        public async Task<ActionResult> HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, DateTime? dateOfChange)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            var response = await _orchestrator.MakeApprenticeRedundant(hashedAccountId, hashedApprenticeshipId, changeType, OwinWrapper.GetClaimValue(@"sub"));
-
-            //if (response.Data.SkipStep)
-            //    return RedirectToRoute("StatusChangeConfirmation", new
-            //    {
-            //        changeType = response.Data.ChangeStatusViewModel.ChangeType.ToString().ToLower(),
-            //        whenToMakeChange = WhenToMakeChangeOptions.Immediately,
-            //        dateOfChange = default(DateTime?)
-            //    });
+            var model=new RedundantApprenticeViewModel
+            {
+                HashedAccountId = hashedAccountId,
+                HashedApprenticeshipId = hashedApprenticeshipId,
+                ChangeType = changeType,
+                DateOfChange = dateOfChange
+            };
+            var response = await _orchestrator.MakeApprenticeRedundant(model, OwinWrapper.GetClaimValue(@"sub"));
 
             return View(new OrchestratorResponse<RedundantApprenticeViewModel>
             {
                 Data = response.Data
             });
+            //return View();
         }
 
         [HttpPost]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/maderedundant")]
-        public async Task<ActionResult> HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, RedundantApprenticeViewModel model)
+        public async Task<ActionResult> HasApprenticeBeenMadeRedundant(RedundantApprenticeViewModel model)
         {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+            if (!await IsUserRoleAuthorized(model.HashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
             if (!ModelState.IsValid)
             {
-                var viewResponse = await _orchestrator.MakeApprenticeRedundant(hashedAccountId, hashedApprenticeshipId, model.ChangeType.Value, OwinWrapper.GetClaimValue(@"sub"));
-                return View(new OrchestratorResponse<RedundantApprenticeViewModel>() { Data = viewResponse.Data });
+                var viewResponse = await _orchestrator.MakeApprenticeRedundant(model, OwinWrapper.GetClaimValue(@"sub"));
+                return View(new OrchestratorResponse<RedundantApprenticeViewModel>()
+                {
+                    Data = viewResponse.Data
+                });
             }
 
-            return RedirectToRoute("StatusChangeConfirmation", new {
-                    changeType = model.ChangeType,
-                          whenToMakeChange = WhenToMakeChangeOptions.Immediately,
-                            dateOfChange = default(DateTime?) });
-            }
+            await _orchestrator.UpdateApprenticeRedundancy(model, OwinWrapper.GetClaimValue(@"sub"),OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
+                OwinWrapper.GetClaimValue(DasClaimTypes.Email));
+
+            return RedirectToRoute("StatusChangeConfirmation", new
+            {
+                changeType = model.ChangeType,
+                whenToMakeChange = WhenToMakeChangeOptions.Immediately,
+                dateOfChange = model.DateOfChange
+            });
+        }
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/confirm", Name = "StatusChangeConfirmation")]

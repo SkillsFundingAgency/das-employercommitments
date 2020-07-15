@@ -12,6 +12,7 @@ using SFA.DAS.Commitments.Api.Types.Commitment.Types;
 using SFA.DAS.EmployerCommitments.Application.Commands.CreateApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.ReviewApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UndoApprenticeshipUpdate;
+using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipRedundancy;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStatus;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStopDate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateProviderPaymentPriority;
@@ -335,11 +336,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
         }
 
         public async Task<OrchestratorResponse<RedundantApprenticeViewModel>> MakeApprenticeRedundant(
-            string hashedAccountId, string hashedApprenticeshipId,
-            ChangeStatusType changeType, string externalUserId)
+            RedundantApprenticeViewModel model, string externalUserId)
         {
-            var accountId = HashingService.DecodeValue(hashedAccountId);
-            var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
+            var accountId = HashingService.DecodeValue(model.HashedAccountId);
+            var apprenticeshipId = HashingService.DecodeValue(model.HashedApprenticeshipId);
 
             Logger.Info(
                 $"Determining navigation for type of change status selection. AccountId: {accountId}, ApprenticeshipId: {apprenticeshipId}");
@@ -355,16 +355,50 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         });
 
                 CheckApprenticeshipStateValidForChange(data.Apprenticeship);
-
+                
                 return new OrchestratorResponse<RedundantApprenticeViewModel>
                 {
                     Data = new RedundantApprenticeViewModel
                     {
-                        ApprenticeshipName = data.Apprenticeship.ApprenticeshipName
+                        ApprenticeshipName = data.Apprenticeship.ApprenticeshipName,
+                        DateOfChange = model.DateOfChange
                     }
                 };
 
-            }, hashedAccountId, externalUserId);
+            }, model.HashedAccountId, externalUserId);
+        }
+
+        public async Task UpdateApprenticeRedundancy(RedundantApprenticeViewModel model, string externalUserId, string userName, string userEmail)
+        {
+            var accountId = HashingService.DecodeValue(model.HashedAccountId);
+            var apprenticeshipId = HashingService.DecodeValue(model.HashedApprenticeshipId);
+
+            Logger.Info(
+                $"Updating Apprenticeship status to {model.ChangeType}. AccountId: {accountId}, ApprenticeshipId: {apprenticeshipId}");
+
+            await CheckUserAuthorization(async () =>
+            {
+                var data =
+                    await
+                        Mediator.SendAsync(new GetApprenticeshipQueryRequest
+                        {
+                            AccountId = accountId,
+                            ApprenticeshipId = apprenticeshipId
+                        });
+
+                CheckApprenticeshipStateValidForChange(data.Apprenticeship);
+
+                await Mediator.SendAsync(new UpdateApprenticeshipRedundancyCommand
+                {
+                    UserId = externalUserId,
+                    ApprenticeshipId = apprenticeshipId,
+                    EmployerAccountId = accountId,
+                    UserEmailAddress = userEmail,
+                    UserDisplayName = userName,
+                    MadeRedundant = model.RedundancyConfirm
+                });
+
+            }, model.HashedAccountId, externalUserId);
         }
 
         private bool CanChangeDateStepBeSkipped(ChangeStatusType changeType, GetApprenticeshipQueryResponse data)

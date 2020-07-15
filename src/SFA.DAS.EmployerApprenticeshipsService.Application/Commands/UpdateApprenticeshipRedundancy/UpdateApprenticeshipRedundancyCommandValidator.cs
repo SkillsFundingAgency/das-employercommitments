@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SFA.DAS.EmployerCommitments.Application.Validation;
-using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
 
-namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStatus
+namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipRedundancy
 {
-    public sealed class UpdateApprenticeshipStatusCommandValidator : IValidator<UpdateApprenticeshipStatusCommand>
+    public sealed class UpdateApprenticeshipRedundancyCommandValidator : IValidator<UpdateApprenticeshipRedundancyCommand>
     {
-        public ValidationResult Validate(UpdateApprenticeshipStatusCommand command)
+        public ValidationResult Validate(UpdateApprenticeshipRedundancyCommand command)
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
@@ -20,16 +19,13 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
             if (command.ApprenticeshipId <= 0)
                 result.AddError(nameof(command.ApprenticeshipId), $"{nameof(command.ApprenticeshipId)} has an invalid value.");
 
-            if (!Enum.IsDefined(typeof(ChangeStatusType),command.ChangeType))
-                result.AddError(nameof(command.ChangeType), $"{nameof(command.ChangeType)} has an invalid value.");
-
             if (string.IsNullOrEmpty(command.UserId))
                 result.AddError(nameof(command.UserId), $"{nameof(command.UserId)} cannot be null or empty.");
 
             return result;
         }
 
-        public Task<ValidationResult> ValidateAsync(UpdateApprenticeshipStatusCommand item)
+        public Task<ValidationResult> ValidateAsync(UpdateApprenticeshipRedundancyCommand item)
         {
             throw new NotImplementedException();
         }
