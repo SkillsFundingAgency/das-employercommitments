@@ -51,16 +51,52 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
             //Arrange
             _owinWrapper.Setup(x => x.GetClaimValue(It.IsAny<string>())).Returns(string.Empty);
             _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(true));
-            _orchestrator.Setup(o => o.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), It.IsAny<bool>(),It.IsAny<string>())).Returns(Task.FromResult(new OrchestratorResponse<ConfirmationStateChangeViewModel>()));
+            _orchestrator.Setup(o => o.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), null,It.IsAny<string>())).Returns(Task.FromResult(new OrchestratorResponse<ConfirmationStateChangeViewModel>()));
 
             var response = new OrchestratorResponse<ConfirmationStateChangeViewModel> { Data = new ConfirmationStateChangeViewModel() };
-            _orchestrator.Setup(o => o.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), It.IsAny<bool>(),It.IsAny<string>())).Returns(Task.FromResult(response)).Verifiable();
+            _orchestrator.Setup(o => o.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), null,It.IsAny<string>())).Returns(Task.FromResult(response)).Verifiable();
 
             //Act
-            var result = await _controller.StatusChangeConfirmation(AccountId, ApprenticeshipId, ChangeStatusType.Stop, WhenToMakeChangeOptions.Immediately, DateTime.Now,null);
+            await _controller.StatusChangeConfirmation(AccountId, ApprenticeshipId, ChangeStatusType.Stop, WhenToMakeChangeOptions.Immediately, DateTime.Now,null);
 
             //Assert
-            _orchestrator.Verify(x => x.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), It.IsAny<bool>(),It.IsAny<string>()));
+            _orchestrator.Verify(x => x.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), null,It.IsAny<string>()));
+        }
+
+        [Test]
+        public async Task ThenItWillAllowToStopIfTheApprenticeStatusIsWaitingToStart_Redundancy_True()
+        {
+            //Arrange
+            _owinWrapper.Setup(x => x.GetClaimValue(It.IsAny<string>())).Returns(string.Empty);
+            _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(true));
+            _orchestrator.Setup(o => o.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), true, It.IsAny<string>())).Returns(Task.FromResult(new OrchestratorResponse<ConfirmationStateChangeViewModel>()));
+
+            var response = new OrchestratorResponse<ConfirmationStateChangeViewModel> { Data = new ConfirmationStateChangeViewModel() };
+            _orchestrator.Setup(o => o.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), true, It.IsAny<string>())).Returns(Task.FromResult(response)).Verifiable();
+
+            //Act
+            await _controller.StatusChangeConfirmation(AccountId, ApprenticeshipId, ChangeStatusType.Stop, WhenToMakeChangeOptions.Immediately, DateTime.Now, true);
+
+            //Assert
+            _orchestrator.Verify(x => x.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), true, It.IsAny<string>()));
+        }
+
+        [Test]
+        public async Task ThenItWillAllowToStopIfTheApprenticeStatusIsWaitingToStart_Redundancy_False()
+        {
+            //Arrange
+            _owinWrapper.Setup(x => x.GetClaimValue(It.IsAny<string>())).Returns(string.Empty);
+            _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(true));
+            _orchestrator.Setup(o => o.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), false, It.IsAny<string>())).Returns(Task.FromResult(new OrchestratorResponse<ConfirmationStateChangeViewModel>()));
+
+            var response = new OrchestratorResponse<ConfirmationStateChangeViewModel> { Data = new ConfirmationStateChangeViewModel() };
+            _orchestrator.Setup(o => o.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), false, It.IsAny<string>())).Returns(Task.FromResult(response)).Verifiable();
+
+            //Act
+            await _controller.StatusChangeConfirmation(AccountId, ApprenticeshipId, ChangeStatusType.Stop, WhenToMakeChangeOptions.Immediately, DateTime.Now, false);
+
+            //Assert
+            _orchestrator.Verify(x => x.GetChangeStatusConfirmationViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<DateTime>(), false, It.IsAny<string>()));
         }
     }
 }

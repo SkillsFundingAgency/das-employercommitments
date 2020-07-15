@@ -236,22 +236,22 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 });
             }
 
-            var response = await _orchestrator.ValidateWhenToApplyChange(hashedAccountId, hashedApprenticeshipId, model);
+            //var response = await _orchestrator.ValidateWhenToApplyChange(hashedAccountId, hashedApprenticeshipId, model);
 
-            if (!response.ValidationResult.IsValid())
-            {
-                response.ValidationResult.AddToModelState(ModelState);
+            //if (!response.ValidationResult.IsValid())
+            //{
+            //    response.ValidationResult.AddToModelState(ModelState);
 
-                var viewResponse = await _orchestrator.MakeApprenticeRedundant(hashedAccountId, hashedApprenticeshipId, model.ChangeType.Value,
-                    model.DateOfChange.DateTime, model.WhenToMakeChange, OwinWrapper.GetClaimValue(@"sub"), model.MadeRedundant);
+            //    var viewResponse = await _orchestrator.MakeApprenticeRedundant(hashedAccountId, hashedApprenticeshipId, model.ChangeType.Value,
+            //        model.DateOfChange.DateTime, model.WhenToMakeChange, OwinWrapper.GetClaimValue(@"sub"), model.MadeRedundant);
 
-                return View(new OrchestratorResponse<RedundantApprenticeViewModel>() { Data = viewResponse.Data });
-            }
+            //    return View(new OrchestratorResponse<RedundantApprenticeViewModel>() { Data = viewResponse.Data });
+            //}
             return RedirectToRoute("StatusChangeConfirmation", new
             {
                 changeType = model.ChangeType,
                 whenToMakeChange = model.WhenToMakeChange,
-                dateOfChange = response.DateOfChange,
+                dateOfChange = model.DateOfChange,
                 madeRedundant = model.MadeRedundant
             });
         }
