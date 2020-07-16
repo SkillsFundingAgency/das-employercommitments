@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MediatR;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
@@ -9,7 +8,6 @@ using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStatus;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Validation;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.Apprenticeship;
@@ -24,8 +22,6 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
         private Mock<ICurrentDateTime> _mockCurrentDateTime;
         private IValidator<UpdateApprenticeshipStatusCommand> _validator = new UpdateApprenticeshipStatusCommandValidator();
         private UpdateApprenticeshipStatusCommand _validCommand;
-        private Mock<IAcademicYearDateProvider> _academicYearDateProvider;
-        private Mock<IAcademicYearValidator> _academicYearValidator;
         private Mock<IProviderEmailNotificationService> _providerEmailNotificationService;
 
         [SetUp]
@@ -53,8 +49,8 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
             _mockCurrentDateTime = new Mock<ICurrentDateTime>();
             _mockCurrentDateTime.SetupGet(x => x.Now).Returns(DateTime.UtcNow);
 
-            _academicYearDateProvider = new Mock<IAcademicYearDateProvider>();
-            _academicYearValidator = new Mock<IAcademicYearValidator>();
+            new Mock<IAcademicYearDateProvider>();
+            new Mock<IAcademicYearValidator>();
 
             _providerEmailNotificationService = new Mock<IProviderEmailNotificationService>();
             _providerEmailNotificationService.Setup(x =>
@@ -98,6 +94,27 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Commands.UpdateAppre
                 x => x.SendProviderApprenticeshipStopNotification(It.IsAny<Apprenticeship>(), It.IsAny<DateTime>()),
                 Times.Exactly(expectSendNotification ? 1 : 0)
                 );
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task ThenTheCommitmentApiShouldBeCalledWithCorrectStatus_MadeRedundant_True(bool madeRedundant)
+        {
+            //Arrange
+            _validCommand.ChangeType = ChangeStatusType.Stop;
+            _validCommand.MadeRedundant = madeRedundant;
+
+            //Act
+            await _handler.Handle(_validCommand);
+
+            //Assert
+            _mockCommitmentApi.Verify(x => x.PatchEmployerApprenticeship(
+                    _validCommand.EmployerAccountId, _validCommand.ApprenticeshipId,
+                    It.Is<ApprenticeshipSubmission>(
+                        y => y.PaymentStatus == PaymentStatus.Withdrawn && 
+                             y.LastUpdatedByInfo.Name == _validCommand.UserDisplayName && 
+                             y.LastUpdatedByInfo.EmailAddress == 
+                             _validCommand.UserEmailAddress && y.MadeRedundant == madeRedundant)));
         }
 
         [Test]
