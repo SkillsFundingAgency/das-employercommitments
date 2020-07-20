@@ -251,7 +251,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             {
                 changeType = model.ChangeType,
                 whenToMakeChange = model.WhenToMakeChange,
-                dateOfChange = model.DateOfChange,
+                dateOfChange = model.DateOfChange.DateTime,
                 madeRedundant = model.MadeRedundant
             });
         }
