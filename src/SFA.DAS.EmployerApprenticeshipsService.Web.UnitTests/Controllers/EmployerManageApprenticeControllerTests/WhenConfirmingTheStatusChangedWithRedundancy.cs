@@ -51,18 +51,18 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
             //Arrange
             _owinWrapper.Setup(x => x.GetClaimValue(It.IsAny<string>())).Returns(string.Empty);
             _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(true));
-            //_orchestrator.Setup(o => o.MakeApprenticeRedundant(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<DateTime>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<string>(), true))
+            //_orchestrator.Setup(o => o.GetRedundantViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<DateTime>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<string>(), true))
             //    .Returns(Task.FromResult(new OrchestratorResponse<RedundantApprenticeViewModel>()));
 
             var response = new OrchestratorResponse<RedundantApprenticeViewModel> { Data = new RedundantApprenticeViewModel() };
-            _orchestrator.Setup(o => o.MakeApprenticeRedundant(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<DateTime>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<string>(), null))
+            _orchestrator.Setup(o => o.GetRedundantViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<DateTime>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<string>(), null))
                 .Returns(Task.FromResult(response)).Verifiable();
 
             //Act
             await _controller.HasApprenticeBeenMadeRedundant(AccountId, ApprenticeshipId, ChangeStatusType.Stop, DateTime.Now, WhenToMakeChangeOptions.Immediately);
 
             //Assert
-            _orchestrator.Verify(x => x.MakeApprenticeRedundant(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<DateTime>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<string>(), null));
+            _orchestrator.Verify(x => x.GetRedundantViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ChangeStatusType>(), It.IsAny<DateTime>(), It.IsAny<WhenToMakeChangeOptions>(), It.IsAny<string>(), null));
         }
     }
 }

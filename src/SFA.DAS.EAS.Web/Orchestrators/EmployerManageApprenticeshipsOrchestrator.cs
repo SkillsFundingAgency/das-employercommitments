@@ -334,7 +334,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        public async Task<OrchestratorResponse<RedundantApprenticeViewModel>> MakeApprenticeRedundant(
+        public async Task<OrchestratorResponse<RedundantApprenticeViewModel>> GetRedundantViewModel(
             string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, DateTime? dateOfChange, WhenToMakeChangeOptions whenToMakeChange, string externalUserId, bool? madeRedundant)
         {
             var accountId = HashingService.DecodeValue(hashedAccountId);
