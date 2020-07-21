@@ -217,7 +217,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpPost]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/maderedundant")]
-        public async Task<ActionResult> HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date")] ChangeStatusViewModel model)
+        public async Task<ActionResult> HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date,Redundant")] ChangeStatusViewModel model)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
