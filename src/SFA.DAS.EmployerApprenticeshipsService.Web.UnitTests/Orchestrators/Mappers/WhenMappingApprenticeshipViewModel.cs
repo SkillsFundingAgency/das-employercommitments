@@ -275,5 +275,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             if (unchanged)
                 Assert.AreEqual(viewModel.IsLockedForUpdate, viewModel.IsEndDateLockedForUpdate);
         }
+
+        [TestCase(null)]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ThenMadeRedundantIsMapped(bool? madeRedundant)
+        {
+            var apprenticeship = new Apprenticeship { MadeRedundant = madeRedundant };
+
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+
+            Assert.AreEqual(madeRedundant, viewModel.MadeRedundant);
+        }
     }
 }
