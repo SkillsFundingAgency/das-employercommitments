@@ -199,3 +199,11 @@
         sfa.dataLayer.vpv = '/accounts/apprentices/manage/@ViewBag.PageId';
     </script>
 }
+
+<script>
+    document.addEventListener('click', function (e) {
+        if (!e.target.matches('.back-link')) return;
+        e.preventDefault();
+        window.history.back();
+    }, false);
+</script>
