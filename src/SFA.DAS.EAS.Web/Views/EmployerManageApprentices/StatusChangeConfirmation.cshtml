@@ -138,6 +138,12 @@
                                 @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormatLongMonthNameWithoutDay()
                             </td>
                         </tr>
+                        <tr>
+                            <th scope="row">Made Redundant</th>
+                            <td>
+                                @(Model.Data.ChangeStatusViewModel.MadeRedundant.Value ? "Yes" : "No")
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
