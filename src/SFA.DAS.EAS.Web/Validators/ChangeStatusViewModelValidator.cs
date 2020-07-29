@@ -16,19 +16,31 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                 .NotNull().WithMessage("Select whether to change this apprenticeship status or not")
                 .IsInEnum().WithMessage("Select an option");
 
-            RuleSet("Date", () => 
+            RuleSet("Date", () =>
             {
                 When(x => x.ChangeType == ChangeStatusType.Stop && x.ChangeConfirmed != false, () =>
                 {
                     RuleFor(r => r.DateOfChange)
                                .Cascade(CascadeMode.StopOnFirstFailure)
                                .Must(d => d.DateTime.HasValue).WithMessage("Enter the stop date for this apprenticeship");
+
                     When(x => x.StartDate < new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1), () =>
                     {
                         RuleFor(r => r.DateOfChange)
                                    .Cascade(CascadeMode.StopOnFirstFailure)
                                    .Must(d => d.DateTime <= new DateTime(_currentDateTime.Now.Year, _currentDateTime.Now.Month, 1)).WithMessage("The stop date cannot be in the future");
                     });
+                });
+
+            });
+
+            RuleSet("Redundant", () =>
+            {
+                When(x => x.ChangeType == ChangeStatusType.Stop, () =>
+                {
+                    RuleFor(x => x.MadeRedundant)
+                        .NotNull()
+                        .WithMessage("Select yes if the apprentice has been made redundant");
                 });
 
             });
