@@ -138,6 +138,15 @@
                                 @Model.Data.ChangeStatusViewModel.DateOfChange.DateTime.Value.ToGdsFormatLongMonthNameWithoutDay()
                             </td>
                         </tr>
+                        if (Model.Data.ChangeStatusViewModel.MadeRedundant.HasValue)
+                        {
+                            <tr>
+                                <th scope="row">Made redundant</th>
+                                <td>
+                                    @(Model.Data.ChangeStatusViewModel.MadeRedundant.Value ? "Yes" : "No")
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
@@ -184,7 +193,7 @@
 
 @section breadcrumb {
     <div class="breadcrumbs">
-        <a href="@Url.RouteUrl("OnProgrammeApprenticeshipDetails")" aria-label="Back to apprentices details" class="back-link">Back</a>
+        <a href="#" class="back-link">Back</a>
     </div>
 }
 
@@ -193,3 +202,11 @@
         sfa.dataLayer.vpv = '/accounts/apprentices/manage/@ViewBag.PageId';
     </script>
 }
+
+<script>
+    document.addEventListener('click', function (e) {
+        if (!e.target.matches('.back-link')) return;
+        e.preventDefault();
+        window.history.back();
+    }, false);
+</script>

@@ -16,42 +16,42 @@
 <div class="grid-row">
     <div class="column-full">
         <form method="POST" action="@Url.Action("SubmitChanges")" novalidate="novalidate" onsubmit="sfa.tagHelper.submitRadioForm('@ViewBag.Title')">
-            
+
             @Html.AntiForgeryToken()
 
             <h1 class="heading-xlarge">@ViewBag.Title</h1>
-            
+
             @{ Html.RenderPartial("_CoreDetail", new CoreDetailsViewModel
-               {
-                   LearnerName = learnerName,
-                   ULN = uln,
-                   TrainingName = trainingName
-               }); }
-            
+                {
+                    LearnerName = learnerName,
+                    ULN = uln,
+                    TrainingName = trainingName
+                }); }
+
             @{ Html.RenderPartial("ApprenticeshipUpdate", Model.Data); }
-                <h2 class="heading-medium">Do you want to make these changes?</h2>
-                <div class="form-group @(!string.IsNullOrEmpty(Model.Data.ChangesConfirmedError) ? "error" : "")">
-                    <fieldset>
-                        <legend class="visually-hidden">Do you want to make these changes?</legend>
-            
-                        <div id="ChangesConfirmed"></div>
-                        @if (!string.IsNullOrEmpty(Model.Data.ChangesConfirmedError))
-                        {
-                            <span class="error-message" id="error-message-ChangesConfirmed">@Model.Data.ChangesConfirmedError</span>
-                        }
+            <h2 class="heading-medium">Do you want to make these changes?</h2>
+            <div class="form-group @(!string.IsNullOrEmpty(Model.Data.ChangesConfirmedError) ? "error" : "")">
+                <fieldset>
+                    <legend class="visually-hidden">Do you want to make these changes?</legend>
 
-                        <label class="block-label selection-button-radio" for="changes-confirmed-true">
-                            @Html.RadioButton("ChangesConfirmed", true, new { id = "changes-confirmed-true", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
-                            Yes, change these details
-                        </label>
-                        <label class="block-label selection-button-radio" for="changes-confirmed-false">
-                            @Html.RadioButton("ChangesConfirmed", false, new { id = "changes-confirmed-false", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
-                            No, don't change these details
-                        </label>
-                    </fieldset>
-                </div>
+                    <div id="ChangesConfirmed"></div>
+                    @if (!string.IsNullOrEmpty(Model.Data.ChangesConfirmedError))
+                    {
+                        <span class="error-message" id="error-message-ChangesConfirmed">@Model.Data.ChangesConfirmedError</span>
+                    }
 
-                <button type="submit" class="button" aria-label="Finish" id="submit-confirm-change">Finish</button>
+                    <label class="block-label selection-button-radio" for="changes-confirmed-true">
+                        @Html.RadioButton("ChangesConfirmed", true, new { id = "changes-confirmed-true", dataOptionName = "Yes", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'Yes')" })
+                        Yes, change these details
+                    </label>
+                    <label class="block-label selection-button-radio" for="changes-confirmed-false">
+                        @Html.RadioButton("ChangesConfirmed", false, new { id = "changes-confirmed-false", dataOptionName = "No", onclick = $"sfa.tagHelper.radioButtonClick('{ViewBag.Title}', 'No')" })
+                        No, don't change these details
+                    </label>
+                </fieldset>
+            </div>
+
+            <button type="submit" class="button" aria-label="Finish" id="submit-confirm-change">Finish</button>
         </form>
     </div>
 </div>
