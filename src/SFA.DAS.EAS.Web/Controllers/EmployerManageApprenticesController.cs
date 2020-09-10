@@ -160,7 +160,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             var response = await _orchestrator.GetChangeStatusDateOfChangeViewModel(hashedAccountId, hashedApprenticeshipId, changeType, OwinWrapper.GetClaimValue(@"sub"));
 
-            if (response.Data.SkipStep)
+            if (response.Data.SkipToMadeRedundantQuestion)
+                return RedirectToRoute("MadeRedundant", new
+                {
+                    changeType = response.Data.ChangeStatusViewModel.ChangeType.ToString().ToLower(),
+                    whenToMakeChange = WhenToMakeChangeOptions.Immediately,
+                    dateOfChange = default(DateTime?)
+                });
+
+            if (response.Data.SkipToConfirmationPage)
                 return RedirectToRoute("StatusChangeConfirmation", new
                 {
                     changeType = response.Data.ChangeStatusViewModel.ChangeType.ToString().ToLower(),

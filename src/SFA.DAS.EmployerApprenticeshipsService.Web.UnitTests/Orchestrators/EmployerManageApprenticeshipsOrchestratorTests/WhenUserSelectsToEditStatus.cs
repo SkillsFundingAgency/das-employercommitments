@@ -37,13 +37,14 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
         [TestCase(PaymentStatus.Active)]
         [TestCase(PaymentStatus.Paused)]
-        public async Task ThenShouldSkipSelectingChangeDateIfTrainingHasNotStarted(PaymentStatus paymentStatus)
+        public async Task OfAnActiveOrPausedApprenticeshipThatHasNotYetStarted_ThenTheyShouldSkipSelectingChangeDateAndMoveToMadeRedundantQuestion(PaymentStatus paymentStatus)
         {
             _testApprenticeship.PaymentStatus = paymentStatus;
 
             OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Stop, "user123");
 
-            response.Data.SkipStep.Should().BeTrue();
+            response.Data.SkipToConfirmationPage.Should().BeFalse();
+            response.Data.SkipToMadeRedundantQuestion.Should().BeTrue();
         }
 
         [Test]
@@ -53,7 +54,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Pause, "user123");
 
-            response.Data.SkipStep.Should().BeTrue();
+            response.Data.SkipToConfirmationPage.Should().BeTrue();
         }
 
         [Test]
@@ -63,7 +64,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             _testApprenticeship.PauseDate = MockDateTime.Object.Now.AddMonths(-1);
             OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Resume, "user123");
 
-            response.Data.SkipStep.Should().BeTrue();
+            response.Data.SkipToConfirmationPage.Should().BeTrue();
         }
        
         [Test]
@@ -74,7 +75,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Pause, "user123");
 
-            response.Data.SkipStep.Should().BeTrue();
+            response.Data.SkipToConfirmationPage.Should().BeTrue();
         }
        
         [Test]
@@ -85,7 +86,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Resume, "user123");
 
-            response.Data.SkipStep.Should().BeTrue();
+            response.Data.SkipToConfirmationPage.Should().BeTrue();
         }
        
         [TestCase(PaymentStatus.Active)]
@@ -97,7 +98,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
 
             OrchestratorResponse<WhenToMakeChangeViewModel> response = await Orchestrator.GetChangeStatusDateOfChangeViewModel("ABC123", "CDE321", ChangeStatusType.Stop, "user123");
 
-            response.Data.SkipStep.Should().BeFalse();
+            response.Data.SkipToConfirmationPage.Should().BeFalse();
         }
 
 
