@@ -320,7 +320,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     {
                         ApprenticeStartDate = data.Apprenticeship.StartDate.Value,
                         SkipToConfirmationPage = CanSkipToConfirmationPage(changeType, data),
-                        SkipToMadeRedundantQuestion = CanSkipToAskRedundancyQuestion(data),
+                        SkipToMadeRedundantQuestion = CanSkipToAskRedundancyQuestion(changeType, data),
                         ChangeStatusViewModel = new ChangeStatusViewModel
                         {
                             ChangeType = changeType
@@ -382,9 +382,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 || data.Apprenticeship.PaymentStatus == PaymentStatus.Active && changeType == ChangeStatusType.Pause; // Pausing
         }
 
-        private bool CanSkipToAskRedundancyQuestion(GetApprenticeshipQueryResponse data)
+        private bool CanSkipToAskRedundancyQuestion(ChangeStatusType changeType, GetApprenticeshipQueryResponse data)
         {
-            return data.Apprenticeship.IsWaitingToStart(_currentDateTime);
+            return changeType == ChangeStatusType.Stop && data.Apprenticeship.IsWaitingToStart(_currentDateTime);
         }
         public async Task<ValidateWhenToApplyChangeResult> ValidateWhenToApplyChange(string hashedAccountId,
             string hashedApprenticeshipId, ChangeStatusViewModel model)
