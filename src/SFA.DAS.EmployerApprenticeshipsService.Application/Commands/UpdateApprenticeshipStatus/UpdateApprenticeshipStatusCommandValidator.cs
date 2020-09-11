@@ -24,7 +24,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
                 result.AddError(nameof(command.ChangeType), $"{nameof(command.ChangeType)} has an invalid value.");
 
             if (string.IsNullOrEmpty(command.UserId))
-                result.AddError(nameof(command.UserId), $"{nameof(command.UserId)} connot be null or empty.");
+                result.AddError(nameof(command.UserId), $"{nameof(command.UserId)} cannot be null or empty.");
 
             return result;
         }

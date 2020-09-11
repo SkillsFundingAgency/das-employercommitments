@@ -76,16 +76,16 @@
         <h2 class="heading-medium visually-hidden">Apprentice status</h2>
         <table id="app-status" class="details-list details-list-new">
             <tbody>
-            <tr>
-                <th scope="row">Status</th>
-                <td>@Model.Data.Status</td>
-                <td id="editStatusLink" class="link-right">
-                    @if (Model.Data.CanEditStatus)
-                    {
-                        @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
-                    }
-                </td>
-            </tr>
+                <tr>
+                    <th scope="row">Status</th>
+                    <td>@Model.Data.Status</td>
+                    <td id="editStatusLink" class="link-right">
+                        @if (Model.Data.CanEditStatus)
+                        {
+                            @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
+                        }
+                    </td>
+                </tr>
                 @if (@Model.Data.PaymentStatus == PaymentStatus.Paused)
                 {
                     <tr>
@@ -134,6 +134,17 @@
                             <td></td>
                         }
                     </tr>
+
+                    if (Model.Data.MadeRedundant.HasValue)
+                    {
+                        <tr>
+                            <th scope="row">Made redundant</th>
+                            <td id="madeRedundant">
+                                  @(Model.Data.MadeRedundant.Value ? "Yes" : "No")
+                            </td>
+                            <td></td>
+                        </tr>
+                    }
                 }
                 <tr>
                     <th scope="row">Training provider</th>

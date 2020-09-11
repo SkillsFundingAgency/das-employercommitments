@@ -91,7 +91,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 CanEditStopDate = (apprenticeship.PaymentStatus == PaymentStatus.Withdrawn),
                 EndpointAssessorName = apprenticeship.EndpointAssessorName,
                 TrainingType = apprenticeship.TrainingType,
-                ReservationId = apprenticeship.ReservationId
+                ReservationId = apprenticeship.ReservationId,
+                MadeRedundant = apprenticeship.MadeRedundant
             };
 
             return result;

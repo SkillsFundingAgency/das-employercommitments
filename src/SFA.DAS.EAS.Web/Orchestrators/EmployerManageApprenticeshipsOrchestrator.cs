@@ -17,7 +17,6 @@ using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStopD
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateProviderPaymentPriority;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
-using SFA.DAS.EmployerCommitments.Application.Queries.ApprenticeshipSearch;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
@@ -318,7 +317,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 return new OrchestratorResponse<WhenToMakeChangeViewModel>
                 {
                     Data = new WhenToMakeChangeViewModel
-                    {                        
+                    {
                         ApprenticeStartDate = data.Apprenticeship.StartDate.Value,
                         SkipStep = CanChangeDateStepBeSkipped(changeType, data),
                         ChangeStatusViewModel = new ChangeStatusViewModel
@@ -329,6 +328,47 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         ApprenticeshipName = data.Apprenticeship.ApprenticeshipName,
                         TrainingName = data.Apprenticeship.TrainingName
 
+                    }
+                };
+
+            }, hashedAccountId, externalUserId);
+        }
+
+        public async Task<OrchestratorResponse<RedundantApprenticeViewModel>> GetRedundantViewModel(
+            string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, DateTime? dateOfChange, WhenToMakeChangeOptions whenToMakeChange, string externalUserId, bool? madeRedundant)
+        {
+            var accountId = HashingService.DecodeValue(hashedAccountId);
+            var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
+
+            Logger.Info(
+                $"Determining navigation for type of change status selection. AccountId: {accountId}, ApprenticeshipId: {apprenticeshipId}");
+
+            return await CheckUserAuthorization(async () =>
+            {
+                var data =
+                    await
+                        Mediator.SendAsync(new GetApprenticeshipQueryRequest
+                        {
+                            AccountId = accountId,
+                            ApprenticeshipId = apprenticeshipId
+                        });
+
+                CheckApprenticeshipStateValidForChange(data.Apprenticeship);
+
+                return new OrchestratorResponse<RedundantApprenticeViewModel>
+                {
+                    Data = new RedundantApprenticeViewModel
+                    {
+                        ApprenticeshipName = data.Apprenticeship.ApprenticeshipName,
+                        ChangeStatusViewModel = new ChangeStatusViewModel()
+                        {
+                            DateOfChange = DetermineChangeDate(changeType, data.Apprenticeship, whenToMakeChange, dateOfChange),
+                            ChangeType = changeType,
+                            WhenToMakeChange = whenToMakeChange,
+                            ChangeConfirmed = false,
+                            StartDate = data.Apprenticeship.StartDate,
+                            MadeRedundant = madeRedundant
+                        }
                     }
                 };
 
@@ -366,7 +406,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             };
         }
 
-        public async Task<OrchestratorResponse<ConfirmationStateChangeViewModel>> GetChangeStatusConfirmationViewModel(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange, string externalUserId)
+        public async Task<OrchestratorResponse<ConfirmationStateChangeViewModel>> GetChangeStatusConfirmationViewModel(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange, bool? madeRedundant, string externalUserId)
         {
             var accountId = HashingService.DecodeValue(hashedAccountId);
             var apprenticeshipId = HashingService.DecodeValue(hashedApprenticeshipId);
@@ -402,7 +442,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                             ChangeType = changeType,
                             WhenToMakeChange = whenToMakeChange,
                             ChangeConfirmed = false,
-                            StartDate = data.Apprenticeship.StartDate
+                            StartDate = data.Apprenticeship.StartDate,
+                            MadeRedundant = madeRedundant
                         }
                     }
                 };
@@ -461,12 +502,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     UserId = externalUserId,
                     ApprenticeshipId = apprenticeshipId,
                     EmployerAccountId = accountId,
-
                     ChangeType = (Domain.Models.Apprenticeship.ChangeStatusType)model.ChangeType,
-
                     DateOfChange = model.DateOfChange.DateTime.Value,
                     UserEmailAddress = userEmail,
-                    UserDisplayName = userName
+                    UserDisplayName = userName,
+                    MadeRedundant = model.MadeRedundant
                 });
 
             }, hashedAccountId, externalUserId);

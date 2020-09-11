@@ -13,5 +13,6 @@ namespace SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipS
         public DateTime DateOfChange { get; set; }
         public string UserDisplayName { get; set; }
         public string UserEmailAddress { get; set; }
+        public bool? MadeRedundant { get; set; }
     }
 }

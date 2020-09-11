@@ -60,6 +60,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public string ManageApprenticeshipV2PageLink { get; set; }
 
         public string EditApprenticeshipEndDateLink { get; set; }
+
+        public bool? MadeRedundant { get; set; }
     }
 
     public enum PendingChanges

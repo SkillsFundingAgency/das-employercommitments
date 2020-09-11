@@ -48,7 +48,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 "CDE321",
                 ChangeStatusType.Resume,
                 WhenToMakeChangeOptions.Immediately,
-                null,
+                null,null,
                 "user123");
 
 
@@ -69,7 +69,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
                 "CDE321",
                 ChangeStatusType.Resume,
                 WhenToMakeChangeOptions.Immediately,
-                null,
+                null,null,
                 "user123");
 
 
