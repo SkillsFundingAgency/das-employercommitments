@@ -58,6 +58,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public Guid? ReservationId { get; set; }
         public string ManageApprenticeshipV2PageLink { get; set; }
+
+        public string EditApprenticeshipEndDateLink { get; set; }
     }
 
     public enum PendingChanges
