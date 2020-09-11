@@ -235,11 +235,11 @@
                 </tr>
                 @if (Model.Data.TrainingType == TrainingType.Standard)
                 {
-            <tr>
-                <th scope="row">End-point assessor</th>
-                <td>@(Model.Data.EndpointAssessorName ?? "The end-point assessor has not been declared")</td>
-                <td></td>
-            </tr>
+                    <tr>
+                        <th scope="row">End-point assessor</th>
+                        <td>@(Model.Data.EndpointAssessorName ?? "The end-point assessor has not been declared")</td>
+                        <td></td>
+                    </tr>
                 }
             </tbody>
         </table>
