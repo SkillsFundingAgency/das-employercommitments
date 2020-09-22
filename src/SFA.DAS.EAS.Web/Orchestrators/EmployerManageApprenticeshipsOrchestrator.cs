@@ -319,7 +319,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     Data = new WhenToMakeChangeViewModel
                     {
                         ApprenticeStartDate = data.Apprenticeship.StartDate.Value,
-                        SkipStep = CanChangeDateStepBeSkipped(changeType, data),
+                        SkipToConfirmationPage = CanSkipToConfirmationPage(changeType, data),
+                        SkipToMadeRedundantQuestion = CanSkipToAskRedundancyQuestion(changeType, data),
                         ChangeStatusViewModel = new ChangeStatusViewModel
                         {
                             ChangeType = changeType
@@ -375,13 +376,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }, hashedAccountId, externalUserId);
         }
 
-        private bool CanChangeDateStepBeSkipped(ChangeStatusType changeType, GetApprenticeshipQueryResponse data)
+        private bool CanSkipToConfirmationPage(ChangeStatusType changeType, GetApprenticeshipQueryResponse data)
         {
-            return data.Apprenticeship.IsWaitingToStart(_currentDateTime) // Not started
-                || data.Apprenticeship.PaymentStatus == PaymentStatus.Paused && changeType == ChangeStatusType.Resume // Resuming 
+            return data.Apprenticeship.PaymentStatus == PaymentStatus.Paused && changeType == ChangeStatusType.Resume // Resuming 
                 || data.Apprenticeship.PaymentStatus == PaymentStatus.Active && changeType == ChangeStatusType.Pause; // Pausing
         }
 
+        private bool CanSkipToAskRedundancyQuestion(ChangeStatusType changeType, GetApprenticeshipQueryResponse data)
+        {
+            return changeType == ChangeStatusType.Stop && data.Apprenticeship.IsWaitingToStart(_currentDateTime);
+        }
         public async Task<ValidateWhenToApplyChangeResult> ValidateWhenToApplyChange(string hashedAccountId,
             string hashedApprenticeshipId, ChangeStatusViewModel model)
         {

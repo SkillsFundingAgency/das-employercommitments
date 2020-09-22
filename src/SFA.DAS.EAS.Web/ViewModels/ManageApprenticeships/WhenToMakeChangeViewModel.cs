@@ -4,7 +4,8 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 {
     public sealed class WhenToMakeChangeViewModel
     {
-        public bool SkipStep { get; set; }
+        public bool SkipToMadeRedundantQuestion { get; set; }
+        public bool SkipToConfirmationPage { get; set; }
         public ChangeStatusViewModel ChangeStatusViewModel { get; set; }
         public DateTime ApprenticeStartDate { get; set; }
         public string ApprenticeshipULN { get; set; }
