@@ -196,6 +196,7 @@
                 <tr>
                     <th scope="row">Apprenticeship training course </th>
                     <td>@Model.Data.TrainingName </td>
+                    <td></td>
                 </tr>
                 <tr>
                     <th scope="row">Planned training start date</th>
@@ -205,6 +206,7 @@
                             @Model.Data.StartDate.Value.ToGdsFormatWithoutDay()
                         }
                     </td>
+                    <td></td>
                 </tr>
                 <tr>
                     <th scope="row">Planned training finish date</th>
@@ -214,20 +216,29 @@
                             @Model.Data.EndDate.Value.ToGdsFormatWithoutDay()
                         }
                     </td>
+                    <td>
+                        @if (Model.Data.PaymentStatus == PaymentStatus.Completed)
+                        {
+                            <a id="editEndDateLink" href="@Model.Data.EditApprenticeshipEndDateLink" aria-label="Edit end date">Edit</a>
+                        }
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row">Total agreed apprenticeship price</th>
                     <td>@FormatCost(Model.Data.Cost) excluding VAT</td>
+                    <td></td>
                 </tr>
                 <tr>
                     <th scope="row">Reference </th>
                     <td>@Model.Data.EmployerReference</td>
+                    <td></td>
                 </tr>
                 @if (Model.Data.TrainingType == TrainingType.Standard)
                 {
                     <tr>
                         <th scope="row">End-point assessor</th>
                         <td>@(Model.Data.EndpointAssessorName ?? "The end-point assessor has not been declared")</td>
+                        <td></td>
                     </tr>
                 }
             </tbody>
