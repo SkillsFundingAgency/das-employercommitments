@@ -86,11 +86,14 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
                 return View("AccessDenied");
 
-            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/changestatus"));
-
-            //var response = await _orchestrator.GetChangeStatusChoiceNavigation(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-
-            //return View(response);
+            var response = await _orchestrator.GetChangeStatusChoiceNavigation(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
+          
+            if (!response.Data.IsCurrentlyPaused)
+            {
+                return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/changestatus"));
+            }
+            
+            return View(response);
         }
 
         [HttpGet]
@@ -135,24 +138,22 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpPost]
         [Route("{hashedApprenticeshipId}/details/statuschange", Name = "PostChangeStatusSelectOption")]
-        public ActionResult ChangeStatus(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusViewModel model)
+        public async Task<ActionResult> ChangeStatus(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusViewModel model)
         {
-            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/changestatus"));
+            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
+                return View("AccessDenied");
 
-            //if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-            //    return View("AccessDenied");
+            if (!ModelState.IsValid)
+            {
+                var response = await _orchestrator.GetChangeStatusChoiceNavigation(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
 
-            //if (!ModelState.IsValid)
-            //{
-            //    var response = await _orchestrator.GetChangeStatusChoiceNavigation(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
+                return View(response);
+            }
 
-            //    return View(response);
-            //}
+            if (model.ChangeType == ChangeStatusType.None)
+                return RedirectToRoute("OnProgrammeApprenticeshipDetails");
 
-            //if (model.ChangeType == ChangeStatusType.None)
-            //    return RedirectToRoute("OnProgrammeApprenticeshipDetails");
-
-            //return RedirectToRoute("WhenToApplyChange", new { changeType = model.ChangeType.ToString().ToLower() });
+            return RedirectToRoute("WhenToApplyChange", new { changeType = model.ChangeType.ToString().ToLower() });
         }
 
         [HttpGet]
