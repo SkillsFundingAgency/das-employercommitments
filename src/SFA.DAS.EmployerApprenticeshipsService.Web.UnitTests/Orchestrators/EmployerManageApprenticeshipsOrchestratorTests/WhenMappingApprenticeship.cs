@@ -5,10 +5,8 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
-using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
-using SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommitmentOrchestrator;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests

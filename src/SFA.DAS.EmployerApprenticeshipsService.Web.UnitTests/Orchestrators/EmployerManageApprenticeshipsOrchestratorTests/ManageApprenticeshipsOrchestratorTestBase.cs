@@ -27,6 +27,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         protected EmployerManageApprenticeshipsOrchestrator Orchestrator;
         protected Mock<ICurrentDateTime> MockDateTime;
         protected Mock<ILinkGenerator> MockLinkGenerator;
+        protected Mock<IFeatureToggleService> MockFeatureToggleService;
 
         public IValidateApprovedApprenticeship Validator;
         protected Mock<IAcademicYearDateProvider> AcademicYearDateProvider;
@@ -57,9 +58,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             AcademicYearDateProvider.Setup(x => x.CurrentAcademicYearEndDate).Returns(new DateTime(2018, 7, 31));
             AcademicYearDateProvider.Setup(x => x.LastAcademicYearFundingPeriod).Returns(new DateTime(2017, 10, 19, 18, 0, 0));
 
+            MockFeatureToggleService = new Mock<IFeatureToggleService>();
+
             ApprenticeshipMapper = new ApprenticeshipMapper(Mock.Of<IHashingService>(), MockDateTime.Object,
                 MockMediator.Object, Mock.Of<ILog>(), Mock.Of<IAcademicYearValidator>(),
-                Mock.Of<IAcademicYearDateProvider>());
+                Mock.Of<IAcademicYearDateProvider>(), MockLinkGenerator.Object, MockFeatureToggleService.Object);
 
             MockHashingService = new Mock<IHashingService>();
             MockHashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);
