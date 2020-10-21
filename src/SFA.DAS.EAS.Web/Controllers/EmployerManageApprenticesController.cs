@@ -87,7 +87,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                 return View("AccessDenied");
 
             var response = await _orchestrator.GetChangeStatusChoiceNavigation(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-
+          
+            if (!response.Data.IsCurrentlyPaused)
+            {
+                return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/changestatus"));
+            }
+            
             return View(response);
         }
 
