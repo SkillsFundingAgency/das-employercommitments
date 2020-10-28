@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FeatureToggle;
 using MediatR;
 
 using Moq;
@@ -7,7 +8,9 @@ using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipsByUln;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
+using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
+using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
@@ -20,6 +23,13 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
         protected Mock<ICurrentDateTime> MockDateTime;
         protected Mock<IAcademicYearValidator> AcademicYearValidator;
         protected Mock<IAcademicYearDateProvider> AcademicYearDateProvider;
+        protected Mock<IFeatureToggleService> MockFeatureToggleService;
+        protected Mock<ILinkGenerator> MockLinkGenerator;
+        protected Mock<IFeatureToggle> MockChangeOfProviderToggle;
+
+        protected const string TestChangeOfProviderLink = "https://commitments.apprenticehips.gov.uk/apprentice/change-training-provider";
+        protected const string HashedAccountId = "HashedAccountId";
+        protected const string HashedApprenticeshipId = "HashedApprenticeshipId";
 
         [SetUp]
         public void SetUp()
@@ -46,8 +56,17 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
                     }
                 });
 
+            MockLinkGenerator = new Mock<ILinkGenerator>();
+            MockChangeOfProviderToggle = new Mock<IFeatureToggle>();
+            MockFeatureToggleService = new Mock<IFeatureToggleService>();
+
+            MockChangeOfProviderToggle.Setup(c => c.FeatureEnabled).Returns(true);
+            MockFeatureToggleService.Setup(f => f.Get<ChangeOfProvider>()).Returns(MockChangeOfProviderToggle.Object);
+
+            MockLinkGenerator.Setup(l => l.CommitmentsV2Link(It.IsAny<string>())).Returns(TestChangeOfProviderLink);
+
             Sut = new ApprenticeshipMapper(mockHashingService.Object, MockDateTime.Object, MockMediator.Object,
-                Mock.Of<ILog>(), AcademicYearValidator.Object, AcademicYearDateProvider.Object);
+                Mock.Of<ILog>(), AcademicYearValidator.Object, AcademicYearDateProvider.Object, MockLinkGenerator.Object, MockFeatureToggleService.Object);
         }
     }
 }

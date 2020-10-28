@@ -20,6 +20,8 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.HashingService;
+using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 
 namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 {
@@ -29,6 +31,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         private readonly ICurrentDateTime _currentDateTime;
         private readonly IMediator _mediator;
         private readonly ILog _logger;
+        private readonly ILinkGenerator _linkGenerator;
+        private readonly IFeatureToggleService _featureToggleService;
 
         private readonly IAcademicYearValidator _academicYearValidator;
         private readonly IAcademicYearDateProvider _academicYearDateProvider;
@@ -39,7 +43,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             IMediator mediator,
             ILog logger,
             IAcademicYearValidator academicYearValidator,
-            IAcademicYearDateProvider academicYearDateProvider)
+            IAcademicYearDateProvider academicYearDateProvider,
+            ILinkGenerator linkGenerator,
+            IFeatureToggleService featureToggleService)
         {
             _hashingService = hashingService;
             _currentDateTime = currentDateTime;
@@ -47,6 +53,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             _logger = logger;
             _academicYearValidator = academicYearValidator;
             _academicYearDateProvider = academicYearDateProvider;
+            _linkGenerator = linkGenerator;
+            _featureToggleService = featureToggleService;
         }
 
         public ApprenticeshipDetailsViewModel MapToApprenticeshipDetailsViewModel(Apprenticeship apprenticeship, bool disableUlnReuseCheck=false)
@@ -58,10 +66,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 pendingChange = PendingChanges.ReadyForApproval;
             
             var statusText = MapPaymentStatus(apprenticeship.PaymentStatus, apprenticeship.StartDate);
-
+            var hashedAccountId = _hashingService.HashValue(apprenticeship.EmployerAccountId);
+            var hashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id);
+            
             var result = new ApprenticeshipDetailsViewModel
             {
-                HashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id),
+                HashedApprenticeshipId = hashedApprenticeshipId,
                 FirstName = apprenticeship.FirstName,
                 LastName = apprenticeship.LastName,
                 ULN = apprenticeship.ULN,
@@ -92,7 +102,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 EndpointAssessorName = apprenticeship.EndpointAssessorName,
                 TrainingType = apprenticeship.TrainingType,
                 ReservationId = apprenticeship.ReservationId,
-                MadeRedundant = apprenticeship.MadeRedundant
+                MadeRedundant = apprenticeship.MadeRedundant,
+                ChangeProviderLink = GetChangeOfProviderLink(hashedAccountId, hashedApprenticeshipId)
             };
 
             return result;
@@ -452,6 +463,18 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 statuses.Add(changesForReview);
 
             return statuses.Distinct();
+        }
+
+        private string GetChangeOfProviderLink(string hashedAccountId, string hashedApprenticeshipId)
+        {
+            if (_featureToggleService.Get<ChangeOfProvider>().FeatureEnabled)
+            {
+                return _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/changing-training-provider");
+            }
+            else
+            {
+                return String.Empty;
+            }
         }
 
     }

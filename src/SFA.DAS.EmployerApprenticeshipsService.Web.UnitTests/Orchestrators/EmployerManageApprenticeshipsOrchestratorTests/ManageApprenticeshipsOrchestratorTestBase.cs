@@ -16,6 +16,8 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.HashingService;
+using FeatureToggle;
+using SFA.DAS.EmployerCommitments.Domain.Models.FeatureToggles;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManageApprenticeshipsOrchestratorTests
 {
@@ -27,6 +29,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
         protected EmployerManageApprenticeshipsOrchestrator Orchestrator;
         protected Mock<ICurrentDateTime> MockDateTime;
         protected Mock<ILinkGenerator> MockLinkGenerator;
+        protected Mock<IFeatureToggleService> MockFeatureToggleService;
+        protected Mock<IFeatureToggle> MockChangeOfProviderToggle;
 
         public IValidateApprovedApprenticeship Validator;
         protected Mock<IAcademicYearDateProvider> AcademicYearDateProvider;
@@ -57,9 +61,15 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerManage
             AcademicYearDateProvider.Setup(x => x.CurrentAcademicYearEndDate).Returns(new DateTime(2018, 7, 31));
             AcademicYearDateProvider.Setup(x => x.LastAcademicYearFundingPeriod).Returns(new DateTime(2017, 10, 19, 18, 0, 0));
 
+            MockChangeOfProviderToggle = new Mock<IFeatureToggle>();
+            MockChangeOfProviderToggle.Setup(c => c.FeatureEnabled).Returns(true);
+
+            MockFeatureToggleService = new Mock<IFeatureToggleService>();
+            MockFeatureToggleService.Setup(f => f.Get<ChangeOfProvider>()).Returns(MockChangeOfProviderToggle.Object);
+
             ApprenticeshipMapper = new ApprenticeshipMapper(Mock.Of<IHashingService>(), MockDateTime.Object,
                 MockMediator.Object, Mock.Of<ILog>(), Mock.Of<IAcademicYearValidator>(),
-                Mock.Of<IAcademicYearDateProvider>());
+                Mock.Of<IAcademicYearDateProvider>(), MockLinkGenerator.Object, MockFeatureToggleService.Object);
 
             MockHashingService = new Mock<IHashingService>();
             MockHashingService.Setup(x => x.DecodeValue("ABC123")).Returns(123L);

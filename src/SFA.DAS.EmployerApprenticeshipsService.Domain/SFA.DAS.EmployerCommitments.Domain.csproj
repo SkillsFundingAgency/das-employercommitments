@@ -313,6 +313,7 @@
     <Compile Include="Models\Apprenticeship\ChangeStatusType.cs" />
     <Compile Include="Models\Apprenticeship\FundingStatus.cs" />
     <Compile Include="Models\Apprenticeship\RecordStatus.cs" />
+    <Compile Include="Models\FeatureToggles\ChangeOfProvider.cs" />
     <Compile Include="Models\FeatureToggles\EmployerManageApprenticesV2.cs" />
     <Compile Include="Models\FeatureToggles\EnhancedApprovals.cs" />
     <Compile Include="Models\FeatureToggles\PublicSectorReporting.cs" />

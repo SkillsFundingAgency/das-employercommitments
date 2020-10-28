@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             AcademicYearDateProvider.Setup(x => x.CurrentAcademicYearStartDate).Returns(academicYearStartDate);
 
             Sut = new ApprenticeshipMapper(Mock.Of<IHashingService>(), MockDateTime.Object, MockMediator.Object,
-                Mock.Of<ILog>(), AcademicYearValidator.Object, AcademicYearDateProvider.Object);
+                Mock.Of<ILog>(), AcademicYearValidator.Object, AcademicYearDateProvider.Object, MockLinkGenerator.Object, MockFeatureToggleService.Object);
 
             //Act
             var result = Sut.MapToEditApprenticeshipStopDateViewModel(apprenticeship);
@@ -56,7 +56,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             AcademicYearDateProvider.Setup(x => x.CurrentAcademicYearStartDate).Returns(academicYearStartDate);
 
             Sut = new ApprenticeshipMapper(Mock.Of<IHashingService>(), MockDateTime.Object, MockMediator.Object,
-                Mock.Of<ILog>(), AcademicYearValidator.Object, AcademicYearDateProvider.Object);
+                Mock.Of<ILog>(), AcademicYearValidator.Object, AcademicYearDateProvider.Object, MockLinkGenerator.Object, MockFeatureToggleService.Object);
 
             //Act
             var result = Sut.MapToEditApprenticeshipStopDateViewModel(apprenticeship);
