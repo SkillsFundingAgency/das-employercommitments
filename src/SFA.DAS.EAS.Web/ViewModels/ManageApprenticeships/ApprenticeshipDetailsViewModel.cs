@@ -64,7 +64,11 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public bool? MadeRedundant { get; set; }
         public string ChangeProviderLink { get; set; }
 
-        public ChangeOfPartyRequestStatus? ChangeOfPartyStatus { get; set; }        
+        public ChangeOfPartyRequestStatus? ChangeOfPartyStatus { get; set; }
+
+        public bool ShowChangeTrainingProviderLink => (PaymentStatus == PaymentStatus.Withdrawn && 
+                                                      ChangeOfPartyStatus != ChangeOfPartyRequestStatus.Pending && 
+                                                      !string.IsNullOrEmpty(ChangeProviderLink));
     }
 
     public enum PendingChanges
