@@ -159,7 +159,29 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
                 PauseDate = pauseDate
             };
             var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
-            viewModel.PauseDate.Should().Be(pauseDate);
+            viewModel.PauseDate.Should().Be(pauseDate);            
+        }
+
+        [TestCase(ChangeOfPartyRequestStatus.Approved, true)]
+        [TestCase(ChangeOfPartyRequestStatus.Pending, false)]
+        [TestCase(ChangeOfPartyRequestStatus.Rejected, true)]
+        [TestCase(ChangeOfPartyRequestStatus.Withdrawn, true)]
+        public void ShowChangePrviderLinkCorrectly(ChangeOfPartyRequestStatus changeOfPartyRequestStatus, bool flag)
+        {
+            //Arrange
+            var apprenticeship = new Apprenticeship
+            {
+                PaymentStatus = PaymentStatus.Withdrawn,
+                StartDate = new DateTime(2018, 01, 01),
+                StopDate = new DateTime(2018, 6, 01),
+                ChangeOfPartyStatus = changeOfPartyRequestStatus
+            };
+
+            //Act
+            var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
+
+            //Assert
+            viewModel.ShowChangeTrainingProviderLink.Should().Be(flag);
         }
     }
 }
