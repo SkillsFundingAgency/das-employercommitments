@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.UI.WebControls.WebParts;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
@@ -63,6 +64,9 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public bool? MadeRedundant { get; set; }
         public string ChangeProviderLink { get; set; }
+        public bool HasPendingChangeOfProviderRequest { get; set; }
+        public Party? PendingChangeOfProviderRequestWithParty { get; set; }
+
     }
 
     public enum PendingChanges
