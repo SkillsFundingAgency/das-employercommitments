@@ -104,7 +104,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 ReservationId = apprenticeship.ReservationId,
                 MadeRedundant = apprenticeship.MadeRedundant,
                 ChangeProviderLink = GetChangeOfProviderLink(hashedAccountId, hashedApprenticeshipId),
-                ChangeOfPartyStatus = apprenticeship.ChangeOfPartyStatus
+                ChangeOfPartyRequests = apprenticeship.ChangeOfPartyRequests
             };
 
             return result;

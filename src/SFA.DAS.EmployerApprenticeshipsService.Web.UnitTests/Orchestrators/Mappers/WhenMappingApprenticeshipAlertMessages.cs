@@ -172,9 +172,16 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             var apprenticeship = new Apprenticeship
             {
                 PaymentStatus = PaymentStatus.Withdrawn,
-                StartDate = new DateTime(2018, 01, 01),
-                StopDate = new DateTime(2018, 6, 01),
-                ChangeOfPartyStatus = changeOfPartyRequestStatus
+                StartDate = new DateTime(2018, 05, 05),
+                StopDate = new DateTime(2018, 11, 05),
+                ChangeOfPartyRequests = new List<ChangeOfPartyRequest>
+                {
+                    new ChangeOfPartyRequest
+                    {
+                        Status = changeOfPartyRequestStatus
+                    }
+                }
+            
             };
 
             //Act
@@ -183,5 +190,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
             //Assert
             viewModel.ShowChangeTrainingProviderLink.Should().Be(flag);
         }
+
     }
 }
