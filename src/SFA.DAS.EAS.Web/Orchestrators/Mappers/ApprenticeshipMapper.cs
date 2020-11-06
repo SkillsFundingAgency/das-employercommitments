@@ -68,6 +68,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             var statusText = MapPaymentStatus(apprenticeship.PaymentStatus, apprenticeship.StartDate);
             var hashedAccountId = _hashingService.HashValue(apprenticeship.EmployerAccountId);
             var hashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id);
+            var pendingChangeOfProviderRequest = apprenticeship.ChangeOfPartyRequests.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
             
             var result = new ApprenticeshipDetailsViewModel
             {
@@ -104,7 +105,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 ReservationId = apprenticeship.ReservationId,
                 MadeRedundant = apprenticeship.MadeRedundant,
                 ChangeProviderLink = GetChangeOfProviderLink(hashedAccountId, hashedApprenticeshipId),
-                ChangeOfPartyRequests = apprenticeship.ChangeOfPartyRequests
+                HasPendingChangeOfProviderRequest = pendingChangeOfProviderRequest != null,
+                PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty                
             };
 
             return result;

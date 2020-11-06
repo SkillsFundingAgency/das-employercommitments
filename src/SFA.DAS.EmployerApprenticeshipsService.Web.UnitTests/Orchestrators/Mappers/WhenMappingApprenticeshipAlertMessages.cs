@@ -178,7 +178,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
                 {
                     new ChangeOfPartyRequest
                     {
-                        Status = changeOfPartyRequestStatus
+                        Status = changeOfPartyRequestStatus,
+                        ChangeOfPartyType = ChangeOfPartyRequestType.ChangeProvider
                     }
                 }
             
