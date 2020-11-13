@@ -36,224 +36,249 @@
             </div>
         }
 
-        @if (Model.Data.PendingDataLockRestart)
+        @if (Model.Data.HasPendingChangeOfProviderRequest
+            && Model.Data.PendingChangeOfProviderRequestWithParty.HasValue)
         {
-            <div class="panel panel-border-wide">
-                <h3 class="heading-small">
-                    Changes requested
-                </h3>
-                <p>
-                    The apprentice's training provider has asked you to stop this apprentice
-                    and then add them to a new cohort using updated training details.
-                </p>
-                <a href="@Url.RouteUrl("RequestRestart")" aria-label="View details" class="">View details</a>
-            </div>
-        }
-        @if (Model.Data.PendingDataLockChange)
-        {
-            <div class="panel panel-border-wide">
-                <h3>
-                    Changes for review
-                </h3>
+            <div class="panel panel-border-wide alert-default">
+            @if (Model.Data.PendingChangeOfProviderRequestWithParty.Value == Party.Employer)
+            {
+                <h3 class="heading-small">Changes for review</h3>
                 <p>
                     There are changes to this apprentice's details that you need to review.
                 </p>
-                <a href="@Url.RouteUrl("RequestChanges")" aria-label="View details" class="">Review changes</a>
+            }
+            else
+            {
+                <h3 class="heading-small">Changes pending</h3>
+                <p>
+                    There are changes to this apprentice's details that are waiting for approval by the training provider.
+               </p>
+
+            }
+                <p>
+                     <a id="changeOfPartyViewChangesLink" href="">View changes</a>
+                </p>
             </div>
         }
 
-        <h1 class="heading-xlarge" id="learnerName">@Model.Data.FirstName @Model.Data.LastName</h1>
-
-        @{ if (!Model.Data.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) &&
-               Model.Data.PaymentStatus != PaymentStatus.Completed)
-            {
-                <p>
-                    Edit details if there's a change in apprentice or apprenticeship circumstances.
-                </p>
-            }
-        }
-
-        <h2 class="heading-medium visually-hidden">Apprentice status</h2>
-        <table id="app-status" class="details-list details-list-new">
-            <tbody>
-                <tr>
-                    <th scope="row">Status</th>
-                    <td>@Model.Data.Status</td>
-                    <td id="editStatusLink" class="link-right">
-                        @if (Model.Data.CanEditStatus)
-                        {
-                            @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
-                        }
-                    </td>
-                </tr>
-                @if (@Model.Data.PaymentStatus == PaymentStatus.Paused)
+                @if (Model.Data.PendingDataLockRestart)
                 {
-                    <tr>
-                        <th scope="row">Apprenticeship pause date</th>
-                        <td id="pauseDate">
-                            @if (Model.Data.PauseDate.HasValue)
-                            {
-                                @Model.Data.PauseDate.Value.ToGdsFormat()
-                            }
-                        </td>
-                        <td></td>
-                    </tr>
+                    <div class="panel panel-border-wide">
+                        <h3 class="heading-small">
+                            Changes requested
+                        </h3>
+                        <p>
+                            The apprentice's training provider has asked you to stop this apprentice
+                            and then add them to a new cohort using updated training details.
+                        </p>
+                        <a href="@Url.RouteUrl("RequestRestart")" aria-label="View details" class="">View details</a>
+                    </div>
+                }
+                @if (Model.Data.PendingDataLockChange)
+                {
+                    <div class="panel panel-border-wide">
+                        <h3>
+                            Changes for review
+                        </h3>
+                        <p>
+                            There are changes to this apprentice's details that you need to review.
+                        </p>
+                        <a href="@Url.RouteUrl("RequestChanges")" aria-label="View details" class="">Review changes</a>
+                    </div>
                 }
 
-                @if (@Model.Data.PaymentStatus == PaymentStatus.Completed)
-                {
-                    <tr>
-                        <th scope="row">Completion payment month</th>
-                        <td id="completionDate">
-                            @if (Model.Data.CompletionDate.HasValue)
-                            {
-                                @Model.Data.CompletionDate.Value.ToGdsFormatLongMonthNameWithoutDay();
-                            }
-                        </td>
-                        <td></td>
-                    </tr>
-                }
+                <h1 class="heading-xlarge" id="learnerName">@Model.Data.FirstName @Model.Data.LastName</h1>
 
-                @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)
-                {
-                    <tr>
-                        <th scope="row">Stopped date</th>
-                        <td id="stopDate">
-                            @if (Model.Data.StopDate.HasValue)
-                            {
-                                @Model.Data.StopDate.Value.ToGdsFormatWithoutDay()
-                            }
-                        </td>
-
-                        @if (Model.Data.CanEditStopDate)
-                        {
-                            <td id="editStopDateLink" class="link-right">@Html.RouteLink("Edit", "EditStopDateOption")</td>
-                        }
-                        else
-                        {
-                            <td></td>
-                        }
-                    </tr>
-
-                    if (Model.Data.MadeRedundant.HasValue)
+                @{ if (!Model.Data.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) &&
+                          Model.Data.PaymentStatus != PaymentStatus.Completed)
                     {
+                        <p>
+                            Edit details if there's a change in apprentice or apprenticeship circumstances.
+                        </p>
+                    }
+                }
+
+                <h2 class="heading-medium visually-hidden">Apprentice status</h2>
+                <table id="app-status" class="details-list details-list-new">
+                    <tbody>
                         <tr>
-                            <th scope="row">Made redundant</th>
-                            <td id="madeRedundant">
-                                  @(Model.Data.MadeRedundant.Value ? "Yes" : "No")
+                            <th scope="row">Status</th>
+                            <td>@Model.Data.Status</td>
+                            <td id="editStatusLink" class="link-right">
+                                @if (Model.Data.CanEditStatus)
+                                {
+                                    @Html.RouteLink("Edit status", "ChangeStatusSelectOption");
+                                }
+                            </td>
+                        </tr>
+                        @if (@Model.Data.PaymentStatus == PaymentStatus.Paused)
+                        {
+                            <tr>
+                                <th scope="row">Apprenticeship pause date</th>
+                                <td id="pauseDate">
+                                    @if (Model.Data.PauseDate.HasValue)
+                                    {
+                                        @Model.Data.PauseDate.Value.ToGdsFormat()
+                                    }
+                                </td>
+                                <td></td>
+                            </tr>
+                        }
+
+                        @if (@Model.Data.PaymentStatus == PaymentStatus.Completed)
+                        {
+                            <tr>
+                                <th scope="row">Completion payment month</th>
+                                <td id="completionDate">
+                                    @if (Model.Data.CompletionDate.HasValue)
+                                    {
+                                        @Model.Data.CompletionDate.Value.ToGdsFormatLongMonthNameWithoutDay();
+                                    }
+                                </td>
+                                <td></td>
+                            </tr>
+                        }
+
+                        @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)
+                        {
+                            <tr>
+                                <th scope="row">Stopped date</th>
+                                <td id="stopDate">
+                                    @if (Model.Data.StopDate.HasValue)
+                                    {
+                                        @Model.Data.StopDate.Value.ToGdsFormatWithoutDay()
+                                    }
+                                </td>
+
+                                @if (Model.Data.CanEditStopDate)
+                                {
+                                    <td id="editStopDateLink" class="link-right">@Html.RouteLink("Edit", "EditStopDateOption")</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            </tr>
+
+                            if (Model.Data.MadeRedundant.HasValue)
+                            {
+                                <tr>
+                                    <th scope="row">Made redundant</th>
+                                    <td id="madeRedundant">
+                                        @(Model.Data.MadeRedundant.Value ? "Yes" : "No")
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+                        <tr>
+                            <th scope="row">Training provider</th>
+                            <td>@Model.Data.ProviderName</td>
+                            @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn && !string.IsNullOrEmpty(Model.Data.ChangeProviderLink))
+                            {
+                                <td class="link-right">
+                                    <a id="changeTrainingProviderLink" href="@Model.Data.ChangeProviderLink" aria-label="Changing training provider">Change</a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        </tr>
+                        <tr>
+                            <th scope="row">Cohort reference</th>
+                            <td>@Model.Data.CohortReference</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 class="heading-medium">
+                    Apprentice details
+                    @if (Model.Data.EnableEdit)
+                    {
+                        <a href="@Url.RouteUrl("EditApprenticeship")" class="float-right">Edit</a>
+                    }
+                </h2>
+                <table class="details-list details-list-new">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Name</th>
+                            <td>@Model.Data.FirstName @Model.Data.LastName</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Unique learner number</th>
+                            <td>@Model.Data.ULN</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Date of birth</th>
+                            <td>
+                                @if (Model.Data.DateOfBirth.HasValue)
+                                {
+                                    @Model.Data.DateOfBirth.Value.ToGdsFormat()
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2 class="heading-medium">
+                    Apprenticeship details
+                </h2>
+                <table class="details-list details-list-new">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Apprenticeship training course </th>
+                            <td>@Model.Data.TrainingName </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Planned training start date</th>
+                            <td>
+                                @if (@Model.Data.StartDate.HasValue)
+                                {
+                                    @Model.Data.StartDate.Value.ToGdsFormatWithoutDay()
+                                }
                             </td>
                             <td></td>
                         </tr>
-                    }
-                }
-                <tr>
-                    <th scope="row">Training provider</th>
-                    <td>@Model.Data.ProviderName</td>
-                    @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn && !string.IsNullOrEmpty(Model.Data.ChangeProviderLink))
-                    {
-                        <td class="link-right">
-                            <a id="changeTrainingProviderLink" href="@Model.Data.ChangeProviderLink" aria-label="Changing training provider">Change</a>
-                        </td>
-                    }
-                    else
-                    {
-                        <td></td>
-                    }
-                </tr>
-                <tr>
-                    <th scope="row">Cohort reference</th>
-                    <td>@Model.Data.CohortReference</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+                        <tr>
+                            <th scope="row">Planned training finish date</th>
+                            <td>
+                                @if (Model.Data.EndDate.HasValue)
+                                {
+                                    @Model.Data.EndDate.Value.ToGdsFormatWithoutDay()
+                                }
+                            </td>
+                            <td>
+                                @if (Model.Data.PaymentStatus == PaymentStatus.Completed)
+                                {
+                                    <a id="editEndDateLink" href="@Model.Data.EditApprenticeshipEndDateLink" aria-label="Edit end date">Edit</a>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Total agreed apprenticeship price</th>
+                            <td>@FormatCost(Model.Data.Cost) excluding VAT</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Reference </th>
+                            <td>@Model.Data.EmployerReference</td>
+                            <td></td>
+                        </tr>
+                        @if (Model.Data.TrainingType == TrainingType.Standard)
+                        {
+                            <tr>
+                                <th scope="row">End-point assessor</th>
+                                <td>@(Model.Data.EndpointAssessorName ?? "The end-point assessor has not been declared")</td>
+                                <td></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
 
-        <h2 class="heading-medium">
-            Apprentice details
-            @if (Model.Data.EnableEdit)
-            {
-                <a href="@Url.RouteUrl("EditApprenticeship")" class="float-right">Edit</a>
-            }
-        </h2>
-        <table class="details-list details-list-new">
-            <tbody>
-                <tr>
-                    <th scope="row">Name</th>
-                    <td>@Model.Data.FirstName @Model.Data.LastName</td>
-                </tr>
-                <tr>
-                    <th scope="row">Unique learner number</th>
-                    <td>@Model.Data.ULN</td>
-                </tr>
-                <tr>
-                    <th scope="row">Date of birth</th>
-                    <td>
-                        @if (Model.Data.DateOfBirth.HasValue)
-                        {
-                            @Model.Data.DateOfBirth.Value.ToGdsFormat()
-                        }
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <h2 class="heading-medium">
-            Apprenticeship details
-        </h2>
-        <table class="details-list details-list-new">
-            <tbody>
-                <tr>
-                    <th scope="row">Apprenticeship training course </th>
-                    <td>@Model.Data.TrainingName </td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th scope="row">Planned training start date</th>
-                    <td>
-                        @if (@Model.Data.StartDate.HasValue)
-                        {
-                            @Model.Data.StartDate.Value.ToGdsFormatWithoutDay()
-                        }
-                    </td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th scope="row">Planned training finish date</th>
-                    <td>
-                        @if (Model.Data.EndDate.HasValue)
-                        {
-                            @Model.Data.EndDate.Value.ToGdsFormatWithoutDay()
-                        }
-                    </td>
-                    <td>
-                        @if (Model.Data.PaymentStatus == PaymentStatus.Completed)
-                        {
-                            <a id="editEndDateLink" href="@Model.Data.EditApprenticeshipEndDateLink" aria-label="Edit end date">Edit</a>
-                        }
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">Total agreed apprenticeship price</th>
-                    <td>@FormatCost(Model.Data.Cost) excluding VAT</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th scope="row">Reference </th>
-                    <td>@Model.Data.EmployerReference</td>
-                    <td></td>
-                </tr>
-                @if (Model.Data.TrainingType == TrainingType.Standard)
-                {
-                    <tr>
-                        <th scope="row">End-point assessor</th>
-                        <td>@(Model.Data.EndpointAssessorName ?? "The end-point assessor has not been declared")</td>
-                        <td></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-    </div>
+            </div>
 </div>
 
 @section breadcrumb {
