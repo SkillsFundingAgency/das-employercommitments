@@ -91,17 +91,17 @@
                 }
 
 
-                @if (!string.IsNullOrWhiteSpace(Model.Data.EncodedNewApprenticeshipId))
+                @if (!string.IsNullOrWhiteSpace(Model.Data.HashedNewApprenticeshipId))
                 {
                     <p>
-                        <a id="continuation-link" class="govuk-link" href="@Url.Action("Details", new { hashedApprenticeshipId = Model.Data.EncodedNewApprenticeshipId })">View the new apprentice record</a>
+                        <a id="continuation-link" class="govuk-link" href="@Url.Action("Details", new { hashedApprenticeshipId = Model.Data.HashedNewApprenticeshipId })">View the new apprentice record</a>
                     </p>
                 }
 
-                @if (!string.IsNullOrWhiteSpace(Model.Data.EncodedPreviousApprenticeshipId))
+                @if (!string.IsNullOrWhiteSpace(Model.Data.HashedPreviousApprenticeshipId))
                 {
                     <p>
-                        <a id="previous-apprentice-link" class="govuk-link" href="@Url.Action("Details", new { hashedApprenticeshipId = Model.Data.EncodedPreviousApprenticeshipId })">View the old apprentice record</a>
+                        <a id="previous-apprentice-link" class="govuk-link" href="@Url.Action("Details", new { hashedApprenticeshipId = Model.Data.HashedPreviousApprenticeshipId })">View the old apprentice record</a>
                     </p>
                 }
             </div>

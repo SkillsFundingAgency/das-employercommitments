@@ -225,7 +225,7 @@ WriteLiteral("                    <p>\r\n                        The apprentice 
 WriteLiteral("\r\n\r\n");
 
                 
-                 if (!string.IsNullOrWhiteSpace(Model.Data.EncodedNewApprenticeshipId))
+                 if (!string.IsNullOrWhiteSpace(Model.Data.HashedNewApprenticeshipId))
                 {
 
 WriteLiteral("                    <p>\r\n                        <a");
@@ -235,7 +235,7 @@ WriteLiteral(" id=\"continuation-link\"");
 WriteLiteral(" class=\"govuk-link\"");
 
 WriteAttribute("href", Tuple.Create(" href=\"", 3942), Tuple.Create("\"", 4043)
-, Tuple.Create(Tuple.Create("", 3949), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", new { hashedApprenticeshipId = Model.Data.EncodedNewApprenticeshipId })
+, Tuple.Create(Tuple.Create("", 3949), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", new { hashedApprenticeshipId = Model.Data.HashedNewApprenticeshipId })
 , 3949), false)
 );
 
@@ -246,7 +246,7 @@ WriteLiteral(">View the new apprentice record</a>\r\n                    </p>\r\
 WriteLiteral("\r\n");
 
                 
-                 if (!string.IsNullOrWhiteSpace(Model.Data.EncodedPreviousApprenticeshipId))
+                 if (!string.IsNullOrWhiteSpace(Model.Data.HashedPreviousApprenticeshipId))
                 {
 
 WriteLiteral("                    <p>\r\n                        <a");
@@ -256,7 +256,7 @@ WriteLiteral(" id=\"previous-apprentice-link\"");
 WriteLiteral(" class=\"govuk-link\"");
 
 WriteAttribute("href", Tuple.Create(" href=\"", 4341), Tuple.Create("\"", 4447)
-  , Tuple.Create(Tuple.Create("", 4348), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", new { hashedApprenticeshipId = Model.Data.EncodedPreviousApprenticeshipId })
+  , Tuple.Create(Tuple.Create("", 4348), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", new { hashedApprenticeshipId = Model.Data.HashedPreviousApprenticeshipId })
 , 4348), false)
 );
 

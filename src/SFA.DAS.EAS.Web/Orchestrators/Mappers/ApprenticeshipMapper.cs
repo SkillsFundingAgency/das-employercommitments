@@ -110,11 +110,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 HasPendingChangeOfProviderRequest = pendingChangeOfProviderRequest != null,
                 PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty,
                 HasApprovedChangeOfPartyRequest = approvedChangeOfPartyRequest != null,
-                EncodedNewApprenticeshipId = approvedChangeOfPartyRequest?.NewApprenticeshipId != null
+                HashedNewApprenticeshipId = approvedChangeOfPartyRequest?.NewApprenticeshipId != null
                         ? _hashingService.HashValue(approvedChangeOfPartyRequest.NewApprenticeshipId.Value)
                         : null,
-                IsContinuation = apprenticeship.ContinuationOfId.HasValue,//IsContinuation && data.Apprenticeship.PreviousProviderId == source.ProviderId,
-                EncodedPreviousApprenticeshipId = apprenticeship.ContinuationOfId.HasValue // && data.Apprenticeship.PreviousProviderId == source.ProviderId
+                IsContinuation = apprenticeship.ContinuationOfId.HasValue,
+                HashedPreviousApprenticeshipId = apprenticeship.ContinuationOfId.HasValue
                         ? _hashingService.HashValue(apprenticeship.ContinuationOfId.Value)
                         : null
             };
