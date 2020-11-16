@@ -61,47 +61,51 @@
             </div>
         }
 
-    <div class="panel panel-border-wide alert-default">
-        
 
-        @if (Model.Data.HasApprovedChangeOfPartyRequest && !Model.Data.IsContinuation)
+        @if (Model.Data.HasApprovedChangeOfPartyRequest || Model.Data.IsContinuation)
         {
-            <h3 class="heading-small">  View apprentice record </h3>
-            <p>
-                The apprentice moved providers during their apprenticeship.
-            </p>
-        }
-        else if (Model.Data.HasApprovedChangeOfPartyRequest)
-        {
-            <h3 class="heading-small">  View apprentice record </h3>
-            <p>
-                The apprentice moved providers during their apprenticeship.
-            </p>
-        }
-        else if (Model.Data.IsContinuation)
-        {
-            <h3 class="heading-small">  View apprentice record </h3>
-            <p>
-                The apprentice moved providers during their apprenticeship.
-            </p>
-        }
+
+            <div class="panel panel-border-wide alert-default">
 
 
-        @if (!string.IsNullOrWhiteSpace(Model.Data.EncodedNewApprenticeshipId))
-        {
-            <p>
-                <a id="continuation-link" class="govuk-link" href="@Url.Action("Details", new {hashedApprenticeshipId = Model.Data.EncodedNewApprenticeshipId})">View the new apprentice record</a>
-            </p>
-        }
+                @if (Model.Data.HasApprovedChangeOfPartyRequest && !Model.Data.IsContinuation)
+                {
+                    <h3 class="heading-small">  View apprentice record </h3>
+                    <p>
+                        The apprentice moved providers during their apprenticeship.
+                    </p>
+                }
+                else if (Model.Data.HasApprovedChangeOfPartyRequest)
+                {
+                    <h3 class="heading-small">  View apprentice record </h3>
+                    <p>
+                        The apprentice moved providers during their apprenticeship.
+                    </p>
+                }
+                else if (Model.Data.IsContinuation)
+                {
+                    <h3 class="heading-small">  View apprentice record </h3>
+                    <p>
+                        The apprentice moved providers during their apprenticeship.
+                    </p>
+                }
 
-        @if (!string.IsNullOrWhiteSpace(Model.Data.EncodedPreviousApprenticeshipId))
-        {
-            <p>
-                <a id="previous-apprentice-link" class="govuk-link" href="@Url.Action("Details", new {hashedApprenticeshipId = Model.Data.EncodedPreviousApprenticeshipId})">View the old apprentice record</a>
-            </p>
-        }
-    </div>
 
+                @if (!string.IsNullOrWhiteSpace(Model.Data.EncodedNewApprenticeshipId))
+                {
+                    <p>
+                        <a id="continuation-link" class="govuk-link" href="@Url.Action("Details", new { hashedApprenticeshipId = Model.Data.EncodedNewApprenticeshipId })">View the new apprentice record</a>
+                    </p>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.Data.EncodedPreviousApprenticeshipId))
+                {
+                    <p>
+                        <a id="previous-apprentice-link" class="govuk-link" href="@Url.Action("Details", new { hashedApprenticeshipId = Model.Data.EncodedPreviousApprenticeshipId })">View the old apprentice record</a>
+                    </p>
+                }
+            </div>
+        }
 
         @if (Model.Data.PendingDataLockRestart)
         {
@@ -132,7 +136,7 @@
         <h1 class="heading-xlarge" id="learnerName">@Model.Data.FirstName @Model.Data.LastName</h1>
 
         @{ if (!Model.Data.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) &&
-                   Model.Data.PaymentStatus != PaymentStatus.Completed)
+                     Model.Data.PaymentStatus != PaymentStatus.Completed)
             {
                 <p>
                     Edit details if there's a change in apprentice or apprenticeship circumstances.
