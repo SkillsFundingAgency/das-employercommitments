@@ -182,7 +182,7 @@ WriteLiteral(" class=\"panel panel-border-wide alert-default\"");
 WriteLiteral(">\r\n\r\n\r\n");
 
                 
-                 if (Model.Data.HasApprovedChangeOfPartyRequest && !Model.Data.IsContinuation)
+                 if (Model.Data.HasApprovedChangeOfPartyRequest && Model.Data.IsContinuation)
                 {
 
 WriteLiteral("                    <h3");
@@ -290,7 +290,7 @@ WriteLiteral(@">
                     and then add them to a new cohort using updated training details.
                 </p>
                 <a");
-
+                
 WriteAttribute("href", Tuple.Create(" href=\"", 5018), Tuple.Create("\"", 5056)
 , Tuple.Create(Tuple.Create("", 5025), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("RequestRestart")
 , 5025), false)
