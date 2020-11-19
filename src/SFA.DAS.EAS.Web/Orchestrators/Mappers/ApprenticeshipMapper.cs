@@ -70,6 +70,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             var hashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id);
             var pendingChangeOfProviderRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
             var approvedChangeOfPartyRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();
+            var pendingChangeOfEmployerRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
+            var approvedChangeOfEmployerRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();
 
             var result = new ApprenticeshipDetailsViewModel
             {
@@ -107,7 +109,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 MadeRedundant = apprenticeship.MadeRedundant,
                 ChangeProviderLink = GetChangeOfProviderLink(hashedAccountId, hashedApprenticeshipId),
                 HasPendingChangeOfProviderRequest = pendingChangeOfProviderRequest != null,
-                PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty                                
+                PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty,                                
                 HasApprovedChangeOfPartyRequest = approvedChangeOfPartyRequest != null,
                 HashedNewApprenticeshipId = approvedChangeOfPartyRequest?.NewApprenticeshipId != null
                         ? _hashingService.HashValue(approvedChangeOfPartyRequest.NewApprenticeshipId.Value)
