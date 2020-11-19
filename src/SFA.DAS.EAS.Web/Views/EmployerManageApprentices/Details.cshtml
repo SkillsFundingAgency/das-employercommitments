@@ -29,10 +29,81 @@
             <div class="panel panel-border-wide">
                 <h3 class="heading-small">Changes pending</h3>
                 <p>
-                The employer has made a change which needs to be approved by the training provider
+                    The employer has made a change which needs to be approved by the training provider
                 <p>
                     <a href="@Url.RouteUrl("ViewChanges", "EmployerManageApprentices")">View changes</a>
                 </p>
+            </div>
+        }
+
+        @if (Model.Data.HasPendingChangeOfProviderRequest
+            && Model.Data.PendingChangeOfProviderRequestWithParty.HasValue)
+        {
+            <div class="panel panel-border-wide alert-default">
+                @if (Model.Data.PendingChangeOfProviderRequestWithParty.Value == Party.Employer)
+                {
+                    <h3 class="heading-small">Changes for review</h3>
+                    <p>
+                        There are changes to this apprentice's details that you need to review.
+                    </p>
+                }
+                else
+                {
+                    <h3 class="heading-small">Changes pending</h3>
+                    <p>
+                        There are changes to this apprentice's details that are waiting for approval by the training provider.
+                    </p>
+
+                }
+                <p>
+                    <a id="changeOfPartyViewChangesLink" href="">View changes</a>
+                </p>
+            </div>
+        }
+
+
+        @if (Model.Data.HasApprovedChangeOfPartyRequest || Model.Data.IsContinuation)
+        {
+
+            <div class="panel panel-border-wide alert-default">
+
+
+                @if (Model.Data.HasApprovedChangeOfPartyRequest && Model.Data.IsContinuation)
+                {
+                    <h3 class="heading-small">  View apprentice record </h3>
+                    <p>
+                        The apprentice moved providers during their apprenticeship.
+                    </p>
+                }
+                else if (Model.Data.HasApprovedChangeOfPartyRequest)
+                {
+                    <h3 class="heading-small">  View apprentice record </h3>
+                    <p>
+                        The apprentice moved providers during their apprenticeship.
+                    </p>
+                }
+                else if (Model.Data.IsContinuation)
+                {
+                    <h3 class="heading-small">  View apprentice record </h3>
+                    <p>
+                        The apprentice moved providers during their apprenticeship.
+                    </p>
+                }
+
+
+                @if (!string.IsNullOrWhiteSpace(Model.Data.HashedNewApprenticeshipId))
+                {
+                    <p>
+                        <a id="continuation-link" class="govuk-link" href="@Url.Action("Details", new { hashedApprenticeshipId = Model.Data.HashedNewApprenticeshipId })">View the new apprentice record</a>
+                    </p>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.Data.HashedPreviousApprenticeshipId))
+                {
+                    <p>
+                        <a id="previous-apprentice-link" class="govuk-link" href="@Url.Action("Details", new { hashedApprenticeshipId = Model.Data.HashedPreviousApprenticeshipId })">View the old apprentice record</a>
+                    </p>
+                }
             </div>
         }
 
@@ -65,7 +136,7 @@
         <h1 class="heading-xlarge" id="learnerName">@Model.Data.FirstName @Model.Data.LastName</h1>
 
         @{ if (!Model.Data.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase) &&
-               Model.Data.PaymentStatus != PaymentStatus.Completed)
+                     Model.Data.PaymentStatus != PaymentStatus.Completed)
             {
                 <p>
                     Edit details if there's a change in apprentice or apprenticeship circumstances.
@@ -140,7 +211,7 @@
                         <tr>
                             <th scope="row">Made redundant</th>
                             <td id="madeRedundant">
-                                  @(Model.Data.MadeRedundant.Value ? "Yes" : "No")
+                                @(Model.Data.MadeRedundant.Value ? "Yes" : "No")
                             </td>
                             <td></td>
                         </tr>
