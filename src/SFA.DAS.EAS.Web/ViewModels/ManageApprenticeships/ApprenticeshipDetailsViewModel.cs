@@ -66,7 +66,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public string ChangeProviderLink { get; set; }
         public bool HasPendingChangeOfProviderRequest { get; set; }
         public Party? PendingChangeOfProviderRequestWithParty { get; set; }
-
+        public string ViewChangesLink { get; internal set; }
     }
 
     public enum PendingChanges
