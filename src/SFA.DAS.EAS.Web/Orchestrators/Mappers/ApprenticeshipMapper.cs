@@ -474,13 +474,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         {
             if (_featureToggleService.Get<ChangeOfProvider>().FeatureEnabled)
             {
-                return _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/changing-training-provider");
+                return _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/change-provider");
             }
             else
             {
                 return String.Empty;
             }
         }
-
     }
 }
