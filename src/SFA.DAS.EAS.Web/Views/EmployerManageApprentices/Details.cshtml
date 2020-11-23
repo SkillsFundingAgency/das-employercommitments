@@ -149,7 +149,7 @@
                 <tr>
                     <th scope="row">Training provider</th>
                     <td>@Model.Data.ProviderName</td>
-                    @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn && !string.IsNullOrEmpty(Model.Data.ChangeProviderLink))
+                    @if (Model.Data.ShowChangeTrainingProviderLink)
                     {
                         <td class="link-right">
                             <a id="changeTrainingProviderLink" href="@Model.Data.ChangeProviderLink" aria-label="Changing training provider">Change</a>

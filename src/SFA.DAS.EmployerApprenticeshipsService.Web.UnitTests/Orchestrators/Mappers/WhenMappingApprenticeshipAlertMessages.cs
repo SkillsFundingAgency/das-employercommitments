@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using FluentAssertions;
-using Moq;
+﻿using FluentAssertions;
 using NUnit.Framework;
-
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipsByUln;
-using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Web.Orchestrators;
-using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
-using SFA.DAS.NLog.Logger;
-using SFA.DAS.HashingService;
+using System;
+using System.Linq;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 {
@@ -159,7 +149,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
                 PauseDate = pauseDate
             };
             var viewModel = Sut.MapToApprenticeshipDetailsViewModel(apprenticeship);
-            viewModel.PauseDate.Should().Be(pauseDate);
+            viewModel.PauseDate.Should().Be(pauseDate);            
         }
     }
 }
