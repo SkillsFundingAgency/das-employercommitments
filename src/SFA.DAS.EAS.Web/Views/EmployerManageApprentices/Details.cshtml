@@ -20,7 +20,7 @@
                     The training provider has made a change which needs to be reviewed and approved by the employer;
                 </p>
                 <p>
-                    <a id="review-changes-link" href="@Model.Data.ViewChangesLink">Review changes</a>
+                    <a id="review-changes-link" href="@Url.RouteUrl("ReviewChanges")">Review changes</a>
                 </p>
             </div>
         }
@@ -31,7 +31,7 @@
                 <p>
                 The employer has made a change which needs to be approved by the training provider
                 <p>
-                    <a id="view-changes-link" href="@Model.Data.ViewChangesLink">View changes</a>
+                    <a id="view-changes-link" href="@Url.RouteUrl("ViewChanges", "EmployerManageApprentices")">View changes</a>
                 </p>
             </div>
         }
@@ -56,7 +56,7 @@
 
             }
                 <p>
-                     <a id="changeOfPartyViewChangesLink" href="">View changes</a>
+                     <a id="changeOfPartyViewChangesLink" href="@Model.Data.ViewChangesLink">View changes</a>
                 </p>
             </div>
         }
@@ -97,28 +97,6 @@
                         </p>
                     }
                 }
-
-                <tr>
-                    <th scope="row">Training provider</th>
-                    <td>@Model.Data.ProviderName</td>
-                    @if (Model.Data.ShowChangeTrainingProviderLink)
-                    {
-                        <td class="link-right">
-                            <a id="changeTrainingProviderLink" href="@Model.Data.ChangeProviderLink" aria-label="Changing training provider">Change</a>
-                        </td>
-                    }
-                    else
-                    {
-                        <td></td>
-                    }
-                </tr>
-                <tr>
-                    <th scope="row">Cohort reference</th>
-                    <td>@Model.Data.CohortReference</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
 
                 <h2 class="heading-medium visually-hidden">Apprentice status</h2>
                 <table id="app-status" class="details-list details-list-new">
@@ -196,7 +174,7 @@
                         <tr>
                             <th scope="row">Training provider</th>
                             <td>@Model.Data.ProviderName</td>
-                            @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn && !string.IsNullOrEmpty(Model.Data.ChangeProviderLink))
+                            @if (Model.Data.ShowChangeTrainingProviderLink)
                             {
                                 <td class="link-right">
                                     <a id="changeTrainingProviderLink" href="@Model.Data.ChangeProviderLink" aria-label="Changing training provider">Change</a>
