@@ -71,6 +71,14 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public bool HasPendingChangeOfProviderRequest { get; set; }
         public Party? PendingChangeOfProviderRequestWithParty { get; set; }
 		
+
+        public bool HasApprovedChangeOfPartyRequest { get; set; }
+        public string HashedNewApprenticeshipId { get; set; }
+        public bool IsContinuation { get; set; }
+        public string HashedPreviousApprenticeshipId { get; set; }
+
+        public string ViewChangesLink { get; internal set; }
+
         public bool ShowChangeTrainingProviderLink => (PaymentStatus == PaymentStatus.Withdrawn &&
                                                       !HasPendingChangeOfProviderRequest &&
                                                       !HasPendingChangeOfEmployerRequest &&
@@ -84,8 +92,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public bool HasPendingChangeOfEmployerRequest { get; set; }
         public Party? PendingChangeOfEmployerRequestWithParty { get; set; }
-        public bool HasApprovedChangeOfEmployerRequest { get; set; }
-        public string ViewChangesLink { get; internal set; }
+        public bool HasApprovedChangeOfEmployerRequest { get; set; }        
     }
 
     public enum PendingChanges

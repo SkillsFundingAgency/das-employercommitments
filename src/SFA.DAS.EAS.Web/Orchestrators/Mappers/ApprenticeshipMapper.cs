@@ -71,9 +71,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             var pendingChangeOfProviderRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
             var approvedChangeOfProviderRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();
             var pendingChangeOfEmployerRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
-            var approvedChangeOfEmployerRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();
+            var approvedChangeOfEmployerRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();            
 
-            
             var result = new ApprenticeshipDetailsViewModel
             {
                 HashedApprenticeshipId = hashedApprenticeshipId,
@@ -114,6 +113,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 HasApprovedChangeOfProviderRequest = approvedChangeOfProviderRequest != null,
                 HashedNewApprenticeshipId = approvedChangeOfProviderRequest?.NewApprenticeshipId != null
                         ? _hashingService.HashValue(approvedChangeOfProviderRequest.NewApprenticeshipId.Value)
+                PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty,                
+                HashedNewApprenticeshipId = approvedChangeOfPartyRequest?.NewApprenticeshipId != null
+                        ? _hashingService.HashValue(approvedChangeOfPartyRequest.NewApprenticeshipId.Value)
                         : null,
                 IsContinuation = apprenticeship.ContinuationOfId.HasValue,                
                 HashedPreviousApprenticeshipId = apprenticeship.ContinuationOfId.HasValue
@@ -122,6 +124,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 HasPendingChangeOfEmployerRequest = pendingChangeOfEmployerRequest != null,
                 PendingChangeOfEmployerRequestWithParty = pendingChangeOfEmployerRequest?.WithParty,
                 HasApprovedChangeOfEmployerRequest = approvedChangeOfEmployerRequest != null                               
+                        : null
+
             };
 
             return result;
