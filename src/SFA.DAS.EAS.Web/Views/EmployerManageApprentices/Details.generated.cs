@@ -83,9 +83,11 @@ WriteLiteral(">Changes for review</h3>\r\n                <p>\r\n               
 "rovider has made a change which needs to be reviewed and approved by the employe" +
 "r;\r\n                </p>\r\n                <p>\r\n                    <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 929), Tuple.Create("\"", 966)
-, Tuple.Create(Tuple.Create("", 936), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("ReviewChanges")
-, 936), false)
+WriteLiteral(" id=\"review-changes-link\"");
+
+WriteAttribute("href", Tuple.Create(" href=\"", 954), Tuple.Create("\"", 991)
+, Tuple.Create(Tuple.Create("", 961), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("ReviewChanges")
+, 961), false)
 );
 
 WriteLiteral(">Review changes</a>\r\n                </p>\r\n            </div>\r\n");
@@ -106,9 +108,11 @@ WriteLiteral(">Changes pending</h3>\r\n                <p>\r\n                  
 "made a change which needs to be approved by the training provider\r\n             " +
 "   <p>\r\n                    <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 1417), Tuple.Create("\"", 1481)
-, Tuple.Create(Tuple.Create("", 1424), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("ViewChanges", "EmployerManageApprentices")
-, 1424), false)
+WriteLiteral(" id=\"view-changes-link\"");
+
+WriteAttribute("href", Tuple.Create(" href=\"", 1465), Tuple.Create("\"", 1529)
+, Tuple.Create(Tuple.Create("", 1472), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("ViewChanges", "EmployerManageApprentices")
+, 1472), false)
 );
 
 WriteLiteral(">View changes</a>\r\n                </p>\r\n            </div>\r\n");
@@ -158,11 +162,14 @@ WriteLiteral("                    <p>\r\n                        There are chang
 
                 }
 
-WriteLiteral("                <p>\r\n                    <a");
+WriteLiteral("                <p>\r\n                     <a");
 
 WriteLiteral(" id=\"changeOfPartyViewChangesLink\"");
 
-WriteLiteral(" href=\"\"");
+WriteAttribute("href", Tuple.Create(" href=\"", 2558), Tuple.Create("\"", 2592)
+, Tuple.Create(Tuple.Create("", 2565), Tuple.Create<System.Object, System.Int32>(Model.Data.ViewChangesLink
+, 2565), false)
+);
 
 WriteLiteral(">View changes</a>\r\n                </p>\r\n            </div>\r\n");
 
@@ -234,9 +241,9 @@ WriteLiteral(" id=\"continuation-link\"");
 
 WriteLiteral(" class=\"govuk-link\"");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 3949), Tuple.Create("\"", 4049)
-, Tuple.Create(Tuple.Create("", 3956), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", new { hashedApprenticeshipId = Model.Data.HashedNewApprenticeshipId })
-, 3956), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 4025), Tuple.Create("\"", 4125)
+, Tuple.Create(Tuple.Create("", 4032), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", new { hashedApprenticeshipId = Model.Data.HashedNewApprenticeshipId })
+, 4032), false)
 );
 
 WriteLiteral(">View the new apprentice record</a>\r\n                    </p>\r\n");
@@ -255,9 +262,9 @@ WriteLiteral(" id=\"previous-apprentice-link\"");
 
 WriteLiteral(" class=\"govuk-link\"");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 4346), Tuple.Create("\"", 4451)
-  , Tuple.Create(Tuple.Create("", 4353), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", new { hashedApprenticeshipId = Model.Data.HashedPreviousApprenticeshipId })
-, 4353), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 4422), Tuple.Create("\"", 4527)
+  , Tuple.Create(Tuple.Create("", 4429), Tuple.Create<System.Object, System.Int32>(Url.Action("Details", new { hashedApprenticeshipId = Model.Data.HashedPreviousApprenticeshipId })
+, 4429), false)
 );
 
 WriteLiteral(">View the old apprentice record</a>\r\n                    </p>\r\n");
@@ -291,9 +298,9 @@ WriteLiteral(@">
                 </p>
                 <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 5026), Tuple.Create("\"", 5064)
-, Tuple.Create(Tuple.Create("", 5033), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("RequestRestart")
-, 5033), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 5102), Tuple.Create("\"", 5140)
+, Tuple.Create(Tuple.Create("", 5109), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("RequestRestart")
+, 5109), false)
 );
 
 WriteLiteral(" aria-label=\"View details\"");
@@ -318,9 +325,9 @@ WriteLiteral(">\r\n                <h3>\r\n                    Changes for revie
 "tice\'s details that you need to review.\r\n                </p>\r\n                <" +
 "a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 5499), Tuple.Create("\"", 5537)
-, Tuple.Create(Tuple.Create("", 5506), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("RequestChanges")
-, 5506), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 5575), Tuple.Create("\"", 5613)
+, Tuple.Create(Tuple.Create("", 5582), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("RequestChanges")
+, 5582), false)
 );
 
 WriteLiteral(" aria-label=\"View details\"");
@@ -452,7 +459,7 @@ WriteLiteral("                        </td>\r\n                        <td></td>
 
                 }
 
-WriteLiteral("\r\n");
+WriteLiteral("\r\n\r\n");
 
                 
                  if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)
@@ -551,9 +558,9 @@ WriteLiteral(">\r\n                            <a");
 
 WriteLiteral(" id=\"changeTrainingProviderLink\"");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 9492), Tuple.Create("\"", 9529)
-, Tuple.Create(Tuple.Create("", 9499), Tuple.Create<System.Object, System.Int32>(Model.Data.ChangeProviderLink
-, 9499), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 9570), Tuple.Create("\"", 9607)
+, Tuple.Create(Tuple.Create("", 9577), Tuple.Create<System.Object, System.Int32>(Model.Data.ChangeProviderLink
+, 9577), false)
 );
 
 WriteLiteral(" aria-label=\"Changing training provider\"");
@@ -589,9 +596,9 @@ WriteLiteral(">\r\n            Apprentice details\r\n");
 
 WriteLiteral("                <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 10145), Tuple.Create("\"", 10187)
-, Tuple.Create(Tuple.Create("", 10152), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("EditApprenticeship")
-, 10152), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 10223), Tuple.Create("\"", 10265)
+, Tuple.Create(Tuple.Create("", 10230), Tuple.Create<System.Object, System.Int32>(Url.RouteUrl("EditApprenticeship")
+, 10230), false)
 );
 
 WriteLiteral(" class=\"float-right\"");
@@ -698,9 +705,9 @@ WriteLiteral("                            <a");
 
 WriteLiteral(" id=\"editEndDateLink\"");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 12322), Tuple.Create("\"", 12370)
-, Tuple.Create(Tuple.Create("", 12329), Tuple.Create<System.Object, System.Int32>(Model.Data.EditApprenticeshipEndDateLink
-, 12329), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 12400), Tuple.Create("\"", 12448)
+, Tuple.Create(Tuple.Create("", 12407), Tuple.Create<System.Object, System.Int32>(Model.Data.EditApprenticeshipEndDateLink
+, 12407), false)
 );
 
 WriteLiteral(" aria-label=\"Edit end date\"");
@@ -755,9 +762,9 @@ WriteLiteral(" class=\"breadcrumbs\"");
 
 WriteLiteral(">\r\n        <a");
 
-WriteAttribute("href", Tuple.Create(" href=\"", 13410), Tuple.Create("\"", 13459)
-, Tuple.Create(Tuple.Create("", 13417), Tuple.Create<System.Object, System.Int32>(Model.Data.ManageApprenticeshipV2PageLink
-, 13417), false)
+WriteAttribute("href", Tuple.Create(" href=\"", 13488), Tuple.Create("\"", 13537)
+, Tuple.Create(Tuple.Create("", 13495), Tuple.Create<System.Object, System.Int32>(Model.Data.ManageApprenticeshipV2PageLink
+, 13495), false)
 );
 
 WriteLiteral(" aria-label=\"Back to manage your apprentices\"");

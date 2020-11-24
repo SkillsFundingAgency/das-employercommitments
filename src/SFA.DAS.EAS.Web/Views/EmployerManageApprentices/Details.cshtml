@@ -177,11 +177,6 @@
                         <th scope="row">Completion payment month</th>
                         <td id="completionDate">
                             @if (Model.Data.CompletionDate.HasValue)
-                        }
-                        <tr>
-                            <th scope="row">Training provider</th>
-                            <td>@Model.Data.ProviderName</td>
-                            @if (Model.Data.ShowChangeTrainingProviderLink)
                             {
                                 @Model.Data.CompletionDate.Value.ToGdsFormatLongMonthNameWithoutDay();
                             }
@@ -189,6 +184,7 @@
                         <td></td>
                     </tr>
                 }
+
 
                 @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)
                 {
