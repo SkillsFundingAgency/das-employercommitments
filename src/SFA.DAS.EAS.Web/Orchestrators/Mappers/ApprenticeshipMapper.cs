@@ -69,7 +69,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             var hashedAccountId = _hashingService.HashValue(apprenticeship.EmployerAccountId);
             var hashedApprenticeshipId = _hashingService.HashValue(apprenticeship.Id);
             var pendingChangeOfProviderRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
-            
+            var approvedChangeOfPartyRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();
+
             var result = new ApprenticeshipDetailsViewModel
             {
                 HashedApprenticeshipId = hashedApprenticeshipId,
@@ -106,7 +107,16 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 MadeRedundant = apprenticeship.MadeRedundant,
                 ChangeProviderLink = GetChangeOfProviderLink(hashedAccountId, hashedApprenticeshipId),
                 HasPendingChangeOfProviderRequest = pendingChangeOfProviderRequest != null,
-                PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty                
+                PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty,
+                HasApprovedChangeOfPartyRequest = approvedChangeOfPartyRequest != null,
+                HashedNewApprenticeshipId = approvedChangeOfPartyRequest?.NewApprenticeshipId != null
+                        ? _hashingService.HashValue(approvedChangeOfPartyRequest.NewApprenticeshipId.Value)
+                        : null,
+                IsContinuation = apprenticeship.ContinuationOfId.HasValue,
+                HashedPreviousApprenticeshipId = apprenticeship.ContinuationOfId.HasValue
+                        ? _hashingService.HashValue(apprenticeship.ContinuationOfId.Value)
+                        : null
+
             };
 
             return result;
