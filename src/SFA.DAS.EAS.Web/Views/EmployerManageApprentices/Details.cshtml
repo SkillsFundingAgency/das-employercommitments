@@ -39,28 +39,29 @@
         @if (Model.Data.HasPendingChangeOfProviderRequest
             && Model.Data.PendingChangeOfProviderRequestWithParty.HasValue)
         {
-            <div class="panel panel-border-wide alert-default">
-                @if (Model.Data.PendingChangeOfProviderRequestWithParty.Value == Party.Employer)
-                {
-                    <h3 class="heading-small">Changes for review</h3>
-                    <p>
-                        There are changes to this apprentice's details that you need to review.
-                    </p>
-                }
-                else
-                {
-                    <h3 class="heading-small">Changes pending</h3>
-                    <p>
-                        There are changes to this apprentice's details that are waiting for approval by the training provider.
-                    </p>
+    <div class="panel panel-border-wide alert-default">
+        @if (Model.Data.PendingChangeOfProviderRequestWithParty.Value == Party.Employer)
+        {
+            <h3 class="heading-small">Changes for review</h3>
+            <p>
+                There are changes to this apprentice's details that you need to review.
+            </p>
+            <p>
+                <a id="changeOfPartyViewChangesLink" href="@Model.Data.ViewChangesLink">Review changes</a>
+            </p>
+        }
+        else
+        {
+            <h3 class="heading-small">Changes pending</h3>
+            <p>
+                There are changes to this apprentice's details that are waiting for approval by the training provider.
+            </p>
+            <p>
+                <a id="changeOfPartyViewChangesLink" href="@Model.Data.ViewChangesLink">View changes</a>
+            </p>
+        }
 
-                }
-                <p>
-
-                    <a id="changeOfPartyViewChangesLink" href="@Model.Data.ViewChangesLink">View changes</a>
-					
-                </p>
-            </div>
+    </div>
         }
 
 
