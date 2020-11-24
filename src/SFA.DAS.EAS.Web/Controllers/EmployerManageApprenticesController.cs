@@ -74,6 +74,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             model.Data.ManageApprenticeshipV2PageLink = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices?fromSearch=true");
             model.Data.EditApprenticeshipEndDateLink = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/editenddate");
+            model.Data.ViewChangesLink = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/view-changes");
 
             return View(model);
         }

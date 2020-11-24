@@ -20,7 +20,7 @@
                     The training provider has made a change which needs to be reviewed and approved by the employer;
                 </p>
                 <p>
-                    <a href="@Url.RouteUrl("ReviewChanges")">Review changes</a>
+                    <a id="review-changes-link" href="@Url.RouteUrl("ReviewChanges")">Review changes</a>
                 </p>
             </div>
         }
@@ -31,7 +31,7 @@
                 <p>
                     The employer has made a change which needs to be approved by the training provider
                 <p>
-                    <a href="@Url.RouteUrl("ViewChanges", "EmployerManageApprentices")">View changes</a>
+                    <a id="view-changes-link" href="@Url.RouteUrl("ViewChanges", "EmployerManageApprentices")">View changes</a>
                 </p>
             </div>
         }
@@ -39,26 +39,29 @@
         @if (Model.Data.HasPendingChangeOfProviderRequest
             && Model.Data.PendingChangeOfProviderRequestWithParty.HasValue)
         {
-            <div class="panel panel-border-wide alert-default">
-                @if (Model.Data.PendingChangeOfProviderRequestWithParty.Value == Party.Employer)
-                {
-                    <h3 class="heading-small">Changes for review</h3>
-                    <p>
-                        There are changes to this apprentice's details that you need to review.
-                    </p>
-                }
-                else
-                {
-                    <h3 class="heading-small">Changes pending</h3>
-                    <p>
-                        There are changes to this apprentice's details that are waiting for approval by the training provider.
-                    </p>
+    <div class="panel panel-border-wide alert-default">
+        @if (Model.Data.PendingChangeOfProviderRequestWithParty.Value == Party.Employer)
+        {
+            <h3 class="heading-small">Changes for review</h3>
+            <p>
+                There are changes to this apprentice's details that you need to review.
+            </p>
+            <p>
+                <a id="changeOfPartyViewChangesLink" href="@Model.Data.ViewChangesLink">Review changes</a>
+            </p>
+        }
+        else
+        {
+            <h3 class="heading-small">Changes pending</h3>
+            <p>
+                There are changes to this apprentice's details that are waiting for approval by the training provider.
+            </p>
+            <p>
+                <a id="changeOfPartyViewChangesLink" href="@Model.Data.ViewChangesLink">View changes</a>
+            </p>
+        }
 
-                }
-                <p>
-                    <a id="changeOfPartyViewChangesLink" href="">View changes</a>
-                </p>
-            </div>
+    </div>
         }
 
 
@@ -220,7 +223,7 @@
                 <tr>
                     <th scope="row">Training provider</th>
                     <td>@Model.Data.ProviderName</td>
-                    @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn && !string.IsNullOrEmpty(Model.Data.ChangeProviderLink) && string.IsNullOrEmpty(Model.Data.HashedNewApprenticeshipId))
+                    @if (Model.Data.ShowChangeTrainingProviderLink)
                     {
                         <td class="link-right">
                             <a id="changeTrainingProviderLink" href="@Model.Data.ChangeProviderLink" aria-label="Changing training provider">Change</a>
