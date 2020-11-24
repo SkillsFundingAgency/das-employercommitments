@@ -73,6 +73,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             var pendingChangeOfEmployerRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
             var approvedChangeOfEmployerRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();
 
+            
             var result = new ApprenticeshipDetailsViewModel
             {
                 HashedApprenticeshipId = hashedApprenticeshipId,
@@ -120,7 +121,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                         : null,
                 HasPendingChangeOfEmployerRequest = pendingChangeOfEmployerRequest != null,
                 PendingChangeOfEmployerRequestWithParty = pendingChangeOfEmployerRequest?.WithParty,
-                HasApprovedChangeOfEmployerRequest = approvedChangeOfEmployerRequest != null
+                HasApprovedChangeOfEmployerRequest = approvedChangeOfEmployerRequest != null                               
             };
 
             return result;
