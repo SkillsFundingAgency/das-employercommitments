@@ -179,11 +179,6 @@
                         <th scope="row">Completion payment month</th>
                         <td id="completionDate">
                             @if (Model.Data.CompletionDate.HasValue)
-                        }
-                        <tr>
-                            <th scope="row">Training provider</th>
-                            <td>@Model.Data.ProviderName</td>
-                            @if (Model.Data.ShowChangeTrainingProviderLink)
                             {
                                 @Model.Data.CompletionDate.Value.ToGdsFormatLongMonthNameWithoutDay();
                             }
@@ -227,7 +222,7 @@
                 <tr>
                     <th scope="row">Training provider</th>
                     <td>@Model.Data.ProviderName</td>
-                    @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn && !string.IsNullOrEmpty(Model.Data.ChangeProviderLink))
+                    @if (Model.Data.ShowChangeTrainingProviderLink)
                     {
                         <td class="link-right">
                             <a id="changeTrainingProviderLink" href="@Model.Data.ChangeProviderLink" aria-label="Changing training provider">Change</a>
