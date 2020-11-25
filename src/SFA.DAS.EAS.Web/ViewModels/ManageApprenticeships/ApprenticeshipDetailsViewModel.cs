@@ -83,12 +83,13 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
                                                       !HasPendingChangeOfProviderRequest &&
                                                       !HasPendingChangeOfEmployerRequest &&
                                                       !(HasApprovedChangeOfEmployerRequest && !IsContinuation) &&
-                                                      !string.IsNullOrEmpty(ChangeProviderLink));
+                                                      !string.IsNullOrEmpty(ChangeProviderLink&&
+                                                      string.IsNullOrEmpty(HashedNewApprenticeshipId));
 
         public bool HasApprovedChangeOfProviderRequest { get; set; }
         public bool HasPendingChangeOfEmployerRequest { get; set; }
         public Party? PendingChangeOfEmployerRequestWithParty { get; set; }
-        public bool HasApprovedChangeOfEmployerRequest { get; set; }        
+        public bool HasApprovedChangeOfEmployerRequest { get; set; }      
     }
 
     public enum PendingChanges
