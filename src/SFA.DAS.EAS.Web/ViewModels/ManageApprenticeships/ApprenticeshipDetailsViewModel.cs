@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
+using System.Web.UI.WebControls.WebParts;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
@@ -65,8 +66,11 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public bool? MadeRedundant { get; set; }
         public string ChangeProviderLink { get; set; }
+
+
         public bool HasPendingChangeOfProviderRequest { get; set; }
         public Party? PendingChangeOfProviderRequestWithParty { get; set; }
+		
 
         public bool HasApprovedChangeOfPartyRequest { get; set; }
         public string HashedNewApprenticeshipId { get; set; }
@@ -76,9 +80,16 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public string ViewChangesLink { get; internal set; }
 
         public bool ShowChangeTrainingProviderLink => (PaymentStatus == PaymentStatus.Withdrawn &&
-                                                       !HasPendingChangeOfProviderRequest &&
-                                                       !string.IsNullOrEmpty(ChangeProviderLink) &&
-                                                       string.IsNullOrEmpty(HashedNewApprenticeshipId));
+                                                      !HasPendingChangeOfProviderRequest &&
+                                                      !HasPendingChangeOfEmployerRequest &&
+                                                      !(HasApprovedChangeOfEmployerRequest && !IsContinuation) &&
+                                                      !string.IsNullOrEmpty(ChangeProviderLink) &&
+                                                      string.IsNullOrEmpty(HashedNewApprenticeshipId));
+
+        public bool HasApprovedChangeOfProviderRequest { get; set; }
+        public bool HasPendingChangeOfEmployerRequest { get; set; }
+        public Party? PendingChangeOfEmployerRequestWithParty { get; set; }
+        public bool HasApprovedChangeOfEmployerRequest { get; set; }      
     }
 
     public enum PendingChanges

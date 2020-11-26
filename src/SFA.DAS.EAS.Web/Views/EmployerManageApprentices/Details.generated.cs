@@ -189,7 +189,7 @@ WriteLiteral("\r\n    </div>\r\n");
 WriteLiteral("\r\n\r\n");
 
         
-         if (Model.Data.HasApprovedChangeOfPartyRequest || Model.Data.IsContinuation)
+         if (Model.Data.HasApprovedChangeOfProviderRequest || Model.Data.IsContinuation)
         {
 
 
@@ -200,7 +200,7 @@ WriteLiteral(" class=\"panel panel-border-wide alert-default\"");
 WriteLiteral(">\r\n\r\n\r\n");
 
                 
-                 if (Model.Data.HasApprovedChangeOfPartyRequest && Model.Data.IsContinuation)
+                 if (Model.Data.HasApprovedChangeOfProviderRequest && Model.Data.IsContinuation)
                 {
 
 WriteLiteral("                    <h3");
@@ -213,7 +213,7 @@ WriteLiteral("                    <p>\r\n                        The apprentice 
 "uring their apprenticeship.\r\n                    </p>\r\n");
 
                 }
-                else if (Model.Data.HasApprovedChangeOfPartyRequest)
+                else if (Model.Data.HasApprovedChangeOfProviderRequest)
                 {
 
 WriteLiteral("                    <h3");
@@ -470,7 +470,7 @@ WriteLiteral("                        </td>\r\n                        <td></td>
 
                 }
 
-WriteLiteral("\r\n");
+WriteLiteral("\r\n\r\n");
 
                 
                  if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)

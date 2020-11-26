@@ -65,20 +65,20 @@
         }
 
 
-        @if (Model.Data.HasApprovedChangeOfPartyRequest || Model.Data.IsContinuation)
+        @if (Model.Data.HasApprovedChangeOfProviderRequest || Model.Data.IsContinuation)
         {
 
             <div class="panel panel-border-wide alert-default">
 
 
-                @if (Model.Data.HasApprovedChangeOfPartyRequest && Model.Data.IsContinuation)
+                @if (Model.Data.HasApprovedChangeOfProviderRequest && Model.Data.IsContinuation)
                 {
                     <h3 class="heading-small">  View apprentice record </h3>
                     <p>
                         The apprentice moved providers during their apprenticeship.
                     </p>
                 }
-                else if (Model.Data.HasApprovedChangeOfPartyRequest)
+                else if (Model.Data.HasApprovedChangeOfProviderRequest)
                 {
                     <h3 class="heading-small">  View apprentice record </h3>
                     <p>
@@ -187,6 +187,7 @@
                         <td></td>
                     </tr>
                 }
+
 
                 @if (Model.Data.PaymentStatus == PaymentStatus.Withdrawn)
                 {

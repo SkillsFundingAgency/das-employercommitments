@@ -705,7 +705,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ConfirmChanges.cshtml</DependentUpon>
-    </Compile>
+    </Compile>    
     <Compile Include="Views\EmployerManageApprentices\Details.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
