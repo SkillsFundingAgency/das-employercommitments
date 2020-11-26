@@ -230,6 +230,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
 
         private async Task<bool> TrainingCourseValidOnStartDate(ApprenticeshipViewModel viewModel, DateTimeViewModel startDate, PropertyValidatorContext context)
         {
+            if (viewModel.IsContinuation)
+                return true;
+
             if (string.IsNullOrWhiteSpace(viewModel.TrainingCode) || (!startDate.DateTime.HasValue))
                 return true;
 
