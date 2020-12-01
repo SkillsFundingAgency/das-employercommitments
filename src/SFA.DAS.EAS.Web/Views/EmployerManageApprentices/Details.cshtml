@@ -65,13 +65,13 @@
         }
 
 
-        @if (Model.Data.HasApprovedChangeOfProviderRequest || Model.Data.IsContinuation)
+        @if (Model.Data.HasApprovedChangeOfProviderRequest || Model.Data.IsEmployerContinuation)
         {
 
             <div class="panel panel-border-wide alert-default">
 
 
-                @if (Model.Data.HasApprovedChangeOfProviderRequest && Model.Data.IsContinuation)
+                @if (Model.Data.HasApprovedChangeOfProviderRequest && Model.Data.IsEmployerContinuation)
                 {
                     <h3 class="heading-small">  View apprentice record </h3>
                     <p>

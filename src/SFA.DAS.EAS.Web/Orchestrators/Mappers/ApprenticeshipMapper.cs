@@ -71,8 +71,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             var pendingChangeOfProviderRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
             var approvedChangeOfProviderRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeProvider && x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();
             var pendingChangeOfEmployerRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Pending).FirstOrDefault();
-            var approvedChangeOfEmployerRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();            
-
+            var approvedChangeOfEmployerRequest = apprenticeship.ChangeOfPartyRequests?.Where(x => x.ChangeOfPartyType == ChangeOfPartyRequestType.ChangeEmployer && x.Status == ChangeOfPartyRequestStatus.Approved).FirstOrDefault();
+          
             var result = new ApprenticeshipDetailsViewModel
             {
                 HashedApprenticeshipId = hashedApprenticeshipId,
@@ -91,8 +91,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 Status = statusText,
                 ProviderName = apprenticeship.ProviderName,
                 PendingChanges = pendingChange,
-                Alerts = MapRecordStatus(apprenticeship.PendingUpdateOriginator, 
-                    apprenticeship.DataLockCourseTriaged, 
+                Alerts = MapRecordStatus(apprenticeship.PendingUpdateOriginator,
+                    apprenticeship.DataLockCourseTriaged,
                     apprenticeship.DataLockPriceTriaged || apprenticeship.DataLockCourseChangeTriaged),
                 EmployerReference = apprenticeship.EmployerRef,
                 CohortReference = _hashingService.HashValue(apprenticeship.CommitmentId),
@@ -109,12 +109,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                 MadeRedundant = apprenticeship.MadeRedundant,
                 ChangeProviderLink = GetChangeOfProviderLink(hashedAccountId, hashedApprenticeshipId),
                 HasPendingChangeOfProviderRequest = pendingChangeOfProviderRequest != null,
-                PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty,                                
+                PendingChangeOfProviderRequestWithParty = pendingChangeOfProviderRequest?.WithParty,
                 HasApprovedChangeOfProviderRequest = approvedChangeOfProviderRequest != null,
                 HashedNewApprenticeshipId = approvedChangeOfProviderRequest?.NewApprenticeshipId != null
                         ? _hashingService.HashValue(approvedChangeOfProviderRequest.NewApprenticeshipId.Value)
-                        :null,               
-                IsContinuation = apprenticeship.ContinuationOfId.HasValue,                
+                        :null,
+                IsContinuation = apprenticeship.ContinuationOfId.HasValue,
+                IsEmployerContinuation = apprenticeship.IsEmployerContinuation,
                 HashedPreviousApprenticeshipId = apprenticeship.ContinuationOfId.HasValue
                         ? _hashingService.HashValue(apprenticeship.ContinuationOfId.Value)
                         : null,
