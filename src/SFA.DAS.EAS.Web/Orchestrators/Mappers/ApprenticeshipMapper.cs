@@ -115,7 +115,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                         ? _hashingService.HashValue(approvedChangeOfProviderRequest.NewApprenticeshipId.Value)
                         :null,
                 IsContinuation = apprenticeship.ContinuationOfId.HasValue,
-                IsEmployerContinuation = apprenticeship.IsEmployerContinuation,
+                IsChangeOfProviderContinuation = apprenticeship.IsChangeOfProviderContinuation,
                 HashedPreviousApprenticeshipId = apprenticeship.ContinuationOfId.HasValue
                         ? _hashingService.HashValue(apprenticeship.ContinuationOfId.Value)
                         : null,

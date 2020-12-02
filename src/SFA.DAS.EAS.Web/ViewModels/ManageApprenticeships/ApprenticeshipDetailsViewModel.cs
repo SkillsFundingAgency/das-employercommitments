@@ -75,7 +75,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public bool HasApprovedChangeOfPartyRequest { get; set; }
         public string HashedNewApprenticeshipId { get; set; }
         public bool IsContinuation { get; set; }
-        public bool IsEmployerContinuation { get; set; }
+        public bool IsChangeOfProviderContinuation { get; set; }
         public string HashedPreviousApprenticeshipId { get; set; }
 
         public string ViewChangesLink { get; internal set; }
