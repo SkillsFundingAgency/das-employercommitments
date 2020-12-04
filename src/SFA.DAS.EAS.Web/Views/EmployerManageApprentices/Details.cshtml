@@ -39,60 +39,41 @@
         @if (Model.Data.HasPendingChangeOfProviderRequest
             && Model.Data.PendingChangeOfProviderRequestWithParty.HasValue)
         {
-    <div class="panel panel-border-wide alert-default">
-        @if (Model.Data.PendingChangeOfProviderRequestWithParty.Value == Party.Employer)
-        {
-            <h3 class="heading-small">Changes for review</h3>
-            <p>
-                There are changes to this apprentice's details that you need to review.
-            </p>
-            <p>
-                <a id="changeOfPartyViewChangesLink" href="@Model.Data.ViewChangesLink">Review changes</a>
-            </p>
-        }
-        else
-        {
-            <h3 class="heading-small">Changes pending</h3>
-            <p>
-                There are changes to this apprentice's details that are waiting for approval by the training provider.
-            </p>
-            <p>
-                <a id="changeOfPartyViewChangesLink" href="@Model.Data.ViewChangesLink">View changes</a>
-            </p>
+        <div class="panel panel-border-wide alert-default">
+            @if (Model.Data.PendingChangeOfProviderRequestWithParty.Value == Party.Employer)
+            {
+                <h3 class="heading-small">Changes for review</h3>
+                <p>
+                    There are changes to this apprentice's details that you need to review.
+                </p>
+                <p>
+                    <a id="changeOfPartyViewChangesLink" href="@Model.Data.ViewChangesLink">Review changes</a>
+                </p>
+            }
+            else
+            {
+                <h3 class="heading-small">Changes pending</h3>
+                <p>
+                    There are changes to this apprentice's details that are waiting for approval by the training provider.
+                </p>
+                <p>
+                    <a id="changeOfPartyViewChangesLink" href="@Model.Data.ViewChangesLink">View changes</a>
+                </p>
+            }
+
+        </div>
         }
 
-    </div>
-        }
 
-
-        @if (Model.Data.HasApprovedChangeOfProviderRequest || Model.Data.IsContinuation)
+        @if (Model.Data.HasApprovedChangeOfProviderRequest || Model.Data.IsChangeOfProviderContinuation)
         {
 
             <div class="panel panel-border-wide alert-default">
 
-
-                @if (Model.Data.HasApprovedChangeOfProviderRequest && Model.Data.IsContinuation)
-                {
-                    <h3 class="heading-small">  View apprentice record </h3>
-                    <p>
-                        The apprentice moved providers during their apprenticeship.
-                    </p>
-                }
-                else if (Model.Data.HasApprovedChangeOfProviderRequest)
-                {
-                    <h3 class="heading-small">  View apprentice record </h3>
-                    <p>
-                        The apprentice moved providers during their apprenticeship.
-                    </p>
-                }
-                else if (Model.Data.IsContinuation)
-                {
-                    <h3 class="heading-small">  View apprentice record </h3>
-                    <p>
-                        The apprentice moved providers during their apprenticeship.
-                    </p>
-                }
-
+                <h3 class="heading-small"> View apprentice record </h3>
+                <p>
+                    The apprentice moved providers during their apprenticeship.
+                </p>
 
                 @if (!string.IsNullOrWhiteSpace(Model.Data.HashedNewApprenticeshipId))
                 {
