@@ -13,6 +13,7 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
+using SFA.DAS.EmployerCommitments.Domain.Extensions;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 
 namespace SFA.DAS.EmployerCommitments.Web.Validators
@@ -242,7 +243,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Validators
                 IncludeFrameworks = true
             });
 
-            var course = result.TrainingProgrammes.Single(x => x.Id == viewModel.TrainingCode);
+            var course = result.TrainingProgrammes.Single(x => x.CourseCode == viewModel.TrainingCode);
 
             var courseStatus = course.GetStatusOn(startDate.DateTime.Value);
 

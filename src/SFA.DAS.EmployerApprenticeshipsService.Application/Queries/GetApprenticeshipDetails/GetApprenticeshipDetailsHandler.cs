@@ -17,7 +17,7 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDetai
             _apprenticeshipInfoService = apprenticeshipInfoService;
         }
 
-        public Task<GetApprenticeshipDetailsResponse> Handle(GetApprenticeshipDetailsQuery message)
+        public async Task<GetApprenticeshipDetailsResponse> Handle(GetApprenticeshipDetailsQuery message)
         {
             var validationresult = _validator.Validate(message);
 
@@ -26,17 +26,15 @@ namespace SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipDetai
                 throw new InvalidRequestException(validationresult.ValidationDictionary);
             }
 
-            return Task.Run(() =>
+            var provider = await _apprenticeshipInfoService.GetProvider(message.ProviderId);
+
+            var providerName = provider?.Provider?.Name ?? "Unknown provider";
+
+            return new GetApprenticeshipDetailsResponse
             {
-                var provider = _apprenticeshipInfoService.GetProvider(message.ProviderId);
-
-                var providerName = provider?.Provider?.Name ?? "Unknown provider";
-
-                return new GetApprenticeshipDetailsResponse
-                {
-                    ProviderName = providerName
-                };
-            });
+                ProviderName = providerName
+            };
+        
         }
     }
 }

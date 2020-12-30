@@ -139,8 +139,8 @@ else
                 <option value="">Please select</option>
                 @foreach (var apprenticeshipProduct in Model.ApprenticeshipProgrammes)
                 {
-                    <option value="@apprenticeshipProduct.Id" @if (apprenticeshipProduct.Id == Model.Apprenticeship.TrainingCode) { @Html.Raw("selected") }>
-                        @apprenticeshipProduct.Title
+                    <option value="@apprenticeshipProduct.CourseCode" @if (apprenticeshipProduct.CourseCode == Model.Apprenticeship.TrainingCode) { @Html.Raw("selected") }>
+                        @apprenticeshipProduct.Name
                     </option>
                 }
             </select>

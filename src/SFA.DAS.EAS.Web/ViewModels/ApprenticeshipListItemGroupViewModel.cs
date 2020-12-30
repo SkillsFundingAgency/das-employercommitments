@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.Commitments.Api.Types.TrainingProgramme;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
+using SFA.DAS.EmployerCommitments.Domain.Extensions;
+using SFA.DAS.EmployerCommitments.Web.Extensions;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 {
     public class ApprenticeshipListItemGroupViewModel
     {
-        public ITrainingProgramme TrainingProgramme { get; }
+        public TrainingProgramme TrainingProgramme { get; }
         public IList<ApprenticeshipListItemViewModel> Apprenticeships { get; }
 
         public int ApprenticeshipsOverFundingLimit { get; }
@@ -18,9 +21,9 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 
         public bool ShowCommonFundingCap => AllApprenticeshipsOverFundingLimit && CommonFundingCap != null;
 
-        public string GroupId => TrainingProgramme?.Id ?? "0";
+        public string GroupId => TrainingProgramme?.CourseCode ?? "0";
 
-        public string GroupName => TrainingProgramme?.Title ?? "No training course";
+        public string GroupName => TrainingProgramme?.Name ?? "No training course";
 
         public int OverlapErrorCount => Apprenticeships.Count(x => x.OverlappingApprenticeships.Any());
 
@@ -29,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
         /// <remarks>
         /// ApprenticeshipsOverFundingLimit and CommonFundingCap are only guaraneteed to be correct if the ctor's params are not mutated after instantiation or on another thread during contruction
         /// </remarks>
-        public ApprenticeshipListItemGroupViewModel(IList<ApprenticeshipListItemViewModel> apprenticeships, ITrainingProgramme trainingProgramme = null)
+        public ApprenticeshipListItemGroupViewModel(IList<ApprenticeshipListItemViewModel> apprenticeships, TrainingProgramme trainingProgramme = null)
         {
             TrainingProgramme = trainingProgramme;
             Apprenticeships = apprenticeships;

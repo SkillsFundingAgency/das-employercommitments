@@ -11,6 +11,7 @@ using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
 using SFA.DAS.Commitments.Api.Types.ProviderPayment;
+using SFA.DAS.Commitments.Api.Types.TrainingProgramme;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.AcademicYear;
@@ -226,9 +227,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
                 if(training != null)
                 {
-                    apprenticeship.TrainingType = training is Standard ? TrainingType.Standard : TrainingType.Framework;
+                    apprenticeship.TrainingType = int.TryParse(training.CourseCode, out _) ? TrainingType.Standard : TrainingType.Framework;
                     apprenticeship.TrainingCode = viewModel.TrainingCode;
-                    apprenticeship.TrainingName = training.Title;
+                    apprenticeship.TrainingName = training.Name;
                 }
                 else
                 {
@@ -316,9 +317,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
 
                 if (training != null)
                 {
-                    model.TrainingType = training is Standard ? TrainingType.Standard : TrainingType.Framework;
+                    model.TrainingType = int.TryParse(training.CourseCode, out _) ? TrainingType.Standard : TrainingType.Framework;
                     model.TrainingCode = edited.TrainingCode;
-                    model.TrainingName = training.Title;
+                    model.TrainingName = training.Name;
                 }
                 else
                 {
@@ -391,7 +392,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
                                      IlrStartDate = dl.IlrEffectiveFromDate.Value,
                                      IlrEndDate = dl.IlrEffectiveToDate,
                                      IlrTrainingProgram =
-                                         (await GetTrainingProgramme(dl.IlrTrainingCourseCode)).Title
+                                         (await GetTrainingProgramme(dl.IlrTrainingCourseCode)).Name
                                  };
                 l.Add(course);
             }
@@ -422,12 +423,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         }
 
 
-        private async Task<ITrainingProgramme> GetTrainingProgramme(string trainingCode)
+        private async Task<TrainingProgramme> GetTrainingProgramme(string trainingCode)
         {
             // TODO: LWA - Need to check is this is called multiple times in a single request.
             var trainingProgrammes = await _mediator.SendAsync(new GetTrainingProgrammesQueryRequest());
 
-            return trainingProgrammes.TrainingProgrammes.FirstOrDefault(x => x.Id == trainingCode);
+            return trainingProgrammes.TrainingProgrammes.FirstOrDefault(x => x.CourseCode == trainingCode);
         }
 
         private static string NullableDecimalToString(decimal? item)
