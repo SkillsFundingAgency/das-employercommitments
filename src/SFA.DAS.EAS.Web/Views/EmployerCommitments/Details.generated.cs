@@ -523,7 +523,7 @@ WriteLiteral("</p>\r\n");
 
 WriteLiteral("                                    <p>Training code: ");
 
-                                                 Write(group.TrainingProgramme.Id);
+                                                 Write(group.TrainingProgramme.CourseCode);
 
 WriteLiteral("</p>\r\n");
 
