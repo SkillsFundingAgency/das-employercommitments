@@ -170,7 +170,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                     {
                         new TrainingProgramme
                         {
-                            CourseCode = "123",
                             FundingPeriods = new List<TrainingProgrammeFundingPeriod>
                             {
                                 new TrainingProgrammeFundingPeriod
@@ -182,7 +181,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                             },
                             EffectiveFrom = new DateTime(2020, 2, 1),
                             EffectiveTo = new DateTime(2020, 3, 1),
-                            Name = "Title"
+                            Name = "Tit"
                         }
                     }
                 });

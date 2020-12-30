@@ -183,7 +183,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             var updated = new ApprenticeshipViewModel
             {
-                TrainingCode = "standard-007"
+                TrainingCode = "007"
             };
 
             MockMediator.Setup(m => m.SendAsync(It.IsAny<GetTrainingProgrammesQueryRequest>()))
@@ -193,13 +193,13 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
                         TrainingProgrammes = new List<TrainingProgramme>
                                     {
                         new TrainingProgramme { CourseCode = "abba-555", Name = "Framework Title"},
-                        new TrainingProgramme { CourseCode = "standard-007", Name = "Standard Title", }
+                        new TrainingProgramme { CourseCode = "007", Name = "Standard Title", }
                                     }
                     });
 
             var model = await Sut.CompareAndMapToApprenticeshipViewModel(a, updated);
 
-            model.TrainingCode.Should().Be("standard-007");
+            model.TrainingCode.Should().Be("007");
             model.TrainingName.Should().Be("Standard Title");
             model.TrainingType.Should().Be(TrainingType.Standard);
         }

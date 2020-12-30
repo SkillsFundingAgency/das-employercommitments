@@ -6,7 +6,6 @@ using NUnit.Framework;
 using SFA.DAS.Commitments.Api.Types.TrainingProgramme;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
@@ -35,7 +34,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
                     {
                         new TrainingProgramme
                         {
-                            CourseCode = "1",
+                            CourseCode = "TESTCOURSE",
                             EffectiveFrom = new DateTime(2018, 5, 1),
                             EffectiveTo = new DateTime(2018, 7, 1)
                         }
