@@ -444,6 +444,7 @@
     <Compile Include="Validators\EditApprenticeshipStopDate\WhenValidatingNewStopDate.cs" />
     <Compile Include="Validators\Messages\WhenExtractingMessages.cs" />
     <Compile Include="Validators\ProviderSelectionTest\WhenValidatingProviderId.cs" />
+    <Compile Include="ViewModels\WhenMappingShowChangeTrainingProviderLink.cs" />
     <Compile Include="ViewModels\WhenCreatedApprenticeshipListItemGroupViewModel.cs" />
     <Compile Include="ViewModels\WhenEmployerRequestedChangeOfParty.cs" />
     <Compile Include="ViewModels\WhenProviderRequestedChangeOfParty.cs" />
