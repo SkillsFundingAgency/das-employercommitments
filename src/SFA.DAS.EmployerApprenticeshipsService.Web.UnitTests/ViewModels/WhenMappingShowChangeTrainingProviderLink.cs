@@ -14,6 +14,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
 
         [TestCase(PaymentStatus.Active, true)]
         [TestCase(PaymentStatus.Withdrawn, true)]
+        [TestCase(PaymentStatus.Paused, true)]
         public void Then_Given_No_Change_Of_Parity_ShowChangeProviderLink(PaymentStatus paymentStatus, bool expected)
         {
             //Arrange
@@ -60,8 +61,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
             viewModel.ShowChangeTrainingProviderLink.Should().Be(expected);
         }
 
-
-        [TestCase(PaymentStatus.Paused, false)]
         [TestCase(PaymentStatus.Completed, false)]
         public void Then_BasedOnApprenticeStatus_DoNotShowChangeProviderLink(PaymentStatus paymentStatus, bool expected)
         {
