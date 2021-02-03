@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using SFA.DAS.Commitments.Api.Types.TrainingProgramme;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 
@@ -15,7 +16,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
         private const int TestTrainingProgrammeFundingCap = 100;
 
         private IList<ApprenticeshipListItemViewModel> _singleApprenticeship;
-        private ITrainingProgramme _testTrainingProgramme;
+        private TrainingProgramme _testTrainingProgramme;
 
         [SetUp]
         public void SetUp()
@@ -29,11 +30,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
                 }
             };
 
-            _testTrainingProgramme =  new Framework
+            _testTrainingProgramme =  new TrainingProgramme
             {
-                FundingPeriods = new[]
+                FundingPeriods = new List<TrainingProgrammeFundingPeriod>
                 {
-                    new FundingPeriod
+                    new TrainingProgrammeFundingPeriod()
                     {
                         EffectiveFrom = new DateTime(2020, 2, 1),
                         EffectiveTo = new DateTime(2020, 3, 1),
@@ -41,7 +42,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
                     }
                 },
                 EffectiveFrom = new DateTime(2020, 2, 1),
-                EffectiveTo = new DateTime(2020, 3, 1)
+                EffectiveTo = new DateTime(2020, 3, 1),
+                CourseCode = "123-abc"
             };
         }
 
@@ -60,7 +62,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
         [Test]
         public void AndNoApprenticeshipsThenThereAreNoApprenticeshipsOverFundingLimit()
         {
-            var trainingProgram = new Framework();
+            var trainingProgram = new TrainingProgramme();
 
             var group = new ApprenticeshipListItemGroupViewModel(new ApprenticeshipListItemViewModel[0], trainingProgram);
 
@@ -87,11 +89,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
                 }
             };
 
-            var trainingProgram = new Framework
+            var trainingProgram = new TrainingProgramme
             {
-                FundingPeriods = new[]
+                FundingPeriods = new List<TrainingProgrammeFundingPeriod>
                 {
-                    new FundingPeriod
+                    new TrainingProgrammeFundingPeriod
                     {
                         EffectiveFrom = fundingPeriodFrom,
                         EffectiveTo = fundingPeriodTo,
@@ -243,23 +245,24 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.ViewModels
                 }
             };
 
-            _testTrainingProgramme = new Framework
+            _testTrainingProgramme = new TrainingProgramme
             {
-                FundingPeriods = new[]
+                FundingPeriods = new List<TrainingProgrammeFundingPeriod>
                 {
-                    new FundingPeriod
+                    new TrainingProgrammeFundingPeriod
                     {
                         EffectiveFrom = new DateTime(2020, 1, 1),
                         EffectiveTo = new DateTime(2020, 1, 31),
                         FundingCap = 100
                     },
-                    new FundingPeriod
+                    new TrainingProgrammeFundingPeriod
                     {
                         EffectiveFrom = new DateTime(2020, 2, 1),
                         EffectiveTo = new DateTime(2020, 2, 28),
                         FundingCap = 200
                     }
                 },
+                CourseCode = "abc-123",
                 EffectiveFrom = new DateTime(2020, 1, 1),
                 EffectiveTo = new DateTime(2020, 2, 28)
             };

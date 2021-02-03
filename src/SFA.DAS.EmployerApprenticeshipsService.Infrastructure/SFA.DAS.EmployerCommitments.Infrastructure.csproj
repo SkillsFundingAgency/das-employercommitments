@@ -132,9 +132,6 @@
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Apprenticeships.Api.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Apprenticeships.Api.Types.0.11.75\lib\net462\SFA.DAS.Apprenticeships.Api.Types.dll</HintPath>
-    </Reference>
     <Reference Include="SFA.DAS.Audit.Client, Version=1.0.0.20553, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Audit.Client.1.0.0.20553\lib\net45\SFA.DAS.Audit.Client.dll</HintPath>
     </Reference>
@@ -147,14 +144,17 @@
     <Reference Include="SFA.DAS.Authentication.Extensions.Legacy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Authentication.Extensions.Legacy.1.0.22\lib\netstandard2.0\SFA.DAS.Authentication.Extensions.Legacy.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=4.14.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.4.14.2\lib\netstandard2.0\SFA.DAS.Commitments.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=6.1.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.6.1.0\lib\netstandard2.0\SFA.DAS.Commitments.Api.Client.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=4.14.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.4.14.2\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=6.1.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.6.1.0\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="SFA.DAS.CommitmentsV2.Types, Version=4.14.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Types.4.14.2\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.CommitmentsV2.Types, Version=6.1.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Types.6.1.0\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Types.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="SFA.DAS.Common.Domain, Version=1.4.276.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.4.276\lib\net462\SFA.DAS.Common.Domain.dll</HintPath>

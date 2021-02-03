@@ -105,9 +105,6 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Apprenticeships.Api.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Apprenticeships.Api.Types.0.11.82\lib\net462\SFA.DAS.Apprenticeships.Api.Types.dll</HintPath>
-    </Reference>
     <Reference Include="SFA.DAS.Audit.Client, Version=1.0.0.20553, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Audit.Client.1.0.0.20553\lib\net45\SFA.DAS.Audit.Client.dll</HintPath>
     </Reference>
@@ -117,14 +114,17 @@
     <Reference Include="SFA.DAS.Authentication.Extensions.Legacy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Authentication.Extensions.Legacy.1.0.22\lib\netstandard2.0\SFA.DAS.Authentication.Extensions.Legacy.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=4.14.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.4.14.2\lib\netstandard2.0\SFA.DAS.Commitments.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=6.1.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.6.1.0\lib\netstandard2.0\SFA.DAS.Commitments.Api.Client.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=4.14.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.4.14.2\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=6.1.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.6.1.0\lib\net462\SFA.DAS.Commitments.Api.Types.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="SFA.DAS.CommitmentsV2.Types, Version=4.14.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Types.4.14.2\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.CommitmentsV2.Types, Version=6.1.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Types.6.1.0\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Types.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="SFA.DAS.Common.Domain, Version=1.4.272.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.4.272\lib\net462\SFA.DAS.Common.Domain.dll</HintPath>
@@ -288,7 +288,6 @@
     <Compile Include="Http\RequestTimeOutException.cs" />
     <Compile Include="Interfaces\IAcademicYearDateProvider.cs" />
     <Compile Include="Interfaces\IAcademicYearValidator.cs" />
-    <Compile Include="Interfaces\IApprenticeshipInfoServiceMapper.cs" />
     <Compile Include="Interfaces\IAzureAdAuthenticationService.cs" />
     <Compile Include="Interfaces\IBackgroundNotificationService.cs" />
     <Compile Include="Interfaces\ICookieStorageService.cs" />
@@ -306,7 +305,7 @@
     <Compile Include="Interfaces\IProviderEmailService.cs" />
     <Compile Include="Models\AcademicYear\AcademicYearValidationResult.cs" />
     <Compile Include="Models\AccountTeam\Account.cs" />
-    <Compile Include="Models\ApprenticeshipCourse\FundingPeriod.cs" />
+    <Compile Include="Models\ApprenticeshipCourse\AllTrainingProgrammesView.cs" />
     <Compile Include="Models\ApprenticeshipCourse\TrainingProgrammeStatus.cs" />
     <Compile Include="Models\Apprenticeship\ApprenticeshipStatus.cs" />
     <Compile Include="Models\Apprenticeship\ChangeOption.cs" />
@@ -341,7 +340,6 @@
     <Compile Include="Configuration\PostcodeAnywhereConfiguration.cs" />
     <Compile Include="Configuration\ReferenceDataApiClientConfiguration.cs" />
     <Compile Include="Extensions\NullableDateTimeExtension.cs" />
-    <Compile Include="Models\ApprenticeshipCourse\Framework.cs" />
     <Compile Include="Models\ApprenticeshipCourse\FrameworksView.cs" />
     <Compile Include="Interfaces\IApprenticeshipInfoServiceConfiguration.cs" />
     <Compile Include="Interfaces\IApprenticeshipInfoService.cs" />
@@ -354,7 +352,6 @@
     <Compile Include="Models\AccountTeam\Invitation.cs" />
     <Compile Include="Models\AccountTeam\InvitationStatus.cs" />
     <Compile Include="Models\AccountTeam\InvitationView.cs" />
-    <Compile Include="Models\ApprenticeshipCourse\ITrainingProgramme.cs" />
     <Compile Include="Models\Audit\EasAuditMessage.cs" />
     <Compile Include="Models\ReferenceData\Charity.cs" />
     <Compile Include="Models\ReferenceData\PagedResponse.cs" />
@@ -372,7 +369,6 @@
     <Compile Include="Models\ApprenticeshipProvider\Provider.cs" />
     <Compile Include="Models\ApprenticeshipProvider\Providers.cs" />
     <Compile Include="Models\ApprenticeshipProvider\ProvidersView.cs" />
-    <Compile Include="Models\ApprenticeshipCourse\Standard.cs" />
     <Compile Include="Models\ApprenticeshipCourse\StandardsView.cs" />
     <Compile Include="Models\AccountTeam\TeamMember.cs" />
   </ItemGroup>

@@ -8,6 +8,7 @@ using SFA.DAS.Commitments.Api.Types;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.Commitment.Types;
+using SFA.DAS.Commitments.Api.Types.TrainingProgramme;
 using SFA.DAS.Commitments.Api.Types.Validation;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
@@ -165,13 +166,13 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockMediator.Setup(m => m.SendAsync(It.IsAny<GetTrainingProgrammesQueryRequest>()))
                 .ReturnsAsync(new GetTrainingProgrammesQueryResponse
                 {
-                    TrainingProgrammes = new List<ITrainingProgramme>
+                    TrainingProgrammes = new List<TrainingProgramme>
                     {
-                        new Standard
+                        new TrainingProgramme
                         {
-                            FundingPeriods = new[]
+                            FundingPeriods = new List<TrainingProgrammeFundingPeriod>
                             {
-                                new FundingPeriod
+                                new TrainingProgrammeFundingPeriod
                                 {
                                     EffectiveFrom = new DateTime(2020, 2, 1),
                                     EffectiveTo = new DateTime(2020, 3, 1),
@@ -180,7 +181,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
                             },
                             EffectiveFrom = new DateTime(2020, 2, 1),
                             EffectiveTo = new DateTime(2020, 3, 1),
-                            Title = "Tit"
+                            Name = "Tit"
                         }
                     }
                 });

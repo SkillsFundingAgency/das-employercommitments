@@ -1,8 +1,7 @@
-﻿using System.Linq;
-using System.Net;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Apprenticeships.Api.Types.Exceptions;
+using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipProvider;
@@ -12,58 +11,69 @@ namespace SFA.DAS.EmployerCommitments.Application.Services
     public class ApprenticeshipInfoService : IApprenticeshipInfoService
     {
         private const string StandardsKey = "Standards";
-        private const string FrameworksKey = "Frameworks";
 
         private readonly ICache _cache;
-        private readonly IApprenticeshipInfoServiceConfiguration _configuration;
-        private readonly IApprenticeshipInfoServiceMapper _mapper;
-
+        private readonly IProviderCommitmentsApi _providerCommitmentsApi;
+        private readonly ITrainingProgrammeApi _trainingProgrammeApi;
+        
         public ApprenticeshipInfoService(ICache cache,
-            IApprenticeshipInfoServiceConfiguration configuration,
-            IApprenticeshipInfoServiceMapper mapper)
+            IProviderCommitmentsApi providerCommitmentsApi,
+            ITrainingProgrammeApi trainingProgrammeApi)
         {
             _cache = cache;
-            _configuration = configuration;
-            _mapper = mapper;
+            _providerCommitmentsApi = providerCommitmentsApi;
+            _trainingProgrammeApi = trainingProgrammeApi;
         }
 
-        public async Task<StandardsView> GetStandardsAsync(bool refreshCache = false)
+        public async Task<StandardsView> GetStandards(bool refreshCache = false)
         {
             if (!await _cache.ExistsAsync(StandardsKey) || refreshCache)
             {
-                var api = new StandardApiClient(_configuration.BaseUrl);
+                var standards = (await _trainingProgrammeApi.GetAllStandards()).TrainingProgrammes.ToList().OrderBy(x => x.Name).ToList();
 
-                var standards = (await api.GetAllAsync()).OrderBy(x => x.Title).ToList();
-
-                await _cache.SetCustomValueAsync(StandardsKey, _mapper.MapFrom(standards));
+                await _cache.SetCustomValueAsync(StandardsKey, new StandardsView
+                {
+                    CreationDate = DateTime.UtcNow,
+                    Standards = standards
+                });
             }
 
             return await _cache.GetCustomValueAsync<StandardsView>(StandardsKey);
         }
-
-        public async Task<FrameworksView> GetFrameworksAsync(bool refreshCache = false)
+        
+        public async Task<AllTrainingProgrammesView> GetAll(bool refreshCache = false)
         {
-            if (!await _cache.ExistsAsync(FrameworksKey) || refreshCache)
+            if (!await _cache.ExistsAsync(nameof(AllTrainingProgrammesView)) || refreshCache)
             {
-                var api = new FrameworkApiClient(_configuration.BaseUrl);
+                var trainingProgrammes = (await _trainingProgrammeApi.GetAll()).TrainingProgrammes.ToList().OrderBy(x => x.Name).ToList();
 
-                var frameworks = (await api.GetAllAsync()).OrderBy(x => x.Title).ToList();
-
-                await _cache.SetCustomValueAsync(FrameworksKey, _mapper.MapFrom(frameworks));
+                await _cache.SetCustomValueAsync(nameof(AllTrainingProgrammesView), new AllTrainingProgrammesView
+                {
+                    CreatedDate = DateTime.UtcNow,
+                    TrainingProgrammes = trainingProgrammes
+                });
             }
 
-            return await _cache.GetCustomValueAsync<FrameworksView>(FrameworksKey);
+            return await _cache.GetCustomValueAsync<AllTrainingProgrammesView>(nameof(AllTrainingProgrammesView));
         }
 
-        public ProvidersView GetProvider(long ukPrn)
+        public async Task<ProvidersView> GetProvider(long ukprn)
         {
             try
             {
-                var api = new Providers.Api.Client.ProviderApiClient(_configuration.BaseUrl);
-                var provider = api.Get(ukPrn);
-                return _mapper.MapFrom(provider);
+                var api = await _providerCommitmentsApi.GetProvider(ukprn);
+                return new ProvidersView
+                {
+                    CreatedDate = DateTime.UtcNow,
+                    Provider = new EmployerCommitments.Domain.Models.ApprenticeshipProvider.Provider
+                    {
+                        Name = api.Provider.Name,
+                        Ukprn = api.Provider.Ukprn,
+                        ProviderName = api.Provider.Name
+                    }
+                };
             }
-            catch (EntityNotFoundException)
+            catch (Exception)
             {
                 return null;
             }

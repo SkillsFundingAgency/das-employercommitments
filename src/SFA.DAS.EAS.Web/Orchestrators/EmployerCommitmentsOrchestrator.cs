@@ -767,22 +767,22 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 var warnings = new Dictionary<string, string>();
 
                 var apprenticeshipGroups = apprenticeships.OrderBy(x => x.TrainingName).GroupBy(x => x.TrainingCode)
-                    .Select(g => new ApprenticeshipListItemGroupViewModel(g.OrderBy(x => x.CanBeApproved).ToList(), trainingProgrammes.FirstOrDefault(x => x.Id == g.Key)))
+                    .Select(g => new ApprenticeshipListItemGroupViewModel(g.OrderBy(x => x.CanBeApproved).ToList(), trainingProgrammes.FirstOrDefault(x => x.CourseCode == g.Key)))
                     .ToList();
 
                 foreach (var apprenticeshipGroup in apprenticeshipGroups)
                 {
                     if (apprenticeshipGroup.OverlapErrorCount > 0)
                     {
-                        var trainingTitle = string.IsNullOrEmpty(apprenticeshipGroup.TrainingProgramme?.Title)
+                        var trainingTitle = string.IsNullOrEmpty(apprenticeshipGroup.TrainingProgramme?.Name)
                             ? string.Empty
-                            : $":{apprenticeshipGroup.TrainingProgramme.Title}";
+                            : $":{apprenticeshipGroup.TrainingProgramme.Name}";
                         errors.Add(apprenticeshipGroup.GroupId, $"Overlapping training dates{trainingTitle}");
                     }
 
                     if (apprenticeshipGroup.ApprenticeshipsOverFundingLimit > 0) // for this to be true, there must be a TrainingProgramme, so no need to cater for null
                     {
-                        warnings.Add(apprenticeshipGroup.GroupId, $"Cost for {apprenticeshipGroup.TrainingProgramme.Title}");
+                        warnings.Add(apprenticeshipGroup.GroupId, $"Cost for {apprenticeshipGroup.TrainingProgramme.Name}");
                     }
                 }
 

@@ -30,7 +30,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetApprentic
 
             _apprenticeshipInfoService = new Mock<IApprenticeshipInfoService>();
 
-            _apprenticeshipInfoService.Setup(x => x.GetProvider(It.IsAny<int>())).Returns(new ProvidersView
+            _apprenticeshipInfoService.Setup(x => x.GetProvider(It.IsAny<int>())).ReturnsAsync(new ProvidersView
             {
                 CreatedDate = DateTime.Now,
                 Provider = _provider
@@ -66,7 +66,7 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Queries.GetApprentic
         [Test]
         public async Task ThenIfNoProvidersAreReturnsAnUnknownProviderLabelShouldBeAdded()
         {
-            _apprenticeshipInfoService.Setup(x => x.GetProvider(It.IsAny<int>())).Returns(new ProvidersView
+            _apprenticeshipInfoService.Setup(x => x.GetProvider(It.IsAny<int>())).ReturnsAsync(new ProvidersView
             {
                 CreatedDate = DateTime.Now,
                 Provider = new EmployerCommitments.Domain.Models.ApprenticeshipProvider.Provider()

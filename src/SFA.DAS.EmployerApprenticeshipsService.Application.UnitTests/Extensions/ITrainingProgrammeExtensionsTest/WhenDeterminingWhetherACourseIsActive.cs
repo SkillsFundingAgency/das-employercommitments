@@ -1,6 +1,7 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Commitments.Api.Types.TrainingProgramme;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 
@@ -21,12 +22,10 @@ namespace SFA.DAS.EmployerCommitments.Application.UnitTests.Extensions.ITraining
         public void ThenIfWithinCourseEffectiveRangeThenIsActive(DateTime? courseStart, DateTime? courseEnd, DateTime effectiveDate, bool expectIsActive)
         {
             //Arrange
-            var course = new Mock<ITrainingProgramme>();
-            course.SetupGet(x => x.EffectiveFrom).Returns(courseStart);
-            course.SetupGet(x => x.EffectiveTo).Returns(courseEnd);
+            var course = new TrainingProgramme {EffectiveFrom = courseStart, EffectiveTo = courseEnd};
 
             //Act
-            var result = course.Object.IsActiveOn(effectiveDate);
+            var result = course.IsActiveOn(effectiveDate);
 
             //Assert
             Assert.AreEqual(expectIsActive, result);
