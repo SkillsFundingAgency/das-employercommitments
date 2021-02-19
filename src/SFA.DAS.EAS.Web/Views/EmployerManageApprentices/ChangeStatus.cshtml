@@ -38,7 +38,7 @@
                     Do not stop completed apprenticeships.
                 </strong>
             </div>
-            <br/>
+            <br />
             <div class="form-group @Html.AddClassIfPropertyInError("ChangeType", "error")">
                 <fieldset>
                     @Html.ValidationMessage("ChangeType", "Select whether to change this apprenticeship status or not", new { id = "error-message-ChangeType" })
@@ -79,8 +79,8 @@
 
 
 @section breadcrumb {
-    <div class="breadcrumbs">
-        <a href="@Url.RouteUrl("OnProgrammeApprenticeshipDetails")" aria-label="Back to apprentices details" class="back-link">Back</a>
+    <div class="breadcrumbs">                
+        <a href=@Model.Data.ApprenticeDetailsV2Link aria-label="Back to apprentices details" class="back-link">Back</a>
     </div>
 }
 

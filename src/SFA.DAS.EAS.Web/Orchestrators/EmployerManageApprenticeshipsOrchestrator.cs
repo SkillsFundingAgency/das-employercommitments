@@ -286,8 +286,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                 CheckApprenticeshipStateValidForChange(data.Apprenticeship);
 
                 var isPaused = data.Apprenticeship.PaymentStatus == PaymentStatus.Paused;
-
-                return new OrchestratorResponse<ChangeStatusChoiceViewModel> { Data = new ChangeStatusChoiceViewModel { IsCurrentlyPaused = isPaused } };
+                var apprenticeDetailsV2Link = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details");            
+                
+                return new OrchestratorResponse<ChangeStatusChoiceViewModel> { Data = new ChangeStatusChoiceViewModel { IsCurrentlyPaused = isPaused, ApprenticeDetailsV2Link = apprenticeDetailsV2Link } };
 
             }, hashedAccountId, externalUserId);
         }
