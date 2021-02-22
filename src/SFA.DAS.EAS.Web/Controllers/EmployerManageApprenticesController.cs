@@ -58,7 +58,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Route("{hashedApprenticeshipId}/details", Name = "OnProgrammeApprenticeshipDetails")]
         public ActionResult Details(string hashedAccountId, string hashedApprenticeshipId)
         {
-           _logger.Info($"Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
+           _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
        
            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
         }
