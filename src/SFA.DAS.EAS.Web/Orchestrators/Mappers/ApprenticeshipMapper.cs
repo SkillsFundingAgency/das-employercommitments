@@ -10,7 +10,6 @@ using SFA.DAS.Commitments.Api.Types.DataLock;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
-using SFA.DAS.Commitments.Api.Types.ProviderPayment;
 using SFA.DAS.Commitments.Api.Types.TrainingProgramme;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -334,19 +333,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
             model.HasHadDataLockSuccess = original.HasHadDataLockSuccess;
 
             return model;
-        }
-
-        public PaymentOrderViewModel MapPayment(IList<ProviderPaymentPriorityItem> data)
-        {
-            var items = data.Select(m => new PaymentOrderItem
-                                 {
-                                     ProviderId = m.ProviderId,
-                                     ProviderName = m.ProviderName,
-                                     Priority = m.PriorityOrder
-                                 })
-                                 .OrderBy(m => m.ProviderName );
-
-            return new PaymentOrderViewModel { Items = items };
         }
 
         public IList<PriceChange> MapPriceChanges(IEnumerable<DataLockStatus> dataLocks, List<PriceHistory> history)

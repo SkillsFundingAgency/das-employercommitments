@@ -14,14 +14,12 @@ using SFA.DAS.EmployerCommitments.Application.Commands.ReviewApprenticeshipUpdat
 using SFA.DAS.EmployerCommitments.Application.Commands.UndoApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStatus;
 using SFA.DAS.EmployerCommitments.Application.Commands.UpdateApprenticeshipStopDate;
-using SFA.DAS.EmployerCommitments.Application.Commands.UpdateProviderPaymentPriority;
 using SFA.DAS.EmployerCommitments.Application.Exceptions;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeship;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetApprenticeshipUpdate;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetCommitment;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetOverlappingApprenticeships;
-using SFA.DAS.EmployerCommitments.Application.Queries.GetProviderPaymentPriority;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetReservationValidation;
 using SFA.DAS.EmployerCommitments.Application.Queries.ValidateStatusChangeDate;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
@@ -665,50 +663,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             {
                 throw new ValidationException("Unable to edit apprenticeship - status not active or paused");
             }
-        }
-
-        public async Task<OrchestratorResponse<PaymentOrderViewModel>> GetPaymentOrder(string hashedAccountId, string user)
-        {
-            var accountId = HashingService.DecodeValue(hashedAccountId);
-
-            Logger.Trace(
-                $"Getting payment order. AccountId: {accountId}");
-
-            return await CheckUserAuthorization(
-                async () =>
-                {
-                    var data = await Mediator.SendAsync(new GetProviderPaymentPriorityRequest { AccountId = accountId });
-                    var result = _apprenticeshipMapper.MapPayment(data.Data);
-
-                    if (result.Items == null || result.Items.Count() < 2)
-                        return new OrchestratorResponse<PaymentOrderViewModel> { Status = HttpStatusCode.NotFound };
-
-                    return new OrchestratorResponse<PaymentOrderViewModel>
-                    {
-                        Data = result
-                    };
-                }, hashedAccountId, user);
-        }
-
-        public async Task UpdatePaymentOrder(string hashedAccountId, IEnumerable<long> paymentItems, string user, string userName, string userEmail)
-        {
-            var accountId = HashingService.DecodeValue(hashedAccountId);
-
-            Logger.Trace($"Updating payment order. AccountId: {accountId}");
-
-            await CheckUserAuthorization(
-                async () =>
-                {
-                    await Mediator.SendAsync(new UpdateProviderPaymentPriorityCommand
-                    {
-                        AccountId = accountId,
-                        ProviderPriorityOrder = paymentItems,
-                        UserId = user,
-                        UserEmailAddress = userEmail,
-                        UserDisplayName = userName
-                    });
-
-                }, hashedAccountId, user);
         }
 
         private async Task AddOverlapAndDateValidationErrors(ConcurrentDictionary<string, string> errors, ApprenticeshipViewModel apprenticeship, UpdateApprenticeshipViewModel updatedModel)
