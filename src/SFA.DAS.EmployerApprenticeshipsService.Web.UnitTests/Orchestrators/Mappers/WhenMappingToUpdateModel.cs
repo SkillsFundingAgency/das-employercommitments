@@ -8,6 +8,7 @@ using NUnit.Framework;
 
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
+using SFA.DAS.Commitments.Api.Types.TrainingProgramme;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
@@ -158,10 +159,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             MockMediator.Setup(m => m.SendAsync(It.IsAny<GetTrainingProgrammesQueryRequest>()))
                 .ReturnsAsync(
-                    new GetTrainingProgrammesQueryResponse { TrainingProgrammes = new List<ITrainingProgramme>
+                    new GetTrainingProgrammesQueryResponse { TrainingProgrammes = new List<TrainingProgramme>
                                     {
-                        new Framework { Id = "abba-555",  FrameworkCode = 05, PathwayCode = 88, ProgrammeType = 2, Title = "Framework Title"},
-                        new Standard { Id = "abba-666" }
+                        new TrainingProgramme { CourseCode = "abba-555",  Name = "Framework Title"},
+                        new TrainingProgramme { CourseCode = "666" }
                                     }
                     });
 
@@ -182,23 +183,23 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.Mappers
 
             var updated = new ApprenticeshipViewModel
             {
-                TrainingCode = "standard-007"
+                TrainingCode = "007"
             };
 
             MockMediator.Setup(m => m.SendAsync(It.IsAny<GetTrainingProgrammesQueryRequest>()))
                 .ReturnsAsync(
                     new GetTrainingProgrammesQueryResponse
                     {
-                        TrainingProgrammes = new List<ITrainingProgramme>
+                        TrainingProgrammes = new List<TrainingProgramme>
                                     {
-                        new Framework { Id = "abba-555",  FrameworkCode = 05, PathwayCode = 88, ProgrammeType = 2, Title = "Framework Title"},
-                        new Standard { Id = "standard-007", Title = "Standard Title", }
+                        new TrainingProgramme { CourseCode = "abba-555", Name = "Framework Title"},
+                        new TrainingProgramme { CourseCode = "007", Name = "Standard Title", }
                                     }
                     });
 
             var model = await Sut.CompareAndMapToApprenticeshipViewModel(a, updated);
 
-            model.TrainingCode.Should().Be("standard-007");
+            model.TrainingCode.Should().Be("007");
             model.TrainingName.Should().Be("Standard Title");
             model.TrainingType.Should().Be(TrainingType.Standard);
         }

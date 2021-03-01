@@ -25,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model.Data.CurrentProgram.Id != Model.Data.IlrProgram.Id)
+                @if (Model.Data.CurrentProgram.CourseCode != Model.Data.IlrProgram.CourseCode)
                 {
 
                     var period = Model.Data.PeriodStartData.HasValue
@@ -37,8 +37,8 @@
                     <tr>
                         <td>Apprenticeship training course</td>
                         <td>@period</td>
-                        <td>@Model.Data.CurrentProgram.Title</td>
-                        <td>@Model.Data.IlrProgram.Title</td>
+                        <td>@Model.Data.CurrentProgram.Name</td>
+                        <td>@Model.Data.IlrProgram.Name</td>
                     </tr>
                 }
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using FluentValidation.Attributes;
 using SFA.DAS.Commitments.Api.Types.DataLock.Types;
+using SFA.DAS.Commitments.Api.Types.TrainingProgramme;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 
@@ -13,9 +14,9 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
     [Validator(typeof(DataLockStatusViewModelViewModelValidator))]
     public class DataLockStatusViewModel : ViewModelBase
     {
-        public ITrainingProgramme CurrentProgram { get; set; }
+        public TrainingProgramme CurrentProgram { get; set; }
 
-        public ITrainingProgramme IlrProgram { get; set; }
+        public TrainingProgramme IlrProgram { get; set; }
 
         public DateTime? PeriodStartData { get; set; }
 

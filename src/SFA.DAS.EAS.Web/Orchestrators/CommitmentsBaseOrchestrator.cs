@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
+using SFA.DAS.Commitments.Api.Types.TrainingProgramme;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetUserAccountRole;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
@@ -94,7 +95,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
             }
         }
 
-        protected async Task<List<ITrainingProgramme>> GetTrainingProgrammes(bool includeFrameworks)
+        protected async Task<List<TrainingProgramme>> GetTrainingProgrammes(bool includeFrameworks)
         {
             var programmes = await Mediator.SendAsync(new GetTrainingProgrammesQueryRequest
             {

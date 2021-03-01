@@ -55,8 +55,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                         new GetApprenticeshipQueryRequest { AccountId = accountId, ApprenticeshipId = apprenticeshipId });
 
                     var programms = await GetTrainingProgrammes(true);
-                    var currentProgram = programms.Single(m => m.Id == apprenticeship.Apprenticeship.TrainingCode);
-                    var newProgram = programms.Single(m => m.Id == dataLock.IlrTrainingCourseCode);
+                    var currentProgram = programms.Single(m => m.CourseCode == apprenticeship.Apprenticeship.TrainingCode);
+                    var newProgram = programms.Single(m => m.CourseCode == dataLock.IlrTrainingCourseCode);
 
                     return new OrchestratorResponse<DataLockStatusViewModel>
                     {

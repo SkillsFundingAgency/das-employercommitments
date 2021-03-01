@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using MediatR;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Commitments.Api.Types.TrainingProgramme;
 using SFA.DAS.EmployerCommitments.Application.Queries.GetTrainingProgrammes;
 using SFA.DAS.EmployerCommitments.Domain.Interfaces;
-using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
 using SFA.DAS.EmployerCommitments.Infrastructure.Services;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.Validators.Messages;
@@ -30,11 +30,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Validators.ApprenticeshipCre
             MockMediator.Setup(x => x.SendAsync(It.IsAny<GetTrainingProgrammesQueryRequest>()))
                 .ReturnsAsync(new GetTrainingProgrammesQueryResponse
                 {
-                    TrainingProgrammes = new List<ITrainingProgramme>
+                    TrainingProgrammes = new List<TrainingProgramme>
                     {
-                        new Standard
+                        new TrainingProgramme
                         {
-                            Id = "TESTCOURSE",
+                            CourseCode = "TESTCOURSE",
                             EffectiveFrom = new DateTime(2018, 5, 1),
                             EffectiveTo = new DateTime(2018, 7, 1)
                         }

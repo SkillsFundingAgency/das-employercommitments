@@ -20,6 +20,8 @@ namespace SFA.DAS.EmployerCommitments.Web.DependencyResolution
 
             For<HttpClient>().Use(x => GetHttpClient(x));
 
+            For<ITrainingProgrammeApi>().Use<TrainingProgrammeApi>().Ctor<HttpClient>().Is(c => c.GetInstance<HttpClient>());
+            For<IProviderCommitmentsApi>().Use<ProviderCommitmentsApi>().Ctor<HttpClient>().Is(c => c.GetInstance<HttpClient>());
             For<IEmployerCommitmentApi>().Use<EmployerCommitmentApi>().Ctor<HttpClient>().Is(c => c.GetInstance<HttpClient>());
 
             For<IValidationApi>().Use<ValidationApi>()

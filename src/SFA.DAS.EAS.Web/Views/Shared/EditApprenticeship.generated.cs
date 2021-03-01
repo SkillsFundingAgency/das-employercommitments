@@ -364,13 +364,13 @@ WriteLiteral(">Please select</option>\r\n");
 WriteLiteral("                <option");
 
 WriteAttribute("value", Tuple.Create(" value=\"", 5089), Tuple.Create("\"", 5122)
-, Tuple.Create(Tuple.Create("", 5097), Tuple.Create<System.Object, System.Int32>(apprenticeshipProduct.Id
+, Tuple.Create(Tuple.Create("", 5097), Tuple.Create<System.Object, System.Int32>(apprenticeshipProduct.CourseCode
 , 5097), false)
 );
 
 WriteLiteral(" ");
 
-                                                           if (apprenticeshipProduct.Id == Model.Apprenticeship.TrainingCode) { 
+                                                           if (apprenticeshipProduct.CourseCode == Model.Apprenticeship.TrainingCode) { 
                                                                                                                            Write(Html.Raw("selected"));
 
                                                                                                                                                       }
@@ -378,7 +378,7 @@ WriteLiteral(">\r\n");
 
 WriteLiteral("                    ");
 
-               Write(apprenticeshipProduct.Title);
+               Write(apprenticeshipProduct.Name);
 
 WriteLiteral("\r\n                </option>\r\n");
 

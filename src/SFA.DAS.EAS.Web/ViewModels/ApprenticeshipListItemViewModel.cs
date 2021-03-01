@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using SFA.DAS.Commitments.Api.Types.TrainingProgramme;
 using SFA.DAS.Commitments.Api.Types.Validation;
 using SFA.DAS.EmployerCommitments.Application.Extensions;
+using SFA.DAS.EmployerCommitments.Domain.Extensions;
 using SFA.DAS.EmployerCommitments.Domain.Models.ApprenticeshipCourse;
+using SFA.DAS.EmployerCommitments.Web.Extensions;
 
 namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 {
@@ -29,7 +32,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels
 
         public string ApprenticeUln { get; set; }
 
-        public bool IsOverFundingLimit(ITrainingProgramme trainingProgramme)
+        public bool IsOverFundingLimit(TrainingProgramme trainingProgramme)
         {
             if (trainingProgramme == null)
                 return false;
