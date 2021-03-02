@@ -18,16 +18,13 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
     public class WhenUpdatingApprenticeshipStopDate
     {
         private Mock<IEmployerManageApprenticeshipsOrchestrator> _orchestrator;
-
         private EmployerManageApprenticesController _controller;
-
         private Mock<IOwinWrapper> _owinWrapper;
-
         private Mock<ICookieStorageService<FlashMessageViewModel>> _cookieStorage;
-
+        private Mock<ILinkGenerator> _linkGenerator;
         private const string AccountId = "123";
-
         private const string ApprenticeshipId = "456";
+        private const string CommitmentsV2DetailsUrl = "https://commitments.apprenticeships.gov.uk/details";
 
         [SetUp]
         public void Setup()
@@ -35,9 +32,11 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
             _orchestrator = new Mock<IEmployerManageApprenticeshipsOrchestrator>();
             _owinWrapper = new Mock<IOwinWrapper>();
             _cookieStorage = new Mock<ICookieStorageService<FlashMessageViewModel>>();
+            _linkGenerator = new Mock<ILinkGenerator>();
+            _linkGenerator.Setup(l => l.CommitmentsV2Link(It.IsAny<string>())).Returns(CommitmentsV2DetailsUrl);
 
             _controller = new EmployerManageApprenticesController(_orchestrator.Object, _owinWrapper.Object, Mock.Of<IMultiVariantTestingService>(),
-                _cookieStorage.Object, Mock.Of<ILinkGenerator>(), Mock.Of<ILog>());
+                _cookieStorage.Object, _linkGenerator.Object, Mock.Of<ILog>());
         }
 
         [Test]
