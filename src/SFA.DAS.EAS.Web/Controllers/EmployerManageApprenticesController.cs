@@ -106,7 +106,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
                 SetOkayMessage("New stop date confirmed");
                 
-                return RedirectToRoute(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));               
+                return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
             }
 
             var viewmodel = await _orchestrator.GetEditApprenticeshipStopDateViewModel(hashedAccountId, hashedApprenticeshipId, userId);
