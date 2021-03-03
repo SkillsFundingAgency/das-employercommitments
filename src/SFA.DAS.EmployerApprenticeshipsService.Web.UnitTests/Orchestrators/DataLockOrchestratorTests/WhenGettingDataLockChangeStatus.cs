@@ -26,7 +26,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.DataLockOrches
             var userId = "ABC456";
             var uln = "IAMAULN";
 
-            var orchestrator = new DataLockOrchestrator(MockMediator.Object, MockHashingService.Object, MockLogger.Object, MockApprenticeshipMapper.Object);
+            var orchestrator = new DataLockOrchestrator(MockMediator.Object, MockHashingService.Object, MockLogger.Object, MockApprenticeshipMapper.Object, MockLinkGenerator.Object);
 
             var apprenticeshipResponse = new GetApprenticeshipQueryResponse
             {

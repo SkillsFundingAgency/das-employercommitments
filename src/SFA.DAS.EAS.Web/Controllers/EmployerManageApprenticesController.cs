@@ -412,6 +412,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             var viewModel = await _orchestrator
                 .GetViewChangesViewModel(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
+            viewModel.Data.ApprenticeDetailsV2Link = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details");
             return View(viewModel);
         }
 
@@ -428,6 +429,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
                 viewmodel.Data.AddErrorsFromModelState(ModelState);
                 SetErrorMessage(viewmodel, viewmodel.Data.ErrorDictionary);
+                viewmodel.Data.ApprenticeDetailsV2Link = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details");
                 return View(viewmodel);
             }
 
@@ -447,6 +449,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             var viewModel = await _orchestrator
                 .GetViewChangesViewModel(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
+            viewModel.Data.ApprenticeDetailsV2Link =_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details");
             return View(viewModel);
         }
 
@@ -461,6 +464,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                     .GetViewChangesViewModel(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
 
                 viewmodel.Data.AddErrorsFromModelState(ModelState);
+                viewModel.ApprenticeDetailsV2Link = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details");
                 SetErrorMessage(viewmodel, viewmodel.Data.ErrorDictionary);
                 return View(viewmodel);
             }

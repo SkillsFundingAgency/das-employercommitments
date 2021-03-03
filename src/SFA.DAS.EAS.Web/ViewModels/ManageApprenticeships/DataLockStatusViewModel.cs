@@ -45,5 +45,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public string ULN { get; set; }
 
         public string TrainingName { get; set; }
+
+        public string ApprenticeDetailsV2Link { get; set; }
     }
 }

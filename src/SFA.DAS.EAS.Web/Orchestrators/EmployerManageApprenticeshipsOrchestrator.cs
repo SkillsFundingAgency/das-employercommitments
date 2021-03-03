@@ -90,6 +90,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
                 var stopDateEditModel =
                     _apprenticeshipMapper.MapToEditApprenticeshipStopDateViewModel(data.Apprenticeship);
+                stopDateEditModel.ApprenticeDetailsV2Link = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details");
 
                 return new OrchestratorResponse<EditApprenticeshipStopDateViewModel> { Data = stopDateEditModel };
             }, hashedAccountId, externalUserId);
@@ -227,7 +228,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
                     viewModel.OriginalApprenticeship = apprenticeship;
                     viewModel.HashedAccountId = hashedAccountId;
                     viewModel.HashedApprenticeshipId = hashedApprenticeshipId;
-                    viewModel.ProviderName = apprenticeship.ProviderName;
+                    viewModel.ProviderName = apprenticeship.ProviderName;                    
 
                     return new OrchestratorResponse<UpdateApprenticeshipViewModel>
                     {
