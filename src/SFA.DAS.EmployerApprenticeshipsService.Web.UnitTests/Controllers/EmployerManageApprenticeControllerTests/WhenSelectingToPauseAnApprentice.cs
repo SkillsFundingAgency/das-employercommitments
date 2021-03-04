@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageApprenticeControllerTests
 {
@@ -25,6 +26,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
         private Mock<IMultiVariantTestingService> _multiVariantTestingService;
         private Mock<ICookieStorageService<FlashMessageViewModel>> _cookieService;
         private Mock<ILinkGenerator> _linkGenerator;
+        private Mock<ILog> _log;
 
         private const string AccountId = "ACC123";
         private const string ApprenticeshipId = "APP123";
@@ -40,9 +42,10 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
             _multiVariantTestingService = new Mock<IMultiVariantTestingService>();
             _cookieService = new Mock<ICookieStorageService<FlashMessageViewModel>>();
             _linkGenerator = new Mock<ILinkGenerator>();
+            _log = new Mock<ILog>();
 
             _controller = new EmployerManageApprenticesController(
-                _orchestrator.Object, _owinWrapper.Object, _multiVariantTestingService.Object, _cookieService.Object, _linkGenerator.Object);
+                _orchestrator.Object, _owinWrapper.Object, _multiVariantTestingService.Object, _cookieService.Object, _linkGenerator.Object, _log.Object);
         }
 
         [Test]

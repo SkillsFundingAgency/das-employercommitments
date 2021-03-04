@@ -24,6 +24,7 @@ using SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers;
 using SFA.DAS.EmployerCommitments.Web.PublicHashingService;
 using SFA.DAS.EmployerCommitments.Web.Validators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
+using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
@@ -43,6 +44,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
         protected Mock<IFeatureToggle> MockEmployerCommitmentsV2FeatureToggleOn;
         protected Mock<IFeatureToggle> MockTransfersFeatureToggleOn;
         protected Mock<IEmployerAccountService> MockEmployerAccountService;
+        protected Mock<ILinkGenerator> MockLinkGenerator;
 
         protected CommitmentView CommitmentView;
 
@@ -54,6 +56,7 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Orchestrators.EmployerCommit
             MockApprenticeshipMapper = new Mock<IApprenticeshipMapper>();
             MockApprenticeshipCoreValidator = new Mock<IApprenticeshipCoreValidator>();
             MockCommitmentMapper = new Mock<ICommitmentMapper>();
+            MockLinkGenerator = new Mock<ILinkGenerator>();
 
             MockEmployerCommitmentsV2FeatureToggleOn = new Mock<IFeatureToggle>();
             MockEmployerCommitmentsV2FeatureToggleOn.Setup(x => x.FeatureEnabled).Returns(true);

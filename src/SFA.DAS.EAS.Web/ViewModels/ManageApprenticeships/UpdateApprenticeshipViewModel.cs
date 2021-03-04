@@ -39,5 +39,7 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
         public string ChangesConfirmedError => GetErrorMessage(nameof(ChangesConfirmed));
 
         public bool HasHadDataLockSuccess { get; set; }
+
+        public string ApprenticeDetailsV2Link { get; set; }
     }
 }

@@ -18,6 +18,7 @@ using SFA.DAS.EmployerUsers.WebClientComponents;
 using SFA.DAS.EmployerCommitments.Web.Extensions;
 using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
 using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
@@ -27,17 +28,20 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     {
         private readonly IEmployerManageApprenticeshipsOrchestrator _orchestrator;
         private readonly ILinkGenerator _linkGenerator;
+        protected readonly ILog _logger;
 
         public EmployerManageApprenticesController(
             IEmployerManageApprenticeshipsOrchestrator orchestrator,
             IOwinWrapper owinWrapper,
             IMultiVariantTestingService multiVariantTestingService,
             ICookieStorageService<FlashMessageViewModel> flashMessage,
-            ILinkGenerator linkGenerator)
+            ILinkGenerator linkGenerator,
+            ILog logger)            
                 : base(owinWrapper, multiVariantTestingService, flashMessage)
         {
             _orchestrator = orchestrator;
             _linkGenerator = linkGenerator;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -52,31 +56,11 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedApprenticeshipId}/details", Name = "OnProgrammeApprenticeshipDetails")]
-        public async Task<ActionResult> Details(string hashedAccountId, string hashedApprenticeshipId)
+        public ActionResult Details(string hashedAccountId, string hashedApprenticeshipId)
         {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            var model = await _orchestrator
-                .GetApprenticeship(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-
-            var flashMessage = GetFlashMessageViewModelFromCookie();
-
-            if (flashMessage == null && model.Data.Status.Equals("Stopped", StringComparison.InvariantCultureIgnoreCase))
-            {
-                flashMessage = new FlashMessageViewModel { Message = "Apprenticeship stopped", Severity = FlashMessageSeverityLevel.Okay };
-            }
-
-            if (flashMessage != null)
-            {
-                model.FlashMessage = flashMessage;
-            }
-
-            model.Data.ManageApprenticeshipV2PageLink = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices?fromSearch=true");
-            model.Data.EditApprenticeshipEndDateLink = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/editenddate");
-            model.Data.ViewChangesLink = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/view-changes");
-
-            return View(model);
+           _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
+       
+           return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
         }
 
         [HttpGet]
@@ -121,11 +105,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                     userId, OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
 
                 SetOkayMessage("New stop date confirmed");
-
-                return RedirectToRoute("OnProgrammeApprenticeshipDetails");
+                
+                return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
             }
 
             var viewmodel = await _orchestrator.GetEditApprenticeshipStopDateViewModel(hashedAccountId, hashedApprenticeshipId, userId);
+            viewmodel.Data.ApprenticeDetailsV2Link = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details");
 
             return View("editstopdate", new OrchestratorResponse<EditApprenticeshipStopDateViewModel> { Data = viewmodel.Data });
         }
@@ -145,7 +130,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
 
             if (model.ChangeType == ChangeStatusType.None)
-                return RedirectToRoute("OnProgrammeApprenticeshipDetails");
+                return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
 
             return RedirectToRoute("WhenToApplyChange", new { changeType = model.ChangeType.ToString().ToLower() });
         }
@@ -279,7 +264,8 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             }
 
             if (model.ChangeConfirmed.HasValue && !model.ChangeConfirmed.Value)
-                return RedirectToRoute("OnProgrammeApprenticeshipDetails");
+                return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
+            
 
             await _orchestrator.UpdateStatus(hashedAccountId, hashedApprenticeshipId, model, OwinWrapper.GetClaimValue(@"sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
                     OwinWrapper.GetClaimValue(DasClaimTypes.Email));
@@ -292,7 +278,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
             AddFlashMessageToCookie(flashmessage);
 
-            return RedirectToRoute("OnProgrammeApprenticeshipDetails");
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
         }
 
         [HttpGet]
@@ -426,6 +412,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             var viewModel = await _orchestrator
                 .GetViewChangesViewModel(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
+            viewModel.Data.ApprenticeDetailsV2Link = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details");
             return View(viewModel);
         }
 
@@ -442,6 +429,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
                 viewmodel.Data.AddErrorsFromModelState(ModelState);
                 SetErrorMessage(viewmodel, viewmodel.Data.ErrorDictionary);
+                viewmodel.Data.ApprenticeDetailsV2Link = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details");
                 return View(viewmodel);
             }
 
@@ -461,6 +449,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         {
             var viewModel = await _orchestrator
                 .GetViewChangesViewModel(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
+            viewModel.Data.ApprenticeDetailsV2Link =_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details");
             return View(viewModel);
         }
 
@@ -475,6 +464,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
                     .GetViewChangesViewModel(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
 
                 viewmodel.Data.AddErrorsFromModelState(ModelState);
+                viewModel.ApprenticeDetailsV2Link = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details");
                 SetErrorMessage(viewmodel, viewmodel.Data.ErrorDictionary);
                 return View(viewmodel);
             }

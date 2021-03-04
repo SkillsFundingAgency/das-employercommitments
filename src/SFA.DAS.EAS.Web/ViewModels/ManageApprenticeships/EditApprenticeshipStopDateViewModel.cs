@@ -21,6 +21,6 @@ namespace SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships
 
         public DateTimeViewModel NewStopDate { get; set; }
 
-        
+        public string ApprenticeDetailsV2Link { get; set; }        
     }
 }
