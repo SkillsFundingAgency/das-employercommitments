@@ -32,10 +32,6 @@ namespace SFA.DAS.EmployerCommitments.Web
                     "~/comt-assets/javascripts/length-limit.js"
                     ));
 
-            bundles.Add(new ScriptBundle("~/comt-assets/bundles/paymentOrder").Include(
-                  "~/comt-assets/javascripts/payment-order.js"
-                 ));
-
             bundles.Add(new ScriptBundle("~/comt-assets/bundles/jqueryvalcustom").Include(
                       "~/Scripts/jquery.validate.js", "~/Scripts/jquery.validate.unobtrusive.custom.js"));
 

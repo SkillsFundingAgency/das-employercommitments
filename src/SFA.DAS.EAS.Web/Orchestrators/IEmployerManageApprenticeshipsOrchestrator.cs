@@ -44,8 +44,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators
 
         void CreateApprenticeshipViewModelCookie(UpdateApprenticeshipViewModel model);
         Task SubmitReviewApprenticeshipUpdate(string hashedAccountId, string hashedApprenticeshipId, string userId, bool isApproved, string userName, string userEmail);
-        Task<OrchestratorResponse<PaymentOrderViewModel>> GetPaymentOrder(string hashedAccountId, string user);
-        Task UpdatePaymentOrder(string hashedAccountId, IEnumerable<long> paymentItems, string user, string userName, string userEmail);
         Task<bool> AuthorizeRole(string hashedAccountId, string externalUserId, Role[] roles);
         Task<OrchestratorResponse<RedundantApprenticeViewModel>> GetRedundantViewModel(
             string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, DateTime? dateOfChange, WhenToMakeChangeOptions whenToMakeChange, string externalUserId, bool? madeRedundant);
