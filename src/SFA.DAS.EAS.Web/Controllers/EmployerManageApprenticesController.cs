@@ -408,6 +408,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [Route("{hashedApprenticeshipId}/changes/view", Name = "ViewChanges")]
         [OutputCache(CacheProfile = "NoCache")]
+        [Deprecated]
         public async Task<ActionResult> ViewChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
             var viewModel = await _orchestrator
@@ -420,6 +421,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("{hashedApprenticeshipId}/changes/view")]
+        [Deprecated]
         public async Task<ActionResult> ViewChanges(string hashedAccountId, string hashedApprenticeshipId, UpdateApprenticeshipViewModel apprenticeship)
         {
             if (!ModelState.IsValid)
@@ -445,6 +447,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/changes/review", Name = "ReviewChanges")]
+        [Deprecated]
         public async Task<ActionResult> ReviewChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
             var viewModel = await _orchestrator
@@ -456,6 +459,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("{hashedApprenticeshipId}/changes/review")]
+        [Deprecated]
         public async Task<ActionResult> ReviewChanges(string hashedAccountId, string hashedApprenticeshipId, UpdateApprenticeshipViewModel viewModel)
         {
             if (!ModelState.IsValid)
