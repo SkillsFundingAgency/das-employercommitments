@@ -410,7 +410,6 @@
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenDeletingApprenticeship.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenUpdatingAnEmployeeStopDate.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingEditApprenticeshipStopDateViewModel.cs" />
-    <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenGettingProviderPriorityList.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingtLegalEntitySignedAgreement.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingDeleteApprenticeshipConfirmation.cs" />
     <Compile Include="Orchestrators\EmployerCommitmentOrchestrator\WhenGettingFinishEditing.cs" />
@@ -422,7 +421,6 @@
     <Compile Include="Orchestrators\Mappers\WhenMappingApprenticeshipViewModel.cs" />
     <Compile Include="Orchestrators\Mappers\WhenMappingDataLockWithPriceHistory.cs" />
     <Compile Include="Orchestrators\Mappers\WhenMappingEditApprenticeshipStopDateViewModel.cs" />
-    <Compile Include="Orchestrators\Mappers\WhenMappingProviderPaymentPriority.cs" />
     <Compile Include="Orchestrators\Mappers\WhenMappingToUpdateModel.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenResumingAnAwaitingApprenticeshipAfterPauseInLastAcademicYear.cs" />
     <Compile Include="Orchestrators\EmployerManageApprenticeshipsOrchestratorTests\WhenResumingAStartedApprenticeshipAfterPauseInLastAcademicYear.cs" />

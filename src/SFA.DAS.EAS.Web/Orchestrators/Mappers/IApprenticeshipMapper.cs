@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Commitment;
 using SFA.DAS.Commitments.Api.Types.DataLock;
-using SFA.DAS.Commitments.Api.Types.ProviderPayment;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
 
@@ -22,8 +21,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Orchestrators.Mappers
         ApprenticeshipUpdate MapFrom(UpdateApprenticeshipViewModel viewModel);
 
         UpdateApprenticeshipViewModel MapFrom(ApprenticeshipUpdate apprenticeshipUpdate);
-
-        PaymentOrderViewModel MapPayment(IList<ProviderPaymentPriorityItem> data);
 
         IList<PriceChange> MapPriceChanges(IEnumerable<DataLockStatus> dataLockWithOnlyPriceMismatch, List<PriceHistory> history);
 

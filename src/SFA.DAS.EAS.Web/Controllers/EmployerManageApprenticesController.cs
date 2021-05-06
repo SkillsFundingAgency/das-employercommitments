@@ -483,50 +483,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             return RedirectToAction("Details", new { hashedAccountId, hashedApprenticeshipId });
         }
 
-        [HttpGet]
-        [Route("paymentorder", Name = "PaymentOrder")]
-        public async Task<ActionResult> PaymentOrder(string hashedAccountId)
-        {
-            var model = await _orchestrator.GetPaymentOrder(hashedAccountId, OwinWrapper.GetClaimValue("sub"));
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("paymentorder", Name = "PaymentOrderPost")]
-        public async Task<ActionResult> PaymentOrderPost(string hashedAccountId, ProviderPriorityReOrderViewModel newProviderOrder)
-        {
-            if (!ModelState.IsValid)
-            {
-                var newModel = await _orchestrator.GetPaymentOrder(hashedAccountId, OwinWrapper.GetClaimValue("sub"));
-                UpdatePriorityOrder(newModel.Data, newProviderOrder);
-
-                return View("PaymentOrder", newModel);
-            }
-
-            await _orchestrator.UpdatePaymentOrder(hashedAccountId, newProviderOrder.Priorities, OwinWrapper.GetClaimValue("sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
-                    OwinWrapper.GetClaimValue(DasClaimTypes.Email));
-
-            SetSuccessMessage("Payment order updated");
-
-            return RedirectToRoute("CommitmentsHome");
-        }
-
-        private void UpdatePriorityOrder(PaymentOrderViewModel data, ProviderPriorityReOrderViewModel paymentOrderItem)
-        {
-            var newList = new List<PaymentOrderItem>(data.Items.Count());
-
-            for (int i = 0; i < paymentOrderItem.Priorities.Count; i++)
-            {
-                newList.Add(new PaymentOrderItem
-                {
-                    Priority = i + 1,
-                    ProviderId = paymentOrderItem.Priorities[i],
-                    ProviderName = data.Items.Single(x => x.ProviderId == paymentOrderItem.Priorities[i]).ProviderName
-                });
-            }
-        }
-
         private bool AnyChanges(UpdateApprenticeshipViewModel data)
         {
             return

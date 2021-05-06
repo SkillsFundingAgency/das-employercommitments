@@ -276,9 +276,6 @@
     <Compile Include="Commands\UpdateApprenticeshipStopDate\UpdateApprenticeshipStopDateCommandValidator.cs" />
     <Compile Include="Commands\TransferApprovalStatus\TransferApprovalCommand.cs" />
     <Compile Include="Commands\TransferApprovalStatus\TransferApprovalCommandHandler.cs" />
-    <Compile Include="Commands\UpdateProviderPaymentPriority\UpdateProviderPaymentPriorityValidator.cs" />
-    <Compile Include="Commands\UpdateProviderPaymentPriority\UpdateProviderPaymentPriorityCommand.cs" />
-    <Compile Include="Commands\UpdateProviderPaymentPriority\UpdateProviderPaymentPriorityCommandHandler.cs" />
     <Compile Include="Domain\Commitment\CommitmentStatusCalculator.cs" />
     <Compile Include="Domain\Commitment\RequestStatus.cs" />
     <Compile Include="Exceptions\InvalidStateException.cs" />
@@ -346,8 +343,6 @@
     <Compile Include="Queries\GetPriceHistoryQueryRequest\GetPriceHistoryQueryHandler.cs" />
     <Compile Include="Queries\GetPriceHistoryQueryRequest\GetPriceHistoryQueryRequest.cs" />
     <Compile Include="Queries\GetPriceHistoryQueryRequest\GetPriceHistoryQueryResponse.cs" />
-    <Compile Include="Queries\GetProviderPaymentPriority\GetProviderPaymentPriorityHandler.cs" />
-    <Compile Include="Queries\GetProviderPaymentPriority\GetProviderPaymentPriorityRequest.cs" />
     <Compile Include="Queries\GetApprenticeshipDetails\GetApprenticeshipDetailsHandler.cs" />
     <Compile Include="Queries\GetApprenticeshipDetails\GetApprenticeshipDetailsQuery.cs" />
     <Compile Include="Queries\GetApprenticeshipDetails\GetApprenticeshipDetailsQueryValidator.cs" />
@@ -367,7 +362,6 @@
     <Compile Include="Queries\GetOverlappingApprenticeships\GetOverlappingApprenticeshipsQueryHandler.cs" />
     <Compile Include="Queries\GetOverlappingApprenticeships\GetOverlappingApprenticeshipsQueryRequest.cs" />
     <Compile Include="Queries\GetOverlappingApprenticeships\GetOverlappingApprenticeshipsQueryResponse.cs" />
-    <Compile Include="Queries\GetProviderPaymentPriority\GetProviderPaymentPriorityResponse.cs" />
     <Compile Include="Queries\GetProvider\GetProviderQueryHandler.cs" />
     <Compile Include="Queries\GetProvider\GetProviderQueryRequest.cs" />
     <Compile Include="Queries\GetProvider\GetProviderQueryResponse.cs" />

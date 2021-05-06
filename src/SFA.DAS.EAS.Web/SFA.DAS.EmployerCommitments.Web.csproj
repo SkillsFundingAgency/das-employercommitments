@@ -552,7 +552,6 @@
     <Compile Include="Validators\IValidateApprovedApprenticeship.cs" />
     <Compile Include="Validators\TransferConfirmationViewModelValidator.cs" />
     <Compile Include="Validators\TransferApprovalConfirmationViewModelValidator.cs" />
-    <Compile Include="Validators\ProviderPriorityReOrderListValidator.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\RedundantApprenticeViewModel.cs" />
     <Compile Include="ViewModels\TransferRequestViewModel.cs" />
     <Compile Include="ViewModels\TransferConfirmationViewModel.cs" />
@@ -565,7 +564,6 @@
     <Compile Include="ViewModels\ManageApprenticeships\CourseChange.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\DataLockStatusViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\EditApprenticeshipStopDateViewModel.cs" />
-    <Compile Include="ViewModels\ManageApprenticeships\PaymentOrderViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PriceChange.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\PriceHistoryViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\ValidateWhenToApplyChangeResult.cs" />
@@ -614,7 +612,6 @@
     <Compile Include="ViewModels\ManageApprenticeships\ConfirmationStateChangeViewModel.cs" />
     <Compile Include="ViewModels\ManageApprenticeships\WhenToMakeChangeOptions.cs" />
     <Compile Include="ViewModels\NotificationSettingsViewModel.cs" />
-    <Compile Include="ViewModels\ProviderPriorityReOrderViewModel.cs" />
     <Compile Include="ViewModels\SummaryUnsubscribeViewModel.cs" />
     <Compile Include="ViewModels\TransferFundedCohortsListItemViewModel.cs" />
     <Compile Include="ViewModels\TransferFundedCohortsViewModel.cs" />
@@ -1196,7 +1193,6 @@
     <Content Include="Views\EmployerManageApprentices\WhenToApplyChange.cshtml" />
     <Content Include="src\sass\_notifications.scss" />
     <Content Include="src\sass\_navigation.scss" />
-    <Content Include="Views\EmployerManageApprentices\PaymentOrder.cshtml" />
     <Content Include="Views\EmployerCommitments\ViewApprenticeshipEntry.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ViewApprenticeshipEntry.generated.cs</LastGenOutput>
