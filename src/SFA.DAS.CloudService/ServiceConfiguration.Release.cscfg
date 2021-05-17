@@ -28,7 +28,7 @@
       <Setting name="FeatureToggle.ChangeOfProvider" value="__FeatureToggle.ChangeOfProvider__" />
     </ConfigurationSettings>
     <Certificates>
-      <Certificate name="WebSslCert" thumbprint="60F4C3C90D283A45E0AE740189217D51BD163453" thumbprintAlgorithm="sha1" />
+      <Certificate name="WebSslCert" thumbprint="06AD4A9E5624E9C9094037068151DD481EEAC056" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>
   <NetworkConfiguration>
