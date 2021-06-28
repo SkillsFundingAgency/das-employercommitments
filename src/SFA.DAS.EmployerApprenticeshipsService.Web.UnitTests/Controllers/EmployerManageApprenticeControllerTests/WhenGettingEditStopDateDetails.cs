@@ -34,27 +34,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
                 Mock.Of<ICookieStorageService<FlashMessageViewModel>>(), Mock.Of<ILinkGenerator>(), Mock.Of<ILog>());
         }
 
-        [Test]
-        public async Task ThenAccessDeniedViewIsReturnedWhenUserNotAuthorised()
-        {
-            _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(false));
-
-            var result = await _controller.EditStopDate(AccountId, ApprenticeshipId);
-
-            Assert.AreEqual("AccessDenied", (result as ViewResult)?.ViewName);
-        }
-
-        [Test]
-        public async Task ThenOrchestratorIsCalled()
-        {
-            _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(true));
-
-            var response = new OrchestratorResponse<EditApprenticeshipStopDateViewModel>();
-            _orchestrator.Setup(o => o.GetEditApprenticeshipStopDateViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(response)).Verifiable();
-
-            await _controller.EditStopDate(AccountId, ApprenticeshipId);
-
-            _orchestrator.Verify(o => o.GetEditApprenticeshipStopDateViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
-        }
+      
     }
 }
