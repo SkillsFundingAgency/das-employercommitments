@@ -170,8 +170,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             //We should never get here
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
         }
-
-
+        
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedApprenticeshipId}/edit", Name = "EditApprenticeship")]

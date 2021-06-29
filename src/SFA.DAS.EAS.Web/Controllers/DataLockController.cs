@@ -7,6 +7,8 @@ using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.ViewModels.ManageApprenticeships;
+using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
@@ -15,52 +17,39 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     public class DataLockController : BaseController
     {
         private readonly DataLockOrchestrator _orchestrator;
+        protected readonly ILog _logger;
+        private readonly ILinkGenerator _linkGenerator;
 
         public DataLockController(
             IOwinWrapper owinWrapper, 
             IMultiVariantTestingService multiVariantTestingService, 
             ICookieStorageService<FlashMessageViewModel> flashMessage,
-            DataLockOrchestrator orchestrator
+            DataLockOrchestrator orchestrator,
+            ILog logger,
+            ILinkGenerator linkGenerator
             ) : base(owinWrapper, multiVariantTestingService, flashMessage)
         {
             _orchestrator = orchestrator;
+            _logger = logger;
+            _linkGenerator = linkGenerator;
         }
 
         [HttpGet]
         [Route("restart", Name = "RequestRestart")]
-        public async Task<ActionResult> RequestRestart(string hashedAccountId, string hashedApprenticeshipId)
+        public ActionResult RequestRestart(string hashedAccountId, string hashedApprenticeshipId)
         {
-            var model = await _orchestrator.GetDataLockStatusForRestartRequest(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-
-            return View(model);
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/changes/restart"));
         }
 
         [HttpGet]
         [Route("changes", Name = "RequestChanges")]
-        public async Task<ActionResult> RequestChanges(string hashedAccountId, string hashedApprenticeshipId)
+        public ActionResult RequestChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
-            var model = await _orchestrator.GetDataLockChangeStatus(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-
-            return View(model);
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/changes/request"));
         }
 
-        [HttpPost]
-        [Route("confirmchanges", Name = "ConfirmRequestChanges")]
-        public async Task<ActionResult> ConfirmRequestChanges(DataLockStatusViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                model.AddErrorsFromModelState(ModelState);
-                var viewModel = await _orchestrator.GetDataLockChangeStatus(model.HashedAccountId, model.HashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-                viewModel.Data.ErrorDictionary = model.ErrorDictionary;
-                return View("RequestChanges", viewModel);
-            }
-
-            await _orchestrator.ConfirmRequestChanges(model.HashedAccountId, model.HashedApprenticeshipId, OwinWrapper.GetClaimValue("sub"), model.ChangesConfirmed ?? false);
-                     
-
-            return RedirectToAction("Details", "EmployerManageApprentices", new { model.HashedAccountId, model.HashedApprenticeshipId });
-        }
        
     }
 }
