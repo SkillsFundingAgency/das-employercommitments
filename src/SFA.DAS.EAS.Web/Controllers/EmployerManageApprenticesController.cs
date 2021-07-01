@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -58,7 +59,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Route("{hashedApprenticeshipId}/details", Name = "OnProgrammeApprenticeshipDetails")]
         public ActionResult Details(string hashedAccountId, string hashedApprenticeshipId)
         {
-           _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
+           _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
        
            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
         }
@@ -68,7 +69,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [OutputCache(CacheProfile = "NoCache")]
         public  ActionResult ChangeStatus(string hashedAccountId, string hashedApprenticeshipId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/changestatus"));
         }
 
@@ -77,7 +78,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [OutputCache(CacheProfile = "NoCache")]
         public  ActionResult EditStopDate(string hashedAccountId, string hashedApprenticeshipId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/editstopdate"));
         }
         
@@ -146,7 +147,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [OutputCache(CacheProfile = "NoCache")]
         public ActionResult HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, DateTime? dateOfChange, WhenToMakeChangeOptions whenToMakeChange)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/madeRedundant"));
         }
 
@@ -155,7 +156,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [OutputCache(CacheProfile = "NoCache")]
         public  ActionResult StatusChangeConfirmation(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange, bool? madeRedundant)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
 
             switch (changeType)
             {
@@ -177,7 +178,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         public ActionResult Edit(string hashedAccountId, string hashedApprenticeshipId)
         {
 
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{ hashedAccountId}/apprentices/{hashedApprenticeshipId}/ edit"));
         }
 
@@ -186,7 +187,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [OutputCache(CacheProfile = "NoCache")]
         public ActionResult ConfirmChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/edit/confirm"));
         }
 
@@ -240,7 +241,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Deprecated]
         public  ActionResult ViewChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/changes/view"));
         }
         
@@ -276,7 +277,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Deprecated]
         public ActionResult ReviewChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/changes/review"));
         }
 
