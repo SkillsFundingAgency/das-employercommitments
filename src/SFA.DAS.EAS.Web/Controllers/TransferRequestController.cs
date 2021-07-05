@@ -9,6 +9,7 @@ using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.EmployerUsers.WebClientComponents;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
@@ -17,78 +18,35 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     public class TransferRequestController : BaseEmployerController
     {
         private readonly ILinkGenerator _linkGenerator;
+        protected readonly ILog _logger;
 
         public TransferRequestController(EmployerCommitmentsOrchestrator orchestrator, IOwinWrapper owinWrapper,
             IMultiVariantTestingService multiVariantTestingService, ICookieStorageService<FlashMessageViewModel> flashMessage, 
-            ICookieStorageService<string> lastCohortCookieStorageService, ILinkGenerator linkGenerator)
+            ICookieStorageService<string> lastCohortCookieStorageService, ILinkGenerator linkGenerator,
+            ILog logger)
             : base(orchestrator, owinWrapper, multiVariantTestingService, flashMessage, lastCohortCookieStorageService)
         {
             _linkGenerator = linkGenerator;
+            _logger = logger;
         }
 
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("sender/transfers/{hashedTransferRequestId}")]
-        public async Task<ActionResult> TransferDetails(string hashedAccountId, string hashedTransferRequestId)
+        public ActionResult TransferDetails(string hashedAccountId, string hashedTransferRequestId)
         {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            var model = await Orchestrator.GetTransferRequestDetails(hashedAccountId, CallerType.TransferSender, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
-
-            return View(model);
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
+            return Redirect(_linkGenerator.CommitmentsV2Link($"accounts/{hashedAccountId}/sender/transfers/{hashedTransferRequestId}"));
         }
 
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("receiver/transfers/{hashedTransferRequestId}")]
-        public async Task<ActionResult> TransferDetailsForReceiver(string hashedAccountId, string hashedTransferRequestId)
+        public ActionResult TransferDetailsForReceiver(string hashedAccountId, string hashedTransferRequestId)
         {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            var model = await Orchestrator.GetTransferRequestDetails(hashedAccountId, CallerType.TransferReceiver, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
-
-            return View(model);
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
+            return Redirect(_linkGenerator.CommitmentsV2Link($"accounts/{hashedAccountId}/receiver/transfers/{hashedTransferRequestId}"));
         }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [OutputCache(CacheProfile = "NoCache")]
-        [Route("sender/transfers/{hashedTransferRequestId}/approve")]
-        public async Task<ActionResult> TransferApproval(string hashedAccountId, string hashedTransferRequestId,  TransferApprovalConfirmationViewModel viewModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                var model = await Orchestrator.GetTransferRequestDetails(hashedAccountId, CallerType.TransferSender, hashedTransferRequestId, OwinWrapper.GetClaimValue(@"sub"));
-
-                return View("TransferDetails", model);
-            }
-            await Orchestrator.SetTransferRequestApprovalStatus(hashedAccountId, viewModel.HashedCohortReference, hashedTransferRequestId, viewModel, OwinWrapper.GetClaimValue(@"sub"),
-                OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
-                OwinWrapper.GetClaimValue(DasClaimTypes.Email));
-
-            var status = (bool)viewModel.ApprovalConfirmed ? "approved" : "rejected";
-
-            return View("TransferConfirmation", new TransferConfirmationViewModel { TransferApprovalStatus = status, TransferReceiverName = viewModel.TransferReceiverName});
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("sender/transfers/{hashedTransferRequestId}/confirmation")]
-        public ActionResult TransferConfirmation(string hashedAccountId, TransferConfirmationViewModel request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("TransferConfirmation", request);
-            }
-
-            var url = request.SelectedOption == TransferConfirmationViewModel.Option.Homepage
-                ? _linkGenerator.AccountsLink($"accounts/{hashedAccountId}/teams")
-                : _linkGenerator.AccountsLink($"accounts/{hashedAccountId}/transfers");
-
-            return Redirect(url);
-        }
+        
     }
 }
