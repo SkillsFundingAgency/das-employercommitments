@@ -14,7 +14,6 @@ namespace SFA.DAS.EmployerCommitments.Domain.Configuration
         public string AllowedHashstringCharacters { get; set; }
         public string PublicHashstring { get; set; }
         public string PublicAllowedHashstringCharacters { get; set; }
-        public ApprenticeshipInfoServiceConfiguration ApprenticeshipInfoService { get; set; }
 		public CommitmentNotificationConfiguration CommitmentNotification { get; set; }
         public PasAccountApiConfiguration ProviderAccountUserApi { get; set; }
     }
@@ -35,11 +34,6 @@ namespace SFA.DAS.EmployerCommitments.Domain.Configuration
 
         public string ClientToken { get; set; }
 
-    }
-
-    public class ApprenticeshipInfoServiceConfiguration : IApprenticeshipInfoServiceConfiguration
-    {
-        public string BaseUrl { get; set; }
     }
 
     public class PasAccountApiConfiguration : PAS.Account.Api.Client.IPasAccountApiConfiguration
