@@ -46,9 +46,6 @@
     "ClientToken": "[TOKEN]",
     "BaseUrl": "https://local.tasks.gov.uk/"
   },
-  "ApprenticeshipInfoService": {
-    "BaseUrl": "http://das-prd-apprenticeshipinfoservice.cloudapp.net/"
-  },
   "PostcodeAnywhere": {
     "Key": "",
     "FindPartsBaseUrl": "http://services.postcodeanywhere.co.uk/PostcodeAnywhere/Interactive/FindByParts/v1.00/json.ws?",
