@@ -8,6 +8,7 @@ using SFA.DAS.EmployerCommitments.Web.Controllers;
 using SFA.DAS.EmployerCommitments.Web.Orchestrators;
 using SFA.DAS.EmployerCommitments.Web.ViewModels;
 using SFA.DAS.EmployerUrlHelper;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitmentsControllerTests
 {
@@ -23,9 +24,14 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerCommitme
 
             Orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).ReturnsAsync(true);
 
-            Controller = new EmployerCommitmentsController(Orchestrator.Object, Mock.Of<IOwinWrapper>(), Mock.Of<IMultiVariantTestingService>(),
-                Mock.Of<ICookieStorageService<FlashMessageViewModel>>(), Mock.Of<ICookieStorageService<string>>(), Mock.Of<IFeatureToggleService>(), Mock.Of<ILinkGenerator
-                >());
+            Controller = new EmployerCommitmentsController(Orchestrator.Object,
+                Mock.Of<IOwinWrapper>(),
+                Mock.Of<IMultiVariantTestingService>(),
+                Mock.Of<ICookieStorageService<FlashMessageViewModel>>(),
+                Mock.Of<ICookieStorageService<string>>(),
+                Mock.Of<IFeatureToggleService>(),
+                Mock.Of<ILinkGenerator>(),
+                Mock.Of<ILog>());
         }
     }
 }

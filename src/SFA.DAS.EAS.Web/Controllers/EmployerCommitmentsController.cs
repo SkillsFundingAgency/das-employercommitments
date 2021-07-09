@@ -18,6 +18,7 @@ using SFA.DAS.EmployerUsers.WebClientComponents;
 using SFA.DAS.EmployerCommitments.Web.Plumbing.Mvc;
 using SFA.DAS.EmployerUrlHelper;
 using SFA.DAS.EmployerUrlHelper.Mvc;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.EmployerCommitments.Web.Controllers
 {
@@ -27,6 +28,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
     {
         private readonly IFeatureToggleService _featureToggleService;
         private readonly ILinkGenerator _linkGenerator;
+        protected readonly ILog _logger;
 
         public EmployerCommitmentsController(
             IEmployerCommitmentsOrchestrator orchestrator,
@@ -35,11 +37,13 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
             ICookieStorageService<FlashMessageViewModel> flashMessage,
             ICookieStorageService<string> lastCohortCookieStorageService,
             IFeatureToggleService featureToggleService,
-            ILinkGenerator linkGenerator)
+            ILinkGenerator linkGenerator,
+            ILog logger)
             : base(orchestrator, owinWrapper, multiVariantTestingService, flashMessage, lastCohortCookieStorageService)
         {
             _featureToggleService = featureToggleService;
             _linkGenerator = linkGenerator;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -157,120 +161,36 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("Inform")]
-        public async Task<ActionResult> Inform(string hashedAccountId)
+        public ActionResult Inform(string hashedAccountId)
         {
             SaveRequestStatusInCookie(RequestStatus.None);
-            var response = await Orchestrator.GetInform(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
 
-            return View(response);
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/unapproved/Inform"));
         }
 
         [HttpGet]
         [Route("transferConnection/create")]
-        public async Task<ActionResult> SelectTransferConnection(string hashedAccountId)
+        public ActionResult SelectTransferConnection(string hashedAccountId)
         {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            var response = await Orchestrator
-                .GetTransferConnections(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
-
-            if (response.Data.TransferConnections.Any())
-            {
-                return View(response);
-            }
-            return RedirectToAction("SelectLegalEntity");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("transferConnection/create")]
-        public async Task<ActionResult> SetTransferConnection(string hashedAccountId, SelectTransferConnectionViewModel selectedTransferConnection)
-        {
-            if (!ModelState.IsValid)
-            {
-                var response = await Orchestrator.GetTransferConnections(hashedAccountId, OwinWrapper.GetClaimValue(@"sub"));
-                return View("SelectTransferConnection", response);
-            }
-
-            var transferConnectionCode =
-                selectedTransferConnection.TransferConnectionCode.Equals("None",
-                    StringComparison.InvariantCultureIgnoreCase)
-                    ? null
-                    : selectedTransferConnection.TransferConnectionCode;
-
-            return RedirectToAction("SelectLegalEntity", new { transferConnectionCode });
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/unapproved/transferConnection/create"));
         }
 
         [HttpGet]
         [Route("legalEntity/create")]
-        public async Task<ActionResult> SelectLegalEntity(string hashedAccountId, string transferConnectionCode, string cohortRef = "")
+        public ActionResult SelectLegalEntity(string hashedAccountId, string transferConnectionCode, string cohortRef = "")
         {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            var response = await Orchestrator.GetLegalEntities(hashedAccountId, transferConnectionCode, cohortRef, OwinWrapper.GetClaimValue(@"sub"));
-
-            if (response.Data.LegalEntities == null || !response.Data.LegalEntities.Any())
-                throw new InvalidStateException($"No legal entities associated with account {hashedAccountId}");
-
-            if (response.Data.LegalEntities.Count() > 1)
-                return View(response);
-
-            var autoSelectLegalEntity = response.Data.LegalEntities.First();
-
-            var hasSigned = EmployerCommitmentsOrchestrator.HasSignedAgreement(
-                autoSelectLegalEntity, !string.IsNullOrWhiteSpace(transferConnectionCode));
-
-            if (hasSigned)
-            {
-                return RedirectToAction("SearchProvider", new SelectLegalEntityViewModel
-                {
-                    TransferConnectionCode = transferConnectionCode,
-                    CohortRef = response.Data.CohortRef,
-                    LegalEntityCode = autoSelectLegalEntity.Code,
-                    // no need to store LegalEntities, as the property is only read in the SelectLegalEntity view, which we're now skipping
-                });
-            }
-
-            return RedirectToAction("AgreementNotSigned", new 
-            {
-                HashedAccountId = hashedAccountId,
-                LegalEntityCode = autoSelectLegalEntity.Code,
-                TransferConnectionCode = transferConnectionCode,
-                CohortRef = response.Data.CohortRef,
-                HasSignedAgreement = false,
-                LegalEntityName = autoSelectLegalEntity.Name ?? string.Empty
-            });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("legalEntity/create")]
-        public async Task<ActionResult> SetLegalEntity(string hashedAccountId, SelectLegalEntityViewModel selectedLegalEntity)
-        {
-            if (!ModelState.IsValid)
-            {
-                var response = await Orchestrator.GetLegalEntities(hashedAccountId,
-                    selectedLegalEntity.TransferConnectionCode, selectedLegalEntity.CohortRef,
-                    OwinWrapper.GetClaimValue(@"sub"));
-
-                return View("SelectLegalEntity", response);
-            }
-
-            var agreement = await Orchestrator.GetLegalEntitySignedAgreementViewModel(hashedAccountId,
-                selectedLegalEntity.TransferConnectionCode, selectedLegalEntity.LegalEntityCode, selectedLegalEntity.CohortRef, OwinWrapper.GetClaimValue(@"sub"));
-
-            if (agreement.Data.HasSignedAgreement)
-                return RedirectToAction("SearchProvider", selectedLegalEntity);
-
-            return RedirectToAction("AgreementNotSigned", agreement.Data);
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/unapproved/legalEntity/create"));
         }
 
         [HttpGet]
         [Route("provider/create")]
         public async Task<ActionResult> SearchProvider(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string cohortRef)
         {
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
+
             var legalEntities = await Orchestrator.GetLegalEntities(hashedAccountId, string.Empty, string.Empty, OwinWrapper.GetClaimValue(@"sub"));
             var legalEntity = legalEntities.Data.LegalEntities.Single(x => x.Code == legalEntityCode);
             var hashedAleId = legalEntity.AccountLegalEntityPublicHashedId;
@@ -355,15 +275,15 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("{legalEntityCode}/AgreementNotSigned")]
-        public async Task<ActionResult> AgreementNotSigned(LegalEntitySignedAgreementViewModel viewModel)
+        public async Task<ActionResult> AgreementNotSignedAsync(LegalEntitySignedAgreementViewModel viewModel)
         {
-            async Task<bool> IsLevyEmployer()
-            {
-                return (await Orchestrator.GetApprenticeshipEmployerType(viewModel.HashedAccountId)) == ApprenticeshipEmployerType.Levy;
-            }
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
 
-            viewModel.CanContinueAnyway = await IsLevyEmployer();
-            return View(viewModel);
+            var legalEntities = await Orchestrator.GetLegalEntities(viewModel.HashedAccountId, string.Empty, string.Empty, OwinWrapper.GetClaimValue(@"sub"));
+            var legalEntity = legalEntities.Data.LegalEntities.Single(x => x.Code == viewModel.LegalEntityCode);
+            var hashedAleId = legalEntity.AccountLegalEntityPublicHashedId;
+
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{viewModel.HashedAccountId}/unapproved/AgreementNotSigned?LegalEntityId={legalEntity.Id}&CohortRef={viewModel.CohortRef}&HasSignedMinimumRequiredAgreementVersion={viewModel.HasSignedAgreement}&LegalEntityName={viewModel.LegalEntityName}&AccountLegalEntityPublicHashedId={hashedAleId}"));
         }
 
         [HttpGet]
