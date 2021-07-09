@@ -39,53 +39,8 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
                 _cookieStorage.Object, _linkGenerator.Object, Mock.Of<ILog>());
         }
 
-        [Test]
-        public async Task ThenAccessDeniedViewIsReturnedWhenUserNotAuthorised()
-        {
-            _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(false));
-
-            var result = await _controller.UpdateApprenticeshipStopDate(AccountId, ApprenticeshipId, null);
-
-            Assert.AreEqual("AccessDenied", (result as ViewResult)?.ViewName);
-        }
-
-
-        [Test]
-        public async Task ThenOrchestratorWillUpdateStopDate()
-        {
-            _owinWrapper.Setup(x => x.GetClaimValue(It.IsAny<string>())).Returns(string.Empty);
-            _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(true));
-            _orchestrator.Setup(o => o.GetEditApprenticeshipStopDateViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(new OrchestratorResponse<EditApprenticeshipStopDateViewModel>()));
-
-            var response = new OrchestratorResponse<EditApprenticeshipStopDateViewModel> { Data = new EditApprenticeshipStopDateViewModel() };
-            _orchestrator.Setup(o => o.GetEditApprenticeshipStopDateViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(response)).Verifiable();
-
-            var model = new EditApprenticeshipStopDateViewModel();
-
-            await _controller.UpdateApprenticeshipStopDate(AccountId, ApprenticeshipId, model);
-
-            _orchestrator.Verify(x => x.UpdateStopDate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<EditApprenticeshipStopDateViewModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
-        }
-
-        [Test]
-        public async Task ThenCookieWillBeUpdated()
-        {
-            _owinWrapper.Setup(x => x.GetClaimValue(It.IsAny<string>())).Returns(string.Empty);
-            _orchestrator.Setup(o => o.AuthorizeRole(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Role[]>())).Returns(() => Task.FromResult(true));
-            _orchestrator.Setup(o => o.GetEditApprenticeshipStopDateViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(new OrchestratorResponse<EditApprenticeshipStopDateViewModel>()));
-
-            var response = new OrchestratorResponse<EditApprenticeshipStopDateViewModel> { Data = new EditApprenticeshipStopDateViewModel() };
-            _orchestrator.Setup(o => o.GetEditApprenticeshipStopDateViewModel(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(response)).Verifiable();
-
-            _cookieStorage.Setup(x => x.Delete(It.IsAny<string>())).Verifiable();
-            _cookieStorage.Setup(x => x.Create(It.IsAny<FlashMessageViewModel>(), It.IsAny<string>(), It.IsAny<int>())).Verifiable();
-
-            var model = new EditApprenticeshipStopDateViewModel();
-
-            await _controller.UpdateApprenticeshipStopDate(AccountId, ApprenticeshipId, model);
-
-            _cookieStorage.Verify(x => x.Delete(It.IsAny<string>()));
-            _cookieStorage.Verify(x => x.Create(It.IsAny<FlashMessageViewModel>(), It.IsAny<string>(), It.IsAny<int>()));
-        }
+       
+       
+      
     }
 }
