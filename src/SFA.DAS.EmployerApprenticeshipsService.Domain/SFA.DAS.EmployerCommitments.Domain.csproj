@@ -341,7 +341,6 @@
     <Compile Include="Configuration\ReferenceDataApiClientConfiguration.cs" />
     <Compile Include="Extensions\NullableDateTimeExtension.cs" />
     <Compile Include="Models\ApprenticeshipCourse\FrameworksView.cs" />
-    <Compile Include="Interfaces\IApprenticeshipInfoServiceConfiguration.cs" />
     <Compile Include="Interfaces\IApprenticeshipInfoService.cs" />
     <Compile Include="Interfaces\IAuditService.cs" />
     <Compile Include="Interfaces\ICache.cs" />
