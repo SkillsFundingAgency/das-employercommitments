@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -58,7 +59,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Route("{hashedApprenticeshipId}/details", Name = "OnProgrammeApprenticeshipDetails")]
         public ActionResult Details(string hashedAccountId, string hashedApprenticeshipId)
         {
-           _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer}");
+           _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
        
            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
         }
@@ -66,75 +67,21 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/statuschange", Name = "ChangeStatusSelectOption")]
         [OutputCache(CacheProfile = "NoCache")]
-        public async Task<ActionResult> ChangeStatus(string hashedAccountId, string hashedApprenticeshipId)
+        public  ActionResult ChangeStatus(string hashedAccountId, string hashedApprenticeshipId)
         {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/changestatus"));
         }
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/editstopdate", Name = "EditStopDateOption")]
         [OutputCache(CacheProfile = "NoCache")]
-        public async Task<ActionResult> EditStopDate(string hashedAccountId, string hashedApprenticeshipId)
+        public  ActionResult EditStopDate(string hashedAccountId, string hashedApprenticeshipId)
         {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            var response = await _orchestrator.GetEditApprenticeshipStopDateViewModel(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-
-            return View(response);
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/editstopdate"));
         }
-
-        [HttpPost]
-        [Route("{hashedApprenticeshipId}/details/editstopdate", Name = "PostEditStopDate")]
-        public async Task<ActionResult> UpdateApprenticeshipStopDate(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date")] EditApprenticeshipStopDateViewModel model)
-        {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            var userId = OwinWrapper.GetClaimValue(@"sub");
-
-            if (ModelState.IsValid)
-            {
-                await _orchestrator.UpdateStopDate(
-                    hashedAccountId,
-                    hashedApprenticeshipId,
-                    model,
-                    userId, OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName), OwinWrapper.GetClaimValue(DasClaimTypes.Email));
-
-                SetOkayMessage("New stop date confirmed");
-                
-                return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
-            }
-
-            var viewmodel = await _orchestrator.GetEditApprenticeshipStopDateViewModel(hashedAccountId, hashedApprenticeshipId, userId);
-            viewmodel.Data.ApprenticeDetailsV2Link = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details");
-
-            return View("editstopdate", new OrchestratorResponse<EditApprenticeshipStopDateViewModel> { Data = viewmodel.Data });
-        }
-
-        [HttpPost]
-        [Route("{hashedApprenticeshipId}/details/statuschange", Name = "PostChangeStatusSelectOption")]
-        public async Task<ActionResult> ChangeStatus(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusViewModel model)
-        {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            if (!ModelState.IsValid)
-            {
-                var response = await _orchestrator.GetChangeStatusChoiceNavigation(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-
-                return View(response);
-            }
-
-            if (model.ChangeType == ChangeStatusType.None)
-                return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
-
-            return RedirectToRoute("WhenToApplyChange", new { changeType = model.ChangeType.ToString().ToLower() });
-        }
-
+        
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/whentoapply", Name = "WhenToApplyChange")]
         [OutputCache(CacheProfile = "NoCache")]
@@ -198,167 +145,50 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/maderedundant", Name = "MadeRedundant")]
         [OutputCache(CacheProfile = "NoCache")]
-        public async Task<ActionResult> HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, DateTime? dateOfChange, WhenToMakeChangeOptions whenToMakeChange)
+        public ActionResult HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, DateTime? dateOfChange, WhenToMakeChangeOptions whenToMakeChange)
         {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            var response = await _orchestrator.GetRedundantViewModel(hashedAccountId, hashedApprenticeshipId, changeType, dateOfChange, whenToMakeChange, OwinWrapper.GetClaimValue(@"sub"), null);
-
-            return View(response);
-        }
-
-        [HttpPost]
-        [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/maderedundant")]
-        public async Task<ActionResult> HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date,Redundant")] ChangeStatusViewModel model)
-        {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            if (!ModelState.IsValid)
-            {
-                var viewResponse = await _orchestrator.GetRedundantViewModel(hashedAccountId, hashedApprenticeshipId, model.ChangeType.Value,
-                    model.DateOfChange.DateTime, model.WhenToMakeChange, OwinWrapper.GetClaimValue(@"sub"), model.MadeRedundant);
-                
-                return View(new OrchestratorResponse<RedundantApprenticeViewModel>
-                {
-                    Data = viewResponse.Data
-                });
-            }
-
-            return RedirectToRoute("StatusChangeConfirmation", new
-            {
-                changeType = model.ChangeType,
-                whenToMakeChange = model.WhenToMakeChange,
-                dateOfChange = model.DateOfChange.DateTime,
-                madeRedundant = model.MadeRedundant
-            });
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/madeRedundant"));
         }
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/confirm", Name = "StatusChangeConfirmation")]
         [OutputCache(CacheProfile = "NoCache")]
-        public async Task<ActionResult> StatusChangeConfirmation(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange, bool? madeRedundant)
+        public  ActionResult StatusChangeConfirmation(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange, bool? madeRedundant)
         {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
 
-            var response = await _orchestrator.GetChangeStatusConfirmationViewModel(hashedAccountId, hashedApprenticeshipId, changeType, whenToMakeChange, dateOfChange, madeRedundant, OwinWrapper.GetClaimValue(@"sub"));
-
-            return View(response);
-        }
-
-
-        [HttpPost]
-        [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/confirm", Name = "PostStatusChangeConfirmation")]
-        public async Task<ActionResult> StatusChangeConfirmation(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date,Confirm")] ChangeStatusViewModel model)
-        {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            if (!ModelState.IsValid)
+            switch (changeType)
             {
-                var response = await _orchestrator.GetChangeStatusConfirmationViewModel(hashedAccountId, hashedApprenticeshipId, model.ChangeType.Value, model.WhenToMakeChange, model.DateOfChange.DateTime, model.MadeRedundant, OwinWrapper.GetClaimValue(@"sub"));
-
-                return View(response);
+                case ChangeStatusType.Pause:
+                    return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/pause"));
+                case ChangeStatusType.Resume:
+                    return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/resume"));
+                case ChangeStatusType.Stop:
+                    return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/confirmStop"));
             }
 
-            if (model.ChangeConfirmed.HasValue && !model.ChangeConfirmed.Value)
-                return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
-            
-
-            await _orchestrator.UpdateStatus(hashedAccountId, hashedApprenticeshipId, model, OwinWrapper.GetClaimValue(@"sub"), OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName),
-                    OwinWrapper.GetClaimValue(DasClaimTypes.Email));
-
-            var flashmessage = new FlashMessageViewModel
-            {
-                Message = GetStatusMessage(model.ChangeType),
-                Severity = FlashMessageSeverityLevel.Okay
-            };
-
-            AddFlashMessageToCookie(flashmessage);
-
+            //We should never get here
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
         }
-
+        
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedApprenticeshipId}/edit", Name = "EditApprenticeship")]
-        public async Task<ActionResult> Edit(string hashedAccountId, string hashedApprenticeshipId)
+        public ActionResult Edit(string hashedAccountId, string hashedApprenticeshipId)
         {
-            if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
 
-            var model = await _orchestrator.GetApprenticeshipForEdit(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-
-            var flashMessage = GetFlashMessageViewModelFromCookie();
-
-            if (flashMessage?.ErrorMessages != null && flashMessage.ErrorMessages.Any())
-            {
-                model.FlashMessage = flashMessage;
-                model.Data.Apprenticeship.ErrorDictionary = flashMessage.ErrorMessages;
-            }
-
-            return View(model);
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{ hashedAccountId}/apprentices/{hashedApprenticeshipId}/ edit"));
         }
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/changes/confirm")]
         [OutputCache(CacheProfile = "NoCache")]
-        public async Task<ActionResult> ConfirmChanges(string hashedAccountId, string hashedApprenticeshipId)
+        public ActionResult ConfirmChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
-            var model = await _orchestrator.GetOrchestratorResponseUpdateApprenticeshipViewModelFromCookie(hashedAccountId, hashedApprenticeshipId);
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("{hashedApprenticeshipId}/changes/confirm")]
-        public async Task<ActionResult> ConfirmChanges(ApprenticeshipViewModel apprenticeship)
-        {
-            if (!await IsUserRoleAuthorized(apprenticeship.HashedAccountId, Role.Owner, Role.Transactor))
-                return View("AccessDenied");
-
-            if (!ModelState.IsValid)
-            {
-                apprenticeship.AddErrorsFromModelState(ModelState);
-            }
-
-            var model = await _orchestrator.GetConfirmChangesModel(
-                apprenticeship.HashedAccountId,
-                apprenticeship.HashedApprenticeshipId,
-                OwinWrapper.GetClaimValue(@"sub"),
-                apprenticeship);
-
-            var validatorResult = await _orchestrator.ValidateApprenticeship(apprenticeship, model.Data);
-            if (validatorResult.Any())
-            {
-                apprenticeship.AddErrorsFromDictionary(validatorResult);
-            }
-
-            if (apprenticeship.ErrorDictionary.Any())
-            {
-                var viewModel = await _orchestrator.GetApprenticeshipForEdit(apprenticeship.HashedAccountId, apprenticeship.HashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-                viewModel.Data.Apprenticeship = apprenticeship;
-                SetErrorMessage(viewModel, viewModel.Data.Apprenticeship.ErrorDictionary);
-
-                return View("Edit", viewModel);
-            }
-
-            if (!AnyChanges(model.Data))
-            {
-                var viewModel = await _orchestrator.GetApprenticeshipForEdit(apprenticeship.HashedAccountId, apprenticeship.HashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-                viewModel.Data.Apprenticeship = apprenticeship;
-                viewModel.Data.Apprenticeship.ErrorDictionary.Add("NoChangesRequested", "No changes made");
-
-                SetErrorMessage(viewModel, viewModel.Data.Apprenticeship.ErrorDictionary);
-
-                return View("Edit", viewModel);
-            }
-
-            _orchestrator.CreateApprenticeshipViewModelCookie(model.Data);
-
-            return RedirectToAction("ConfirmChanges");
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/edit/confirm"));
         }
 
         [HttpPost]
@@ -409,15 +239,12 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Route("{hashedApprenticeshipId}/changes/view", Name = "ViewChanges")]
         [OutputCache(CacheProfile = "NoCache")]
         [Deprecated]
-        public async Task<ActionResult> ViewChanges(string hashedAccountId, string hashedApprenticeshipId)
+        public  ActionResult ViewChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
-            var viewModel = await _orchestrator
-                .GetViewChangesViewModel(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-            viewModel.Data.ApprenticeDetailsV2Link = _linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details");
-            return View(viewModel);
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/changes/view"));
         }
-
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("{hashedApprenticeshipId}/changes/view")]
@@ -448,12 +275,10 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [Route("{hashedApprenticeshipId}/changes/review", Name = "ReviewChanges")]
         [Deprecated]
-        public async Task<ActionResult> ReviewChanges(string hashedAccountId, string hashedApprenticeshipId)
+        public ActionResult ReviewChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
-            var viewModel = await _orchestrator
-                .GetViewChangesViewModel(hashedAccountId, hashedApprenticeshipId, OwinWrapper.GetClaimValue(@"sub"));
-            viewModel.Data.ApprenticeDetailsV2Link =_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details");
-            return View(viewModel);
+            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
+            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/changes/review"));
         }
 
         [HttpPost]
