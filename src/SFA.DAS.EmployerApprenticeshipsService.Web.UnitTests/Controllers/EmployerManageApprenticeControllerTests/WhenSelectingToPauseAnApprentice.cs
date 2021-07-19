@@ -48,23 +48,6 @@ namespace SFA.DAS.EmployerCommitments.Web.UnitTests.Controllers.EmployerManageAp
                 _orchestrator.Object, _owinWrapper.Object, _multiVariantTestingService.Object, _cookieService.Object, _linkGenerator.Object, _log.Object);
         }
 
-        [Test]
-        public async Task WhenRequestingChangeStatusPage_AndStatusIsNotCurrentlyPaused_ThenRedirectToV2ChangeStatusPage()
-        {
-            _owinWrapper.Setup(o => o.GetClaimValue(@"sub"))
-                .Returns("ClaimValue");
-            _orchestrator.Setup(a => a.AuthorizeRole(AccountId, It.IsAny<string>(), new Role[] { Role.Owner, Role.Transactor }))
-                .ReturnsAsync(true);
-            _orchestrator.Setup(r => r.GetChangeStatusChoiceNavigation(AccountId, ApprenticeshipId, It.IsAny<string>()))
-                .ReturnsAsync(GetOrchestratorResponse());
-            _linkGenerator.Setup(l => l.CommitmentsV2Link(It.IsAny<string>())).Returns(CommitmentsV2PauseUrl);
-
-            var response = await _controller.ChangeStatus(AccountId, ApprenticeshipId);
-            RedirectResult result = (RedirectResult)response;
-            
-            Assert.AreEqual(CommitmentsV2PauseUrl, result.Url);
-        }
-
         private OrchestratorResponse<ChangeStatusChoiceViewModel> GetOrchestratorResponse()
         {
             return new OrchestratorResponse<ChangeStatusChoiceViewModel>
