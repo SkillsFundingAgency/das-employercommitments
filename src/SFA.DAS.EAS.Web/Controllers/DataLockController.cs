@@ -36,20 +36,18 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("restart", Name = "RequestRestart")]
+        [Deprecated]
         public ActionResult RequestRestart(string hashedAccountId, string hashedApprenticeshipId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/changes/restart"));
         }
 
         [HttpGet]
         [Route("changes", Name = "RequestChanges")]
+        [Deprecated]
         public ActionResult RequestChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/changes/request"));
         }
-
-       
     }
 }

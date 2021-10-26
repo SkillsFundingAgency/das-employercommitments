@@ -161,36 +161,34 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("Inform")]
+        [Deprecated]
         public ActionResult Inform(string hashedAccountId)
         {
             SaveRequestStatusInCookie(RequestStatus.None);
-
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/unapproved/Inform"));
         }
 
         [HttpGet]
         [Route("transferConnection/create")]
+        [Deprecated]
         public ActionResult SelectTransferConnection(string hashedAccountId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/unapproved/transferConnection/create"));
         }
 
         [HttpGet]
         [Route("legalEntity/create")]
+        [Deprecated]
         public ActionResult SelectLegalEntity(string hashedAccountId, string transferConnectionCode, string cohortRef = "")
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/unapproved/legalEntity/create"));
         }
 
         [HttpGet]
         [Route("provider/create")]
+        [Deprecated]
         public async Task<ActionResult> SearchProvider(string hashedAccountId, string transferConnectionCode, string legalEntityCode, string cohortRef)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
-
             var legalEntities = await Orchestrator.GetLegalEntities(hashedAccountId, string.Empty, string.Empty, OwinWrapper.GetClaimValue(@"sub"));
             var legalEntity = legalEntities.Data.LegalEntities.Single(x => x.Code == legalEntityCode);
             var hashedAleId = legalEntity.AccountLegalEntityPublicHashedId;
@@ -224,6 +222,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/details/delete")]
+        [Deprecated]
         public async Task<ActionResult> DeleteCohort(string hashedAccountId, string hashedCommitmentId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -238,6 +237,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/details/delete")]
         [ValidateAntiForgeryToken]
+        [Deprecated]
         public async Task<ActionResult> DeleteCohort(DeleteCommitmentViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -275,10 +275,9 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("{legalEntityCode}/AgreementNotSigned")]
+        [Deprecated]
         public async Task<ActionResult> AgreementNotSignedAsync(LegalEntitySignedAgreementViewModel viewModel)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
-
             var legalEntities = await Orchestrator.GetLegalEntities(viewModel.HashedAccountId, string.Empty, string.Empty, OwinWrapper.GetClaimValue(@"sub"));
             var legalEntity = legalEntities.Data.LegalEntities.Single(x => x.Code == viewModel.LegalEntityCode);
             var hashedAleId = legalEntity.AccountLegalEntityPublicHashedId;
@@ -289,6 +288,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/apprenticeships/{hashedApprenticeshipId}/view")]
+        [Deprecated]
         public async Task<ActionResult> ViewApprenticeship(string hashedAccountId, string hashedCommitmentId, string hashedApprenticeshipId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -301,6 +301,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/finished")]
+        [Deprecated]
         public async Task<ActionResult> FinishedEditing(string hashedAccountId, string hashedCommitmentId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -314,6 +315,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("{hashedCommitmentId}/finished")]
+        [Deprecated]
         public async Task<ActionResult> FinishedEditing(FinishEditingViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -352,6 +354,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("{hashedCommitmentId}/CohortApproved")]
+        [Deprecated]
         public async Task<ActionResult> Approved(string hashedAccountId, string hashedCommitmentId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -374,6 +377,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/submit")]
+        [Deprecated]
         public async Task<ActionResult> SubmitExistingCommitment(string hashedAccountId, string hashedCommitmentId, SaveStatus saveStatus)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -386,6 +390,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("{hashedCommitmentId}/submit")]
+        [Deprecated]
         public async Task<ActionResult> SubmitExistingCommitmentEntry(SubmitCommitmentViewModel model)
         {
             var userDisplayName = OwinWrapper.GetClaimValue(DasClaimTypes.DisplayName);
@@ -399,6 +404,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpGet]
         [Route("{hashedCommitmentId}/Acknowledgement")]
+        [Deprecated]
         public async Task<ActionResult> AcknowledgementExisting(string hashedAccountId, string hashedCommitmentId, SaveStatus saveStatus)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -468,6 +474,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedCommitmentId}/Apprenticeships/{hashedApprenticeshipId}/Delete")]
+        [Deprecated]
         public async Task<ActionResult> DeleteApprenticeshipConfirmation(string hashedAccountId, string hashedCommitmentId, string hashedApprenticeshipId)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -483,6 +490,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("{hashedCommitmentId}/Apprenticeships/{hashedApprenticeshipId}/Delete")]
+        [Deprecated]
         public async Task<ActionResult> DeleteApprenticeshipConfirmation(DeleteApprenticeshipConfirmationViewModel viewModel)
         {
             if (!ModelState.IsValid)
