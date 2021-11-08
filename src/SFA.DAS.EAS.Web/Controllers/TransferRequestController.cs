@@ -33,20 +33,19 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("sender/transfers/{hashedTransferRequestId}")]
+        [Deprecated]
         public ActionResult TransferDetails(string hashedAccountId, string hashedTransferRequestId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"accounts/{hashedAccountId}/sender/transfers/{hashedTransferRequestId}"));
         }
 
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("receiver/transfers/{hashedTransferRequestId}")]
+        [Deprecated]
         public ActionResult TransferDetailsForReceiver(string hashedAccountId, string hashedTransferRequestId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"accounts/{hashedAccountId}/receiver/transfers/{hashedTransferRequestId}"));
         }
-        
     }
 }

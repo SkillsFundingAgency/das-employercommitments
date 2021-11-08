@@ -520,7 +520,6 @@
     <Compile Include="Authentication\IdentityServerConfigurationFactory.cs" />
     <Compile Include="Authentication\IOwinWrapper.cs" />
     <Compile Include="Authentication\OwinWrapper.cs" />
-    <Compile Include="Controllers\AccessDeniedController.cs" />
     <Compile Include="Controllers\DataLockController.cs" />
     <Compile Include="Controllers\BaseEmployerController.cs" />
     <Compile Include="Controllers\TransferRequestController.cs" />
@@ -1220,6 +1219,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Views\Home\" />
     <Folder Include="Views\Service\" />
   </ItemGroup>
   <ItemGroup>

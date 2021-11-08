@@ -57,34 +57,34 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedApprenticeshipId}/details", Name = "OnProgrammeApprenticeshipDetails")]
+        [Deprecated]
         public ActionResult Details(string hashedAccountId, string hashedApprenticeshipId)
-        {
-           _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
-       
+        {       
            return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details"));
         }
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/statuschange", Name = "ChangeStatusSelectOption")]
         [OutputCache(CacheProfile = "NoCache")]
+        [Deprecated]
         public  ActionResult ChangeStatus(string hashedAccountId, string hashedApprenticeshipId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/changestatus"));
         }
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/editstopdate", Name = "EditStopDateOption")]
         [OutputCache(CacheProfile = "NoCache")]
+        [Deprecated]
         public  ActionResult EditStopDate(string hashedAccountId, string hashedApprenticeshipId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/editstopdate"));
         }
         
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/whentoapply", Name = "WhenToApplyChange")]
         [OutputCache(CacheProfile = "NoCache")]
+        [Deprecated]
         public async Task<ActionResult> WhenToApplyChange(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -116,6 +116,7 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
 
         [HttpPost]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/whentoapply", Name = "PostWhenToApplyChange")]
+        [Deprecated]
         public async Task<ActionResult> WhenToApplyChange(string hashedAccountId, string hashedApprenticeshipId, [CustomizeValidator(RuleSet = "default,Date")] ChangeStatusViewModel model)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -145,19 +146,18 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/maderedundant", Name = "MadeRedundant")]
         [OutputCache(CacheProfile = "NoCache")]
+        [Deprecated]
         public ActionResult HasApprenticeBeenMadeRedundant(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, DateTime? dateOfChange, WhenToMakeChangeOptions whenToMakeChange)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/details/madeRedundant"));
         }
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/details/statuschange/{changeType}/confirm", Name = "StatusChangeConfirmation")]
         [OutputCache(CacheProfile = "NoCache")]
+        [Deprecated]
         public  ActionResult StatusChangeConfirmation(string hashedAccountId, string hashedApprenticeshipId, ChangeStatusType changeType, WhenToMakeChangeOptions whenToMakeChange, DateTime? dateOfChange, bool? madeRedundant)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
-
             switch (changeType)
             {
                 case ChangeStatusType.Pause:
@@ -175,25 +175,25 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [HttpGet]
         [OutputCache(CacheProfile = "NoCache")]
         [Route("{hashedApprenticeshipId}/edit", Name = "EditApprenticeship")]
+        [Deprecated]
         public ActionResult Edit(string hashedAccountId, string hashedApprenticeshipId)
         {
-
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{ hashedAccountId}/apprentices/{hashedApprenticeshipId}/ edit"));
         }
 
         [HttpGet]
         [Route("{hashedApprenticeshipId}/changes/confirm")]
         [OutputCache(CacheProfile = "NoCache")]
+        [Deprecated]
         public ActionResult ConfirmChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/edit/confirm"));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("{hashedApprenticeshipId}/changes/SubmitChanges")]
+        [Deprecated]
         public async Task<ActionResult> SubmitChanges(string hashedAccountId, string hashedApprenticeshipId, UpdateApprenticeshipViewModel apprenticeship)
         {
             if (!await IsUserRoleAuthorized(hashedAccountId, Role.Owner, Role.Transactor))
@@ -241,7 +241,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Deprecated]
         public  ActionResult ViewChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/changes/view"));
         }
         
@@ -277,7 +276,6 @@ namespace SFA.DAS.EmployerCommitments.Web.Controllers
         [Deprecated]
         public ActionResult ReviewChanges(string hashedAccountId, string hashedApprenticeshipId)
         {
-            _logger.Info($"To track Apprentice V1 details UrlReferrer Request: {HttpContext.Request.UrlReferrer} Request to Page: {HttpContext.Request.RawUrl}");
             return Redirect(_linkGenerator.CommitmentsV2Link($"{hashedAccountId}/apprentices/{hashedApprenticeshipId}/changes/review"));
         }
 
