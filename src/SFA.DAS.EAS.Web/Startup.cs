@@ -121,7 +121,7 @@ namespace SFA.DAS.EmployerCommitments.Web
             var email = identity.Claims.FirstOrDefault(claim => claim.Type == constants.Email())?.Value;
             var firstName = identity.Claims.FirstOrDefault(claim => claim.Type == constants.GivenName())?.Value;
             var lastName = identity.Claims.FirstOrDefault(claim => claim.Type == constants.FamilyName())?.Value;
-            logger.Info("Claims retrieved from OIDC server {0}: {1} : {2} : {3}", userRef, email, firstName, lastName);
+            logger.Info("Claims retrieved from OIDC server for user {0}", userRef);
 
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, identity.Claims.First(c => c.Type == constants.Id()).Value));
             identity.AddClaim(new Claim(ClaimTypes.Name, identity.Claims.First(c => c.Type == constants.DisplayName()).Value));
